@@ -1,19 +1,15 @@
-const menu = {
-  namespaced: true,
-  state: {
-    menuVisible: false
+export const state = () => ({
+  menuVisible: false
+})
+
+export const mutations = {
+  openMenu(state) {
+    state.menuVisible = true
   },
-  mutations: {
-    openMenu(state) {
-      state.menuVisible = true
-    },
-    toggleShowMenu(state) {
-      state.menuVisible = !state.menuVisible
-    },
-    disableMenu(state) {
-      state.menuVisible = false
-    }
+  toggleShowMenu(state) {
+    state.menuVisible = !state.menuVisible
+  },
+  disableMenu(state) {
+    state.menuVisible = false
   }
 }
-
-export default menu

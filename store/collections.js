@@ -1,16 +1,16 @@
-const collections = {
-  namespaced: true,
-  state: {
+export const state = () => ({
     collections: []
-  },
-  getters: {
+  })
+
+  export const getters = {
     getCollection: state => handle => {
       return state.collections.find(collection => (
         collection.handle === handle
       ))
     }
-  },
-  mutations: {
+  }
+
+  export const mutations = {
     addCollection(state, collection) {
       state.collections.push(collection)
     },
@@ -28,6 +28,3 @@ const collections = {
       }
     }
   }
-}
-
-export default collections

@@ -1,7 +1,7 @@
 <template>
   <div
     class="button is-primary checkout-button nacelle"
-    :class="{'is-loading': loading}"
+    :class="{ 'is-loading': loading }"
     @click="checkout"
   >
     {{ checkoutText }}
@@ -9,8 +9,7 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
-import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 export default {
   props: {
     checkoutText: {
@@ -18,7 +17,7 @@ export default {
       default: 'Checkout'
     }
   },
-  data () {
+  data() {
     return {
       loading: false
     }
@@ -29,29 +28,20 @@ export default {
   methods: {
     ...mapMutations('cart', ['setCartError']),
     ...mapActions('cart', ['processCheckout']),
-    async checkout () {
+    async checkout() {
       const vm = this
       this.loading = true
-      const processCheckoutObject = await this.$apollo
-        .mutate({
-          mutation: gql`
-            mutation($input: CheckoutInput) {
-              processCheckout(input: $input) {
-                id
-                url
-                completed
-              }
-            }
-          `,
-          variables: {
-            input: {
-              cartItems: vm.checkoutLineItems,
-              checkoutId: vm.checkoutIdForBackend
-            }
-          }
+      const processCheckoutObject = await this.$nacelle
+        .checkout({
+          cartItems: vm.checkoutLineItems,
+          checkoutId: vm.checkoutIdForBackend
         })
         .then(data => {
-          return data.data.processCheckout
+          if (data && data.id && data.url) {
+            return data
+          }
+
+          throw new Error('checkout failure')
         })
         .catch(err => {
           console.log(err)

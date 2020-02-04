@@ -1,24 +1,20 @@
-const menu = {
-  namespaced: true,
-  state: {
-    modalOpen: false,
-    modalContext: null,
-    modalData: null
+export const state = () => ({
+  modalOpen: false,
+  modalContext: null,
+  modalData: null
+})
+
+export const mutations = {
+  openModal(state) {
+    state.modalOpen = true
   },
-  mutations: {
-    openModal(state) {
-      state.modalOpen = true
-    },
-    closeModal(state) {
-      state.modalOpen = false
-    },
-    setModalContext(state, payload) {
-      state.modalContext = payload
-    },
-    setModalData(state, payload) {
-      state.modalData = payload
-    }
+  closeModal(state) {
+    state.modalOpen = false
+  },
+  setModalContext(state, payload) {
+    state.modalContext = payload
+  },
+  setModalData(state, payload) {
+    state.modalData = payload
   }
 }
-
-export default menu

@@ -8,7 +8,7 @@
 
       <div class="main-nav-brand">
         <nuxt-link to="/">
-          <img :src="logoSrc" width="112" :alt="name" />
+          <strong>{{ name }}</strong>
         </nuxt-link>
       </div>
 
@@ -33,7 +33,7 @@
       <div class="nav-flyout" v-if="menuVisible">
         <div class="nav-flyout-header">
           <router-link class="navbar-item" to="/">
-            <img :src="logoSrc" width="112" :alt="name" />
+            <strong>{{ name }}</strong>
           </router-link>
           <button class="nav-flyout-close" @click="toggleShowMenu">
             <svg
@@ -74,8 +74,18 @@
 </template>
 
 <script>
+import MainNavCart from '~/components/MainNavCart'
+import MainNavBurger from '~/components/MainNavBurger'
+import SearchBox from '~/components/SearchBox'
+import Cart from '~/components/Cart'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 export default {
+  components:{
+    Cart,
+    MainNavCart,
+    MainNavBurger,
+    SearchBox
+  },
   props: {
     isSticky: {
       type: Boolean,
@@ -86,13 +96,6 @@ export default {
     ...mapState('space', ['id', 'name', 'linklists']),
     ...mapState('menu', ['menuVisible']),
     ...mapGetters('space', ['getLinks']),
-    logoSrc() {
-      if (this.id) {
-        return `https://d3ej2r3y1rjyfi.cloudfront.net/space/${this.id}/logo.png`
-      }
-
-      return ''
-    },
     mainMenu() {
       return this.getLinks('main-menu')
     },

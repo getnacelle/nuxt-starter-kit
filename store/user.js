@@ -2,16 +2,15 @@ import uuid from 'uuidv4'
 import localforage from 'localforage'
 import * as Cookies from 'es-cookie'
 
-const user = {
-  namespaced: true,
-  state: {
+export const state = () => ({
     anonymousID: null,
     customerID: null,
     customerEmail: null,
     sessionID: null,
     language: 'en-US'
-  },
-  mutations: {
+  })
+
+ export const mutations = {
     setUserData(state, payload) {
       state.customerID = payload.customerID
       state.customerEmail = payload.customerEmail
@@ -25,8 +24,9 @@ const user = {
     setLanguage(state, language) {
       state.language = language
     }
-  },
-  actions: {
+  }
+
+  export const actions =  {
     async initUserData(context) {
       await context.dispatch('readAnonymousID')
       await context.dispatch('readSession')
@@ -76,6 +76,3 @@ const user = {
       }
     }
   }
-}
-
-export default user

@@ -1,115 +1,111 @@
 import axios from 'axios'
 import { transformProduct } from '@nacelle/nacelle-tools'
 
-const search = {
-  namespaced: true,
-  state: {
-    query: null,
-    autocompleteVisible: false,
-    filtersCleared: false,
-    searchData: {},
-    loadedData: false,
-    searchLoading: false
-  },
-  getters: {
-    queryOrigin(state) {
-      if (state.query && state.query.origin) {
-        return state.query.origin
-      }
+export const state = () => ({
+  query: null,
+  autocompleteVisible: false,
+  filtersCleared: false,
+  searchData: {},
+  loadedData: false,
+  searchLoading: false
+})
 
-      return undefined
-    },
-    hasProductData(state) {
-      return (
-        state.searchData &&
-        state.searchData.products &&
-        state.searchData.products.length > 0
-      )
-    },
-    productData(state) {
-      if (
-        state.searchData &&
-        state.searchData.products &&
-        state.searchData.products.length > 0
-      ) {
-        return state.searchData.products
-      }
-
-      return []
+export const getters = {
+  queryOrigin(state) {
+    if (state.query && state.query.origin) {
+      return state.query.origin
     }
+
+    return undefined
   },
-  mutations: {
-    setQuery(state, query) {
-      state.query = query
-    },
+  hasProductData(state) {
+    return (
+      state.searchData &&
+      state.searchData.products &&
+      state.searchData.products.length > 0
+    )
+  },
+  productData(state) {
+    if (
+      state.searchData &&
+      state.searchData.products &&
+      state.searchData.products.length > 0
+    ) {
+      return state.searchData.products
+    }
 
-    setAutocompleteVisible(state) {
-      state.autocompleteVisible = true
-    },
+    return []
+  }
+}
+export const mutations = {
+  setQuery(state, query) {
+    state.query = query
+  },
 
-    setAutocompleteNotVisible(state) {
-      state.autocompleteVisible = false
-    },
+  setAutocompleteVisible(state) {
+    state.autocompleteVisible = true
+  },
 
-    setFiltersCleared(state) {
-      state.filtersCleared = true
-    },
+  setAutocompleteNotVisible(state) {
+    state.autocompleteVisible = false
+  },
 
-    setFiltersNotCleared(state) {
-      state.filtersCleared = false
-    },
+  setFiltersCleared(state) {
+    state.filtersCleared = true
+  },
 
-    setSearchData(state, data) {
-      state.searchData = {
-        ...state.searchData,
-        ...data
-      }
-    },
+  setFiltersNotCleared(state) {
+    state.filtersCleared = false
+  },
 
-    dataHasLoaded(state) {
-      state.loadedData = true
-    },
-
-    dataNotLoaded(state) {
-      state.loadedData = false
-    },
-
-    isSearching(state) {
-      state.searchLoading = true
-    },
-
-    isNotSearching(state) {
-      state.searchLoading = false
+  setSearchData(state, data) {
+    state.searchData = {
+      ...state.searchData,
+      ...data
     }
   },
 
-  actions: {
-    getProductData({ commit, getters }) {
-      if (!getters.hasProductData) {
-        commit('dataNotLoaded')
-        commit('isSearching')
+  dataHasLoaded(state) {
+    state.loadedData = true
+  },
 
-        axios
-          .get('/data/search.json')
-          .then(res => {
-            if (res && res.data) {
-              commit('dataHasLoaded')
-              commit('isNotSearching')
+  dataNotLoaded(state) {
+    state.loadedData = false
+  },
 
-              const products = res.data
-                .filter(product => product && product.title && product.variants)
-                .map(product => transformProduct(product))
+  isSearching(state) {
+    state.searchLoading = true
+  },
 
-              commit('setSearchData', { products })
-            }
-          })
-          .catch(err => {
-            console.log(err)
-            return err
-          })
-      }
-    }
+  isNotSearching(state) {
+    state.searchLoading = false
   }
 }
 
-export default search
+export const actions = {
+  getProductData({ commit, getters }) {
+    if (!getters.hasProductData) {
+      commit('dataNotLoaded')
+      commit('isSearching')
+
+      axios
+        .get('/data/search.json')
+        .then(res => {
+          if (res && res.data) {
+            commit('dataHasLoaded')
+            commit('isNotSearching')
+
+            const products = res.data
+              .filter(product => product && product.title && product.variants)
+              .map(product => transformProduct(product))
+
+            commit('setSearchData', { products })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          return err
+        })
+    }
+  }
+}

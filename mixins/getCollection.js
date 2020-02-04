@@ -1,5 +1,5 @@
 import { mapMutations } from 'vuex'
-import { getCollectionData, collectionProducts } from '../nacelle/fetch-static'
+import { getCollectionData, collectionProducts } from '@nacelle/nacelle-tools'
 import observeFetchMoreComponent from './observeFetchMoreComponent'
 
 export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {

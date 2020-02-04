@@ -1,4 +1,4 @@
-import { getPageData } from '../nacelle/fetch-static'
+import { getPageData } from '@nacelle/nacelle-tools'
 
 export default ({ pageHandle, locale } = {}) => {
   return {

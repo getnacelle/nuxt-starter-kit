@@ -30,6 +30,7 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 import ContentHeroBanner from './ContentHeroBanner'
 import ContentSideBySide from './ContentSideBySide'
 import ContentTestimonials from './ContentTestimonials'
+import ContentTestimonial from '~/components/ContentTestimonial'
 import ContentProductGrid from './ContentProductGrid'
 
 export default {
@@ -37,6 +38,7 @@ export default {
     ContentHeroBanner,
     ContentSideBySide,
     ContentTestimonials,
+    ContentTestimonial,
     ContentProductGrid
   },
   props: {
@@ -87,19 +89,23 @@ export default {
       return []
     },
     body() {
-      if (this.page && this.page.fields && this.page.fields.body) {
+      if (this.page) {
         const { source } = this.page
 
-        if (source === 'shopify') {
-          return this.page.fields.body
+        if (source === 'shopify' && this.page.content) {
+          return this.page.content
         }
 
-        if (source === 'contentful') {
+        if (
+          source === 'contentful' &&
+          this.page.fields &&
+          this.page.fields.body
+        ) {
           return this.contentToHtml(this.page.fields.body)
         }
-
-        return ''
       }
+
+      return ''
     }
   },
   methods: {
@@ -114,31 +120,11 @@ export default {
 
       return documentToHtmlString(content, options)
     },
-    formatShopifySection(section) {
-      const { tags, ...rest } = section.node
-      const tagFields = {}
-
-      tags.forEach(tag => {
-        if (tag.includes('field::')) {
-          const [field, key, value] = tag.split('::')
-          tagFields[key] = value
-        }
-      })
-
-      return {
-        ...tagFields,
-        ...rest,
-        tags
-      }
-    },
     reduceShopifySections(sections) {
       return sections.reduce((sections, section, index) => {
-        const formatted = this.formatShopifySection(section)
-        const { tags } = formatted
-
-        if (index > 0 && formatted.tags.includes('childSection')) {
+        if (index > 0 && section.tags.includes('childSection')) {
           const parent = sections[sections.length - 1]
-          const child = this.mapShopifySection(formatted)
+          const child = this.mapShopifySection(section)
 
           if (parent.children) {
             parent.children.push(child)
@@ -146,7 +132,7 @@ export default {
             parent.children = [child]
           }
         } else {
-          sections.push(formatted)
+          sections.push(section)
         }
 
         return sections
@@ -288,7 +274,7 @@ export default {
             backgroundImgUrl: imageSrc,
             size,
             alignment,
-            mobileFullHeight: String(fields.mobileFullHeight) === 'true',
+            mobileFullHeight: String(mobileFullHeight) === 'true',
             textColor,
             mobileBackgroundImgUrl: mobileBackgroundImage
               ? mobileBackgroundImage.fields.file.url
