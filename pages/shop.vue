@@ -11,10 +11,16 @@
 </template>
 
 <script>
-import nacelleVue from "@nacelle/nacelle-vue-components/dist/nacelleVueInstance.js"
-export default nacelleVue({
-  type: "shop",
-})
+import getShopPage from '~/mixins/getShopPage'
+import getPage from '~/mixins/getPage'
+import PageContent from '~/components/PageContent'
+import ProductGrid from '~/components/ProductGrid'
+export default {
+  components: {
+    PageContent, ProductGrid
+  },
+     mixins: [getShopPage(), getPage({ pageHandle: 'shop' })]
+}
 </script>
 <style lang="scss" scoped>
 // .products {

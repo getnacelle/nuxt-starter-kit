@@ -1,5 +1,5 @@
 import { mapMutations } from 'vuex'
-import { getShopPageData, getProductsPerPage } from '../nacelle/fetch-static'
+import { getShopPageData, getProductsPerPage } from '@nacelle/nacelle-tools/src/nacelle/fetch-static'
 import observeFetchMoreComponent from './observeFetchMoreComponent'
 
 export default ({ itemsPerPage, locale } = {}) => {

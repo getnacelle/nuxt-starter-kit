@@ -28,10 +28,12 @@
 </template>
 
 <script>
-import nacelleVue from "@nacelle/nacelle-vue-components/dist/nacelleVueInstance.js"
-export default nacelleVue({
-  type: "product"
-})
+import getProduct from '~/mixins/getProduct'
+import ProductDetails from '~/components/ProductDetails'
+export default {
+  components:{ProductDetails},
+  mixins: [getProduct()]
+}
 </script>
 
 <style lang="scss" scoped>

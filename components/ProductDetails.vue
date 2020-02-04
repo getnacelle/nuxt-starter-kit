@@ -36,13 +36,20 @@
 
 <script>
 import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
-// import your own components here
-// import ProductSpecial from '~/components/ComponentName'
-
+import ProductCategory from '~/components/ProductCategory'
+import ProductMediaSelectView from '~/components/ProductMediaSelectView'
+import ProductTitle from '~/components/ProductTitle'
+import ProductPrice from '~/components/ProductPrice'
+import ProductDescription from '~/components/ProductDescription'
+import ProductVariantSelect from '~/components/ProductVariantSelect'
 export default {
   components: {
-    // export your components by name here:
-    // ComponentName
+ProductCategory,
+ProductMediaSelectView,
+ProductTitle,
+ProductPrice,
+ProductDescription,
+ProductVariantSelect
   },
   data () {
     return {

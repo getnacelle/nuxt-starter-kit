@@ -1,4 +1,4 @@
-import { getProductData } from '../nacelle/fetch-static'
+import { getProductData } from '@nacelle/nacelle-tools'
 
 export default ({ productHandle, locale } = {}) => {
   return {

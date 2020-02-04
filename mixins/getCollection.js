@@ -38,6 +38,7 @@ export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {
         locale: locale || $nacelle.locale,
         payload
       })
+
       let products = []
 
       if (

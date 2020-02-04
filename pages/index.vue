@@ -103,9 +103,10 @@ import getCollection from '~/mixins/getCollection'
 import ContentHeroBanner from '~/components/ContentHeroBanner'
 import ContentSideBySide from '~/components/ContentSideBySide'
 import PageContent from '~/components/PageContent'
-import nmerge from 'nuxt-merge-asyncdata'
 export default {
   components: {ContentHeroBanner, ContentSideBySide, PageContent},
-  mixins: [getPage({ pageHandle: 'homepage' }), getCollection({ pageHandle: 'homepage' })]
+  mixins: [getPage({ pageHandle: 'homepage' }), 
+  getCollection({ pageHandle: 'homepage' })
+  ]
 }
 </script>
