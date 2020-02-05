@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { transformProduct } from '@nacelle/nacelle-tools'
 
 export const state = () => ({
   query: null,
@@ -37,6 +36,7 @@ export const getters = {
     return []
   }
 }
+
 export const mutations = {
   setQuery(state, query) {
     state.query = query
@@ -97,7 +97,6 @@ export const actions = {
 
             const products = res.data
               .filter(product => product && product.title && product.variants)
-              .map(product => transformProduct(product))
 
             commit('setSearchData', { products })
           }
