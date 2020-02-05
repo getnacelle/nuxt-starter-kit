@@ -1,4 +1,4 @@
-import { getBlogData, blogArticles } from '../nacelle/fetch-static'
+import { getBlogData, blogArticles } from '@nacelle/nacelle-tools'
 import observeFetchMoreComponent from './observeFetchMoreComponent'
 
 export default (config = {}) => {

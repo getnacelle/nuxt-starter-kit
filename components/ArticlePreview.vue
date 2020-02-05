@@ -37,7 +37,9 @@
 </template>
 
 <script>
+import InterfaceFeaturedMedia from '~/components/InterfaceFeaturedMedia'
 export default {
+  components: {InterfaceFeaturedMedia},
   props: {
     title: {
       type: String,

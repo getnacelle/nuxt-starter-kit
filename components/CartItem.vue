@@ -1,10 +1,6 @@
 <template>
   <div class="columns is-marginless is-mobile flyout-cart-item">
-    <router-link
-      :to="`${pathFragment}${item.handle}`"
-      class="column is-3"
-      @click.native="hideCart"
-    >
+    <router-link :to="`${pathFragment}${item.handle}`" class="column is-3" @click.native="hideCart">
       <product-image
         v-if="productThumbnail && productThumbnail.length > 0"
         :source="productThumbnail"
@@ -16,10 +12,7 @@
       <router-link :to="`${pathFragment}${item.handle}`" @click.native="hideCart">
         <product-title class="flyout-item-title" element="h4" :title="item.title" />
       </router-link>
-      <product-variant-title
-        :title="variant.title"
-        class="flyout-item-variant-title"
-      />
+      <product-variant-title :title="variant.title" class="flyout-item-variant-title" />
       <div class="flyout-item-details columns is-marginless is-paddingless">
         <product-price class="flyout-item-price" :price="item.variant.price" />
         <quantity-selector :item="item" :quantity="item.quantity" />
@@ -30,8 +23,22 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations } from "vuex";
+import ProductImage from "~/components/ProductImage";
+import ProductTitle from "~/components/ProductTitle";
+import ProductPrice from "~/components/ProductPrice";
+import ProductVariantTitle from "~/components/ProductVariantTitle";
+import QuantitySelector from "~/components/QuantitySelector";
+import CartFlyoutItemRemoveButton from "~/components/CartFlyoutItemRemoveButton";
 export default {
+  components: {
+    ProductImage,
+    ProductTitle,
+    ProductPrice,
+    ProductVariantTitle,
+    QuantitySelector,
+    CartFlyoutItemRemoveButton
+  },
   props: {
     item: {
       type: Object,
@@ -39,45 +46,38 @@ export default {
     },
     pathFragment: {
       type: String,
-      default: '/products/'
+      default: "/products/"
     }
   },
   computed: {
-    productThumbnail () {
-      if (
-        this.item &&
-        this.item.image &&
-        this.item.image.thumbnailSrc
-      ) {
-        return this.item.image.thumbnailSrc
+    productThumbnail() {
+      if (this.item && this.item.image && this.item.image.thumbnailSrc) {
+        return this.item.image.thumbnailSrc;
       }
 
-      return ''
+      return "";
     },
-    variant () {
+    variant() {
       const defaultVariant = {
-        id: '',
-        title: '',
+        id: "",
+        title: "",
         price: 0
-      }
+      };
 
-      if (
-        this.item &&
-        this.item.variant
-      ) {
+      if (this.item && this.item.variant) {
         return {
           ...defaultVariant,
           ...this.item.variant
-        }
+        };
       }
 
-      return defaultVariant
+      return defaultVariant;
     }
   },
   methods: {
-    ...mapMutations('cart', ['hideCart'])
+    ...mapMutations("cart", ["hideCart"])
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

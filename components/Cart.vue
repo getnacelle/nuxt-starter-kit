@@ -15,30 +15,44 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from "vuex";
+import CartFlyoutHeader from "~/components/CartFlyoutHeader";
+import CartFlyoutMessaging from "~/components/CartFlyoutMessaging";
+import CartFlyoutSubtotal from "~/components/CartFlyoutSubtotal";
+import CartFlyoutCheckoutButton from "~/components/CartFlyoutCheckoutButton";
+import MessagingFreeShippingCounter from "~/components/MessagingFreeShippingCounter";
+import CartItem from "~/components/CartItem";
 export default {
+  components: {
+    CartFlyoutHeader,
+    CartFlyoutMessaging,
+    CartFlyoutSubtotal,
+    CartFlyoutCheckoutButton,
+    MessagingFreeShippingCounter,
+    CartItem
+  },
   computed: {
-    ...mapState('cart', ['lineItems', 'cartVisible'])
+    ...mapState("cart", ["lineItems", "cartVisible"])
   },
   methods: {
-    ...mapMutations('cart', [
-      'showCart',
-      'hideCart',
-      'setFreeShippingThreshold'
+    ...mapMutations("cart", [
+      "showCart",
+      "hideCart",
+      "setFreeShippingThreshold"
     ]),
-    ...mapActions('cart', ['updateLocalCart']),
+    ...mapActions("cart", ["updateLocalCart"]),
     handleClose() {
-      this.hideCart()
+      this.hideCart();
     }
   },
   watch: {
     lineItems(newValue) {
       if (newValue.length == 0) {
-        this.hideCart()
+        this.hideCart();
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

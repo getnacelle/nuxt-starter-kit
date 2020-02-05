@@ -2,18 +2,21 @@ import uuid from 'uuidv4'
 import localforage from 'localforage'
 import * as Cookies from 'es-cookie'
 
-export const state = () => ({
+export const state = () =>  ({
+
     anonymousID: null,
-    customerID: null,
+    userID: null,
     customerEmail: null,
+    customerPhone: null,
     sessionID: null,
     language: 'en-US'
   })
-
- export const mutations = {
+  export const mutations = {
     setUserData(state, payload) {
-      state.customerID = payload.customerID
-      state.customerEmail = payload.customerEmail
+      const { userID, customerEmail, customerPhone } = payload
+      state.userID = userID
+      state.customerEmail = customerEmail
+      state.customerPhone = customerPhone
     },
     setAnonymousID(state, id) {
       state.anonymousID = id
@@ -25,21 +28,28 @@ export const state = () => ({
       state.language = language
     }
   }
-
-  export const actions =  {
+  export const actions = {
     async initUserData(context) {
       await context.dispatch('readAnonymousID')
       await context.dispatch('readSession')
+
+      if (process.browser) {
+        const userData = Cookies.get('user-data')
+
+        if (userData) {
+          context.commit('setUserData', JSON.parse(userData))
+        }
+      }
     },
 
-    /// / ANONYMOUS ID ACTIONS //////////////////////////////////////////
+    // ANONYMOUS ID ACTIONS //////////////////////////////////////////
     async createAnonymousID(context) {
       const anonymousID = uuid()
-      await localforage.set('anonymousID', anonymousID)
+      await localforage.setItem('anonymousID', anonymousID)
       context.commit('setAnonymousID', anonymousID)
     },
     async readAnonymousID(context) {
-      const anonymousID = await localforage.get('anonymousID')
+      const anonymousID = await localforage.getItem('anonymousID')
       if (anonymousID != null) {
         context.commit('setAnonymousID', anonymousID)
       } else {
@@ -47,7 +57,7 @@ export const state = () => ({
       }
     },
 
-    /// / SESSION ACTIONS //////////////////////////////////////////
+    // SESSION ACTIONS //////////////////////////////////////////
     async createSession(context) {
       const sessionID = uuid()
       context.commit('setSessionID', sessionID)
