@@ -22,6 +22,9 @@ describe('FormConsentField.vue', () => {
 
   it('has the "aria-pressed" attribute on the button, after the button is clicked', async () => {
     submit.trigger('click')
-    expect(submit.attributes('aria-pressed')).toBe('true')
+    setTimeout(() => {
+      expect(submit.attributes('aria-pressed')).toBe('true')
+    }, 200)
+
   })
 })

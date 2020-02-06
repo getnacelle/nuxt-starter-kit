@@ -1,5 +1,6 @@
-import { mount } from '@vue/test-utils'
-import ContentTestimonials from '@/components/ContentTestimonials'
+import { mount, createLocalVue } from '@vue/test-utils'
+import ContentTestimonials from '~/components/ContentTestimonials'
+
 
 describe('ContentTestimonials.vue', () => {
   const slides = [

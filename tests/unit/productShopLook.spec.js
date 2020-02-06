@@ -19,7 +19,9 @@ describe('ProductShopLook.vue', () => {
     const button = wrapper.find('.button')
    button.trigger('click')
 
+setTimeout(() => {
+  expect(wrapper.find('.shop-look-modal').exists()).toBe(true)
+}, 200)
 
-    expect(wrapper.find('.shop-look-modal').exists()).toBe(true)
   })
 })

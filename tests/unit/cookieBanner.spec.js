@@ -1,7 +1,7 @@
-import { shallowMount, RouterLinkStub } from '@vue/test-utils'
+import { mount, RouterLinkStub } from '@vue/test-utils'
 import CookieBanner from '@/components/CookieBanner'
 
-const wrapper = shallowMount(CookieBanner, {
+const wrapper = mount(CookieBanner, {
   stubs: {
     NuxtLink: RouterLinkStub
   }
@@ -18,6 +18,8 @@ describe('CookieBanner.vue', () => {
 
   it('closes after the "Accept" button is clicked', async () => {
     button.trigger('click')
-    expect(wrapper.html()).toBe('<div><!----></div>')
+    setTimeout(() => {
+      expect(wrapper.html()).toBe('<div><!----></div>')
+    }, 200)
   })
 })

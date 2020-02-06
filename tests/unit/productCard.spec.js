@@ -1,5 +1,9 @@
-import { mount } from '@vue/test-utils'
-import store from '../../src/store/store'
+import {createLocalVue, mount } from '@vue/test-utils'
+import storeConfig from '../storeConfig'
+import Vuex from 'vuex'
+const localVue = createLocalVue()
+localVue.use(Vuex)
+
 import ProductCard from '@/components/ProductCard'
 
 describe('ProductCard.vue', () => {
@@ -22,7 +26,7 @@ describe('ProductCard.vue', () => {
       }
     ]
   }
-
+  const store = new Vuex.Store(storeConfig())
   store.state.cart.lineItems = [
     {
       image: {
@@ -39,9 +43,11 @@ describe('ProductCard.vue', () => {
   ]
 
   it('renders a product card', async () => {
+    const store = new Vuex.Store(storeConfig())
     const wrapper = mount(ProductCard, {
       stubs: ['router-link'],
       store,
+      localVue,
       propsData: {
         product: defaultProduct
       }

@@ -18,10 +18,10 @@ describe('FormConsentField.vue', () => {
   })
 
   it('renders sample code for adding a title via a named template', async () => {
-    expect(title.html()).toBe('<h3 id="field-title">\n      Add a title with:\n      <code>&lt;template v-slot:title&gt;Section Title&lt;/template&gt;</code></h3>')
+    expect(title.html()).toBe('<h3 id="field-title">\n  Add a title with:\n  <code>&lt;template v-slot:title&gt;Section Title&lt;/template&gt;</code></h3>')
   })
 
   it('renders sample code for adding a description via a named template', async () => {
-    expect(description.html()).toBe('<p id="field-description">\n      Add a description with:\n      <code>&lt;template v-slot:description&gt;Section Description Goes Here&lt;/template&gt;</code></p>')
+    expect(description.html()).toBe('<p id="field-description">\n  Add a description with:\n  <code>&lt;template v-slot:description&gt;Section Description Goes Here&lt;/template&gt;</code></p>')
   })
 })

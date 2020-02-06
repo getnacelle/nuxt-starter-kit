@@ -6,8 +6,6 @@ describe('ProductDescription.vue', () => {
     const wrapper = shallowMount(ProductDescription, {
       propsData: { description: '<p>This is the description</p>' }
     })
-    expect(wrapper.html()).toBe(
-      '<div class="product-description nacelle"><p>This is the description</p></div>'
-    )
+    expect(wrapper.contains('p')).toBe(true)
   })
 })

@@ -1,7 +1,12 @@
-import store from '../../src/store/store'
+import {createLocalVue } from '@vue/test-utils'
+import storeConfig from '../storeConfig'
+import Vuex from 'vuex'
+const localVue = createLocalVue()
+localVue.use(Vuex)
 
 describe('Space Store', () => {
   it('adds a metafield to metafields array', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.commit('space/addMetafield', {
       namespace: 'metatag',
       key: 'og:image',
@@ -17,6 +22,7 @@ describe('Space Store', () => {
   })
 
   it('get namespace returns namespace object', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.state.space.metafields = [
       {
         namespace: 'metatag',
@@ -33,6 +39,7 @@ describe('Space Store', () => {
   })
 
   it('metafieldsObj returns metafields object', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.state.space.metafields = [
       {
         namespace: 'metatag',
@@ -63,6 +70,7 @@ describe('Space Store', () => {
   })
 
   it('updateSpace sets space', async () => {
+    const store = new Vuex.Store(storeConfig())
     const id = '12345'
     const name = 'test-store'
     const domain = 'test-store.com'

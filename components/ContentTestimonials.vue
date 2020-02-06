@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import 'vue-glide-js/dist/vue-glide.css'
+
 import { Glide, GlideSlide } from 'vue-glide-js'
 import ContentTestimonial from './ContentTestimonial'
 
@@ -85,6 +85,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import 'vue-glide-js/dist/vue-glide.css';
+
 .glide-wrapper {
   margin-left: 2rem;
   margin-right: 2rem;

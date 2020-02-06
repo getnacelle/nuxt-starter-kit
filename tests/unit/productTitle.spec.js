@@ -1,13 +1,13 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
+import storeConfig from '../storeConfig'
 import ProductTitle from '@/components/ProductTitle'
 import Vuex from 'vuex'
-
-import store from '../../src/store/store'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('ProductTitle.vue', () => {
   it('renders a title', async () => {
+    const store = new Vuex.Store(storeConfig())
     const wrapper = shallowMount(ProductTitle, {
       store,
       localVue,
@@ -17,6 +17,7 @@ describe('ProductTitle.vue', () => {
   })
 
   it('renders a specific html element when passed', async () => {
+    const store = new Vuex.Store(storeConfig())
     const wrapper = shallowMount(ProductTitle, {
       store,
       localVue,
