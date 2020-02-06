@@ -1,6 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import store from '../../src/store/store'
-import nacellePlugin from './../../__mocks__/nacelle-vue-plugin'
+import Vuex from 'vuex'
+import storeConfig from '../storeConfig'
+import localforage from 'localforage'
+import nacellePlugin from '../mocks/nacelle-vue-plugin'
 import NacelleCollection from '@/components/NacelleCollection'
 
 const delay = () =>
@@ -28,6 +30,8 @@ describe('NacelleCollection.vue', () => {
   it('loads a collection', async () => {
     const localVue = createLocalVue()
     localVue.use(nacellePlugin)
+    localVue.use(Vuex)
+    const store = new Vuex.Store(storeConfig())
 
     const wrapper = shallowMount(NacelleCollection, {
       localVue,
@@ -47,6 +51,8 @@ describe('NacelleCollection.vue', () => {
     const handle = 'test'
     const localVue = createLocalVue()
     localVue.use(nacellePlugin)
+    localVue.use(Vuex)
+    const store = new Vuex.Store(storeConfig())
 
     // update test collection in store with dummy data
     store.commit('collections/updateCollection', {

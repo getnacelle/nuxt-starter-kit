@@ -1,8 +1,14 @@
-import { mount } from '@vue/test-utils'
-import store from '../../src/store/store'
+import { mount, createLocalVue } from '@vue/test-utils'
+import storeConfig from '../storeConfig'
 import ProductOptionSwatches from '@/components/ProductOptionSwatches'
 
+import Vuex from 'vuex'
+const localVue = createLocalVue()
+localVue.use(Vuex)
+
+
 describe('ProductOptionSwatch.vue', () => {
+  const store = new Vuex.Store(storeConfig())
   const wrapper = mount(ProductOptionSwatches, {
     store,
     propsData: {

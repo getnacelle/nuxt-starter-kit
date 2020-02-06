@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import ProductAddToCartButton from '@/components/ProductAddToCartButton'
-import createStoreConfig from '../../src/store/storeConfig'
+import createStoreConfig from '../storeConfig'
 import Vuex from 'vuex'
 
 describe('Product Add to Cart Button', () => {
@@ -322,13 +322,9 @@ describe('Product Add to Cart Button', () => {
     })
     wrapper.find('button').trigger('click')
 
-    expect(store.getters['cart/checkoutLineItems']).toEqual([
-      {
-        metafields: [{ key: 'customProp1', value: 'customValue1' }],
-        quantity: 1,
-        variantId:
-          'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFadC8yODU2ODgyMDAyMzQwMQ=='
-      }
+    expect(store.getters['cart/checkoutLineItems'][0].metafields).toEqual([
+  { key: 'customProp1', value: 'customValue1' }
+  
     ])
   })
 })

@@ -1,9 +1,14 @@
-import store from '../../src/store/store'
+import Vue from 'vue'
+import Vuex from 'vuex'
+Vue.use(Vuex)
+import storeConfig from '../storeConfig'
 import localforage from 'localforage'
 import uuid from 'uuidv4'
 
+
 describe('Cart Store', () => {
   it('adds a line item to the line items array', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.dispatch('cart/addLineItem', {
       image: {
         source: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/shirt.jpg'
@@ -22,6 +27,7 @@ describe('Cart Store', () => {
   })
 
   it('removes a line item from the line items array', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.state.cart.lineItems = [
       {
         id: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::${uuid()}`,
@@ -45,6 +51,7 @@ describe('Cart Store', () => {
   })
 
   it('increments a line item', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.state.cart.lineItems = [
       {
         id: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::${uuid()}`,
@@ -68,6 +75,7 @@ describe('Cart Store', () => {
   })
 
   it('decrements a line item', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.state.cart.lineItems = [
       {
         id: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::${uuid()}`,
@@ -91,6 +99,7 @@ describe('Cart Store', () => {
   })
 
   it('sets the line items array', async () => {
+    const store = new Vuex.Store(storeConfig())
     const lineUuid = uuid()
     store.commit('cart/setLineItems', [
       {
@@ -125,6 +134,7 @@ describe('Cart Store', () => {
   })
 
   it('calculates the cart value', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.commit('cart/setLineItems', [
       {
         id: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::${uuid()}`,
@@ -145,6 +155,7 @@ describe('Cart Store', () => {
   })
 
   it('returns true if the free shipping threshold has been reached', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.commit('cart/setFreeShippingThreshold', 100)
     store.commit('cart/setLineItems', [
       {
@@ -166,6 +177,7 @@ describe('Cart Store', () => {
     expect(store.getters['cart/freeShippingThresholdPassed']).toEqual(true)
   })
   it('returns the amount needed to hit the shipping threshold', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.commit('cart/setFreeShippingThreshold', 100)
     store.commit('cart/setLineItems', [
       {
@@ -188,9 +200,11 @@ describe('Cart Store', () => {
   })
 
   it('returns an array of line items with the properties needed for checkout', async () => {
+    const store = new Vuex.Store(storeConfig())
+    const lineUuid = uuid()
     store.commit('cart/setLineItems', [
       {
-        id: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::${uuid()}`,
+        id: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::${lineUuid}`,
         image: {
           source: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/shirt.jpg'
         },
@@ -199,6 +213,7 @@ describe('Cart Store', () => {
         handle: 'gray-t-shirt',
         price: '40.00',
         quantity: 2,
+
         variant: {
           id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
         }
@@ -208,24 +223,29 @@ describe('Cart Store', () => {
       {
         variantId:
           'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==',
-        quantity: 2
+        quantity: 2,
+        cartItemId:`Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::${lineUuid}`,
+        metafields: undefined,
       }
     ])
   })
 
   it('sets a checkoutId', async () => {
+    const store = new Vuex.Store(storeConfig())
     await localforage.clear()
     await store.commit('cart/setCheckoutId', '1234567899')
     expect(store.state.cart.checkoutId).toEqual('1234567899')
   })
 
   it('gets a checkoutId', async () => {
+    const store = new Vuex.Store(storeConfig())
     await localforage.setItem('checkout-id', '1234567778')
     await store.dispatch('cart/getCheckoutId')
     expect(store.state.cart.checkoutId).toEqual('1234567778')
   })
 
   it('saves an array of line items', async () => {
+    const store = new Vuex.Store(storeConfig())
     const lineUuid = uuid()
     store.state.cart.lineItems = [
       {

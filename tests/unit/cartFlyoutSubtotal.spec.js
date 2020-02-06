@@ -1,11 +1,16 @@
-import store from '../../src/store/store'
-import { mount } from '@vue/test-utils'
+import storeConfig from '../storeConfig'
+import { mount, createLocalVue } from '@vue/test-utils'
 import CartFlyoutSubtotal from '@/components/CartFlyoutSubtotal'
+import Vuex from 'vuex'
+const localVue = createLocalVue()
+localVue.use(Vuex)
 
 describe('CartFlyoutSubtotal.vue', () => {
   it('displays the cart subtotal', async () => {
+    const store = new Vuex.Store(storeConfig())
     const wrapper = mount(CartFlyoutSubtotal, {
-      store
+      store,
+      localVue
     })
     store.dispatch('cart/addLineItem', {
       image: {

@@ -13,3 +13,8 @@ export const mutations = {
     state.menuVisible = false
   }
 }
+export default {
+  namespaced: true,
+  state,
+  mutations
+}

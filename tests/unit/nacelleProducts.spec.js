@@ -1,6 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import nacellePlugin from './../../__mocks__/nacelle-vue-plugin'
+import nacellePlugin from '../mocks/nacelle-vue-plugin'
 import NacelleProducts from '@/components/NacelleProducts'
+
 
 const delay = () => {
   return new Promise(resolve => {
@@ -16,6 +17,7 @@ describe('NacelleProducts.vue', () => {
   it('loads single product', async () => {
     const localVue = createLocalVue()
     localVue.use(nacellePlugin)
+    
 
     const wrapper = shallowMount(NacelleProducts, {
       localVue,

@@ -27,7 +27,7 @@ export default {
         allProducts: null,
         products: [],
         productIndex: 0,
-        productsPerPage: itemsPerPage || 30,
+        productsPerPage: 30,
         isLoadingProducts: false
       }
     },
@@ -51,8 +51,8 @@ export default {
       if (shopPageData && shopPageData.allProducts) {
         products = await getProductsPerPage({
           handles: shopPageData.allProducts,
-          productsPerPage: itemsPerPage || 30,
-          locale: locale || $nacelle.locale
+          productsPerPage: 30,
+          locale: $nacelle.locale
         })
       }
 
@@ -83,7 +83,7 @@ export default {
             this.products = await getProductsPerPage({
               handles: this.allProducts,
               productsPerPage: this.productsPerPage,
-              locale: locale || this.$nacelle.locale
+              locale:this.$nacelle.locale
             })
             updateShopPage = true
           }
