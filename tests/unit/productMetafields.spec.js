@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import MixinTestBench from '@/components/MixinTestBench.vue'
 // import ProductTitle from '@/components/ProductTitle'
-import productMetafields from '../../src/mixins/productMetafields'
+import productMetafields from '../../mixins/productMetafields'
 
 describe('productMetafields.js', () => {
   const metafields = [{

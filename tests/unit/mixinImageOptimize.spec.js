@@ -1,6 +1,6 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import ImageOptimize from '@/mixins/imageOptimize'
-import createStoreConfig from '../../src/store/storeConfig'
+import createStoreConfig from '../storeConfig'
 import Vuex from 'vuex'
 
 const localVue = createLocalVue()

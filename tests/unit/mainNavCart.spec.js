@@ -1,9 +1,15 @@
-import store from '../../src/store/store'
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
+import Vuex from 'vuex'
+import storeConfig from '../storeConfig'
+const localVue = createLocalVue()
+
+localVue.use(Vuex)
+
 import MainNavCart from '@/components/MainNavCart'
 
 describe('MainNavCart.vue', () => {
   it('displays correct cart quantity', async () => {
+    const store = new Vuex.Store(storeConfig())
     store.state.cart.lineItems = [
       {
         image: {
@@ -19,6 +25,7 @@ describe('MainNavCart.vue', () => {
       }
     ]
     const wrapper = shallowMount(MainNavCart, {
+      localVue,
       store
     })
     const count = wrapper.find('.cart-count')

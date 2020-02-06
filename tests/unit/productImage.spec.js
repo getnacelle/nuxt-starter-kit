@@ -2,14 +2,16 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import ProductImage from '@/components/ProductImage'
 import Vuex from 'vuex'
 
-import store from '../../src/store/store'
+import storeConfig from '../storeConfig'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('ProductImage/vue', () => {
   it('renders an image', async () => {
+    const store = new Vuex.Store(storeConfig())
     const wrapper = shallowMount(ProductImage, {
       store,
+      localVue,
       propsData: {
         source:
           'https://www.sparkawards.com/wp-content/uploads/2011/05/Product_Lg_Type-1024x791.jpg',
@@ -21,8 +23,6 @@ describe('ProductImage/vue', () => {
         }
       }
     })
-    expect(wrapper.html()).toBe(
-      '<div class="product-image nacelle"><picture><!----> <source srcset="https://www.sparkawards.com/wp-content/uploads/2011/05/Product_Lg_Type-1024x791.jpg" type="image/webp"> <source srcset="https://www.sparkawards.com/wp-content/uploads/2011/05/Product_Lg_Type-1024x791.jpg" type="image/jpeg"> <img src="https://www.sparkawards.com/wp-content/uploads/2011/05/Product_Lg_Type-1024x791.jpg" alt="chair" class=""></picture></div>'
-    )
+    expect(wrapper.contains('picture')).toBe(true)
   })
 })
