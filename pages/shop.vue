@@ -14,6 +14,7 @@
 import PageContent from '~/components/PageContent'
 import ProductGrid from '~/components/ProductGrid'
 import { mapMutations } from 'vuex'
+import getPage from '~/mixins/getPage'
 import { getShopPageData, getProductsPerPage } from '@nacelle/nacelle-tools/src/nacelle/fetch-static'
 import observeFetchMoreComponent from '~/mixins/observeFetchMoreComponent'
 
@@ -21,7 +22,7 @@ export default {
   components: {
     PageContent, ProductGrid
   },
-    mixins: [observeFetchMoreComponent],
+    mixins: [observeFetchMoreComponent, getPage({ pageHandle: 'shop'})],
     data() {
       return {
         allProducts: null,
@@ -116,7 +117,7 @@ export default {
             handles: this.allProducts,
             productsPerPage: this.productsPerPage,
             index: this.productIndex,
-            locale: locale || this.$nacelle.locale
+            locale: this.$nacelle.locale
           })
 
           this.products = [
