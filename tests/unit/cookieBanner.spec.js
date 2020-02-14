@@ -1,23 +1,49 @@
-import { mount, RouterLinkStub } from '@vue/test-utils'
+import { mount, RouterLinkStub, createLocalVue } from '@vue/test-utils'
+import Vuex from 'vuex'
+import * as Cookies from 'es-cookie'
+import storeConfig from '../storeConfig'
 import CookieBanner from '@/components/CookieBanner'
 
-const wrapper = mount(CookieBanner, {
-  stubs: {
-    NuxtLink: RouterLinkStub
-  }
-})
+const localVue = createLocalVue()
+localVue.use(Vuex)
 
-const button = wrapper.find('button')
+const store = new Vuex.Store(storeConfig())
+
+process.browser = true
 
 describe('CookieBanner.vue', () => {
+  const wrapper = mount(CookieBanner, {
+    store,
+    localVue,
+    stubs: {
+      NuxtLink: RouterLinkStub
+    }
+  })
+
+  
+  
   it('displays the accept button', async () => {
+    
+    await setTimeout(() => {}, 100)
+    
+    wrapper.setData({ visible: true })
+    const button = wrapper.find('button')
+
     expect(button.html()).toBe(
-      '<button id="accept" type="button" tabindex="0" role="button" aria-pressed="false">Accept</button>'
+`<button id="accept" type="button" tabindex="0" role="button" aria-pressed="false">
+  Accept
+</button>`
     )
   })
 
   it('closes after the "Accept" button is clicked', async () => {
+    await setTimeout(() => {}, 100)
+    
+    wrapper.setData({ visible: true })
+    const button = wrapper.find('button')
+    
     button.trigger('click')
+    
     setTimeout(() => {
       expect(wrapper.html()).toBe('<div><!----></div>')
     }, 200)
