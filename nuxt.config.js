@@ -62,6 +62,10 @@ export default {
     'vue-currency-filter/nuxt'
   ],
 
+  router: {
+    middleware: 'cart'
+  },
+
   sitemap: {
     gzip: true,
     async routes() {
