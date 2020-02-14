@@ -2,20 +2,24 @@
   <div class="filters">
     <h3>Refine Your Search</h3>
     <div class="filter" v-for="filter in filters" :key="filter.property.field">
-      <h4>{{filter.property.label}}</h4>
-      <div class="control">
-        <label class="radio" v-for="value in filter.values" :key="value">
-          <input
-            type="radio"
-            :name="filter.property.field"
-            @click="setFilterActive({property: filter.property.field, value:value})"
-            :checked="filterActive(value)"
-          />
-          {{value}}
-        </label>
-      </div>
+      <template v-if="filter.values.length > 0">
+        <h4>{{filter.property.label}}</h4>
+        <div class="control">
+          <label class="radio" v-for="value in filter.values" :key="value">
+            <input
+              type="radio"
+              :name="filter.property.field"
+              @click="setFilterActive({property: filter.property.field, value:value})"
+              :checked="filterActive(value)"
+            />
+            {{value}}
+          </label>
+        </div>
+      </template>
     </div>
-    <button class="button is-text" @click="setFiltersCleared">Clear Filters</button>
+    <button class="button is-text" @click="setFiltersCleared">
+      Clear Filters
+    </button>
   </div>
 </template>
 
@@ -67,7 +71,7 @@ export default {
               return item[`${property.field}`]
             })
             .filter(value => {
-              return value != ''
+              return value != '' && value != null
             })
           let dedupedValues = Array.from(new Set(rawValues))
           return {
