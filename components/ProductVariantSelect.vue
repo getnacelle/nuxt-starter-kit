@@ -10,18 +10,8 @@
     />
     <slot name="above-button"></slot>
     <div class="columns is-mobile">
-      <div
-        class="column auto"
-        v-if="
-          allOptionsSelected &&
-            selectedVariant &&
-            selectedVariant.availableForSale &&
-            showQuantitySelect
-        "
-      >
-        <quantity-selector
-          :quantity.sync="quantity"
-        />
+      <div v-if="displayQuantitySelect" class="column auto">
+        <quantity-selector :quantity.sync="quantity" />
       </div>
       <div class="column auto">
         <product-add-to-cart-button
@@ -55,7 +45,7 @@ export default {
       default: true
     }
   },
-  data () {
+  data() {
     return {
       quantity: 0
     }
@@ -70,9 +60,17 @@ export default {
     showProductOptions() {
       return (
         Array.isArray(this.allOptions) &&
-        this.allOptions.length > 1 &&
+        this.allOptions.length >= 1 &&
         this.allOptions[0].values.length > 1 &&
         this.product.availableForSale
+      )
+    },
+    displayQuantitySelect() {
+      return (
+        this.allOptionsSelected &&
+        this.selectedVariant &&
+        this.selectedVariant.availableForSale &&
+        this.showQuantitySelect
       )
     }
   }
