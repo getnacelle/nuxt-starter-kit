@@ -18,10 +18,6 @@
               {
                 field:'productType',
                 label:'Product Type'
-              },
-              {
-                field: `category`,
-                label:'Category'
               }
             ]"
             :inputData="productData"
