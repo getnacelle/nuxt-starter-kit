@@ -16,7 +16,7 @@
           />
         </div>
       </div>
-      <div ref="fetchMore" class="fetch-more-component" />
+      <observe-emitter v-on:observe="fetchMore" />
     </section>
   </div>
 </template>
@@ -25,11 +25,14 @@
 import getCollection from '~/mixins/getCollection'
 import ContentHeroBanner from '~/components/ContentHeroBanner'
 import ProductGrid from '~/components/ProductGrid'
+import ObserveEmitter from '~/components/ObserveEmitter'
 import {mapGetters} from 'vuex'
 export default {
       name: 'collection',
       components:{
-        ContentHeroBanner, ProductGrid
+        ContentHeroBanner,
+        ProductGrid,
+        ObserveEmitter
       },
     mixins: [getCollection()],
     computed: {

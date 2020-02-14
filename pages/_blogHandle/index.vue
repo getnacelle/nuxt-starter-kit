@@ -30,20 +30,22 @@
             />
           </div>
         </div>
-        <div
-            ref="fetchMore"
-            class="fetch-more-component"
-          />
+        <observe-emitter v-on:observe="fetchMore"/>
       </div>
     </section>
   </div>
 </template>
 <script>
-import ArticlePreview from '~/components/ArticlePreview'
-import getBlog from '~/mixins/getBlog'
 import {mapGetters } from 'vuex'
+import getBlog from '~/mixins/getBlog'
+import ArticlePreview from '~/components/ArticlePreview'
+import ObserveEmitter from '~/components/ObserveEmitter'
+
 export default {
-  components: {ArticlePreview},
+  components: {
+    ArticlePreview,
+    ObserveEmitter
+  },
     mixins: [getBlog()],
     computed: {
       ...mapGetters('space', ['getMetatag']),

@@ -5,24 +5,26 @@
       <div class="container">
         <product-grid :products="products" :showAddToCart="true" :showQuantityUpdate="true" />
       </div>
-      <div ref="fetchMore" class="fetch-more-component"></div>
+      <observe-emitter v-on:observe="fetchMore" />
     </section>
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+import { getShopPageData, getProductsPerPage } from '@nacelle/nacelle-tools/src/nacelle/fetch-static'
+import getPage from '~/mixins/getPage'
 import PageContent from '~/components/PageContent'
 import ProductGrid from '~/components/ProductGrid'
-import { mapMutations } from 'vuex'
-import getPage from '~/mixins/getPage'
-import { getShopPageData, getProductsPerPage } from '@nacelle/nacelle-tools/src/nacelle/fetch-static'
-import observeFetchMoreComponent from '~/mixins/observeFetchMoreComponent'
+import ObserveEmitter from '~/components/ObserveEmitter'
 
 export default {
   components: {
-    PageContent, ProductGrid
+    PageContent,
+    ProductGrid,
+    ObserveEmitter
   },
-    mixins: [observeFetchMoreComponent, getPage({ pageHandle: 'shop'})],
+    mixins: [ getPage({ pageHandle: 'shop'}) ],
     data() {
       return {
         allProducts: null,
