@@ -67,6 +67,24 @@ export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {
 
       return collectionObj
     },
+    computed: {
+      selectedProductList() {
+        if (
+          this.collection && 
+          Array.isArray(this.collection.productLists)
+         ) {
+          const list = this.collection.productLists.find(collection => {
+            return collection.slug === this.selectedList
+          })
+
+          if (list && Array.isArray(list.handles)) {
+            return list.handles
+          }
+        }
+
+        return []
+      }
+    },
     async created () {
       // Flag for determining if we update collection in vuex store
       let updateCollection = false
@@ -117,9 +135,8 @@ export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {
         if (
           !this.isLoadingProducts &&
           this.collection &&
-          Array.isArray(this.collection.products) &&
           this.products.length > 0 &&
-          this.productIndex < this.collection.products.length
+          this.productIndex < this.selectedProductList.length
         ) {
           this.isLoadingProducts = true
 
