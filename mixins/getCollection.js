@@ -1,10 +1,8 @@
 import { mapMutations } from 'vuex'
 import { getCollectionData, collectionProducts } from '@nacelle/nacelle-tools'
-import observeFetchMoreComponent from './observeFetchMoreComponent'
 
 export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {
   return {
-    mixins: [observeFetchMoreComponent],
     data() {
       return {
         handle: null,
