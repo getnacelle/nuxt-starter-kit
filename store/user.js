@@ -9,7 +9,8 @@ export const state = () =>  ({
     customerEmail: null,
     customerPhone: null,
     sessionID: null,
-    language: 'en-US'
+    language: 'en-US',
+    acceptCookies: false
   })
   export const mutations = {
     setUserData(state, payload) {
@@ -26,6 +27,9 @@ export const state = () =>  ({
     },
     setLanguage(state, language) {
       state.language = language
+    },
+    setAcceptCookies(state, payload) {
+      state.acceptCookies = payload
     }
   }
   export const actions = {
@@ -84,6 +88,27 @@ export const state = () =>  ({
           expires: new Date().setMinutes(30)
         })
       }
+    },
+    createCookieAccept({ commit }) {
+      if (process.browser) {
+        Cookies.set('nacelle-accept', true, {
+          expires: 7
+        })
+        commit('setAcceptCookies', true)
+      }
+    },
+    readCookieAccept({ commit }) {
+      if (process.browser) {
+        const accept = Cookies.get('nacelle-accept')
+
+        if (accept) {
+          commit('setAcceptCookies', accept)
+
+          return accept
+        }
+      }
+
+      return false
     }
   }
 

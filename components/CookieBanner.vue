@@ -20,14 +20,18 @@
           tabindex="0"
           role="button"
           aria-pressed="false"
-          @click="visible = false"
-        >Accept</button>
+          @click="onAcceptClick"
+        >
+          Accept
+        </button>
       </section>
     </transition>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   props: {
     privacyPolicyLink: {
@@ -39,16 +43,29 @@ export default {
       default: 0.5
     }
   },
+  data() {
+    return {
+      visible: false
+    }
+  },
   computed: {
+    ...mapState('user', ['acceptCookies']),
     style() {
       return {
         '--cookie-animation-duration': `${this.animationDuration}s`
       }
     }
   },
-  data() {
-    return {
-      visible: true
+  mounted() {
+    this.readCookieAccept().then(result => {
+      this.visible = !this.acceptCookies
+    })
+  },
+  methods: {
+    ...mapActions('user', ['createCookieAccept', 'readCookieAccept']),
+    onAcceptClick() {
+      this.visible = false
+      this.createCookieAccept()
     }
   }
 }

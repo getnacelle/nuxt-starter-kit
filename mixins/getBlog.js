@@ -1,9 +1,7 @@
 import { getBlogData, blogArticles } from '@nacelle/nacelle-tools'
-import observeFetchMoreComponent from './observeFetchMoreComponent'
 
 export default (config = {}) => {
   return {
-    mixins: [observeFetchMoreComponent],
     data() {
       return {
         handle: null,
