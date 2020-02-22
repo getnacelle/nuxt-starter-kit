@@ -20,6 +20,11 @@
           </div>
         </div>
       </div>
+      <select v-model="sortBy">
+        <option selected disabled>Sort By</option>
+        <option value="hi-low">High to Low</option>
+        <option value="low-hi">Low To High</option>
+      </select>
       <button class="button is-text" @click="setFiltersCleared">Clear Filters</button>
     </div>
   </div>
@@ -51,7 +56,8 @@ export default {
   data () {
     return {
       activeFilters: [],
-      passedData: null
+      passedData: null,
+      sortBy: 'Sort By'
     }
   },
   watch: {
@@ -66,6 +72,7 @@ export default {
     filtersCleared (val) {
       if (val === true) {
         this.activeFilters = []
+        this.sortBy = 'Sort By'
         this.removeFiltersInQueryParams()
       }
     }
@@ -121,10 +128,63 @@ export default {
           })
           return itemShouldPass
         })
+        if (vm.sortBy) {
+          switch (vm.sortBy) {
+            case 'hi-low':
+              return output.sort((a, b) => {
+                if (a.priceRange.min < b.priceRange.min) {
+                  return 1
+                }
+                if (a.priceRange.min > b.priceRange.min) {
+                  return -1
+                }
+
+                return 0
+              })
+            case 'low-hi':
+              return output.sort((a, b) => {
+                if (a.priceRange.min < b.priceRange.min) {
+                  return -1
+                }
+                if (a.priceRange.min > b.priceRange.min) {
+                  return 1
+                }
+
+                return 0
+              })
+          }
+        }
         return output
       }
 
-      return vm.inputData
+      // return vm.inputData
+      switch (vm.sortBy) {
+        case 'hi-low':
+          return vm.inputData.sort((a, b) => {
+            if (a.priceRange.min < b.priceRange.min) {
+              return 1
+            }
+            if (a.priceRange.min > b.priceRange.min) {
+              return -1
+            }
+
+            return 0
+          })
+        case 'low-hi':
+          return vm.inputData.sort((a, b) => {
+            if (a.priceRange.min < b.priceRange.min) {
+              return -1
+            }
+            if (a.priceRange.min > b.priceRange.min) {
+              return 1
+            }
+
+            return 0
+          })
+
+        default:
+          return vm.inputData
+      }
     }
   },
   methods: {
@@ -186,14 +246,22 @@ export default {
         let transformedParams
 
         if (currentParams.length > 0) {
-          if (currentParams.some(param => {
-            return param.property === filter.property
-          })) {
+          if (
+            currentParams.some(param => {
+              return param.property === filter.property
+            })
+          ) {
             currentParams = currentParams.map(param => {
-              if (param.property === filter.property && !param.values.includes(filter.value)) {
+              if (
+                param.property === filter.property &&
+                !param.values.includes(filter.value)
+              ) {
                 param.values.push(filter.value)
                 return param
-              } else if (param.property === filter.property && param.values.includes(filter.value)) {
+              } else if (
+                param.property === filter.property &&
+                param.values.includes(filter.value)
+              ) {
                 const index = param.values.indexOf(filter.value)
                 param.values.splice(index, 1)
                 return param
@@ -258,8 +326,8 @@ export default {
         .filter(filter => {
           return (
             filter.values !== null &&
-              filter.values !== undefined &&
-              filter.values.length > 0
+            filter.values !== undefined &&
+            filter.values.length > 0
           )
         })
 
