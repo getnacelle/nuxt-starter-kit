@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="section search-section">
+    <!-- <section class="section search-section">
       <div class="container">
         <div class="columns">
           <div class="column is-4 is-offset-4">
@@ -8,10 +8,9 @@
           </div>
         </div>
       </div>
-    </section>
-    <section class="section">
-      <div class="columns">
-        <div class="column is-2">
+    </section> -->
+    <section class="section filtering">
+         <div class="column is-12">
           <refinement-filters
             v-if="productData"
             :filterProperties="[
@@ -19,24 +18,24 @@
                 field:'productType',
                 label:'Product Type'
               },
-              {
-                field: `category`,
-                label:'Category'
-              }
+              {field: 'color', label: 'Color'},
+              {field: 'material', label: 'Material'}
             ]"
             :inputData="productData"
             v-on:updated="updateFilteredData"
           />
         </div>
-        <div class="column is-10">
+    </section>
+    <section class="section">
+      <div class="columns is-multiline">
+        <div class="column is-12">
           <search-results
             v-if="filteredData"
             :searchData="filteredData"
             :searchQuery="query"
           >
             <template v-slot:result="{ result }">
-              <product-grid :products="result" :columns="3" />
-              <!-- <pre>{{ result.length }}</pre> -->
+              <product-grid :products="result" :columns="4" />
             </template>
             <template v-slot:no-results>
               <search-no-results />
@@ -56,46 +55,46 @@ import SearchResults from '~/components/SearchResults'
 import ProductGrid from '~/components/ProductGrid'
 import SearchNoResults from '~/components/SearchNoResults'
 export default {
-  components:{
+  components: {
     SearchBox,
     RefinementFilters,
     SearchResults,
     ProductGrid,
     SearchNoResults
   },
-    data() {
-      return {
-        filteredData: null
-      }
-    },
-    computed: {
-      ...mapState('search', ['query', 'loadedData']),
-      ...mapGetters('search', ['productData'])
-    },
-    watch: {
-      loadedData(newVal) {
-        if (newVal) {
-          if (this.$route.query && this.$route.query.q) {
-            this.setQuery({
-              origin: 'in-page',
-              value: this.$route.query.q
-            })
-          }
+  data () {
+    return {
+      filteredData: null
+    }
+  },
+  computed: {
+    ...mapState('search', ['query', 'loadedData']),
+    ...mapGetters('search', ['productData'])
+  },
+  watch: {
+    loadedData (newVal) {
+      if (newVal) {
+        if (this.$route.query && this.$route.query.q) {
+          this.setQuery({
+            origin: 'in-page',
+            value: this.$route.query.q
+          })
         }
       }
-    },
-    created () {
-      if (process.browser) {
-        this.getProductData()
-      }
-    },
-    methods: {
-      ...mapMutations('search', ['setQuery']),
-      ...mapActions('search', ['getProductData']),
-      updateFilteredData(data) {
-        this.filteredData = data
-      }
     }
+  },
+  created () {
+    if (process.browser) {
+      this.getProductData()
+    }
+  },
+  methods: {
+    ...mapMutations('search', ['setQuery']),
+    ...mapActions('search', ['getProductData']),
+    updateFilteredData (data) {
+      this.filteredData = data
+    }
+  }
 }
 </script>
 
@@ -109,5 +108,9 @@ export default {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+.filtering{
+  background:whitesmoke;
+  padding: 1rem;
 }
 </style>

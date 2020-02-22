@@ -1,29 +1,39 @@
 <template>
-  <div class="filters">
+  <div>
     <h3>Refine Your Search</h3>
-    <div class="filter" v-for="filter in filters" :key="filter.property.field">
-      <h4>{{filter.property.label}}</h4>
-      <div class="control">
-        <label class="radio" v-for="value in filter.values" :key="value">
-          <input
-            type="radio"
-            :name="filter.property.field"
-            @click="setFilterActive({property: filter.property.field, value:value})"
-            :checked="filterActive(value)"
-          />
-          {{value}}
-        </label>
+    <div class="filters">
+      <div class="filter" v-for="filter in filters" :key="filter.property.field">
+        <h4>{{filter.property.label}}</h4>
+
+        <div class="facet-values">
+          <div
+            class="value"
+            v-for="value in filter.values"
+            :key="value"
+            @click="toggleFilterActive({property: filter.property.field, value})"
+          >
+            <refinement-filter-select
+              :value="value"
+              :activeFilters="activeFilters"
+              :property="filter.property.field"
+            />
+          </div>
+        </div>
       </div>
+      <button class="button is-text" @click="setFiltersCleared">Clear Filters</button>
     </div>
-    <button class="button is-text" @click="setFiltersCleared">Clear Filters</button>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex'
 import queryString from 'query-string'
+import RefinementFilterSelect from '~/components/RefinementFilterSelect'
 import { omit } from 'search-params'
 export default {
+  components: {
+    RefinementFilterSelect
+  },
   props: {
     inputData: {
       type: Array,
@@ -38,18 +48,23 @@ export default {
       required: false
     }
   },
-  data() {
+  data () {
     return {
       activeFilters: [],
       passedData: null
     }
   },
   watch: {
-    outputData() {
+    outputData () {
       this.$emit('updated', this.outputData)
     },
-    filtersCleared(val) {
-      if (val == true) {
+
+    /**
+     * Watches the filtersCleared property on the Vuex store.
+     * It sets the activeFilters array to a new array, and removes the filters from the URL.
+     */
+    filtersCleared (val) {
+      if (val === true) {
         this.activeFilters = []
         this.removeFiltersInQueryParams()
       }
@@ -58,55 +73,67 @@ export default {
   computed: {
     ...mapState('search', ['filtersCleared']),
 
-    filters() {
-      let vm = this
+    /**
+     * Returns an array of objects representing all filters that can be applied.
+     * It is based on the filterProperties prop passed from the parent,
+     * and uses the data loaded on the page to evaluate all possible filters and values.
+     */
+    filters () {
+      const vm = this
       if (vm.inputData && vm.filterProperties) {
-        let propertyValues = vm.filterProperties.map(property => {
-          let rawValues = vm.inputData
+        const propertyValues = vm.filterProperties.map(property => {
+          const rawValues = vm.inputData
             .map(item => {
               return item[`${property.field}`]
             })
             .filter(value => {
-              return value != ''
+              return value !== undefined && value !== null && value !== ''
             })
-          let dedupedValues = Array.from(new Set(rawValues))
+          const dedupedValues = Array.from(new Set(rawValues))
           return {
             property: property,
             values: dedupedValues
           }
         })
         return propertyValues
+      } else {
+        return null
       }
     },
-    outputData() {
-      let vm = this
+
+    outputData () {
+      const vm = this
       if (vm.activeFilters.length > 0 && vm.inputData) {
-        let output = this.inputData.filter(item => {
-          let filterChecks = vm.activeFilters.map(filter => {
-            if (filter.value == item[filter.property]) {
+        const output = this.inputData.filter(item => {
+          const filterChecks = vm.activeFilters.map(filter => {
+            if (
+              filter.values.some(filterCheck => {
+                return filterCheck === item[filter.property]
+              })
+            ) {
               return true
             } else {
               return false
             }
           })
-          let itemShouldPass = filterChecks.every(filterCheck => {
-            return filterCheck == true
+          const itemShouldPass = filterChecks.every(filterCheck => {
+            return filterCheck === true
           })
           return itemShouldPass
         })
         return output
       }
-      
+
       return vm.inputData
     }
   },
   methods: {
     ...mapMutations('search', ['setFiltersCleared']),
     ...mapMutations('search', ['setFiltersNotCleared']),
-    filterActive(value) {
+    filterActive (value) {
       if (this.activeFilters) {
-        let filterArray = this.activeFilters.filter(filter => {
-          return filter.value == value
+        const filterArray = this.activeFilters.filter(filter => {
+          return filter.value === value
         })
         if (filterArray.length > 0) {
           return true
@@ -115,71 +142,139 @@ export default {
         }
       }
     },
-    setFilterActive(filter) {
-      let filterInFilters = this.activeFilters.filter(filtersItem => {
-        return filtersItem.property == filter.property
+    toggleFilterActive (filter) {
+      const filterInFilters = this.activeFilters.filter(filtersItem => {
+        return filtersItem.property === filter.property
       })
-      if (filterInFilters.length == 0) {
-        this.activeFilters.push(filter)
+      if (filterInFilters.length === 0) {
+        this.activeFilters.push({
+          property: filter.property,
+          values: [filter.value]
+        })
       } else {
-        this.activeFilters = this.activeFilters.map(filtersItem => {
-          if (filtersItem.property == filter.property) {
-            return filter
+        this.activeFilters.map((filtersItem, index) => {
+          if (
+            filtersItem.property === filter.property &&
+            !filtersItem.values.some(value => value === filter.value)
+          ) {
+            filtersItem.values.push(filter.value)
+          } else if (
+            filtersItem.property === filter.property &&
+            filtersItem.values.some(value => value === filter.value)
+          ) {
+            const filterIndex = filtersItem.values.indexOf(filter.value)
+            filtersItem.values.splice(filterIndex, 1)
           } else {
             return filtersItem
+          }
+          if (filtersItem.values.length === 0) {
+            this.activeFilters.splice(index, 1)
           }
         })
       }
       this.setFilterInQueryParams(filter)
       this.setFiltersNotCleared()
     },
-    setFilterInQueryParams(filter) {
+    setFilterInQueryParams (filter) {
       if (process.browser) {
-        let parsed = queryString.parse(location.search)
-        let transformedFilter = {
-          [filter.property]: filter.value
+        let parsed = queryString.parse(location.search, {
+          arrayFormat: 'comma'
+        })
+
+        let currentParams = this.readFiltersFromQueryParams()
+
+        let transformedParams
+
+        if (currentParams.length > 0) {
+          if (currentParams.some(param => {
+            return param.property === filter.property
+          })) {
+            currentParams = currentParams.map(param => {
+              if (param.property === filter.property && !param.values.includes(filter.value)) {
+                param.values.push(filter.value)
+                return param
+              } else if (param.property === filter.property && param.values.includes(filter.value)) {
+                const index = param.values.indexOf(filter.value)
+                param.values.splice(index, 1)
+                return param
+              } else {
+                return param
+              }
+            })
+          } else {
+            currentParams.push(filter)
+          }
+          transformedParams = {}
+
+          currentParams.forEach(param => {
+            if (param.values && param.values.length > 0) {
+              transformedParams[param.property] = param.values.join(',')
+            } else {
+              transformedParams[param.property] = param.value
+            }
+          })
+        } else {
+          transformedParams = {
+            [filter.property]: filter.value
+          }
         }
-        parsed = { ...parsed, ...transformedFilter }
+
+        parsed = { ...parsed, ...transformedParams }
+
         this.$router.push({ query: parsed })
       }
     },
-    removeFiltersInQueryParams() {
+    removeFiltersInQueryParams () {
       if (process.browser) {
-        let filtersFromUrl = this.filterProperties.map(filter => {
+        const filtersFromUrl = this.filterProperties.map(filter => {
           return filter.field
         })
-        let queryParamsString = queryString.stringify(
+        const queryParamsString = queryString.stringify(
           queryString.parse(location.search)
         )
-        let queryWithoutFilters = omit(queryParamsString, filtersFromUrl)
+        const queryWithoutFilters = omit(queryParamsString, filtersFromUrl)
           .querystring
         this.$router.push({ query: queryString.parse(queryWithoutFilters) })
       }
     },
-    async readFiltersFromQueryParams() {
-      return new Promise((resolve, reject) => {
-        let parsed = queryString.parse(location.search)
-        let filtersFromUrl = this.filterProperties
-          .map(filter => {
-            return { property: filter.field, value: parsed[filter.field] }
-          })
-          .filter(filter => {
-            return filter.value != undefined
-          })
+    readFiltersFromQueryParams () {
+      let parsed = Object.entries(
+        queryString.parse(location.search, { arrayFormat: 'comma' })
+      )
 
-        if (filtersFromUrl.length > 0) {
-          resolve(filtersFromUrl)
-        } else {
-          resolve([])
-        }
-      })
+      parsed = Object.fromEntries(
+        parsed.map(filter => {
+          if (typeof filter[1] === 'string') {
+            filter[1] = [filter[1]]
+          }
+          return filter
+        })
+      )
+
+      const filtersFromUrl = this.filterProperties
+        .map(filter => {
+          return { property: filter.field, values: parsed[filter.field] }
+        })
+        .filter(filter => {
+          return (
+            filter.values !== null &&
+              filter.values !== undefined &&
+              filter.values.length > 0
+          )
+        })
+
+      if (filtersFromUrl.length > 0) {
+        return filtersFromUrl
+      } else {
+        return []
+      }
     },
-    getPassedData() {
-      let vm = this
+    getPassedData () {
+      const vm = this
       if (vm.passingConditions) {
         return vm.inputData.filter(item => {
-          let conditions = vm.passingConditions.map(passingCondition => {
-            let passing = new Function(
+          const conditions = vm.passingConditions.map(passingCondition => {
+            const passing = new Function(
               `return "${passingCondition.value}" ${
                 passingCondition.conditional
               } "${item[passingCondition.property]}"`
@@ -187,7 +282,7 @@ export default {
 
             return passing()
           })
-          let passedConditions = conditions.every(condition => {
+          const passedConditions = conditions.every(condition => {
             return condition == true
           })
           return passedConditions == true
@@ -198,38 +293,39 @@ export default {
       return vm.inputData
     }
   },
-  created() {
+  created () {
     if (process.browser) {
-      // this.passedData = this.getPassedData()
-      let vm = this
-      this.readFiltersFromQueryParams().then(res => {
-        this.activeFilters = res
-        vm.$emit('updated', vm.outputData)
-      })
+      this.passedData = this.getPassedData()
+      this.activeFilters = this.readFiltersFromQueryParams()
+      this.$emit('updated', this.outputData)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .filters {
-  border-right: 1px solid whitesmoke;
-  position: sticky;
-  top: 10rem;
+  display: flex;
+  justify-content: space-between;
 }
 .filter {
+  padding-left: 1rem;
+  border-right: 1px solid rgb(206, 206, 206);
+  flex-grow: 3;
+  margin-bottom: 0.5rem;
   margin-right: 1rem;
+  &:last-of-type {
+    border-right: unset;
+  }
 }
-.control {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
+.facet-values {
+  columns: 3;
 }
-.radio {
-  margin: unset;
-  margin-bottom: 0.2rem;
+.value {
+  break-inside: avoid;
+  cursor: pointer;
 }
 h3 {
-  font-size: 18pt;
+  font-size: 16pt;
   margin-bottom: 1.5rem;
 }
 h4 {

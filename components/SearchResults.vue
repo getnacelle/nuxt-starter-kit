@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <transition name="fade" mode="out-in">
       <div
         v-if="searchResults && searchResults.length == 0"
@@ -9,6 +10,7 @@
         <slot name="no-results"></slot>
       </div>
       <div key="results" class="search-results" v-else>
+            <h2>Showing {{searchResults.length}} {{itemSinglularPlural}} based on selected filters</h2>
         <slot name="result" :result="searchResults"></slot>
       </div>
     </transition>
@@ -37,13 +39,22 @@ export default {
       default: 0.5
     }
   },
-  data() {
+  data () {
     return {
       searchRes: null
     }
   },
   computed: {
-    searchResults() {
+    itemSinglularPlural () {
+      if (this.searchResults && this.searchResults.length === 1) {
+        return 'item'
+      } else if (this.searchResults && this.searchResults.length > 1) {
+        return 'items'
+      } else {
+        return 'items'
+      }
+    },
+    searchResults () {
       if (
         this.searchData &&
         this.searchQuery &&
@@ -59,7 +70,7 @@ export default {
         )
 
         this.$emit('results')
-        
+
         return results
       }
 

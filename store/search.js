@@ -10,27 +10,46 @@ export const state = () => ({
 })
 
 export const getters = {
-  queryOrigin(state) {
+  queryOrigin (state) {
     if (state.query && state.query.origin) {
       return state.query.origin
     }
 
     return undefined
   },
-  hasProductData(state) {
+  hasProductData (state) {
     return (
       state.searchData &&
       state.searchData.products &&
       state.searchData.products.length > 0
     )
   },
-  productData(state) {
+  productData (state) {
     if (
       state.searchData &&
       state.searchData.products &&
       state.searchData.products.length > 0
     ) {
-      return state.searchData.products
+      return state.searchData.products.map(product => {
+        const { tags, ...rest } = product
+
+        const facets = tags.filter(tag => tag.includes('filter'))
+
+        facets.forEach(facet => {
+          const facetFragments = facet.split('_')
+          const facetName = facetFragments[1]
+          const facetValue = () => {
+            const fragments = facetFragments[2].split('-')
+            return fragments.map(fragment => {
+              return `${fragment.charAt(0).toUpperCase()}${fragment.substring(1)}`
+            }).join(' ')
+          }
+
+          rest[facetName] = facetValue()
+        })
+
+        return { ...rest, tags }
+      })
     }
 
     return []
@@ -38,52 +57,52 @@ export const getters = {
 }
 
 export const mutations = {
-  setQuery(state, query) {
+  setQuery (state, query) {
     state.query = query
   },
 
-  setAutocompleteVisible(state) {
+  setAutocompleteVisible (state) {
     state.autocompleteVisible = true
   },
 
-  setAutocompleteNotVisible(state) {
+  setAutocompleteNotVisible (state) {
     state.autocompleteVisible = false
   },
 
-  setFiltersCleared(state) {
+  setFiltersCleared (state) {
     state.filtersCleared = true
   },
 
-  setFiltersNotCleared(state) {
+  setFiltersNotCleared (state) {
     state.filtersCleared = false
   },
 
-  setSearchData(state, data) {
+  setSearchData (state, data) {
     state.searchData = {
       ...state.searchData,
       ...data
     }
   },
 
-  dataHasLoaded(state) {
+  dataHasLoaded (state) {
     state.loadedData = true
   },
 
-  dataNotLoaded(state) {
+  dataNotLoaded (state) {
     state.loadedData = false
   },
 
-  isSearching(state) {
+  isSearching (state) {
     state.searchLoading = true
   },
 
-  isNotSearching(state) {
+  isNotSearching (state) {
     state.searchLoading = false
   }
 }
 
 export const actions = {
-  getProductData({ commit, getters }) {
+  getProductData ({ commit, getters }) {
     if (!getters.hasProductData) {
       commit('dataNotLoaded')
       commit('isSearching')
