@@ -1,6 +1,12 @@
 <template>
   <div>
     <h3>Refine Your Search</h3>
+    <select v-model="sortBy">
+        <option selected disabled>Sort By</option>
+        <option value="hi-low">High to Low</option>
+        <option value="low-hi">Low To High</option>
+      </select>
+      <button class="button is-text" @click="setFiltersCleared">Clear Filters</button>
     <div class="filters">
       <div class="filter" v-for="filter in filters" :key="filter.property.field">
         <h4>{{filter.property.label}}</h4>
@@ -37,12 +43,7 @@
           </div>
         </div>
       </div>
-      <select v-model="sortBy">
-        <option selected disabled>Sort By</option>
-        <option value="hi-low">High to Low</option>
-        <option value="low-hi">Low To High</option>
-      </select>
-      <button class="button is-text" @click="setFiltersCleared">Clear Filters</button>
+
     </div>
   </div>
 </template>
@@ -456,12 +457,20 @@ export default {
 .filters {
   display: flex;
   justify-content: space-between;
+  @media screen and (max-width: 786px){
+    flex-direction: column;
+  }
 }
 .filter {
   padding-left: 1rem;
   border-right: 1px solid rgb(206, 206, 206);
+
   flex-grow: 3;
   margin-bottom: 0.5rem;
+    @media screen and (max-width: 786px){
+    border: none;
+    margin-bottom: 2rem;
+  }
   margin-right: 1rem;
   &:last-of-type {
     border-right: unset;
@@ -469,6 +478,12 @@ export default {
 }
 .facet-values {
   columns: 3;
+  @media screen and (max-width: 1200px){
+    columns: 2;
+  }
+  @media screen and (max-width: 950px){
+    columns: 1;
+  }
 }
 .value {
   break-inside: avoid;

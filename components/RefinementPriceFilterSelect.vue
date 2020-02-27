@@ -80,9 +80,8 @@ h3 {
   margin-bottom: .6rem;
 }
 
-.value span {
-  font-size: 0.7rem;
-  color: gray;
+.value {
+  font-size: .9rem;
 }
 .product {
   background: whitesmoke;
