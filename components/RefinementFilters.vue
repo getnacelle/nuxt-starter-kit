@@ -441,7 +441,6 @@ export default {
       } else {
         return vm.inputData
       }
-      return vm.inputData
     }
   },
   created () {
