@@ -1,42 +1,12 @@
 <template>
   <div>
-    <!-- <section class="section search-section">
-      <div class="container">
-        <div class="columns">
-          <div class="column is-4 is-offset-4">
-            <search-box position="in-page" />
-          </div>
-        </div>
-      </div>
-    </section>-->
-    <section class="section filtering">
-      <div class="column is-12">
-        <refinement-filters
-          v-if="productData"
-          :propertyFilters="[
-              {
-                field:'productType',
-                label:'Product Type'
-              },
-              {field: 'color', label: 'Color'},
-              {field: 'material', label: 'Material'}
-            ]"
-          :priceRangeFilters="[
-            {range:[0, 50], label: '< $50'},
-            {range:[50, 100], label: '$50 - 100'},
-            {range:[100, 200], label: '$100 - 200'},
-            {range:[200, 500], label: '$200 - 500'},
-            {range:[500, 0], label: '> $500'},
-            ]"
-          :inputData="productData"
-          v-on:updated="updateFilteredData"
-        />
-      </div>
-    </section>
     <section class="section">
       <div class="columns is-multiline">
+        /**
+        * Product results show up here
+        */
         <div class="column is-12">
-          <search-results v-if="filteredData" :searchData="filteredData" :searchQuery="query">
+          <search-results v-if="productData" :searchData="productData" :searchQuery="query">
             <template v-slot:result="{ result }">
               <product-grid :products="result" :columns="4" />
             </template>
@@ -44,6 +14,27 @@
               <search-no-results />
             </template>
           </search-results>
+        </div>
+        /**
+        * Blog results show up here
+        */
+        <div class="column is-6">
+          <search-results v-if="blogData" :searchData="blogData" :searchQuery="query">
+            <template v-slot:result="{ result }">{{result}}</template>
+            <template v-slot:no-results>
+              <search-no-results />
+            </template>
+          </search-results>
+        </div>
+        <div class="column is-6">
+          /**
+          * Event results show up here
+          */
+        </div>
+        <div class="column is-12">
+          /**
+          * Page results show up here
+          */
         </div>
       </div>
     </section>

@@ -33,6 +33,8 @@ export const getters = {
       return state.searchData.products.map(product => {
         const { tags, ...rest } = product
 
+        rest.minPrice = rest.priceRange.min
+
         const facets = tags.filter(tag => tag.includes('filter'))
 
         facets.forEach(facet => {
@@ -114,10 +116,7 @@ export const actions = {
             commit('dataHasLoaded')
             commit('isNotSearching')
 
-            const products = res.data
-              .filter(product => product && product.title && product.variants)
-
-            commit('setSearchData', { products })
+            commit('setSearchData', res.data)
           }
         })
         .catch(err => {

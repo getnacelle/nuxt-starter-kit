@@ -1,7 +1,7 @@
-require('dotenv').config()
-
 import path from 'path'
 import fs from 'fs-extra'
+
+require('dotenv').config()
 
 export default {
   mode: process.env.BUILD_MODE,
@@ -45,7 +45,7 @@ export default {
   css: [
     '@nacelle/nacelle-vue-components/dist/base-styles.css',
     '@/assets/global.css'
-  ], 
+  ],
 
   env: {
     nacelleSpaceID: process.env.NACELLE_SPACE_ID,
@@ -64,11 +64,11 @@ export default {
 
   sitemap: {
     gzip: true,
-    async routes() {
+    async routes () {
       const staticDir = path.resolve(__dirname, './static/data')
       const routes = fs.readJsonSync(`${staticDir}/routes.json`)
       const routesOnly = routes.map(route => route.route)
-      
+
       return routesOnly
     }
   },
@@ -79,7 +79,8 @@ export default {
     gaID: process.env.NACELLE_GA_ID,
     fbID: process.env.NACELLE_FB_ID,
     skipPrefetch: process.env.SKIP_PREFETCH === 'true',
-    customEndpoint: process.env.NACELLE_CUSTOM_ENDPOINT
+    customEndpoint: process.env.NACELLE_CUSTOM_ENDPOINT,
+    searchDataTypes: ['article', 'page', 'blog']
   },
 
   generate: {

@@ -1,44 +1,25 @@
 <template>
   <div class="facet-value">
-    <div v-if="property !== 'color'" class="checkbox" :class="{'selected': selected }"></div>
-    <refinement-filter-color-swatch v-else :color="value" :selected="selected"></refinement-filter-color-swatch>
-    <div class="value">{{value}}</div>
+    <div class="checkbox" :class="{selected: selected }"></div>
+    <div class="value">{{priceRange.label}}</div>
   </div>
 </template>
 
 <script>
-import RefinementFilterColorSwatch from '~/components/RefinementFilterColorSwatch'
 export default {
   props: {
-    value: {
-      type: String
+    priceRange: {
+      type: Object
     },
-    property: {
-      type: String
-    },
-    activeFilters: {
-      type: Array,
-      default: [String]
+    activePriceRange: {
+      type: Object
     }
   },
-  components: { RefinementFilterColorSwatch },
   computed: {
-    filterActive () {
-      const vm = this
-      if (vm.activeFilters.length > 0) {
-        return vm.activeFilters.some(filter => filter.property === vm.property)
-      }
-    },
     selected () {
       const vm = this
-      if (vm.filterActive) {
-        const thisFilter = vm.activeFilters.filter(filter => {
-          return filter.property == [vm.property]
-        })[0]
-
-        return thisFilter.values.some(val => {
-          return val === vm.value
-        })
+      if (vm.activePriceRange && vm.priceRange.label === vm.activePriceRange.label) {
+        return true
       } else {
         return false
       }
@@ -46,6 +27,7 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .product-filters {
   margin-top: 4rem;
@@ -62,7 +44,7 @@ h3 {
   border-radius: 2px;
   margin-right: 0.5rem;
   position: relative;
-  background: white;
+  background:white;
 }
 .checkbox::before {
   content: url("/check-solid.svg");
@@ -95,7 +77,7 @@ h3 {
 .facet-value {
   display: flex;
   align-items: center;
-  margin-bottom: 0.6rem;
+  margin-bottom: .6rem;
 }
 
 .value span {

@@ -20,6 +20,23 @@
           </div>
         </div>
       </div>
+      <div class="filter">
+        <h4>Price</h4>
+
+        <div >
+          <div
+            class="value"
+            v-for="priceRange in priceRangeFilters"
+            :key="priceRange.label"
+            @click="togglePriceRangeActive(priceRange)"
+          >
+            <refinement-price-filter-select
+            :priceRange="priceRange"
+            :activePriceRange="activePriceRange || {}"
+            />
+          </div>
+        </div>
+      </div>
       <select v-model="sortBy">
         <option selected disabled>Sort By</option>
         <option value="hi-low">High to Low</option>
@@ -34,19 +51,24 @@
 import { mapState, mapMutations } from 'vuex'
 import queryString from 'query-string'
 import RefinementFilterSelect from '~/components/RefinementFilterSelect'
+import RefinementPriceFilterSelect from '~/components/RefinementPriceFilterSelect'
 import { omit } from 'search-params'
 export default {
   components: {
-    RefinementFilterSelect
+    RefinementFilterSelect,
+    RefinementPriceFilterSelect
   },
   props: {
     inputData: {
       type: Array,
       required: true
     },
-    filterProperties: {
+    propertyFilters: {
       type: Array,
       required: true
+    },
+    priceRangeFilters: {
+      type: Array
     },
     passingConditions: {
       type: Array,
@@ -56,6 +78,7 @@ export default {
   data () {
     return {
       activeFilters: [],
+      activePriceRange: null,
       passedData: null,
       sortBy: 'Sort By'
     }
@@ -72,6 +95,7 @@ export default {
     filtersCleared (val) {
       if (val === true) {
         this.activeFilters = []
+        this.activePriceRange = null
         this.sortBy = 'Sort By'
         this.removeFiltersInQueryParams()
       }
@@ -82,13 +106,13 @@ export default {
 
     /**
      * Returns an array of objects representing all filters that can be applied.
-     * It is based on the filterProperties prop passed from the parent,
+     * It is based on the propertyFilters prop passed from the parent,
      * and uses the data loaded on the page to evaluate all possible filters and values.
      */
     filters () {
       const vm = this
-      if (vm.inputData && vm.filterProperties) {
-        const propertyValues = vm.filterProperties.map(property => {
+      if (vm.inputData && vm.propertyFilters) {
+        const propertyValues = vm.propertyFilters.map(property => {
           const rawValues = vm.inputData
             .map(item => {
               return item[`${property.field}`]
@@ -111,7 +135,7 @@ export default {
     outputData () {
       const vm = this
       if (vm.activeFilters.length > 0 && vm.inputData) {
-        const output = this.inputData.filter(item => {
+        let output = this.inputData.filter(item => {
           const filterChecks = vm.activeFilters.map(filter => {
             if (
               filter.values.some(filterCheck => {
@@ -128,6 +152,32 @@ export default {
           })
           return itemShouldPass
         })
+
+        output = output.filter(item => {
+          if (vm.activePriceRange) {
+            if (vm.activePriceRange.range[0] === 0) {
+              if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+                return true
+              } else {
+                return false
+              }
+            } else if (vm.activePriceRange.range[1] === 0) {
+              if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
+                return true
+              } else {
+                return false
+              }
+            } else if (parseFloat(item.minPrice) > vm.activePriceRange.range[0] && parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+              return true
+            } else {
+              return false
+            }
+          } else {
+            return true
+          }
+        })
+
+        // output = output.filter()
         if (vm.sortBy) {
           switch (vm.sortBy) {
             case 'hi-low':
@@ -157,10 +207,35 @@ export default {
         return output
       }
 
+      let output = Object.assign(vm.inputData)
+
+      output = output.filter(item => {
+        if (vm.activePriceRange) {
+          if (vm.activePriceRange.range[0] === 0) {
+            if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+              return true
+            } else {
+              return false
+            }
+          } else if (vm.activePriceRange.range[1] === 0) {
+            if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
+              return true
+            } else {
+              return false
+            }
+          } else if (parseFloat(item.minPrice) > vm.activePriceRange.range[0] && parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+            return true
+          } else {
+            return false
+          }
+        } else {
+          return true
+        }
+      })
       // return vm.inputData
       switch (vm.sortBy) {
         case 'hi-low':
-          return vm.inputData.sort((a, b) => {
+          return output.sort((a, b) => {
             if (a.priceRange.min < b.priceRange.min) {
               return 1
             }
@@ -171,7 +246,7 @@ export default {
             return 0
           })
         case 'low-hi':
-          return vm.inputData.sort((a, b) => {
+          return output.sort((a, b) => {
             if (a.priceRange.min < b.priceRange.min) {
               return -1
             }
@@ -183,7 +258,7 @@ export default {
           })
 
         default:
-          return vm.inputData
+          return output
       }
     }
   },
@@ -234,6 +309,13 @@ export default {
       }
       this.setFilterInQueryParams(filter)
       this.setFiltersNotCleared()
+    },
+    togglePriceRangeActive (priceRange) {
+      if (JSON.stringify(this.activePriceRange) === JSON.stringify(priceRange)) {
+        this.activePriceRange = null
+      } else {
+        this.activePriceRange = priceRange
+      }
     },
     setFilterInQueryParams (filter) {
       if (process.browser) {
@@ -294,7 +376,7 @@ export default {
     },
     removeFiltersInQueryParams () {
       if (process.browser) {
-        const filtersFromUrl = this.filterProperties.map(filter => {
+        const filtersFromUrl = this.propertyFilters.map(filter => {
           return filter.field
         })
         const queryParamsString = queryString.stringify(
@@ -319,7 +401,7 @@ export default {
         })
       )
 
-      const filtersFromUrl = this.filterProperties
+      const filtersFromUrl = this.propertyFilters
         .map(filter => {
           return { property: filter.field, values: parsed[filter.field] }
         })
