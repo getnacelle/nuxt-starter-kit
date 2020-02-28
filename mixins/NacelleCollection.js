@@ -1,5 +1,5 @@
 import { mapGetters } from 'vuex'
-import { getCollection } from '@nacelle/nacelle-tools'
+import { getCollection } from './getCollection'
 
 export default params => {
   return {
@@ -7,7 +7,7 @@ export default params => {
     mixins: [getCollection(params)],
     computed: {
       ...mapGetters('space', ['getMetatag']),
-      featuredImage() {
+      featuredImage () {
         if (
           this.collection &&
         this.collection.featuredMedia &&
@@ -19,7 +19,7 @@ export default params => {
         return null
       }
     },
-    head() {
+    head () {
       if (this.collection) {
         const properties = {}
         const meta = []

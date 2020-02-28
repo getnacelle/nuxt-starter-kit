@@ -3,18 +3,13 @@ export const state = () => ({
 })
 
 export const mutations = {
-  openMenu(state) {
+  openMenu (state) {
     state.menuVisible = true
   },
-  toggleShowMenu(state) {
+  toggleShowMenu (state) {
     state.menuVisible = !state.menuVisible
   },
-  disableMenu(state) {
+  disableMenu (state) {
     state.menuVisible = false
   }
-}
-export default {
-  namespaced: true,
-  state,
-  mutations
 }
