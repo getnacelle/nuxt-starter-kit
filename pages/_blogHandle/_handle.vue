@@ -53,7 +53,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getBlogArticle, getCollection } from '@nacelle/nacelle-tools'
+import getBlogArticle from '~/mixins/getBlogArticle'
+import getCollection from '~/mixins/getCollection'
 import InterfaceFeaturedMedia from '~/components/InterfaceFeaturedMedia'
 import BlogArticleHeader from '~/components/BlogArticleHeader'
 import BlogArticleContent from '~/components/BlogArticleContent'

@@ -10,18 +10,16 @@
         v-if="
           !variantInLineItems && !allOptionsSelected && product.availableForSale
         "
-        >Select Options</span
-      >
+      >Select Options</span>
       <span
         v-if="
           (!variantInLineItems && allOptionsSelected && variant == undefined) ||
             (!variantInLineItems &&
               allOptionsSelected &&
-              variant.availableForSale != true) ||
+              variant.availableForSale === false) ||
             !product.availableForSale
         "
-        >Out of Stock</span
-      >
+      >Out of Stock</span>
       <span
         v-if="
           !variantInLineItems &&
@@ -29,24 +27,29 @@
             variant &&
             variant.availableForSale == true
         "
-        >Add to Cart</span
-      >
+      >Add to Cart</span>
       <span v-if="variantInLineItems">Added!</span>
     </button>
-    <button class="button is-primary" @click="addToCart" v-else>
+    <button class="button is-primary" @click="addToCart" v-else       :disabled="disableAtcButton">
       <slot>
         <span v-if="!product.availableForSale">Out of Stock</span>
-        <span v-if="!onlyOneOption && product.availableForSale"
-          >Select Options</span
-        >
+        <span v-if="!onlyOneOption && product.availableForSale">Select Options</span>
         <span
           v-if="
             onlyOneOption &&
               !variantInLineItems &&
               variant.availableForSale == true
           "
-          >Add to Cart</span
-        >
+        >Add to Cart</span>
+              <span
+        v-if="
+          (!variantInLineItems && allOptionsSelected && variant == undefined) ||
+            (!variantInLineItems &&
+              allOptionsSelected &&
+              variant.availableForSale === false) ||
+            !product.availableForSale
+        "
+      >Out of Stock</span>
         <span v-if="onlyOneOption && variantInLineItems">Added!</span>
       </slot>
     </button>
@@ -54,7 +57,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
+import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 
 export default {
   props: {
@@ -67,7 +70,7 @@ export default {
     metafields: {
       type: Array,
       default: () => {
-        return []
+        return [];
       }
     },
 
@@ -78,27 +81,27 @@ export default {
   },
 
   computed: {
-    ...mapState('cart', ['lineItems']),
-    ...mapGetters('cart', ['checkoutLineItems']),
+    ...mapState("cart", ["lineItems"]),
+    ...mapGetters("cart", ["checkoutLineItems"]),
 
     variantInLineItems() {
-      const vm = this
+      const vm = this;
       if (vm.variant != null) {
         const lineItem = vm.lineItems.findIndex(lineItem => {
-          return lineItem.variant.id === vm.variant.id
-        })
+          return lineItem.variant.id === vm.variant.id;
+        });
         if (lineItem !== -1) {
-          return true
+          return true;
         } else {
-          return false
+          return false;
         }
       } else {
-        return false
+        return false;
       }
     },
 
     isProductVariantSelectChild() {
-      return this.$parent.$options._componentTag === 'product-variant-select'
+      return this.$parent.$options._componentTag === "product-variant-select";
     },
 
     disableAtcButton() {
@@ -108,25 +111,25 @@ export default {
         (!this.variantInLineItems &&
           this.allOptionsSelected &&
           this.variant.availableForSale !== true)
-      )
+      );
     }
   },
 
   watch: {
     confirmedSelection() {
-      this.addToCart()
+      this.addToCart();
     }
   },
 
   methods: {
-    ...mapActions('cart', [
-      'addLineItem',
-      'removeLineItem',
-      'incrementLineItem',
-      'decrementLineItem',
-      'getLineItems'
+    ...mapActions("cart", [
+      "addLineItem",
+      "removeLineItem",
+      "incrementLineItem",
+      "decrementLineItem",
+      "getLineItems"
     ]),
-    ...mapMutations('cart', ['showCart']),
+    ...mapMutations("cart", ["showCart"]),
     addToCart() {
       if (this.allOptionsSelected && this.product.availableForSale) {
         const lineItem = {
@@ -137,11 +140,11 @@ export default {
           productId: this.product.id,
           handle: this.product.handle,
           metafields: this.metafields
-        }
-        this.addLineItem(lineItem)
-        this.showCart()
+        };
+        this.addLineItem(lineItem);
+        this.showCart();
       }
     }
   }
-}
+};
 </script>

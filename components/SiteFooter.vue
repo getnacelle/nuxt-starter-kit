@@ -7,7 +7,7 @@
           <strong>{{ name }}</strong>
         </nuxt-link>
       </div>
-      <div class="column is-12 has-text-centered">© NACELLE 2019</div>
+      <div class="column is-12 has-text-centered">© {{currentYear}}</div>
       <!-- TEMPORARY FOOTER END -->
 
       <!-- <div class="columns is-multiline is-marginless">
@@ -63,7 +63,8 @@ export default {
     },
     accountMenu() {
       return this.getLinks('account')
-    }
+    },
+     currentYear(){return new Date().getFullYear()  }
   }
 }
 </script>
