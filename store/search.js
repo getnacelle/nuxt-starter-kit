@@ -95,7 +95,7 @@ export const actions = {
             commit('dataHasLoaded')
             commit('isNotSearching')
 
-            const products = res.data
+            const products = res.data.products
               .filter(product => product && product.title && product.variants)
 
             commit('setSearchData', { products })
