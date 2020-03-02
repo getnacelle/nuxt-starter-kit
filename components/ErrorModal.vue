@@ -1,9 +1,6 @@
 <template>
   <div>
-    <interface-modal
-      :modal-open="showModal"
-      @closeModal="showModal = false"
-    >
+    <interface-modal :modal-open="showModal" @closeModal="showModal = false">
       {{ error }}
     </interface-modal>
   </div>
@@ -16,7 +13,7 @@ export default {
   components: {
     InterfaceModal
   },
-  data () {
+  data() {
     return {
       showModal: false
     }
@@ -24,15 +21,16 @@ export default {
   computed: {
     ...mapState('cart', ['error'])
   },
+  created() {
+    this.$store.subscribe((mutation, state) => {
+      const { type, payload } = mutation
 
-  watch: {
-    error () {
-      this.showModal = true
-    }
+      if (type === 'cart/setCartError') {
+        this.showModal = true
+      }
+    })
   }
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
