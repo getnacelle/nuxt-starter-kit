@@ -1,4 +1,4 @@
-import { getArticleData } from '../nacelle/fetch-static'
+import { getArticleData } from '@nacelle/nacelle-tools'
 
 export default (config = {}) => {
   return {
