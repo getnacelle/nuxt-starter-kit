@@ -227,11 +227,11 @@ export const state = () => ({
         ) {
           const checkoutStatus = await axios({
             method: 'post',
-            url: endpoint,
+            url: this.$nacelle.endpoint,
             headers: {
               'Content-Type': 'application/json',
               'x-nacelle-space-id': context.rootState.space.id,
-              'x-nacelle-space-token': token
+              'x-nacelle-space-token': this.$nacelle.token
             },
             data: {
               query: `query {
