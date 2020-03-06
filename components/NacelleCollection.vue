@@ -27,6 +27,10 @@ export default {
       type: Number,
       default: 30
     },
+    selectedList: {
+      type: String,
+      default: 'default'
+    },
     useButtonLoadMore: {
       type: Boolean,
       default: false
@@ -51,8 +55,7 @@ export default {
       return (
         this.useButtonLoadMore &&
         this.collection &&
-        Array.isArray(this.collection.products) &&
-        this.productIndex < this.collection.products.length
+        this.productIndex < this.selectedProductList.length
       )
     },
     useLocale() {
@@ -65,6 +68,19 @@ export default {
       }
 
       return 'en-us'
+    },
+    selectedProductList() {
+      if (this.collection && Array.isArray(this.collection.productLists)) {
+        const list = this.collection.productLists.find(collection => {
+          return collection.slug === this.selectedList
+        })
+
+        if (list && Array.isArray(list.handles)) {
+          return list.handles
+        }
+      }
+
+      return []
     }
   },
   created() {
@@ -75,22 +91,24 @@ export default {
         this.collection = storeCollection.collection
         this.products = storeCollection.products
       } else {
-        this.$nacelle.collection({
-          handle: this.handle,
-          locale: this.useLocale
-        }).then(result => {
-          if (result) {
-            this.collection = result
-            this.products = []
-            this.addCollection({
-              handle: this.handle,
-              collection: this.collection,
-              products: this.products,
-              productIndex: 0
-            })
-            this.fetchProducts()
-          }
-        })
+        this.$nacelle
+          .collection({
+            handle: this.handle,
+            locale: this.useLocale
+          })
+          .then(result => {
+            if (result) {
+              this.collection = result
+              this.products = []
+              this.addCollection({
+                handle: this.handle,
+                collection: this.collection,
+                products: this.products,
+                productIndex: 0
+              })
+              this.fetchProducts()
+            }
+          })
       }
     }
   },
@@ -133,15 +151,14 @@ export default {
         !this.isLoadingProducts &&
         (process.browser || process.client) &&
         this.collection &&
-        Array.isArray(this.collection.products) &&
-        this.products.length < this.collection.products.length
+        this.products.length < this.selectedProductList.length
       ) {
-        let handles = this.collection.products
+        let handles = this.selectedProductList
 
         this.isLoadingProducts = true
 
         if (this.paginate) {
-          handles = this.collection.products.slice(
+          handles = this.selectedProductList.slice(
             this.productIndex,
             this.productIndex + this.productsPerPage
           )
