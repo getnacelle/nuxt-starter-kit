@@ -26,12 +26,6 @@ export default {
         type: 'text/css',
         href: `//dmf8x4ovgacxs.cloudfront.net/${process.env.NACELLE_SPACE_ID}/styles.css`
       }
-    ],
-    script: [
-      {
-        src:
-          'https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver'
-      }
     ]
   },
   /*
@@ -59,11 +53,21 @@ export default {
     '@nacelle/nacelle-nuxt-module',
     '@nuxtjs/sitemap',
     '@nuxtjs/axios',
+    'nuxt-polyfill',
     'vue-currency-filter/nuxt'
   ],
 
   router: {
     middleware: 'cart'
+  },
+
+  polyfill: {
+    features: [
+      {
+        require: 'intersection-observer',
+        detect: () => 'IntersectionObserver' in window
+      }
+    ]
   },
 
   sitemap: {
