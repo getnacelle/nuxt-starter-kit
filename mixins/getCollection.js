@@ -133,7 +133,6 @@ export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {
         if (
           !this.isLoadingProducts &&
           this.collection &&
-          this.products.length > 0 &&
           this.productIndex < this.selectedProductList.length
         ) {
           this.isLoadingProducts = true
