@@ -2,11 +2,11 @@
   <div>
     <h3>Refine Your Search</h3>
     <select v-model="sortBy">
-        <option selected disabled>Sort By</option>
-        <option value="hi-low">High to Low</option>
-        <option value="low-hi">Low To High</option>
-      </select>
-      <button class="button is-text" @click="setFiltersCleared">Clear Filters</button>
+      <option selected disabled>Sort By</option>
+      <option value="hi-low">High to Low</option>
+      <option value="low-hi">Low To High</option>
+    </select>
+    <button class="button is-text" @click="setFiltersCleared">Clear Filters</button>
     <div class="filters">
       <div class="filter" v-for="filter in filters" :key="filter.property.field">
         <h4>{{filter.property.label}}</h4>
@@ -29,7 +29,7 @@
       <div class="filter">
         <h4>Price</h4>
 
-        <div >
+        <div>
           <div
             class="value"
             v-for="priceRange in priceRangeFilters"
@@ -37,13 +37,12 @@
             @click="togglePriceRangeActive(priceRange)"
           >
             <refinement-price-filter-select
-            :priceRange="priceRange"
-            :activePriceRange="activePriceRange || {}"
+              :priceRange="priceRange"
+              :activePriceRange="activePriceRange || {}"
             />
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -113,46 +112,76 @@ export default {
     filters () {
       const vm = this
       if (vm.inputData && vm.propertyFilters) {
-        const propertyValues = vm.propertyFilters.map(property => {
-          const rawValues = vm.inputData
-            .map(item => {
-              return item[`${property.field}`]
+        return vm.inputData.reduce((output, item) => {
+          item.facets.filter(facet => facet.name !== 'Title').forEach(facet => {
+            const index = output.findIndex(arrayItem => {
+              return facet.name === arrayItem.property
             })
-            .filter(value => {
-              return value !== undefined && value !== null && value !== ''
-            })
-          const dedupedValues = Array.from(new Set(rawValues))
+            if (index === -1) {
+              output.push({ property: facet.name, values: [facet.value] })
+            } else {
+              output[index].values.push(facet.value)
+            }
+          })
+          return output
+        }, []).map(facet => {
+          const values = Array.from(new Set(facet.values))
+          return { property: facet.property, values: values }
+        }).filter(facet => {
+          return vm.propertyFilters.find(filter => {
+            return filter.field === facet.property
+          })
+        }).map(facet => {
+          const index = vm.propertyFilters.findIndex(filter => {
+            return filter.field === facet.property
+          })
           return {
-            property: property,
-            values: dedupedValues
+            property: {
+              field: facet.property,
+              label: vm.propertyFilters[index].label
+            },
+            values: facet.values
           }
         })
-        return propertyValues
-      } else {
-        return null
       }
+      return null
     },
 
-    outputData () {
+    filteredData () {
       const vm = this
-      if (vm.activeFilters.length > 0 && vm.inputData) {
-        let output = this.inputData.filter(item => {
+      if (vm.inputData && vm.activeFilters) {
+        const output = this.inputData.filter(item => {
           const filterChecks = vm.activeFilters.map(filter => {
             if (
               filter.values.some(filterCheck => {
-                return filterCheck === item[filter.property]
+                const value = item.facets.find(facet => {
+                  return facet.value === filterCheck
+                })
+                if (value) {
+                  return true
+                }
+                return false
               })
             ) {
               return true
-            } else {
-              return false
             }
+            return false
           })
+
           const itemShouldPass = filterChecks.every(filterCheck => {
             return filterCheck === true
           })
           return itemShouldPass
         })
+        return output
+      }
+      return []
+    },
+
+    outputData () {
+      const vm = this
+      if (vm.activeFilters.length > 0 && vm.filteredData) {
+        let output = JSON.parse(JSON.stringify(this.filteredData))
 
         output = output.filter(item => {
           if (vm.activePriceRange) {
@@ -208,9 +237,9 @@ export default {
         return output
       }
 
-      let output = Object.assign(vm.inputData)
+      const output = JSON.parse(JSON.stringify(vm.inputData))
 
-      output = output.filter(item => {
+      const priceFilteredOutput = output.filter(item => {
         if (vm.activePriceRange) {
           if (vm.activePriceRange.range[0] === 0) {
             if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
@@ -224,7 +253,10 @@ export default {
             } else {
               return false
             }
-          } else if (parseFloat(item.minPrice) > vm.activePriceRange.range[0] && parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+          } else if (
+            parseFloat(item.minPrice) > vm.activePriceRange.range[0] &&
+            parseFloat(item.minPrice) < vm.activePriceRange.range[1]
+          ) {
             return true
           } else {
             return false
@@ -259,7 +291,7 @@ export default {
           })
 
         default:
-          return output
+          return priceFilteredOutput
       }
     }
   },
@@ -312,7 +344,9 @@ export default {
       this.setFiltersNotCleared()
     },
     togglePriceRangeActive (priceRange) {
-      if (JSON.stringify(this.activePriceRange) === JSON.stringify(priceRange)) {
+      if (
+        JSON.stringify(this.activePriceRange) === JSON.stringify(priceRange)
+      ) {
         this.activePriceRange = null
       } else {
         this.activePriceRange = priceRange
@@ -456,7 +490,7 @@ export default {
 .filters {
   display: flex;
   justify-content: space-between;
-  @media screen and (max-width: 786px){
+  @media screen and (max-width: 786px) {
     flex-direction: column;
   }
 }
@@ -466,7 +500,7 @@ export default {
 
   flex-grow: 3;
   margin-bottom: 0.5rem;
-    @media screen and (max-width: 786px){
+  @media screen and (max-width: 786px) {
     border: none;
     margin-bottom: 2rem;
   }
@@ -477,16 +511,17 @@ export default {
 }
 .facet-values {
   columns: 3;
-  @media screen and (max-width: 1200px){
+  @media screen and (max-width: 1200px) {
     columns: 2;
   }
-  @media screen and (max-width: 950px){
+  @media screen and (max-width: 950px) {
     columns: 1;
   }
 }
 .value {
   break-inside: avoid;
   cursor: pointer;
+  user-select:none;
 }
 h3 {
   font-size: 16pt;

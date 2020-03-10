@@ -31,13 +31,29 @@ export const getters = {
       state.searchData.products.length > 0
     ) {
       return state.searchData.products.map(product => {
-        const { tags, ...rest } = product
+        const { tags, variants, ...rest } = product
 
-        rest.minPrice = rest.priceRange.min
+        /// //////////////////////////
+        /// //////////////////////////
+        // Get product filter facets from variant data
+        const variantOptions = variants.map(variant => {
+          return variant.selectedOptions
+        })
 
-        const facets = tags.filter(tag => tag.includes('filter'))
+        const variantFacets = variantOptions.reduce((acc, item) => {
+          return acc.concat(item)
+        }, []).map(option => JSON.stringify(option))
 
-        facets.forEach(facet => {
+        const facets = Array.from(new Set(variantFacets)).map(option => JSON.parse(option)).map(option => {
+          return { name: option.name.toLowerCase(), value: option.value }
+        })
+
+        /// //////////////////////////
+        /// //////////////////////////
+        // Get product filter facets from tags. Tags should be formatted "filter_property-name_value"
+        const rootFacets = tags.filter(tag => tag.includes('filter'))
+
+        rootFacets.forEach(facet => {
           const facetFragments = facet.split('_')
           const facetName = facetFragments[1]
           const facetValue = () => {
@@ -48,9 +64,16 @@ export const getters = {
           }
 
           rest[facetName] = facetValue()
+          facets.push({ name: facetName, value: facetValue() })
         })
 
-        return { ...rest, tags }
+        if (product.productType) {
+          facets.push({ name: 'productType', value: product.productType })
+        }
+
+        rest.minPrice = rest.priceRange.min
+
+        return { ...rest, tags, variantOptions, variants, facets }
       })
     }
 

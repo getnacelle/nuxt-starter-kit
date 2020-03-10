@@ -14,12 +14,10 @@
         <refinement-filters
           v-if="productData"
           :propertyFilters="[
-              {
-                field:'productType',
-                label:'Product Type'
-              },
+              {field:'productType', label:'Product Type'},
               {field: 'color', label: 'Color'},
-              {field: 'material', label: 'Material'}
+              {field: 'material', label: 'Material'},
+              {field: 'size', label: 'Size'}
             ]"
           :priceRangeFilters="[
             {range:[0, 50], label: '< $50'},
