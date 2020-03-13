@@ -63,14 +63,14 @@ export default {
     }
   },
   computed: {
-    contentToHtml() {
+    contentToHtml () {
       if (this.customContentToHtml) {
         return this.contentToHtmlFn
       }
 
       return this.defaultContentToHtml
     },
-    mappedSections() {
+    mappedSections () {
       if (this.page && this.page.sections && this.page.sections.length > 0) {
         const { source, sections } = this.page
         if (source === 'contentful') {
@@ -88,7 +88,7 @@ export default {
 
       return []
     },
-    body() {
+    body () {
       if (this.page) {
         const { source } = this.page
 
@@ -109,7 +109,7 @@ export default {
     }
   },
   methods: {
-    defaultContentToHtml(content) {
+    defaultContentToHtml (content) {
       const options = {
         renderNode: {
           [BLOCKS.EMBEDDED_ASSET]: node => `
@@ -120,7 +120,7 @@ export default {
 
       return documentToHtmlString(content, options)
     },
-    reduceShopifySections(sections) {
+    reduceShopifySections (sections) {
       return sections.reduce((sections, section, index) => {
         if (index > 0 && section.tags.includes('childSection')) {
           const parent = sections[sections.length - 1]
@@ -138,7 +138,7 @@ export default {
         return sections
       }, [])
     },
-    mapShopifySection(section) {
+    mapShopifySection (section) {
       const { title, handle, contentHtml, contentType, ...fields } = section
       const clickHandler = () => {
         this.$router.push(fields.ctaUrl)
@@ -238,7 +238,7 @@ export default {
         data
       }
     },
-    mapContentfulSection(section) {
+    mapContentfulSection (section) {
       const { fields } = section
       const { contentType, handle, title, content, featuredMedia } = fields
       const contentHtml = content ? this.contentToHtml(content) : ''

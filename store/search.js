@@ -1,4 +1,5 @@
 import axios from 'axios'
+import generateProductData from '@nacelle/replicator'
 
 export const state = () => ({
   query: null,
@@ -30,7 +31,7 @@ export const getters = {
       state.searchData.products &&
       state.searchData.products.length > 0
     ) {
-      return state.searchData.products.map(product => {
+      return generateProductData(1000).map(product => {
         const { tags, variants, ...rest } = product
 
         /// //////////////////////////
