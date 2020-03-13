@@ -1,3 +1,11 @@
+<!-- 
+/****
+/* Customize your Nacelle content by taking advantage
+/* of named slots. For more details, refer to:
+/*
+/* https://docs.getnacelle.com/nuxt/pages.html#customizing-homepage-content-output
+/****
+-->
 <template>
   <div class="article-page">
     <article class="article">
@@ -14,12 +22,15 @@
           <div v-if="article" class="columns is-centered is-multiline">
             <div class="article-header column is-6 has-text-centered">
               <!-- 
-              * Edit Blog Article Header *
-                Available slots:
-                name: "tags", data: "tags"
-                name: "title", data: "title"
-                name: "author", data: "author"
-                name: "date", data: "date"
+                /****
+                /* -- Edit Blog Article Header --
+                /* |       Available slots:      |
+                /* 
+                /* name: "tags", data: "tags"
+                /* name: "title", data: "title"
+                /* name: "author", data: "author"
+                /* name: "date", data: "date"
+                /****
               -->
               <blog-article-header
                 :title="article.title"
