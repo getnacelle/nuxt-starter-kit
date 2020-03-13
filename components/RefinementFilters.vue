@@ -148,115 +148,115 @@ export default {
     outputData () {
       const vm = this
       if (vm.activeFilters.length > 0 && vm.filteredData) {
-        const output = this.filteredData
+        let output = this.filteredData
 
-        // output = output.filter(item => {
-        //   if (vm.activePriceRange) {
-        //     if (vm.activePriceRange.range[0] === 0) {
-        //       if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
-        //         return true
-        //       } else {
-        //         return false
-        //       }
-        //     } else if (vm.activePriceRange.range[1] === 0) {
-        //       if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
-        //         return true
-        //       } else {
-        //         return false
-        //       }
-        //     } else if (parseFloat(item.minPrice) > vm.activePriceRange.range[0] && parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
-        //       return true
-        //     } else {
-        //       return false
-        //     }
-        //   } else {
-        //     return true
-        //   }
-        // })
-        // if (vm.sortBy) {
-        //   switch (vm.sortBy) {
-        //     case 'hi-low':
-        //       return output.sort((a, b) => {
-        //         if (a.priceRange.min < b.priceRange.min) {
-        //           return 1
-        //         }
-        //         if (a.priceRange.min > b.priceRange.min) {
-        //           return -1
-        //         }
+        output = output.filter(item => {
+          if (vm.activePriceRange) {
+            if (vm.activePriceRange.range[0] === 0) {
+              if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+                return true
+              } else {
+                return false
+              }
+            } else if (vm.activePriceRange.range[1] === 0) {
+              if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
+                return true
+              } else {
+                return false
+              }
+            } else if (parseFloat(item.minPrice) > vm.activePriceRange.range[0] && parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+              return true
+            } else {
+              return false
+            }
+          } else {
+            return true
+          }
+        })
+        if (vm.sortBy) {
+          switch (vm.sortBy) {
+            case 'hi-low':
+              return output.sort((a, b) => {
+                if (a.priceRange.min < b.priceRange.min) {
+                  return 1
+                }
+                if (a.priceRange.min > b.priceRange.min) {
+                  return -1
+                }
 
-        //         return 0
-        //       })
-        //     case 'low-hi':
-        //       return output.sort((a, b) => {
-        //         if (a.priceRange.min < b.priceRange.min) {
-        //           return -1
-        //         }
-        //         if (a.priceRange.min > b.priceRange.min) {
-        //           return 1
-        //         }
+                return 0
+              })
+            case 'low-hi':
+              return output.sort((a, b) => {
+                if (a.priceRange.min < b.priceRange.min) {
+                  return -1
+                }
+                if (a.priceRange.min > b.priceRange.min) {
+                  return 1
+                }
 
-        //         return 0
-        //       })
-        //   }
-        // }
+                return 0
+              })
+          }
+        }
         return output
-        // } else {
-        //   const output = JSON.parse(JSON.stringify(vm.inputData))
-        //   const priceFilteredOutput = output.filter(item => {
-        //     if (vm.activePriceRange) {
-        //       if (vm.activePriceRange.range[0] === 0) {
-        //         if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
-        //           return true
-        //         } else {
-        //           return false
-        //         }
-        //       } else if (vm.activePriceRange.range[1] === 0) {
-        //         if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
-        //           return true
-        //         } else {
-        //           return false
-        //         }
-        //       } else if (
-        //         parseFloat(item.minPrice) > vm.activePriceRange.range[0] &&
-        //       parseFloat(item.minPrice) < vm.activePriceRange.range[1]
-        //       ) {
-        //         return true
-        //       } else {
-        //         return false
-        //       }
-        //     } else {
-        //       return true
-        //     }
-        //   })
+      } else {
+        const output = JSON.parse(JSON.stringify(vm.inputData))
+        const priceFilteredOutput = output.filter(item => {
+          if (vm.activePriceRange) {
+            if (vm.activePriceRange.range[0] === 0) {
+              if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+                return true
+              } else {
+                return false
+              }
+            } else if (vm.activePriceRange.range[1] === 0) {
+              if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
+                return true
+              } else {
+                return false
+              }
+            } else if (
+              parseFloat(item.minPrice) > vm.activePriceRange.range[0] &&
+              parseFloat(item.minPrice) < vm.activePriceRange.range[1]
+            ) {
+              return true
+            } else {
+              return false
+            }
+          } else {
+            return true
+          }
+        })
 
-        //   // return vm.inputData
-        //   switch (vm.sortBy) {
-        //     case 'hi-low':
-        //       return output.sort((a, b) => {
-        //         if (a.priceRange.min < b.priceRange.min) {
-        //           return 1
-        //         }
-        //         if (a.priceRange.min > b.priceRange.min) {
-        //           return -1
-        //         }
+        // return vm.inputData
+        switch (vm.sortBy) {
+          case 'hi-low':
+            return output.sort((a, b) => {
+              if (a.priceRange.min < b.priceRange.min) {
+                return 1
+              }
+              if (a.priceRange.min > b.priceRange.min) {
+                return -1
+              }
 
-        //         return 0
-        //       })
-        //     case 'low-hi':
-        //       return output.sort((a, b) => {
-        //         if (a.priceRange.min < b.priceRange.min) {
-        //           return -1
-        //         }
-        //         if (a.priceRange.min > b.priceRange.min) {
-        //           return 1
-        //         }
+              return 0
+            })
+          case 'low-hi':
+            return output.sort((a, b) => {
+              if (a.priceRange.min < b.priceRange.min) {
+                return -1
+              }
+              if (a.priceRange.min > b.priceRange.min) {
+                return 1
+              }
 
-        //         return 0
-        //       })
+              return 0
+            })
 
-      //     default:
-      //       return priceFilteredOutput
-      //   }
+          default:
+            return priceFilteredOutput
+        }
       }
       return vm.inputData
     }
@@ -349,119 +349,119 @@ export default {
         this.setFiltersNotCleared()
       })
     },
-    // togglePriceRangeActive (priceRange) {
-    //   if (
-    //     JSON.stringify(this.activePriceRange) === JSON.stringify(priceRange)
-    //   ) {
-    //     this.activePriceRange = null
-    //   } else {
-    //     this.activePriceRange = priceRange
-    //   }
-    // },
-    // setFilterInQueryParams (filter) {
-    //   return requestAnimationFrame(() => {
-    //     if (process.browser) {
-    //       let parsed = queryString.parse(location.search, {
-    //         arrayFormat: 'comma'
-    //       })
+    togglePriceRangeActive (priceRange) {
+      if (
+        JSON.stringify(this.activePriceRange) === JSON.stringify(priceRange)
+      ) {
+        this.activePriceRange = null
+      } else {
+        this.activePriceRange = priceRange
+      }
+    },
+    setFilterInQueryParams (filter) {
+      return requestAnimationFrame(() => {
+        if (process.browser) {
+          let parsed = queryString.parse(location.search, {
+            arrayFormat: 'comma'
+          })
 
-    //       let currentParams = this.readFiltersFromQueryParams()
+          let currentParams = this.readFiltersFromQueryParams()
 
-    //       let transformedParams
+          let transformedParams
 
-    //       if (currentParams.length > 0) {
-    //         if (
-    //           currentParams.some(param => {
-    //             return param.property === filter.property
-    //           })
-    //         ) {
-    //           currentParams = currentParams.map(param => {
-    //             if (
-    //               param.property === filter.property &&
-    //             !param.values.includes(filter.value)
-    //             ) {
-    //               param.values.push(filter.value)
-    //               return param
-    //             } else if (
-    //               param.property === filter.property &&
-    //             param.values.includes(filter.value)
-    //             ) {
-    //               const index = param.values.indexOf(filter.value)
-    //               param.values.splice(index, 1)
-    //               return param
-    //             } else {
-    //               return param
-    //             }
-    //           })
-    //         } else {
-    //           currentParams.push(filter)
-    //         }
-    //         transformedParams = {}
+          if (currentParams.length > 0) {
+            if (
+              currentParams.some(param => {
+                return param.property === filter.property
+              })
+            ) {
+              currentParams = currentParams.map(param => {
+                if (
+                  param.property === filter.property &&
+                !param.values.includes(filter.value)
+                ) {
+                  param.values.push(filter.value)
+                  return param
+                } else if (
+                  param.property === filter.property &&
+                param.values.includes(filter.value)
+                ) {
+                  const index = param.values.indexOf(filter.value)
+                  param.values.splice(index, 1)
+                  return param
+                } else {
+                  return param
+                }
+              })
+            } else {
+              currentParams.push(filter)
+            }
+            transformedParams = {}
 
-    //         currentParams.forEach(param => {
-    //           if (param.values && param.values.length > 0) {
-    //             transformedParams[param.property] = param.values.join(',')
-    //           } else {
-    //             transformedParams[param.property] = param.value
-    //           }
-    //         })
-    //       } else {
-    //         transformedParams = {
-    //           [filter.property]: filter.value
-    //         }
-    //       }
+            currentParams.forEach(param => {
+              if (param.values && param.values.length > 0) {
+                transformedParams[param.property] = param.values.join(',')
+              } else {
+                transformedParams[param.property] = param.value
+              }
+            })
+          } else {
+            transformedParams = {
+              [filter.property]: filter.value
+            }
+          }
 
-    //       parsed = { ...parsed, ...transformedParams }
+          parsed = { ...parsed, ...transformedParams }
 
-    //       this.$router.push({ query: parsed })
-    //     }
-    //   })
-    // },
-    // removeFiltersInQueryParams () {
-    //   if (process.browser) {
-    //     const filtersFromUrl = this.propertyFilters.map(filter => {
-    //       return filter.field
-    //     })
-    //     const queryParamsString = queryString.stringify(
-    //       queryString.parse(location.search)
-    //     )
-    //     const queryWithoutFilters = omit(queryParamsString, filtersFromUrl)
-    //       .querystring
-    //     this.$router.push({ query: queryString.parse(queryWithoutFilters) })
-    //   }
-    // },
-    // readFiltersFromQueryParams () {
-    //   let parsed = Object.entries(
-    //     queryString.parse(location.search, { arrayFormat: 'comma' })
-    //   )
+          this.$router.push({ query: parsed })
+        }
+      })
+    },
+    removeFiltersInQueryParams () {
+      if (process.browser) {
+        const filtersFromUrl = this.propertyFilters.map(filter => {
+          return filter.field
+        })
+        const queryParamsString = queryString.stringify(
+          queryString.parse(location.search)
+        )
+        const queryWithoutFilters = omit(queryParamsString, filtersFromUrl)
+          .querystring
+        this.$router.push({ query: queryString.parse(queryWithoutFilters) })
+      }
+    },
+    readFiltersFromQueryParams () {
+      let parsed = Object.entries(
+        queryString.parse(location.search, { arrayFormat: 'comma' })
+      )
 
-    //   parsed = Object.fromEntries(
-    //     parsed.map(filter => {
-    //       if (typeof filter[1] === 'string') {
-    //         filter[1] = [filter[1]]
-    //       }
-    //       return filter
-    //     })
-    //   )
+      parsed = Object.fromEntries(
+        parsed.map(filter => {
+          if (typeof filter[1] === 'string') {
+            filter[1] = [filter[1]]
+          }
+          return filter
+        })
+      )
 
-    //   const filtersFromUrl = this.propertyFilters
-    //     .map(filter => {
-    //       return { property: filter.field, values: parsed[filter.field] }
-    //     })
-    //     .filter(filter => {
-    //       return (
-    //         filter.values !== null &&
-    //         filter.values !== undefined &&
-    //         filter.values.length > 0
-    //       )
-    //     })
+      const filtersFromUrl = this.propertyFilters
+        .map(filter => {
+          return { property: filter.field, values: parsed[filter.field] }
+        })
+        .filter(filter => {
+          return (
+            filter.values !== null &&
+            filter.values !== undefined &&
+            filter.values.length > 0
+          )
+        })
 
-    //   if (filtersFromUrl.length > 0) {
-    //     return filtersFromUrl
-    //   } else {
-    //     return []
-    //   }
-    // },
+      if (filtersFromUrl.length > 0) {
+        return filtersFromUrl
+      } else {
+        return []
+      }
+    },
     getPassedData () {
       const vm = this
       if (vm.passingConditions) {
