@@ -152,21 +152,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-// .products {
-//   display: flex;
-//   flex-wrap: wrap;
-// }
 .product {
-  // width: 20rem;
-  // height: 20rem;
-  // text-decoration: none;
-  // color: black;
-  // display: flex;
-  // flex-direction: column;
-  // margin-bottom: 2rem;
-  // flex-grow: 1;
-  // justify-content: center;
-  // align-items: center;
   .title {
     font-weight: bold;
   }
