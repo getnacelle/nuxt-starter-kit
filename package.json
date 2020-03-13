@@ -26,6 +26,7 @@
     "fs-extra": "^8.1.0",
     "graphql-tag": "^2.10.3",
     "localforage": "^1.7.3",
+    "lodash.clonedeep": "^4.5.0",
     "lodash.sortby": "^4.7.0",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.12.0",

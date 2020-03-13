@@ -31,7 +31,7 @@ export const getters = {
       state.searchData.products &&
       state.searchData.products.length > 0
     ) {
-      return generateProductData(1000).map(product => {
+      return generateProductData(400).map(product => {
         const { tags, variants, ...rest } = product
 
         /// //////////////////////////

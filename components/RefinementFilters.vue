@@ -77,6 +77,7 @@ export default {
   },
   data () {
     return {
+      filters: null,
       activeFilters: [],
       activePriceRange: null,
       passedData: null,
@@ -84,14 +85,13 @@ export default {
     }
   },
   watch: {
-    outputData () {
-      this.$emit('updated', this.outputData)
+    inputData () {
+      this.setupFilters()
     },
-
-    /**
-     * Watches the filtersCleared property on the Vuex store.
-     * It sets the activeFilters array to a new array, and removes the filters from the URL.
-     */
+    outputData () {
+      const vm = this
+      vm.$emit('updated', vm.outputData)
+    },
     filtersCleared (val) {
       if (val === true) {
         this.activeFilters = []
@@ -104,15 +104,170 @@ export default {
   computed: {
     ...mapState('search', ['filtersCleared']),
 
-    /**
-     * Returns an array of objects representing all filters that can be applied.
-     * It is based on the propertyFilters prop passed from the parent,
-     * and uses the data loaded on the page to evaluate all possible filters and values.
-     */
-    filters () {
+    filteredData () {
+      const vm = this
+      const inputData = []
+      const activeFilters = []
+      for (const rec of vm.inputData) {
+        inputData.push(Object.assign({}, rec))
+      }
+
+      for (const rec of vm.activeFilters) {
+        activeFilters.push(Object.assign({}, rec))
+      }
+
+      if (inputData && activeFilters) {
+        const output = inputData.filter(item => {
+          const filterChecks = activeFilters.map(filter => {
+            if (
+              filter.values.some(filterCheck => {
+                const value = item.facets.find(facet => {
+                  return facet.value === filterCheck
+                })
+                if (value) {
+                  return true
+                }
+                return false
+              })
+            ) {
+              return true
+            }
+            return false
+          })
+
+          const itemShouldPass = filterChecks.every(filterCheck => {
+            return filterCheck === true
+          })
+          return itemShouldPass
+        })
+        return output
+      }
+      return []
+    },
+
+    outputData () {
+      const vm = this
+      if (vm.activeFilters.length > 0 && vm.filteredData) {
+        const output = this.filteredData
+
+        // output = output.filter(item => {
+        //   if (vm.activePriceRange) {
+        //     if (vm.activePriceRange.range[0] === 0) {
+        //       if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+        //         return true
+        //       } else {
+        //         return false
+        //       }
+        //     } else if (vm.activePriceRange.range[1] === 0) {
+        //       if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
+        //         return true
+        //       } else {
+        //         return false
+        //       }
+        //     } else if (parseFloat(item.minPrice) > vm.activePriceRange.range[0] && parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+        //       return true
+        //     } else {
+        //       return false
+        //     }
+        //   } else {
+        //     return true
+        //   }
+        // })
+        // if (vm.sortBy) {
+        //   switch (vm.sortBy) {
+        //     case 'hi-low':
+        //       return output.sort((a, b) => {
+        //         if (a.priceRange.min < b.priceRange.min) {
+        //           return 1
+        //         }
+        //         if (a.priceRange.min > b.priceRange.min) {
+        //           return -1
+        //         }
+
+        //         return 0
+        //       })
+        //     case 'low-hi':
+        //       return output.sort((a, b) => {
+        //         if (a.priceRange.min < b.priceRange.min) {
+        //           return -1
+        //         }
+        //         if (a.priceRange.min > b.priceRange.min) {
+        //           return 1
+        //         }
+
+        //         return 0
+        //       })
+        //   }
+        // }
+        return output
+        // } else {
+        //   const output = JSON.parse(JSON.stringify(vm.inputData))
+        //   const priceFilteredOutput = output.filter(item => {
+        //     if (vm.activePriceRange) {
+        //       if (vm.activePriceRange.range[0] === 0) {
+        //         if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
+        //           return true
+        //         } else {
+        //           return false
+        //         }
+        //       } else if (vm.activePriceRange.range[1] === 0) {
+        //         if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
+        //           return true
+        //         } else {
+        //           return false
+        //         }
+        //       } else if (
+        //         parseFloat(item.minPrice) > vm.activePriceRange.range[0] &&
+        //       parseFloat(item.minPrice) < vm.activePriceRange.range[1]
+        //       ) {
+        //         return true
+        //       } else {
+        //         return false
+        //       }
+        //     } else {
+        //       return true
+        //     }
+        //   })
+
+        //   // return vm.inputData
+        //   switch (vm.sortBy) {
+        //     case 'hi-low':
+        //       return output.sort((a, b) => {
+        //         if (a.priceRange.min < b.priceRange.min) {
+        //           return 1
+        //         }
+        //         if (a.priceRange.min > b.priceRange.min) {
+        //           return -1
+        //         }
+
+        //         return 0
+        //       })
+        //     case 'low-hi':
+        //       return output.sort((a, b) => {
+        //         if (a.priceRange.min < b.priceRange.min) {
+        //           return -1
+        //         }
+        //         if (a.priceRange.min > b.priceRange.min) {
+        //           return 1
+        //         }
+
+        //         return 0
+        //       })
+
+      //     default:
+      //       return priceFilteredOutput
+      //   }
+      }
+      return vm.inputData
+    }
+  },
+  methods: {
+    ...mapMutations('search', ['setFiltersCleared']),
+    ...mapMutations('search', ['setFiltersNotCleared']),
+    setupFilters () {
       const vm = this
       if (vm.inputData && vm.propertyFilters) {
-        return vm.inputData.reduce((output, item) => {
+        vm.filters = vm.inputData.reduce((output, item) => {
           item.facets.filter(facet => facet.name !== 'Title').forEach(facet => {
             const index = output.findIndex(arrayItem => {
               return facet.name === arrayItem.property
@@ -144,316 +299,169 @@ export default {
           }
         })
       }
-      return null
     },
-
-    filteredData () {
-      const vm = this
-      if (vm.inputData && vm.activeFilters) {
-        const output = this.inputData.filter(item => {
-          const filterChecks = vm.activeFilters.map(filter => {
-            if (
-              filter.values.some(filterCheck => {
-                const value = item.facets.find(facet => {
-                  return facet.value === filterCheck
-                })
-                if (value) {
-                  return true
-                }
-                return false
-              })
-            ) {
-              return true
-            }
-            return false
+    filterActive (value) {
+      return requestAnimationFrame(() => {
+        if (this.activeFilters) {
+          const filterArray = this.activeFilters.filter(filter => {
+            return filter.value === value
           })
-
-          const itemShouldPass = filterChecks.every(filterCheck => {
-            return filterCheck === true
-          })
-          return itemShouldPass
-        })
-        return output
-      }
-      return []
-    },
-
-    outputData () {
-      const vm = this
-      if (vm.activeFilters.length > 0 && vm.filteredData) {
-        let output = JSON.parse(JSON.stringify(this.filteredData))
-
-        output = output.filter(item => {
-          if (vm.activePriceRange) {
-            if (vm.activePriceRange.range[0] === 0) {
-              if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
-                return true
-              } else {
-                return false
-              }
-            } else if (vm.activePriceRange.range[1] === 0) {
-              if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
-                return true
-              } else {
-                return false
-              }
-            } else if (parseFloat(item.minPrice) > vm.activePriceRange.range[0] && parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
-              return true
-            } else {
-              return false
-            }
-          } else {
-            return true
-          }
-        })
-
-        // output = output.filter()
-        if (vm.sortBy) {
-          switch (vm.sortBy) {
-            case 'hi-low':
-              return output.sort((a, b) => {
-                if (a.priceRange.min < b.priceRange.min) {
-                  return 1
-                }
-                if (a.priceRange.min > b.priceRange.min) {
-                  return -1
-                }
-
-                return 0
-              })
-            case 'low-hi':
-              return output.sort((a, b) => {
-                if (a.priceRange.min < b.priceRange.min) {
-                  return -1
-                }
-                if (a.priceRange.min > b.priceRange.min) {
-                  return 1
-                }
-
-                return 0
-              })
-          }
-        }
-        return output
-      }
-
-      const output = JSON.parse(JSON.stringify(vm.inputData))
-
-      const priceFilteredOutput = output.filter(item => {
-        if (vm.activePriceRange) {
-          if (vm.activePriceRange.range[0] === 0) {
-            if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
-              return true
-            } else {
-              return false
-            }
-          } else if (vm.activePriceRange.range[1] === 0) {
-            if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
-              return true
-            } else {
-              return false
-            }
-          } else if (
-            parseFloat(item.minPrice) > vm.activePriceRange.range[0] &&
-            parseFloat(item.minPrice) < vm.activePriceRange.range[1]
-          ) {
+          if (filterArray.length > 0) {
             return true
           } else {
             return false
           }
-        } else {
-          return true
         }
       })
-      // return vm.inputData
-      switch (vm.sortBy) {
-        case 'hi-low':
-          return output.sort((a, b) => {
-            if (a.priceRange.min < b.priceRange.min) {
-              return 1
-            }
-            if (a.priceRange.min > b.priceRange.min) {
-              return -1
-            }
-
-            return 0
-          })
-        case 'low-hi':
-          return output.sort((a, b) => {
-            if (a.priceRange.min < b.priceRange.min) {
-              return -1
-            }
-            if (a.priceRange.min > b.priceRange.min) {
-              return 1
-            }
-
-            return 0
-          })
-
-        default:
-          return priceFilteredOutput
-      }
-    }
-  },
-  methods: {
-    ...mapMutations('search', ['setFiltersCleared']),
-    ...mapMutations('search', ['setFiltersNotCleared']),
-    filterActive (value) {
-      if (this.activeFilters) {
-        const filterArray = this.activeFilters.filter(filter => {
-          return filter.value === value
-        })
-        if (filterArray.length > 0) {
-          return true
-        } else {
-          return false
-        }
-      }
     },
     toggleFilterActive (filter) {
-      const filterInFilters = this.activeFilters.filter(filtersItem => {
-        return filtersItem.property === filter.property
-      })
-      if (filterInFilters.length === 0) {
-        this.activeFilters.push({
-          property: filter.property,
-          values: [filter.value]
+      return requestAnimationFrame(() => {
+        const filterInFilters = this.activeFilters.filter(filtersItem => {
+          return filtersItem.property === filter.property
         })
-      } else {
-        this.activeFilters.map((filtersItem, index) => {
-          if (
-            filtersItem.property === filter.property &&
-            !filtersItem.values.some(value => value === filter.value)
-          ) {
-            filtersItem.values.push(filter.value)
-          } else if (
-            filtersItem.property === filter.property &&
-            filtersItem.values.some(value => value === filter.value)
-          ) {
-            const filterIndex = filtersItem.values.indexOf(filter.value)
-            filtersItem.values.splice(filterIndex, 1)
-          } else {
-            return filtersItem
-          }
-          if (filtersItem.values.length === 0) {
-            this.activeFilters.splice(index, 1)
-          }
-        })
-      }
-      this.setFilterInQueryParams(filter)
-      this.setFiltersNotCleared()
-    },
-    togglePriceRangeActive (priceRange) {
-      if (
-        JSON.stringify(this.activePriceRange) === JSON.stringify(priceRange)
-      ) {
-        this.activePriceRange = null
-      } else {
-        this.activePriceRange = priceRange
-      }
-    },
-    setFilterInQueryParams (filter) {
-      if (process.browser) {
-        let parsed = queryString.parse(location.search, {
-          arrayFormat: 'comma'
-        })
-
-        let currentParams = this.readFiltersFromQueryParams()
-
-        let transformedParams
-
-        if (currentParams.length > 0) {
-          if (
-            currentParams.some(param => {
-              return param.property === filter.property
-            })
-          ) {
-            currentParams = currentParams.map(param => {
-              if (
-                param.property === filter.property &&
-                !param.values.includes(filter.value)
-              ) {
-                param.values.push(filter.value)
-                return param
-              } else if (
-                param.property === filter.property &&
-                param.values.includes(filter.value)
-              ) {
-                const index = param.values.indexOf(filter.value)
-                param.values.splice(index, 1)
-                return param
-              } else {
-                return param
-              }
-            })
-          } else {
-            currentParams.push(filter)
-          }
-          transformedParams = {}
-
-          currentParams.forEach(param => {
-            if (param.values && param.values.length > 0) {
-              transformedParams[param.property] = param.values.join(',')
-            } else {
-              transformedParams[param.property] = param.value
-            }
+        if (filterInFilters.length === 0) {
+          this.activeFilters.push({
+            property: filter.property,
+            values: [filter.value]
           })
         } else {
-          transformedParams = {
-            [filter.property]: filter.value
-          }
+          this.activeFilters.map((filtersItem, index) => {
+            if (
+              filtersItem.property === filter.property &&
+            !filtersItem.values.some(value => value === filter.value)
+            ) {
+              filtersItem.values.push(filter.value)
+            } else if (
+              filtersItem.property === filter.property &&
+            filtersItem.values.some(value => value === filter.value)
+            ) {
+              const filterIndex = filtersItem.values.indexOf(filter.value)
+              filtersItem.values.splice(filterIndex, 1)
+            } else {
+              return filtersItem
+            }
+            if (filtersItem.values.length === 0) {
+              this.activeFilters.splice(index, 1)
+            }
+          })
         }
-
-        parsed = { ...parsed, ...transformedParams }
-
-        this.$router.push({ query: parsed })
-      }
+        this.setFilterInQueryParams(filter)
+        this.setFiltersNotCleared()
+      })
     },
-    removeFiltersInQueryParams () {
-      if (process.browser) {
-        const filtersFromUrl = this.propertyFilters.map(filter => {
-          return filter.field
-        })
-        const queryParamsString = queryString.stringify(
-          queryString.parse(location.search)
-        )
-        const queryWithoutFilters = omit(queryParamsString, filtersFromUrl)
-          .querystring
-        this.$router.push({ query: queryString.parse(queryWithoutFilters) })
-      }
-    },
-    readFiltersFromQueryParams () {
-      let parsed = Object.entries(
-        queryString.parse(location.search, { arrayFormat: 'comma' })
-      )
+    // togglePriceRangeActive (priceRange) {
+    //   if (
+    //     JSON.stringify(this.activePriceRange) === JSON.stringify(priceRange)
+    //   ) {
+    //     this.activePriceRange = null
+    //   } else {
+    //     this.activePriceRange = priceRange
+    //   }
+    // },
+    // setFilterInQueryParams (filter) {
+    //   return requestAnimationFrame(() => {
+    //     if (process.browser) {
+    //       let parsed = queryString.parse(location.search, {
+    //         arrayFormat: 'comma'
+    //       })
 
-      parsed = Object.fromEntries(
-        parsed.map(filter => {
-          if (typeof filter[1] === 'string') {
-            filter[1] = [filter[1]]
-          }
-          return filter
-        })
-      )
+    //       let currentParams = this.readFiltersFromQueryParams()
 
-      const filtersFromUrl = this.propertyFilters
-        .map(filter => {
-          return { property: filter.field, values: parsed[filter.field] }
-        })
-        .filter(filter => {
-          return (
-            filter.values !== null &&
-            filter.values !== undefined &&
-            filter.values.length > 0
-          )
-        })
+    //       let transformedParams
 
-      if (filtersFromUrl.length > 0) {
-        return filtersFromUrl
-      } else {
-        return []
-      }
-    },
+    //       if (currentParams.length > 0) {
+    //         if (
+    //           currentParams.some(param => {
+    //             return param.property === filter.property
+    //           })
+    //         ) {
+    //           currentParams = currentParams.map(param => {
+    //             if (
+    //               param.property === filter.property &&
+    //             !param.values.includes(filter.value)
+    //             ) {
+    //               param.values.push(filter.value)
+    //               return param
+    //             } else if (
+    //               param.property === filter.property &&
+    //             param.values.includes(filter.value)
+    //             ) {
+    //               const index = param.values.indexOf(filter.value)
+    //               param.values.splice(index, 1)
+    //               return param
+    //             } else {
+    //               return param
+    //             }
+    //           })
+    //         } else {
+    //           currentParams.push(filter)
+    //         }
+    //         transformedParams = {}
+
+    //         currentParams.forEach(param => {
+    //           if (param.values && param.values.length > 0) {
+    //             transformedParams[param.property] = param.values.join(',')
+    //           } else {
+    //             transformedParams[param.property] = param.value
+    //           }
+    //         })
+    //       } else {
+    //         transformedParams = {
+    //           [filter.property]: filter.value
+    //         }
+    //       }
+
+    //       parsed = { ...parsed, ...transformedParams }
+
+    //       this.$router.push({ query: parsed })
+    //     }
+    //   })
+    // },
+    // removeFiltersInQueryParams () {
+    //   if (process.browser) {
+    //     const filtersFromUrl = this.propertyFilters.map(filter => {
+    //       return filter.field
+    //     })
+    //     const queryParamsString = queryString.stringify(
+    //       queryString.parse(location.search)
+    //     )
+    //     const queryWithoutFilters = omit(queryParamsString, filtersFromUrl)
+    //       .querystring
+    //     this.$router.push({ query: queryString.parse(queryWithoutFilters) })
+    //   }
+    // },
+    // readFiltersFromQueryParams () {
+    //   let parsed = Object.entries(
+    //     queryString.parse(location.search, { arrayFormat: 'comma' })
+    //   )
+
+    //   parsed = Object.fromEntries(
+    //     parsed.map(filter => {
+    //       if (typeof filter[1] === 'string') {
+    //         filter[1] = [filter[1]]
+    //       }
+    //       return filter
+    //     })
+    //   )
+
+    //   const filtersFromUrl = this.propertyFilters
+    //     .map(filter => {
+    //       return { property: filter.field, values: parsed[filter.field] }
+    //     })
+    //     .filter(filter => {
+    //       return (
+    //         filter.values !== null &&
+    //         filter.values !== undefined &&
+    //         filter.values.length > 0
+    //       )
+    //     })
+
+    //   if (filtersFromUrl.length > 0) {
+    //     return filtersFromUrl
+    //   } else {
+    //     return []
+    //   }
+    // },
     getPassedData () {
       const vm = this
       if (vm.passingConditions) {
@@ -480,7 +488,8 @@ export default {
   created () {
     if (process.browser) {
       this.passedData = this.getPassedData()
-      this.activeFilters = this.readFiltersFromQueryParams()
+      // this.setupFilters()
+      // this.activeFilters = this.readFiltersFromQueryParams()
       this.$emit('updated', this.outputData)
     }
   }
