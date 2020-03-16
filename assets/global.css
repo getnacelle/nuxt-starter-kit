@@ -105,7 +105,7 @@ section.hero {
   height: 100vh;
 }
 
-#hero-banner .hero-body {
+section.hero .hero-body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -117,14 +117,14 @@ section.hero {
   justify-content: center;
 }
 
-#hero-banner .title {
+section.hero .title {
   margin-bottom: 2rem;
   font-size: 3rem;
   letter-spacing: 0.025rem;
   line-height: 3.875rem;
 }
 
-#hero-banner .button.is-primary {
+section.hero .button.is-primary {
   padding: 1.3125rem 2.0625rem;
   height: auto;
   font-size: 0.8125rem;
