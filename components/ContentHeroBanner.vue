@@ -374,6 +374,6 @@ export default {
 }
 
 .hero-body-inner {
-  max-width: 500px;
+  max-width: 650px;
 }
 </style>

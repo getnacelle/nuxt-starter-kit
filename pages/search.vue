@@ -1,3 +1,10 @@
+<!-- 
+/****
+/* For information about search & filtering, please refer to:
+/*
+/* https://docs.getnacelle.com/nuxt/filtering-products.html#filtering-searching
+/****
+-->
 <template>
   <div>
     <section class="section search-section">
@@ -16,8 +23,8 @@
             v-if="productData"
             :filterProperties="[
               {
-                field:'productType',
-                label:'Product Type'
+                field: 'productType',
+                label: 'Product Type'
               }
             ]"
             :inputData="productData"
@@ -52,46 +59,46 @@ import SearchResults from '~/components/SearchResults'
 import ProductGrid from '~/components/ProductGrid'
 import SearchNoResults from '~/components/SearchNoResults'
 export default {
-  components:{
+  components: {
     SearchBox,
     RefinementFilters,
     SearchResults,
     ProductGrid,
     SearchNoResults
   },
-    data() {
-      return {
-        filteredData: null
-      }
-    },
-    computed: {
-      ...mapState('search', ['query', 'loadedData']),
-      ...mapGetters('search', ['productData'])
-    },
-    watch: {
-      loadedData(newVal) {
-        if (newVal) {
-          if (this.$route.query && this.$route.query.q) {
-            this.setQuery({
-              origin: 'in-page',
-              value: this.$route.query.q
-            })
-          }
+  data() {
+    return {
+      filteredData: null
+    }
+  },
+  computed: {
+    ...mapState('search', ['query', 'loadedData']),
+    ...mapGetters('search', ['productData'])
+  },
+  watch: {
+    loadedData(newVal) {
+      if (newVal) {
+        if (this.$route.query && this.$route.query.q) {
+          this.setQuery({
+            origin: 'in-page',
+            value: this.$route.query.q
+          })
         }
       }
-    },
-    created () {
-      if (process.browser) {
-        this.getProductData()
-      }
-    },
-    methods: {
-      ...mapMutations('search', ['setQuery']),
-      ...mapActions('search', ['getProductData']),
-      updateFilteredData(data) {
-        this.filteredData = data
-      }
     }
+  },
+  created() {
+    if (process.browser) {
+      this.getProductData()
+    }
+  },
+  methods: {
+    ...mapMutations('search', ['setQuery']),
+    ...mapActions('search', ['getProductData']),
+    updateFilteredData(data) {
+      this.filteredData = data
+    }
+  }
 }
 </script>
 
@@ -103,7 +110,8 @@ export default {
 .fade-leave-active {
   transition: opacity 0.1s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
