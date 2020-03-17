@@ -1,3 +1,11 @@
+<!-- 
+/****
+/* Product collections are loaded with the getCollection mixin.
+/* For information about creating collections, please refer to:
+/*
+/* https://docs.getnacelle.com/nuxt/collections.html#adding-content-to-collections-pages
+/****
+-->
 <template>
   <div class="page page-shop" v-if="collection">
     <content-hero-banner
@@ -26,96 +34,82 @@ import getCollection from '~/mixins/getCollection'
 import ContentHeroBanner from '~/components/ContentHeroBanner'
 import ProductGrid from '~/components/ProductGrid'
 import ObserveEmitter from '~/components/ObserveEmitter'
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
-      name: 'collection',
-      components:{
-        ContentHeroBanner,
-        ProductGrid,
-        ObserveEmitter
-      },
-    mixins: [getCollection()],
-    computed: {
-      ...mapGetters('space', ['getMetatag']),
-      featuredImage() {
-        if (
-          this.collection &&
+  name: 'collection',
+  components: {
+    ContentHeroBanner,
+    ProductGrid,
+    ObserveEmitter
+  },
+  mixins: [getCollection()],
+  computed: {
+    ...mapGetters('space', ['getMetatag']),
+    featuredImage() {
+      if (
+        this.collection &&
         this.collection.featuredMedia &&
         this.collection.featuredMedia.src
-        ) {
-          return this.collection.featuredMedia.src
-        }
-
-        return null
+      ) {
+        return this.collection.featuredMedia.src
       }
-    },
-    head() {
-      if (this.collection) {
-        const properties = {}
-        const meta = []
-        const title = this.getMetatag('title')
 
-        if (this.collection.title) {
-          let fullTitle = this.collection.title
+      return null
+    }
+  },
+  head() {
+    if (this.collection) {
+      const properties = {}
+      const meta = []
+      const title = this.getMetatag('title')
 
-          if (title) {
-            fullTitle = `${fullTitle} | ${title.value}`
-          }
+      if (this.collection.title) {
+        let fullTitle = this.collection.title
 
-          properties.title = fullTitle
-          meta.push({
-            hid: 'og:title',
-            property: 'og:title',
-            content: fullTitle
-          })
+        if (title) {
+          fullTitle = `${fullTitle} | ${title.value}`
         }
 
-        if (this.collection.description) {
-          meta.push({
-            hid: 'description',
-            name: 'description',
-            content: this.collection.description
-          })
-          meta.push({
-            hid: 'og:description',
-            property: 'og:description',
-            content: this.collection.description
-          })
-        }
+        properties.title = fullTitle
+        meta.push({
+          hid: 'og:title',
+          property: 'og:title',
+          content: fullTitle
+        })
+      }
 
-        if (this.featuredImage) {
-          meta.push({
-            hid: 'og:image',
-            property: 'og:image',
-            content: this.featuredImage
-          })
-        }
+      if (this.collection.description) {
+        meta.push({
+          hid: 'description',
+          name: 'description',
+          content: this.collection.description
+        })
+        meta.push({
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.collection.description
+        })
+      }
 
-        return {
-          ...properties,
-          meta
-        }
+      if (this.featuredImage) {
+        meta.push({
+          hid: 'og:image',
+          property: 'og:image',
+          content: this.featuredImage
+        })
+      }
+
+      return {
+        ...properties,
+        meta
       }
     }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-// .products {
-//   display: flex;
-//   flex-wrap: wrap;
-// }
 .product {
-  // width: 20rem;
-  // height: 20rem;
-  // text-decoration: none;
-  // color: black;
-  // display: flex;
-  // flex-direction: column;
-  // margin-bottom: 2rem;
-  // flex-grow: 1;
-  // justify-content: center;
-  // align-items: center;
   .title {
     font-weight: bold;
   }
