@@ -140,6 +140,28 @@ section.hero .button.is-primary {
   color: #fff;
 }
 
+@media screen and (max-width: 768px) {
+  section.hero .title {
+    font-size: 2.15rem;
+    letter-spacing: 0.01rem;
+  }
+  section.hero .button.is-primary {
+    padding: 1rem 1.67rem;
+    font-size: 0.67rem;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  section.hero .title {
+    font-size: 2.5rem;
+    letter-spacing: 0.02rem;
+  }
+  section.hero .button.is-primary {
+    padding: 1.25rem 1.85rem;
+    font-size: 0.75rem;
+  }
+}
+
 /* Home Side-by-Side */
 .sbs .button.is-primary {
   padding: 0.15em 0;
