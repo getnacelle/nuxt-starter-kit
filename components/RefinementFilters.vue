@@ -78,7 +78,9 @@ export default {
   data () {
     return {
       filters: null,
+      filteredData: null,
       activeFilters: [],
+      outputData: null,
       activePriceRange: null,
       passedData: null,
       sortBy: 'Sort By'
@@ -87,10 +89,23 @@ export default {
   watch: {
     inputData () {
       this.setupFilters()
+      this.computeFilteredData()
     },
     outputData () {
       const vm = this
       vm.$emit('updated', vm.outputData)
+    },
+    filters () {
+      this.computeFilteredData()
+    },
+    activeFiters () {
+      this.computeFilteredData()
+    },
+    activePriceRange () {
+      this.computeOutputData()
+    },
+    sortBy () {
+      this.computeOutputData()
     },
     filtersCleared (val) {
       if (val === true) {
@@ -102,168 +117,28 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['filtersCleared']),
-
-    filteredData () {
-      const vm = this
-      const inputData = []
-      const activeFilters = []
-      for (const rec of vm.inputData) {
-        inputData.push(Object.assign({}, rec))
-      }
-
-      for (const rec of vm.activeFilters) {
-        activeFilters.push(Object.assign({}, rec))
-      }
-
-      if (inputData && activeFilters) {
-        const output = inputData.filter(item => {
-          const filterChecks = activeFilters.map(filter => {
-            if (
-              filter.values.some(filterCheck => {
-                const value = item.facets.find(facet => {
-                  return facet.value === filterCheck
-                })
-                if (value) {
-                  return true
-                }
-                return false
-              })
-            ) {
-              return true
-            }
-            return false
-          })
-
-          const itemShouldPass = filterChecks.every(filterCheck => {
-            return filterCheck === true
-          })
-          return itemShouldPass
-        })
-        return output
-      }
-      return []
-    },
-
-    outputData () {
-      const vm = this
-      if (vm.activeFilters.length > 0 && vm.filteredData) {
-        let output = this.filteredData
-
-        output = output.filter(item => {
-          if (vm.activePriceRange) {
-            if (vm.activePriceRange.range[0] === 0) {
-              if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
-                return true
-              } else {
-                return false
-              }
-            } else if (vm.activePriceRange.range[1] === 0) {
-              if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
-                return true
-              } else {
-                return false
-              }
-            } else if (parseFloat(item.minPrice) > vm.activePriceRange.range[0] && parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
-              return true
-            } else {
-              return false
-            }
-          } else {
-            return true
-          }
-        })
-        if (vm.sortBy) {
-          switch (vm.sortBy) {
-            case 'hi-low':
-              return output.sort((a, b) => {
-                if (a.priceRange.min < b.priceRange.min) {
-                  return 1
-                }
-                if (a.priceRange.min > b.priceRange.min) {
-                  return -1
-                }
-
-                return 0
-              })
-            case 'low-hi':
-              return output.sort((a, b) => {
-                if (a.priceRange.min < b.priceRange.min) {
-                  return -1
-                }
-                if (a.priceRange.min > b.priceRange.min) {
-                  return 1
-                }
-
-                return 0
-              })
-          }
-        }
-        return output
-      } else {
-        const output = JSON.parse(JSON.stringify(vm.inputData))
-        const priceFilteredOutput = output.filter(item => {
-          if (vm.activePriceRange) {
-            if (vm.activePriceRange.range[0] === 0) {
-              if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {
-                return true
-              } else {
-                return false
-              }
-            } else if (vm.activePriceRange.range[1] === 0) {
-              if (parseFloat(item.minPrice) > vm.activePriceRange.range[0]) {
-                return true
-              } else {
-                return false
-              }
-            } else if (
-              parseFloat(item.minPrice) > vm.activePriceRange.range[0] &&
-              parseFloat(item.minPrice) < vm.activePriceRange.range[1]
-            ) {
-              return true
-            } else {
-              return false
-            }
-          } else {
-            return true
-          }
-        })
-
-        // return vm.inputData
-        switch (vm.sortBy) {
-          case 'hi-low':
-            return output.sort((a, b) => {
-              if (a.priceRange.min < b.priceRange.min) {
-                return 1
-              }
-              if (a.priceRange.min > b.priceRange.min) {
-                return -1
-              }
-
-              return 0
-            })
-          case 'low-hi':
-            return output.sort((a, b) => {
-              if (a.priceRange.min < b.priceRange.min) {
-                return -1
-              }
-              if (a.priceRange.min > b.priceRange.min) {
-                return 1
-              }
-
-              return 0
-            })
-
-          default:
-            return priceFilteredOutput
-        }
-      }
-      return vm.inputData
-    }
+    ...mapState('search', ['filtersCleared'])
   },
   methods: {
     ...mapMutations('search', ['setFiltersCleared']),
     ...mapMutations('search', ['setFiltersNotCleared']),
+    computeOutputData () {
+      const vm = this
+      const outputWorker = new Worker('/outputWorker.js')
+      outputWorker.postMessage({ activeFilters: this.activeFilters, filteredData: this.filteredData, activePriceRange: this.activePriceRange, sortBy: this.sortBy })
+      outputWorker.onmessage = function (e) {
+        vm.outputData = e.data
+      }
+    },
+    computeFilteredData () {
+      const vm = this
+      const filterWorker = new Worker('/filterWorker.js')
+      filterWorker.postMessage({ activeFilters: this.activeFilters, inputData: this.inputData })
+      filterWorker.onmessage = function (e) {
+        vm.filteredData = e.data
+        vm.computeOutputData()
+      }
+    },
     setupFilters () {
       const vm = this
       if (vm.inputData && vm.propertyFilters) {
@@ -347,6 +222,7 @@ export default {
         }
         this.setFilterInQueryParams(filter)
         this.setFiltersNotCleared()
+        this.computeFilteredData()
       })
     },
     togglePriceRangeActive (priceRange) {
@@ -488,8 +364,8 @@ export default {
   created () {
     if (process.browser) {
       this.passedData = this.getPassedData()
-      // this.setupFilters()
-      // this.activeFilters = this.readFiltersFromQueryParams()
+      this.setupFilters()
+      this.activeFilters = this.readFiltersFromQueryParams()
       this.$emit('updated', this.outputData)
     }
   }

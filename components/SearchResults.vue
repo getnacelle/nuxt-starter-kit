@@ -11,7 +11,7 @@
       </div>
       <div key="results" class="search-results" v-else>
             <h2>Showing {{searchResults.length}} {{itemSinglularPlural}} based on selected filters</h2>
-        <slot name="result" :result="searchResults"></slot>
+        <slot name="result" :result="searchResultsSlice"></slot>
       </div>
     </transition>
   </div>
@@ -77,6 +77,9 @@ export default {
       this.$emit('no-query')
 
       return this.searchData
+    },
+    searchResultsSlice () {
+      return this.searchResults.slice(0, 48)
     }
   }
 }

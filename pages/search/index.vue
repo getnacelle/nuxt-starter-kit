@@ -34,6 +34,7 @@
     <section class="section">
       <div class="columns is-multiline">
         <div class="column is-12">
+
           <search-results v-if="filteredData" :searchData="filteredData" :searchQuery="query">
             <template v-slot:result="{ result }">
               <product-grid :products="result" :columns="4" />
@@ -71,6 +72,7 @@ export default {
   computed: {
     ...mapState('search', ['query', 'loadedData']),
     ...mapGetters('search', ['productData'])
+
   },
   watch: {
     loadedData (newVal) {
