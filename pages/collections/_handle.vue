@@ -1,3 +1,11 @@
+<!-- 
+/****
+/* Product collections are loaded with the getCollection mixin.
+/* For information about creating collections, please refer to:
+/*
+/* https://docs.getnacelle.com/nuxt/collections.html#adding-content-to-collections-pages
+/****
+-->
 <template>
   <div class="page page-shop" v-if="collection">
     <content-hero-banner
@@ -16,7 +24,7 @@
           />
         </div>
       </div>
-      <div ref="fetchMore" class="fetch-more-component" />
+      <observe-emitter v-on:observe="fetchMore" />
     </section>
   </div>
 </template>
@@ -25,10 +33,15 @@
 import getCollection from '~/mixins/getCollection'
 import ContentHeroBanner from '~/components/ContentHeroBanner'
 import ProductGrid from '~/components/ProductGrid'
+<<<<<<< HEAD
+=======
+import ObserveEmitter from '~/components/ObserveEmitter'
+>>>>>>> dev
 import { mapGetters } from 'vuex'
 export default {
   name: 'collection',
   components: {
+<<<<<<< HEAD
     ContentHeroBanner, ProductGrid
   },
   mixins: [getCollection()],
@@ -101,11 +114,32 @@ export default {
       ) {
         return this.collection.featuredMedia.src
       }
+=======
+    ContentHeroBanner,
+    ProductGrid,
+    ObserveEmitter
+  },
+  mixins: [getCollection()],
+  computed: {
+    ...mapGetters('space', ['getMetatag']),
+    featuredImage() {
+      if (
+        this.collection &&
+        this.collection.featuredMedia &&
+        this.collection.featuredMedia.src
+      ) {
+        return this.collection.featuredMedia.src
+      }
+>>>>>>> dev
 
       return null
     }
   },
+<<<<<<< HEAD
   head () {
+=======
+  head() {
+>>>>>>> dev
     if (this.collection) {
       const properties = {}
       const meta = []
@@ -157,21 +191,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .products {
-//   display: flex;
-//   flex-wrap: wrap;
-// }
 .product {
-  // width: 20rem;
-  // height: 20rem;
-  // text-decoration: none;
-  // color: black;
-  // display: flex;
-  // flex-direction: column;
-  // margin-bottom: 2rem;
-  // flex-grow: 1;
-  // justify-content: center;
-  // align-items: center;
   .title {
     font-weight: bold;
   }

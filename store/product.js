@@ -4,7 +4,7 @@ export const state = () => ({
 })
 
 export const getters = {
-  currentVariant (state) {
+  currentVariant(state) {
     if (state.selectedVariant) {
       return state.selectedVariant
     }
@@ -22,10 +22,10 @@ export const getters = {
 }
 
 export const mutations = {
-  setProduct (state, payload) {
+  setProduct(state, payload) {
     state.product = payload
   },
-  setSelectedVariant (state, payload) {
+  setSelectedVariant(state, payload) {
     if (state.product && state.product.variants && payload && payload.id) {
       const variant = state.product.variants.find(
         variant => variant.id === payload.id
@@ -33,7 +33,7 @@ export const mutations = {
       state.selectedVariant = variant
     }
   },
-  setSelectedVariantById (state, payload) {
+  setSelectedVariantById(state, payload) {
     if (state.product && state.product.variants && payload) {
       const variant = state.product.variants.find(
         variant => variant.id === payload

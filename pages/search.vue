@@ -1,3 +1,10 @@
+<!--
+/****
+/* For information about search & filtering, please refer to:
+/*
+/* https://docs.getnacelle.com/nuxt/filtering-products.html#filtering-searching
+/****
+-->
 <template>
   <div>
     <!-- <section class="section search-section">
@@ -70,7 +77,7 @@ export default {
 
   },
   watch: {
-    loadedData (newVal) {
+    loadedData(newVal) {
       if (newVal) {
         if (this.$route.query && this.$route.query.q) {
           this.setQuery({
@@ -81,7 +88,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     if (process.browser) {
       if (!this.filteredData) {
         this.getProductData()
@@ -92,7 +99,7 @@ export default {
     ...mapMutations('search', ['setFilteredData']),
     ...mapMutations('search', ['setQuery']),
     ...mapActions('search', ['getProductData']),
-    updateFilteredData (data) {
+    updateFilteredData(data) {
       this.setFilteredData(data)
     }
   }
@@ -107,7 +114,8 @@ export default {
 .fade-leave-active {
   transition: opacity 0.1s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 .filtering {

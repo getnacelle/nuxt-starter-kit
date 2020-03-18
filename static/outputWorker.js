@@ -1,4 +1,4 @@
-onmessage = function (e) {
+onmessage = function(e) {
   const vm = e.data
   let output = JSON.parse(JSON.stringify(vm.filteredData))
 

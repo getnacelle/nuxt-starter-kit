@@ -1,4 +1,4 @@
-onmessage = function (e) {
+onmessage = function(e) {
   const inputData = e.data.inputData
   const activeFilters = e.data.activeFilters
 

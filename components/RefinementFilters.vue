@@ -75,7 +75,7 @@ export default {
       required: false
     }
   },
-  data () {
+  data() {
     return {
       filters: null,
       filteredData: null,
@@ -87,29 +87,29 @@ export default {
     }
   },
   watch: {
-    inputData () {
+    inputData() {
       this.setupFilters()
       this.computeFilteredData()
     },
-    outputData () {
+    outputData() {
       const vm = this
       if (vm.outputData.length > 0) {
         vm.$emit('updated', vm.outputData)
       }
     },
-    filters () {
+    filters() {
       this.computeFilteredData()
     },
-    activeFiters () {
+    activeFiters() {
       this.computeFilteredData()
     },
-    activePriceRange () {
+    activePriceRange() {
       this.computeOutputData()
     },
-    sortBy () {
+    sortBy() {
       this.computeOutputData()
     },
-    filtersCleared (val) {
+    filtersCleared(val) {
       if (val === true) {
         this.activeFilters = []
         this.activePriceRange = null
@@ -124,24 +124,24 @@ export default {
   methods: {
     ...mapMutations('search', ['setFiltersCleared']),
     ...mapMutations('search', ['setFiltersNotCleared']),
-    computeOutputData () {
+    computeOutputData() {
       const vm = this
       const outputWorker = new Worker('/outputWorker.js')
       outputWorker.postMessage({ activeFilters: this.activeFilters, filteredData: this.filteredData, activePriceRange: this.activePriceRange, sortBy: this.sortBy })
-      outputWorker.onmessage = function (e) {
+      outputWorker.onmessage = function(e) {
         vm.outputData = e.data
       }
     },
-    computeFilteredData () {
+    computeFilteredData() {
       const vm = this
       const filterWorker = new Worker('/filterWorker.js')
       filterWorker.postMessage({ activeFilters: this.activeFilters, inputData: this.inputData })
-      filterWorker.onmessage = function (e) {
+      filterWorker.onmessage = function(e) {
         vm.filteredData = e.data
         vm.computeOutputData()
       }
     },
-    setupFilters () {
+    setupFilters() {
       const vm = this
       if (vm.inputData && vm.propertyFilters) {
         vm.filters = vm.inputData.reduce((output, item) => {
@@ -177,7 +177,7 @@ export default {
         })
       }
     },
-    filterActive (value) {
+    filterActive(value) {
       return requestAnimationFrame(() => {
         if (this.activeFilters) {
           const filterArray = this.activeFilters.filter(filter => {
@@ -191,7 +191,7 @@ export default {
         }
       })
     },
-    toggleFilterActive (filter) {
+    toggleFilterActive(filter) {
       return requestAnimationFrame(() => {
         const filterInFilters = this.activeFilters.filter(filtersItem => {
           return filtersItem.property === filter.property
@@ -227,7 +227,7 @@ export default {
         this.computeFilteredData()
       })
     },
-    togglePriceRangeActive (priceRange) {
+    togglePriceRangeActive(priceRange) {
       if (
         JSON.stringify(this.activePriceRange) === JSON.stringify(priceRange)
       ) {
@@ -236,7 +236,7 @@ export default {
         this.activePriceRange = priceRange
       }
     },
-    setFilterInQueryParams (filter) {
+    setFilterInQueryParams(filter) {
       return requestAnimationFrame(() => {
         if (process.browser) {
           let parsed = queryString.parse(location.search, {
@@ -295,7 +295,7 @@ export default {
         }
       })
     },
-    removeFiltersInQueryParams () {
+    removeFiltersInQueryParams() {
       if (process.browser) {
         const filtersFromUrl = this.propertyFilters.map(filter => {
           return filter.field
@@ -308,7 +308,7 @@ export default {
         this.$router.push({ query: queryString.parse(queryWithoutFilters) })
       }
     },
-    readFiltersFromQueryParams () {
+    readFiltersFromQueryParams() {
       let parsed = Object.entries(
         queryString.parse(location.search, { arrayFormat: 'comma' })
       )
@@ -340,7 +340,7 @@ export default {
         return []
       }
     },
-    getPassedData () {
+    getPassedData() {
       const vm = this
       if (vm.passingConditions) {
         return vm.inputData.filter(item => {
@@ -363,7 +363,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     if (process.browser) {
       this.passedData = this.getPassedData()
       this.setupFilters()

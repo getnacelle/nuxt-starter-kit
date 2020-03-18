@@ -26,12 +26,6 @@ export default {
         type: 'text/css',
         href: `//dmf8x4ovgacxs.cloudfront.net/${process.env.NACELLE_SPACE_ID}/styles.css`
       }
-    ],
-    script: [
-      {
-        src:
-          'https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver'
-      }
     ]
   },
   /*
@@ -59,12 +53,26 @@ export default {
     '@nacelle/nacelle-nuxt-module',
     '@nuxtjs/sitemap',
     '@nuxtjs/axios',
+    'nuxt-polyfill',
     'vue-currency-filter/nuxt'
   ],
 
+  router: {
+    middleware: 'cart'
+  },
+
+  polyfill: {
+    features: [
+      {
+        require: 'intersection-observer',
+        detect: () => 'IntersectionObserver' in window
+      }
+    ]
+  },
+
   sitemap: {
     gzip: true,
-    async routes () {
+    async routes() {
       const staticDir = path.resolve(__dirname, './static/data')
       const routes = fs.readJsonSync(`${staticDir}/routes.json`)
       const routesOnly = routes.map(route => route.route)
@@ -80,7 +88,8 @@ export default {
     fbID: process.env.NACELLE_FB_ID,
     skipPrefetch: process.env.SKIP_PREFETCH === 'true',
     customEndpoint: process.env.NACELLE_CUSTOM_ENDPOINT,
-    searchDataTypes: ['article', 'page', 'blog']
+    searchDataTypes: ['article', 'page', 'blog'],
+    tem: process.env.NACELLE_TEM
   },
 
   generate: {

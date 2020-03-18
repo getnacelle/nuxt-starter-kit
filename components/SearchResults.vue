@@ -42,13 +42,13 @@ export default {
     }
   },
   watch: {
-    filteredData (newData, oldData) {
+    filteredData(newData, oldData) {
       if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
         this.resetResults()
       }
     }
   },
-  data () {
+  data() {
     return {
       searchRes: null,
       pageHeight: null
@@ -56,7 +56,7 @@ export default {
   },
   computed: {
     ...mapState('search', ['resultsToDisplay', 'filteredData']),
-    itemSinglularPlural () {
+    itemSinglularPlural() {
       if (this.searchResults && this.searchResults.length === 1) {
         return 'item'
       } else if (this.searchResults && this.searchResults.length > 1) {
@@ -65,7 +65,7 @@ export default {
         return 'items'
       }
     },
-    searchResults () {
+    searchResults() {
       if (
         this.searchData &&
         this.searchQuery &&
@@ -89,14 +89,14 @@ export default {
 
       return this.searchData
     },
-    searchResultsSlice () {
+    searchResultsSlice() {
       return this.searchResults.slice(0, this.resultsToDisplay)
     }
   },
   methods: {
     ...mapMutations('search', ['showMoreResults', 'resetResults'])
   },
-  mounted () {
+  mounted() {
     setTimeout(() => {
       if (this.$refs['load-more']) {
         const options = {

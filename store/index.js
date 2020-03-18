@@ -1,4 +1,3 @@
-import axios from 'axios'
 export const state = () => ({
   collectionLimit: 12
 })
