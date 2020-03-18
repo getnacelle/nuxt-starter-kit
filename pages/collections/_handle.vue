@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* Product collections are loaded with the getCollection mixin.
 /* For information about creating collections, please refer to:
@@ -33,20 +33,16 @@
 import getCollection from '~/mixins/getCollection'
 import ContentHeroBanner from '~/components/ContentHeroBanner'
 import ProductGrid from '~/components/ProductGrid'
-<<<<<<< HEAD
-=======
 import ObserveEmitter from '~/components/ObserveEmitter'
->>>>>>> dev
 import { mapGetters } from 'vuex'
 export default {
   name: 'collection',
   components: {
-<<<<<<< HEAD
-    ContentHeroBanner, ProductGrid
+    ContentHeroBanner, ProductGrid, ObserveEmitter
   },
   mixins: [getCollection()],
   computed: {
-    productData () {
+    productData() {
       if (this.products) {
         return this.products.map(product => {
           const { tags, variants, ...rest } = product
@@ -106,22 +102,6 @@ export default {
       return []
     },
     ...mapGetters('space', ['getMetatag']),
-    featuredImage () {
-      if (
-        this.collection &&
-        this.collection.featuredMedia &&
-        this.collection.featuredMedia.src
-      ) {
-        return this.collection.featuredMedia.src
-      }
-=======
-    ContentHeroBanner,
-    ProductGrid,
-    ObserveEmitter
-  },
-  mixins: [getCollection()],
-  computed: {
-    ...mapGetters('space', ['getMetatag']),
     featuredImage() {
       if (
         this.collection &&
@@ -130,16 +110,11 @@ export default {
       ) {
         return this.collection.featuredMedia.src
       }
->>>>>>> dev
 
       return null
     }
   },
-<<<<<<< HEAD
-  head () {
-=======
   head() {
->>>>>>> dev
     if (this.collection) {
       const properties = {}
       const meta = []
