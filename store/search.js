@@ -1,13 +1,14 @@
 import axios from 'axios'
-import generateProductData from '@nacelle/replicator'
 
 export const state = () => ({
   query: null,
   autocompleteVisible: false,
   filtersCleared: false,
   searchData: {},
+  filteredData: null,
   loadedData: false,
-  searchLoading: false
+  searchLoading: false,
+  resultsToDisplay: 12
 })
 
 export const getters = {
@@ -31,7 +32,7 @@ export const getters = {
       state.searchData.products &&
       state.searchData.products.length > 0
     ) {
-      return generateProductData(100).map(product => {
+      return state.searchData.products.map(product => {
         const { tags, variants, ...rest } = product
 
         /// //////////////////////////
@@ -85,6 +86,18 @@ export const getters = {
 export const mutations = {
   setQuery (state, query) {
     state.query = query
+  },
+
+  setFilteredData (state, data) {
+    state.filteredData = data
+  },
+
+  showMoreResults (state) {
+    state.resultsToDisplay = state.resultsToDisplay + 12
+  },
+
+  resetResults (state) {
+    state.resultsToDisplay = 12
   },
 
   setAutocompleteVisible (state) {

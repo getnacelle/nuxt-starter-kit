@@ -36,7 +36,7 @@ export default {
       default: 'Load More'
     }
   },
-  data() {
+  data () {
     return {
       collection: undefined,
       products: [],
@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     ...mapGetters('collections', ['getCollection']),
-    showButton() {
+    showButton () {
       return (
         this.useButtonLoadMore &&
         this.collection &&
@@ -55,7 +55,7 @@ export default {
         this.productIndex < this.collection.products.length
       )
     },
-    useLocale() {
+    useLocale () {
       if (this.locale && this.locale !== '') {
         return this.locale
       }
@@ -67,7 +67,7 @@ export default {
       return 'en-us'
     }
   },
-  created() {
+  created () {
     if (process.browser || process.client) {
       const storeCollection = this.getCollection(this.handle)
 
@@ -94,20 +94,20 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.initObserver()
   },
-  updated() {
+  updated () {
     this.initObserver()
   },
   methods: {
     ...mapMutations('collections', ['addCollection', 'updateCollection']),
-    onChange(changes) {
+    onChange (changes) {
       if (changes[0].isIntersecting) {
         this.fetchProducts()
       }
     },
-    initObserver() {
+    initObserver () {
       if (
         !this.isObserverInitialized &&
         (process.browser || process.client) &&
@@ -128,7 +128,7 @@ export default {
         }
       }
     },
-    fetchProducts() {
+    fetchProducts () {
       if (
         !this.isLoadingProducts &&
         (process.browser || process.client) &&

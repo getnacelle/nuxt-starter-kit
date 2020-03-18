@@ -12,14 +12,16 @@
       <div key="results" class="search-results" v-else>
             <h2>Showing {{searchResults.length}} {{itemSinglularPlural}} based on selected filters</h2>
         <slot name="result" :result="searchResultsSlice"></slot>
+              <div ref="load-more"></div>
       </div>
+
     </transition>
   </div>
 </template>
 
 <script>
 import Fuse from 'fuse.js'
-
+import { mapState, mapMutations } from 'vuex'
 export default {
   props: {
     searchKeys: {
@@ -39,12 +41,21 @@ export default {
       default: 0.5
     }
   },
+  watch: {
+    filteredData (newData, oldData) {
+      if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+        this.resetResults()
+      }
+    }
+  },
   data () {
     return {
-      searchRes: null
+      searchRes: null,
+      pageHeight: null
     }
   },
   computed: {
+    ...mapState('search', ['resultsToDisplay', 'filteredData']),
     itemSinglularPlural () {
       if (this.searchResults && this.searchResults.length === 1) {
         return 'item'
@@ -79,8 +90,27 @@ export default {
       return this.searchData
     },
     searchResultsSlice () {
-      return this.searchResults.slice(0, 48)
+      return this.searchResults.slice(0, this.resultsToDisplay)
     }
+  },
+  methods: {
+    ...mapMutations('search', ['showMoreResults', 'resetResults'])
+  },
+  mounted () {
+    setTimeout(() => {
+      if (this.$refs['load-more']) {
+        const options = {
+          root: null,
+          rootMargin: '250px',
+          threshold: 1
+        }
+        const observer = new IntersectionObserver(this.showMoreResults, options)
+        const observee = this.$refs['load-more']
+
+        observer.observe(observee)
+        this.isObserverInitialized = true
+      }
+    }, 5000)
   }
 }
 </script>

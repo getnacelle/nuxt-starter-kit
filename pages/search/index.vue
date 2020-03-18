@@ -37,7 +37,7 @@
 
           <search-results v-if="filteredData" :searchData="filteredData" :searchQuery="query">
             <template v-slot:result="{ result }">
-              <product-grid :products="result" :columns="4" />
+              <product-grid :products="result" :columns="4"/>
             </template>
             <template v-slot:no-results>
               <search-no-results />
@@ -64,13 +64,8 @@ export default {
     ProductGrid,
     SearchNoResults
   },
-  data () {
-    return {
-      filteredData: null
-    }
-  },
   computed: {
-    ...mapState('search', ['query', 'loadedData']),
+    ...mapState('search', ['query', 'loadedData', 'filteredData']),
     ...mapGetters('search', ['productData'])
 
   },
@@ -88,14 +83,17 @@ export default {
   },
   created () {
     if (process.browser) {
-      this.getProductData()
+      if (!this.filteredData) {
+        this.getProductData()
+      }
     }
   },
   methods: {
+    ...mapMutations('search', ['setFilteredData']),
     ...mapMutations('search', ['setQuery']),
     ...mapActions('search', ['getProductData']),
     updateFilteredData (data) {
-      this.filteredData = data
+      this.setFilteredData(data)
     }
   }
 }

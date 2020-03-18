@@ -93,7 +93,9 @@ export default {
     },
     outputData () {
       const vm = this
-      vm.$emit('updated', vm.outputData)
+      if (vm.outputData.length > 0) {
+        vm.$emit('updated', vm.outputData)
+      }
     },
     filters () {
       this.computeFilteredData()
@@ -366,7 +368,9 @@ export default {
       this.passedData = this.getPassedData()
       this.setupFilters()
       this.activeFilters = this.readFiltersFromQueryParams()
-      this.$emit('updated', this.outputData)
+      if (this.filteredData && this.outputData.length > 0) {
+        this.$emit('updated', this.outputData)
+      }
     }
   }
 }
