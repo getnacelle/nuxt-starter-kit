@@ -359,9 +359,9 @@ export default {
             return passing()
           })
           const passedConditions = conditions.every(condition => {
-            return condition == true
+            return condition === true
           })
-          return passedConditions == true
+          return passedConditions === true
         })
       } else {
         return vm.inputData
