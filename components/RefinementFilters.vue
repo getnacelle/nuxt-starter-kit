@@ -100,7 +100,8 @@ export default {
     filters() {
       this.computeFilteredData()
     },
-    activeFiters() {
+    activeFilters() {
+      console.log('activeFiltersChanged')
       this.computeFilteredData()
     },
     activePriceRange() {
@@ -110,6 +111,7 @@ export default {
       this.computeOutputData()
     },
     filtersCleared(val) {
+      console.log(val)
       if (val === true) {
         this.activeFilters = []
         this.activePriceRange = null
@@ -122,8 +124,11 @@ export default {
     ...mapState('search', ['filtersCleared'])
   },
   methods: {
-    ...mapMutations('search', ['setFiltersCleared']),
-    ...mapMutations('search', ['setFiltersNotCleared']),
+    ...mapMutations('search', [
+      'setFiltersCleared',
+      'setFiltersNotCleared',
+      'setFilteredData'
+    ]),
     computeOutputData() {
       const vm = this
       const outputWorker = new Worker('/outputWorker.js')
