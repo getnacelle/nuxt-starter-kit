@@ -93,9 +93,7 @@ export default {
     },
     outputData() {
       const vm = this
-      if (vm.outputData.length > 0) {
-        vm.$emit('updated', vm.outputData)
-      }
+      vm.$emit('updated', vm.outputData)
     },
     filters() {
       this.computeFilteredData()

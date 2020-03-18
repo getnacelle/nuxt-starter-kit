@@ -23,13 +23,13 @@ export default {
   },
   components: { RefinementFilterColorSwatch },
   computed: {
-    filterActive () {
+    filterActive() {
       const vm = this
       if (vm.activeFilters.length > 0) {
         return vm.activeFilters.some(filter => filter.property === vm.property)
       }
     },
-    selected () {
+    selected() {
       const vm = this
       if (vm.filterActive) {
         const thisFilter = vm.activeFilters.filter(filter => {
