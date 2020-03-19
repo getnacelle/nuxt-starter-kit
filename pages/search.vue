@@ -42,14 +42,14 @@
       <div class="columns is-multiline">
         <div class="column is-12">
 
-          <search-results v-if="filteredData" :searchData="filteredData" :searchQuery="query">
+          <refinement-results v-if="filteredData" :searchData="filteredData" :searchQuery="query">
             <template v-slot:result="{ result }">
               <product-grid :products="result" :columns="4"/>
             </template>
             <template v-slot:no-results>
               <search-no-results />
             </template>
-          </search-results>
+          </refinement-results>
         </div>
       </div>
     </section>
@@ -60,14 +60,14 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import SearchBox from '~/components/SearchBox'
 import RefinementFilters from '~/components/RefinementFilters'
-import SearchResults from '~/components/SearchResults'
+import RefinementResults from '~/components/RefinementResults'
 import ProductGrid from '~/components/ProductGrid'
 import SearchNoResults from '~/components/SearchNoResults'
 export default {
   components: {
     SearchBox,
     RefinementFilters,
-    SearchResults,
+    RefinementResults,
     ProductGrid,
     SearchNoResults
   },

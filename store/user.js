@@ -111,3 +111,10 @@ export const actions = {
     return false
   }
 }
+
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions
+}

@@ -331,3 +331,11 @@ export const actions = {
     await dispatch('saveAndRedirect', payload)
   }
 }
+
+export default {
+  namespaced: true,
+  state,
+  getters,
+  mutations,
+  actions
+}
