@@ -22,6 +22,6 @@ module.exports = {
     'jest'
   ],
   rules: {
-    'space-before-function-paren': 0
+    "space-before-function-paren": ["error", "never"]
   }
 }
