@@ -21,11 +21,13 @@
       <!-- <template v-slot:section="{ section }"> -->
 
       <!--
-            * Edit Hero Banner *
-                Available slots:
-                name: "background", data: "backgroundImgUrl", "mobileBackgroundImgUrl", "backgroundAltTag"
-                name: "body", data: "title", "subtitle", "textColor"
-                name: "cta", data: "ctaUrl", "ctaText", "ctaHandler"
+        /****
+        /* -- Edit Hero Banner --
+        /* |   Available slots:  |
+        /* name: "background", data: "backgroundImgUrl", "mobileBackgroundImgUrl", "backgroundAltTag"
+        /* name: "body", data: "title", "subtitle", "textColor"
+        /* name: "cta", data: "ctaUrl", "ctaText", "ctaHandler"
+        /****
 
         <content-hero-banner
           v-if="section.contentType === 'ContentHeroBanner'"
@@ -66,7 +68,9 @@
       -->
 
       <!--
-            * Edit Testimonials *
+        /****
+        /* -- Edit Testimonials --
+        /****
 
         <content-testimonials
           v-if="section.contentType === 'ContentTestimonials'"
