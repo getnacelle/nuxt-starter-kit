@@ -18,9 +18,3 @@ export const mutations = {
     state.modalData = payload
   }
 }
-
-export default {
-  namespaced: true,
-  state,
-  mutations
-}

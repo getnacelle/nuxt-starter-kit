@@ -88,6 +88,7 @@ export default {
   },
   watch: {
     inputData() {
+      console.log(this.inputData)
       this.setupFilters()
       this.computeFilteredData()
     },

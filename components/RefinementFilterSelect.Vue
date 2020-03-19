@@ -34,7 +34,7 @@ export default {
       const vm = this
       if (vm.filterActive) {
         const thisFilter = vm.activeFilters.filter(filter => {
-          return filter.property == [vm.property]
+          return filter.property === [vm.property]
         })[0]
 
         return thisFilter.values.some(val => {
