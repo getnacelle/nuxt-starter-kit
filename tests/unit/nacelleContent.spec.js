@@ -1,4 +1,4 @@
-import {createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import nacellePlugin from '../mocks/nacelle-vue-plugin'
 import NacelleContent from '@/components/NacelleContent'
 
@@ -15,7 +15,7 @@ const delay = () => {
 describe('NacelleContent.vue', () => {
   global.process.client = true
 
-  it('loads content object', async () => {
+  it('loads content object', async() => {
     localVue.use(nacellePlugin)
 
     const wrapper = shallowMount(NacelleContent, {

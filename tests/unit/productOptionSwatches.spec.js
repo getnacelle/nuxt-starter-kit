@@ -6,7 +6,6 @@ import Vuex from 'vuex'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-
 describe('ProductOptionSwatch.vue', () => {
   const store = new Vuex.Store(storeConfig())
   const wrapper = mount(ProductOptionSwatches, {
@@ -38,7 +37,7 @@ describe('ProductOptionSwatch.vue', () => {
       ]
     }
   })
-  it('renders swatches', async () => {
+  it('renders swatches', async() => {
     expect(wrapper.findAll('.swatches').exists()).toBe(true)
   })
 })

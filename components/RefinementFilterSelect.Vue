@@ -18,7 +18,7 @@ export default {
     },
     activeFilters: {
       type: Array,
-      default: [String]
+      default: () => [String]
     }
   },
   components: { RefinementFilterColorSwatch },
@@ -28,6 +28,7 @@ export default {
       if (vm.activeFilters.length > 0) {
         return vm.activeFilters.some(filter => filter.property === vm.property)
       }
+      return null
     },
     selected() {
       const vm = this

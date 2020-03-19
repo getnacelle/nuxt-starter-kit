@@ -1,5 +1,5 @@
 import storeConfig from '../storeConfig'
-import { shallowMount,createLocalVue } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
 import CartFlyoutItemRemoveButton from '@/components/CartFlyoutItemRemoveButton'
 
 import Vuex from 'vuex'
@@ -7,9 +7,8 @@ import Vuex from 'vuex'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-describe('CartFlyoutItemRemoveButton.vue', () => { 
-
-  it('removes a line item from the cart', async () => {
+describe('CartFlyoutItemRemoveButton.vue', () => {
+  it('removes a line item from the cart', async() => {
     const store = new Vuex.Store(storeConfig())
     store.state.cart.lineItems = [
       {

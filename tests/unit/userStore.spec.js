@@ -5,7 +5,7 @@ import Vuex from 'vuex'
 import * as Cookies from 'es-cookie'
 process.browser = true
 describe('User Store', () => {
-  it('sets user data ', async () => {
+  it('sets user data ', async() => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -19,7 +19,7 @@ describe('User Store', () => {
     expect(store.state.user.customerEmail).toEqual('test@test.com')
   })
 
-  it('creates a session cookie and sets the session id', async () => {
+  it('creates a session cookie and sets the session id', async() => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -30,7 +30,7 @@ describe('User Store', () => {
     expect(cookie).toBeDefined()
   })
 
-  it('reads the session cookie', async () => {
+  it('reads the session cookie', async() => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()

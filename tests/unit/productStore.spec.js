@@ -1,9 +1,9 @@
 import storeConfig from '../storeConfig'
 import Vue from 'vue'
 import Vuex from 'vuex'
-Vue.use(Vuex)
 
 import { defaultProduct } from '../mocks/defaultObjects'
+Vue.use(Vuex)
 
 describe('Event Store', () => {
   it('sets the product in vuex store', () => {

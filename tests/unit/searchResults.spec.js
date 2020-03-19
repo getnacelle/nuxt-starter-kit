@@ -3,7 +3,7 @@ import SearchResults from '@/components/SearchResults'
 const localVue = createLocalVue()
 
 describe('SearchResults.vue', () => {
-  it('provides search results from a supplied query and search data', async () => {
+  it('provides search results from a supplied query and search data', async() => {
     const wrapper = mount(SearchResults, {
       localVue,
       propsData: {

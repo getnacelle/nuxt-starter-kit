@@ -6,7 +6,7 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('CartFlyoutSubtotal.vue', () => {
-  it('displays the cart subtotal', async () => {
+  it('displays the cart subtotal', async() => {
     const store = new Vuex.Store(storeConfig())
     const wrapper = mount(CartFlyoutSubtotal, {
       store,

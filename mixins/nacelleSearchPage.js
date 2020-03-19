@@ -23,7 +23,7 @@ export default params => {
         }
       }
     },
-    created () {
+    created() {
       if (process.browser) {
         this.getProductData()
       }

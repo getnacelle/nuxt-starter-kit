@@ -2,7 +2,8 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
+    'jest/globals': true
   },
   extends: [
     'plugin:vue/essential',
@@ -17,9 +18,10 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: [
-    'vue'
+    'vue',
+    'jest'
   ],
   rules: {
-    "space-before-function-paren": ["error", "never"]
+    'space-before-function-paren': 0
   }
 }

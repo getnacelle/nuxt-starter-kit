@@ -1,6 +1,6 @@
 export default {
   computed: {
-    metafieldsObj () {
+    metafieldsObj() {
       if (this.product && this.product.metafields) {
         return this.product.metafields.reduce((obj, metafield) => {
           const { namespace, key, value } = metafield
@@ -20,7 +20,7 @@ export default {
     }
   },
   methods: {
-    getMetafield (namespace, key) {
+    getMetafield(namespace, key) {
       const metafield = this.product.metafields.find(field => (
         field.namespace === namespace && field.key === key
       ))
