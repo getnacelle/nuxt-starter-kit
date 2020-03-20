@@ -53,11 +53,11 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import SearchBox from '~/components/SearchBox'
-import RefinementFilters from '~/components/RefinementFilters'
-import SearchResults from '~/components/SearchResults'
-import ProductGrid from '~/components/ProductGrid'
-import SearchNoResults from '~/components/SearchNoResults'
+import SearchBox from '~/components/nacelle/SearchBox'
+import RefinementFilters from '~/components/nacelle/RefinementFilters'
+import SearchResults from '~/components/nacelle/SearchResults'
+import ProductGrid from '~/components/nacelle/ProductGrid'
+import SearchNoResults from '~/components/nacelle/SearchNoResults'
 export default {
   components: {
     SearchBox,

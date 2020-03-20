@@ -137,9 +137,9 @@
 <script>
 import getPage from '~/mixins/getPage'
 import getCollection from '~/mixins/getCollection'
-import ContentHeroBanner from '~/components/ContentHeroBanner'
-import ContentSideBySide from '~/components/ContentSideBySide'
-import PageContent from '~/components/PageContent'
+import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
+import ContentSideBySide from '~/components/nacelle/ContentSideBySide'
+import PageContent from '~/components/nacelle/PageContent'
 export default {
   components: { ContentHeroBanner, ContentSideBySide, PageContent },
   mixins: [
