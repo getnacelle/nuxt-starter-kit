@@ -45,8 +45,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import getBlog from '~/mixins/getBlog'
-import ArticlePreview from '~/components/ArticlePreview'
-import ObserveEmitter from '~/components/ObserveEmitter'
+import ArticlePreview from '~/components/nacelle/ArticlePreview'
+import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 
 export default {
   components: {
