@@ -1,7 +1,7 @@
 import { addParameters, configure } from '@storybook/vue'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import '../assets/base-styles.css'
+import '../assets/global.css'
 
 import nacellePlugin from '../tests/mocks/nacelle-vue-plugin'
 import nacelleHelpers from '../tests/mocks/nacelle-helpers'
