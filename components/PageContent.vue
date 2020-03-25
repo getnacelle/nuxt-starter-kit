@@ -30,7 +30,7 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 import ContentHeroBanner from './ContentHeroBanner'
 import ContentSideBySide from './ContentSideBySide'
 import ContentTestimonials from './ContentTestimonials'
-import ContentTestimonial from '~/components/ContentTestimonial'
+import ContentTestimonial from './ContentTestimonial'
 import ContentProductGrid from './ContentProductGrid'
 
 export default {
