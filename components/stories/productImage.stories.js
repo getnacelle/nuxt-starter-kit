@@ -1,0 +1,25 @@
+import { withInfo } from 'storybook-addon-vue-info';
+
+import ProductImage from '../ProductImage';
+
+export default {
+  title: 'Components | Product',
+  decorators: [withInfo],
+};
+
+export const Image = () => ({
+  components: { ProductImage },
+  template: `<div class="columns">
+    <div class="column is-6">
+      <product-image :width="500"/>
+    </div>
+  </div>`,
+});
+
+Image.story = {
+  parameters: {
+    info: {
+      // summary: "Hello"
+    },
+  },
+};
