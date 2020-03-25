@@ -5,7 +5,7 @@ const localVue = createLocalVue()
 
 localVue.use(Vuex)
 
-import MainNavCart from '@/components/MainNavCart'
+import MainNavCart from '@/components/nacelle/MainNavCart'
 
 describe('MainNavCart.vue', () => {
   it('displays correct cart quantity', async () => {

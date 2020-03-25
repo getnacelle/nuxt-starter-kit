@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
 import { defaultProduct } from '../mocks/defaultObjects'
-import ProductShopLook from '~/components/ProductShopLook'
+import ProductShopLook from '~/components/nacelle/ProductShopLook'
 
 const localVue = createLocalVue()
 

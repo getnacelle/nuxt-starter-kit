@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-import ProductCard from '@/components/ProductCard'
+import ProductCard from '@/components/nacelle/ProductCard'
 
 describe('ProductCard.vue', () => {
   const defaultProduct = {

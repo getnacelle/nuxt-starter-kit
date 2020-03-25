@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import InterfaceCloseButton from '@/components/InterfaceCloseButton'
+import InterfaceCloseButton from '@/components/nacelle/InterfaceCloseButton'
 
 describe('InterfaceCloseButton.vue', () => {
   it('emits a close event on click', async () => {

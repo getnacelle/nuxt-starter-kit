@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import FormConsentField from '@/components/FormConsentField'
+import FormConsentField from '@/components/nacelle/FormConsentField'
 
 const wrapper = mount(FormConsentField)
 const fieldset = wrapper.find('fieldset')

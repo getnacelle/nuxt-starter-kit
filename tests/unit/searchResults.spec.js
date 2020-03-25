@@ -1,5 +1,5 @@
 import { mount, createLocalVue } from '@vue/test-utils'
-import SearchResults from '@/components/SearchResults'
+import SearchResults from '@/components/nacelle/SearchResults'
 const localVue = createLocalVue()
 
 describe('SearchResults.vue', () => {

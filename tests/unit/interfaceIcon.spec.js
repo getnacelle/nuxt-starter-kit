@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import InterfaceIcon from '@/components/InterfaceIcon'
+import InterfaceIcon from '@/components/nacelle/InterfaceIcon'
 
 describe('InterfaceIcon.vue', () => {
   it('renders an svg', async () => {

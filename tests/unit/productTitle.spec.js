@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import storeConfig from '../storeConfig'
-import ProductTitle from '@/components/ProductTitle'
+import ProductTitle from '@/components/nacelle/ProductTitle'
 import Vuex from 'vuex'
 const localVue = createLocalVue()
 localVue.use(Vuex)
