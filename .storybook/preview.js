@@ -1,4 +1,4 @@
-import { addParameters, configure } from '@storybook/vue'
+import { configure, addParameters } from '@storybook/vue'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import '../assets/global.css'
@@ -14,11 +14,7 @@ Vue.use(axiosModule)
 
 const req = require.context('../components/stories', true, /.stories.js$/)
 
-function loadStories() {
-  req.keys().forEach(filename => req(filename))
-}
-
-configure(loadStories, module)
+configure(req, module)
 
 addParameters({
   options: {
