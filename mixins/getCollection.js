@@ -44,7 +44,7 @@ export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {
       // If not in store or payload fetch static data
       const collectionData = await $nacelle.data.collection({
         handle: pageHandle || handle,
-        locale: locale || $nacelle.locale
+        locale: locale
       }).catch(error => {
         console.warn(
           `Unable to find collection with handle, "${pageHandle || handle}".\n
@@ -65,7 +65,7 @@ Some page templates attempt to locate collections automatically, so this may not
           list: selectedList || 'default',
           paginate: true,
           itemsPerPage: itemsPerPage || 30,
-          locale: locale || $nacelle.locale
+          locale: locale
         })
       }
 
@@ -111,7 +111,7 @@ Some page templates attempt to locate collections automatically, so this may not
         if (!this.collection && !this.noCollectionData) {
           this.collection = await this.$nacelle.data.collection({
             handle: this.handle,
-            locale: locale || this.$nacelle.locale
+            locale: locale
           }).catch(error => {
             console.warn(
               `Unable to find collection with handle, "${this.handle}".\n

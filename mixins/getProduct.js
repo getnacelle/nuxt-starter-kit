@@ -24,7 +24,7 @@ export default ({ productHandle, locale } = {}) => {
 
       const pData = await $nacelle.data.product({
         handle: productHandle || handle,
-        locale: locale || $nacelle.locale
+        locale: locale
       })
 
       return {
@@ -38,7 +38,7 @@ export default ({ productHandle, locale } = {}) => {
         if (!this.product && !this.noProductData) {
           const productData = await this.$nacelle.data.product({
             handle: this.handle,
-            locale: locale || this.$nacelle.locale
+            locale: locale
           })
 
           if (productData) {

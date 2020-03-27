@@ -57,7 +57,7 @@ export default (config = {}) => {
         if (!this.blog && !this.noBlogData) {
           this.blog = await this.$nacelle.data.blog({
             handle: this.handle,
-            locale: config.locale || this.$nacelle.locale
+            locale: config.locale
           })
         }
 
@@ -68,7 +68,7 @@ export default (config = {}) => {
             selectedList: this.selectedList || 'default',
             paginate: true,
             itemsPerPage: this.articlesPerPage || 12,
-            locale: config.locale || this.$nacelle.locale
+            locale: config.locale
           })
         } else {
           this.articles = []
@@ -112,7 +112,7 @@ export default (config = {}) => {
             paginate: true,
             itemsPerPage: this.articlesPerPage || 12,
             index: this.articleIndex,
-            locale: config.locale || this.$nacelle.locale
+            locale: config.locale
           })
 
           this.articles = [

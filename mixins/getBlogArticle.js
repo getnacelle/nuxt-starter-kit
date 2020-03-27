@@ -22,11 +22,11 @@ export default (config = {}) => {
       if (typeof process.server === 'undefined' || process.server) {
         return {}
       }
-      
+
       const articleData = await $nacelle.data.article({
         handle,
         blogHandle,
-        locale: config.locale || $nacelle.locale
+        locale: config.locale
       })
 
       return {
@@ -45,7 +45,7 @@ export default (config = {}) => {
         this.article = await this.$nacelle.data.article({
           handle: this.handle,
           blogHandle: this.blogHandle,
-          locale: config.locale || this.$nacelle.locale
+          locale: config.locale
         })
       }
     }

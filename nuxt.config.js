@@ -117,6 +117,6 @@ export default {
         useShortDoctype: true
       }
     },
-    transpile: ['@nacelle/nacelle-tools']
+    transpile: ['@nacelle/nacelle-nuxt-module']
   }
 }

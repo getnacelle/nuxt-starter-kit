@@ -37,7 +37,7 @@ export default {
     ...mapMutations('cart', ['removeLineItemMutation', 'setCartError']),
 
     // This method gets the Nacelle product ID and variant ID from the
-    // line item, and uses $nacelle.isVariantAvailable to check if a user
+    // line item, and uses $nacelle.status.isVariantAvailable to check if a user
     // is allowed to purchase the item.
     async checkAvailability(lineItem) {
       try {

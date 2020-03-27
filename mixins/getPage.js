@@ -24,7 +24,7 @@ export default ({ pageHandle, locale } = {}) => {
 
       const pageData = await $nacelle.data.page({
         handle: pageHandle || handle,
-        locale: locale || $nacelle.locale
+        locale: locale
       })
 
       return {
@@ -37,7 +37,7 @@ export default ({ pageHandle, locale } = {}) => {
       if (process.browser && !this.page && !this.noPageData) {
         const pageData = await this.$nacelle.data.page({
           handle: this.handle,
-          locale: locale || this.$nacelle.locale
+          locale: locale
         })
 
         if (pageData) {
