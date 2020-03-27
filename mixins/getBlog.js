@@ -31,6 +31,12 @@ export default (config = {}) => {
       const blogData = await $nacelle.data.blog({
         handle: config.blogHandle || blogHandle,
         locale: config.locale || $nacelle.locale
+      }).catch(error => {
+        console.warn(
+          `Unable to find blog data for handle, "${blogHandle || handle}".\n
+Some page templates attempt to locate blog data automatically, so this may not reflect a true error.`
+        )
+        return undefined
       })
 
       if (blogData && blogData.blog && blogData.blog.articleLists) {
@@ -58,6 +64,12 @@ export default (config = {}) => {
           this.blog = await this.$nacelle.data.blog({
             handle: this.handle,
             locale: config.locale
+          }).catch(error => {
+            console.warn(
+              `Unable to find blog data for handle, "${this.handle}".\n
+    Some page templates attempt to locate blog data automatically, so this may not reflect a true error.`
+            )
+            return undefined
           })
         }
 

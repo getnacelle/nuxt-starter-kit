@@ -25,6 +25,12 @@ export default ({ productHandle, locale } = {}) => {
       const productData = await $nacelle.data.product({
         handle: productHandle || handle,
         locale: locale
+      }).catch(error => {
+        console.warn(
+          `Unable to find product data for handle, "${productHandle || handle}".\n
+Some page templates attempt to locate product data automatically, so this may not reflect a true error.`
+        )
+        return undefined
       })
 
       return {
@@ -39,6 +45,12 @@ export default ({ productHandle, locale } = {}) => {
           const productData = await this.$nacelle.data.product({
             handle: this.handle,
             locale: locale
+          }).catch(error => {
+            console.warn(
+              `Unable to find product data for handle, "${this.handle}".\n
+    Some page templates attempt to locate product data automatically, so this may not reflect a true error.`
+            )
+            return undefined
           })
 
           if (productData) {

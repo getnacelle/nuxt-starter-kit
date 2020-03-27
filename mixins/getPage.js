@@ -25,6 +25,12 @@ export default ({ pageHandle, locale } = {}) => {
       const pageData = await $nacelle.data.page({
         handle: pageHandle || handle,
         locale: locale
+      }).catch(error => {
+        console.warn(
+          `Unable to find page data for handle, "${pageHandle || handle}".\n
+Some page templates attempt to locate page data automatically, so this may not reflect a true error.`
+        )
+        return undefined
       })
 
       return {
@@ -38,6 +44,12 @@ export default ({ pageHandle, locale } = {}) => {
         const pageData = await this.$nacelle.data.page({
           handle: this.handle,
           locale: locale
+        }).catch(error => {
+          console.warn(
+            `Unable to find page data for handle, "${this.handle}".\n
+  Some page templates attempt to locate page data automatically, so this may not reflect a true error.`
+          )
+          return undefined
         })
 
         if (pageData) {

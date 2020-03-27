@@ -24,9 +24,15 @@ export default (config = {}) => {
       }
 
       const articleData = await $nacelle.data.article({
-        handle,
-        blogHandle,
+        handle: config.handle || handle,
+        blogHandle: config.blogHandle || blogHandle,
         locale: config.locale
+      }).catch(error => {
+        console.warn(
+          `Unable to find article data for handle, "${config.handle || handle}".\n
+Some page templates attempt to locate article data automatically, so this may not reflect a true error.`
+        )
+        return undefined
       })
 
       return {
@@ -46,6 +52,12 @@ export default (config = {}) => {
           handle: this.handle,
           blogHandle: this.blogHandle,
           locale: config.locale
+        }).catch(error => {
+          console.warn(
+            `Unable to find article data for handle, "${this.handle}".\n
+  Some page templates attempt to locate article data automatically, so this may not reflect a true error.`
+          )
+          return undefined
         })
       }
     }
