@@ -9,7 +9,7 @@
     "start": "nuxt start",
     "generate": "node node_modules/@nacelle/nacelle-tools/dist/scripts/npm-run-generate-script.js",
     "serve": "npx http-server dist",
-    "storybook": "start-storybook"
+    "storybook": "start-storybook -p 7777"
   },
   "dependencies": {
     "@nacelle/nacelle-nuxt-module": "^3.0.4",
