@@ -1,5 +1,3 @@
-import { getProductData } from '@nacelle/nacelle-tools'
-
 export default ({ productHandle, locale } = {}) => {
   return {
     data () {
@@ -14,14 +12,23 @@ export default ({ productHandle, locale } = {}) => {
       const { handle } = params
       const { $nacelle } = app
 
-      const productData = await getProductData({
+      if (payload && payload.productData) {
+        return {
+          article: payload.productData
+        }
+      }
+
+      if (typeof process.server === 'undefined' || process.server) {
+        return {}
+      }
+
+      const pData = await $nacelle.data.product({
         handle: productHandle || handle,
-        locale: locale || $nacelle.locale,
-        payload
+        locale: locale || $nacelle.locale
       })
 
       return {
-        ...productData
+        product: productData
       }
     },
     async created () {
@@ -29,16 +36,19 @@ export default ({ productHandle, locale } = {}) => {
 
       if (process.browser) {
         if (!this.product && !this.noProductData) {
-          const result = await this.$nacelle.products({
+          const productData = await this.$nacelle.data.product({
             handle: this.handle,
             locale: locale || this.$nacelle.locale
           })
 
-          if (
-            Array.isArray(result) &&
-            result.length > 0
-          ) {
-            this.product = result.pop()
+          if (productData) {
+            if (productData.noData) {
+              this.noproductData = true
+            } else {
+              this.product = productData
+            }
+          } else {
+            this.noproductData = true
           }
         }
       }

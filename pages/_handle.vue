@@ -2,8 +2,10 @@
   <div class="page">
     <!-- 
     /****
-    /* The <page-content> component maps data
-    /* from your CMS to Nacelle components
+    /* The <page-content> component maps data from your CMS to Nacelle components.
+    /* For information about creating pages, please refer to:
+    /*
+    /* https://docs.getnacelle.com/nuxt/pages.html#general-pages
     /****
     -->
     <page-content :page="page" :products="products">
@@ -11,7 +13,7 @@
         /****
         /* Customize your Nacelle content by taking advantage
         /* of named slots. For more details, refer to:
-        *
+        /*
         /* https://docs.getnacelle.com/nuxt/pages.html#customizing-homepage-content-output
         /* 
         /* Begin editing sections by uncommenting the <template> tags below.
@@ -37,7 +39,7 @@
              <h1 class="special-title">{{ title }}</h1>
           </template>
         </content-hero-banner>
-      -->
+        -->
 
       <!--
         /****
@@ -51,7 +53,7 @@
           v-if="section.contentType === 'ContentSideBySide'"
           v-bind="section.data"
         />
-      -->
+        -->
 
       <!--
         /****
@@ -65,7 +67,7 @@
           v-if="section.contentType === 'ContentProductGrid'"
           v-bind="section.data"
         />
-      -->
+        -->
 
       <!-- 
         /****
@@ -76,7 +78,7 @@
           v-if="section.contentType === 'ContentTestimonials'"
           v-bind="section.data"
         />
-      -->
+        -->
 
       <!-- </template> -->
     </page-content>
@@ -84,48 +86,17 @@
 </template>
 
 <script>
-import { getPageData } from '@nacelle/nacelle-tools'
+import getPage from '~/mixins/getPage'
+import PageContent from '~/components/nacelle/PageContent'
+
 export default {
+  components: { PageContent },
+  mixins: [getPage()],
   data() {
     return {
       handle: null,
       page: null,
       noPageData: false
-    }
-  },
-  async asyncData(context) {
-    const { params, app, payload } = context
-    const { handle } = params
-    const { $nacelle } = app
-
-    const pageData = await getPageData({
-      handle: pageHandle || handle,
-      locale: locale || $nacelle.locale,
-      payload
-    })
-
-    return {
-      ...pageData
-    }
-  },
-  async created() {
-    this.handle = pageHandle || this.$route.params.handle
-
-    if (process.browser && !this.page && !this.noPageData) {
-      const pageData = await this.$nacelle.content({
-        handle: this.handle,
-        locale: locale || this.$nacelle.locale
-      })
-
-      if (pageData) {
-        if (pageData.noData) {
-          this.noPageData = true
-        } else {
-          this.page = pageData
-        }
-      } else {
-        this.noPageData = true
-      }
     }
   }
 }

@@ -1,5 +1,3 @@
-import { getArticleData } from '@nacelle/nacelle-tools'
-
 export default (config = {}) => {
   return {
     data() {
@@ -15,15 +13,24 @@ export default (config = {}) => {
       const { $nacelle } = app
       const { handle, blogHandle } = params
 
-      const articleData = await getArticleData({
-        handle: config.articleHandle || handle,
-        blogHandle: config.blogHandle || blogHandle,
-        locale: config.locale || $nacelle.locale,
-        payload
+      if (payload && payload.articleData) {
+        return {
+          article: payload.articleData
+        }
+      }
+
+      if (typeof process.server === 'undefined' || process.server) {
+        return {}
+      }
+      
+      const articleData = await $nacelle.data.article({
+        handle,
+        blogHandle,
+        locale: config.locale || $nacelle.locale
       })
 
       return {
-        ...articleData
+        article: articleData
       }
     },
     async created() {
@@ -35,8 +42,8 @@ export default (config = {}) => {
         !this.article &&
         !this.noArticleData
       ) {
-        this.article = await this.$nacelle.article({
-          articleHandle: this.handle,
+        this.article = await this.$nacelle.data.article({
+          handle: this.handle,
           blogHandle: this.blogHandle,
           locale: config.locale || this.$nacelle.locale
         })

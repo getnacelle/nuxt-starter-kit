@@ -86,50 +86,17 @@
 </template>
 
 <script>
+import getPage from '~/mixins/getPage'
 import PageContent from '~/components/nacelle/PageContent'
-import { getPageData } from '@nacelle/nacelle-tools'
+
 export default {
   components: { PageContent },
+  mixins: [getPage()],
   data() {
     return {
       handle: null,
       page: null,
       noPageData: false
-    }
-  },
-  async asyncData(context) {
-    const { params, app, payload } = context
-    const { handle } = params
-    const { $nacelle } = app
-
-    const pageData = await getPageData({
-      handle: handle,
-      locale: $nacelle.locale,
-      payload
-    })
-
-    return {
-      ...pageData
-    }
-  },
-  async created() {
-    this.handle = this.$route.params.handle
-
-    if (process.browser && !this.page && !this.noPageData) {
-      const pageData = await this.$nacelle.content({
-        handle: this.handle,
-        locale: this.$nacelle.locale
-      })
-
-      if (pageData) {
-        if (pageData.noData) {
-          this.noPageData = true
-        } else {
-          this.page = pageData
-        }
-      } else {
-        this.noPageData = true
-      }
     }
   }
 }

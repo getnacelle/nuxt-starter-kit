@@ -45,10 +45,12 @@ export default {
         const variantId = variant.id || ''
 
         if (productId.length > 0 && variantId.length > 0) {
-          const variantAvailable = await this.$nacelle.isVariantAvailable({
-            productId,
-            variantId
-          })
+          const variantAvailable = await this.$nacelle.status.isVariantAvailable(
+            {
+              productId,
+              variantId
+            }
+          )
 
           if (!variantAvailable) {
             this.removeLineItemMutation(productId)

@@ -1,5 +1,3 @@
-import { getPageData } from '@nacelle/nacelle-tools'
-
 export default ({ pageHandle, locale } = {}) => {
   return {
     data () {
@@ -14,21 +12,30 @@ export default ({ pageHandle, locale } = {}) => {
       const { handle } = params
       const { $nacelle } = app
 
-      const pageData = await getPageData({
+      if (payload && payload.pageData) {
+        return {
+          article: payload.pageData
+        }
+      }
+
+      if (typeof process.server === 'undefined' || process.server) {
+        return {}
+      }
+
+      const pageData = await $nacelle.data.page({
         handle: pageHandle || handle,
-        locale: locale || $nacelle.locale,
-        payload
+        locale: locale || $nacelle.locale
       })
 
       return {
-        ...pageData
+        page: pageData
       }
     },
     async created () {
       this.handle = pageHandle || this.$route.params.handle
 
       if (process.browser && !this.page && !this.noPageData) {
-        const pageData = await this.$nacelle.content({
+        const pageData = await this.$nacelle.data.page({
           handle: this.handle,
           locale: locale || this.$nacelle.locale
         })
