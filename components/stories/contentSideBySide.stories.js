@@ -1,5 +1,6 @@
 import { withKnobs, text, boolean } from '@storybook/addon-knobs'
 import { withInfo } from 'storybook-addon-vue-info'
+import store from '../../.storybook/store';
 
 import ContentSideBySide from '../ContentSideBySide'
 
@@ -9,6 +10,7 @@ export default {
 };
 
 export const Default = () => ({
+  store,
   components: { ContentSideBySide },
   props: {
     imageUrl: {

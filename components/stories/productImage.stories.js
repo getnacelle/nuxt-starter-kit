@@ -1,4 +1,5 @@
 import { withInfo } from 'storybook-addon-vue-info';
+import store from '../../.storybook/store';
 
 import ProductImage from '../ProductImage';
 
@@ -8,6 +9,7 @@ export default {
 };
 
 export const Image = () => ({
+  store,
   components: { ProductImage },
   template: `<div class="columns">
     <div class="column is-6">

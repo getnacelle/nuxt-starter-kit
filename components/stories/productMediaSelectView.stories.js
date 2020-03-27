@@ -1,4 +1,5 @@
 import { withInfo } from 'storybook-addon-vue-info';
+import store from '../../.storybook/store';
 
 import ProductMediaSelectView from '../ProductMediaSelectView';
 
@@ -8,6 +9,7 @@ export default {
 };
 
 export const MediaSelectView = () => ({
+  store,
   components: { ProductMediaSelectView },
   template: `<div class="section">
     <div class="columns">
