@@ -14,7 +14,7 @@ export default ({ productHandle, locale } = {}) => {
 
       if (payload && payload.productData) {
         return {
-          article: payload.productData
+          product: payload.productData
         }
       }
 
@@ -22,7 +22,7 @@ export default ({ productHandle, locale } = {}) => {
         return {}
       }
 
-      const pData = await $nacelle.data.product({
+      const productData = await $nacelle.data.product({
         handle: productHandle || handle,
         locale: locale
       })

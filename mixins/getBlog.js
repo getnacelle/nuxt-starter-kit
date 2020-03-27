@@ -20,7 +20,7 @@ export default (config = {}) => {
 
       if (payload && payload.blogData) {
         return {
-          article: payload.blogData
+          blog: payload.blogData
         }
       }
 

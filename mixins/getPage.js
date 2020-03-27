@@ -14,7 +14,7 @@ export default ({ pageHandle, locale } = {}) => {
 
       if (payload && payload.pageData) {
         return {
-          article: payload.pageData
+          page: payload.pageData
         }
       }
 
