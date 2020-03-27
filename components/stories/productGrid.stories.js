@@ -3,9 +3,9 @@ import StoryRouter from 'storybook-vue-router';
 
 import ProductGrid from '../ProductGrid';
 import InterfaceModal from '../InterfaceModal';
-import store from '../../store/store';
+import store from '../../.storybook/store';
 
-import { defaultProduct } from '../../.storybook/defaultObjects.js';
+import { defaultProduct } from '../../tests/mocks/defaultObjects';
 
 const productArray = [defaultProduct, defaultProduct, defaultProduct];
 
