@@ -1,12 +1,12 @@
-import { withInfo } from 'storybook-addon-vue-info'
 import { withKnobs } from '@storybook/addon-knobs'
+import { withInfo } from 'storybook-addon-vue-info'
 import StoryRouter from 'storybook-vue-router'
-import store from '../../store/store'
+import store from '../../.storybook/store'
 import {
   defaultProduct,
   shopifyArticle,
   contentfulArticle
-} from '../../.storybook/defaultObjects.js'
+} from '../../tests/mocks/defaultObjects'
 
 import BlogArticleContent from '../BlogArticleContent'
 
@@ -43,126 +43,104 @@ Shopify.story = {
   },
 };
 
-// export default {
-//   title: 'Components | Content / Blog / Article Content',
-//   decorators: [withInfo, withKnobs, StoryRouter(), storyWrapper],
-// };
+export const ShopifyWithShopLook = () => ({
+  components: { BlogArticleContent },
+  store,
+  data() {
+    return {
+      article: shopifyArticle,
+      products: [defaultProduct]
+    }
+  },
+  template: `
+    <blog-article-content
+      :article="article"
+      :products="products"
+    />
+  `
+});
 
-// export const ShopifyWithShopLook = () => ({
-//   components: { BlogArticleContent },
-//   store,
-//   data() {
-//     return {
-//       article: shopifyArticle,
-//       products: [defaultProduct]
-//     }
-//   },
-//   template: `
-//     <blog-article-content
-//       :article="article"
-//       :products="products"
-//     />
-//   `
-// });
+ShopifyWithShopLook.story = {
+  name: 'Shopify with Shop Look',
+  parameters: {
+    info: {
+      // summary: "Hello"
+    }
+  },
+};
 
-// ShopifyWithShopLook.story = {
-//   name: 'Shopify with Shop Look',
+export const ShopLookWithCustomProductCard = () => ({
+  components: { BlogArticleContent },
+  store,
+  data() {
+    return {
+      article: shopifyArticle,
+      products: [defaultProduct]
+    }
+  },
+  template: `
+    <blog-article-content
+      :article="article"
+      :products="products"
+    >
+      <template v-slot:product-card="{ product }">
+        {{ product }}
+      </template>
+    </blog-article-content>
+  `
+});
 
-//   parameters: {
-//     info: {
-//       // summary: "Hello"
-//     }
-//   },
-// };
+ShopLookWithCustomProductCard.story = {
+  name: 'Shop Look with Custom Product Card',
+  parameters: {
+    info: {
+      // summary: "Hello"
+    }
+  },
+};
 
-// export default {
-//   title: 'Components | Content / Blog / Article Content',
-//   decorators: [withInfo, withKnobs, StoryRouter(), storyWrapper],
-// };
+export const Contentful = () => ({
+  components: { BlogArticleContent },
+  data() {
+    return {
+      article: contentfulArticle
+    }
+  },
+  template: `
+    <blog-article-content
+      :article="article"
+    />
+  `
+});
 
-// export const ShopLookWithCustomProductCard = () => ({
-//   components: { BlogArticleContent },
-//   store,
-//   data() {
-//     return {
-//       article: shopifyArticle,
-//       products: [defaultProduct]
-//     }
-//   },
-//   template: `
-//     <blog-article-content
-//       :article="article"
-//       :products="products"
-//     >
-//       <template v-slot:product-card="{ product }">
-//         {{ product }}
-//       </template>
-//     </blog-article-content>
-//   `
-// });
+Contentful.story = {
+  parameters: {
+    info: {
+      // summary: "Hello"
+    }
+  },
+};
 
-// ShopLookWithCustomProductCard.story = {
-//   name: 'Shop Look with Custom Product Card',
+export const Customized = () => ({
+  components: { BlogArticleContent },
+  data() {
+    return {
+      article: contentfulArticle
+    }
+  },
+  template: `
+    <blog-article-content :article="article">
+      <div>
+        <h1 class="title">This is extra content appended to the article</h1>
+      </div>
+    </blog-article-content>
+  `
+});
 
-//   parameters: {
-//     info: {
-//       // summary: "Hello"
-//     }
-//   },
-// };
-
-// export default {
-//   title: 'Components | Content / Blog / Article Content',
-//   decorators: [withInfo, withKnobs, StoryRouter(), storyWrapper],
-// };
-
-// export const Contentful = () => ({
-//   components: { BlogArticleContent },
-//   data() {
-//     return {
-//       article: contentfulArticle
-//     }
-//   },
-//   template: `
-//     <blog-article-content
-//       :article="article"
-//     />
-//   `
-// });
-
-// Contentful.story = {
-//   parameters: {
-//     info: {
-//       // summary: "Hello"
-//     }
-//   },
-// };
-
-// export default {
-//   title: 'Components | Content / Blog / Article Content',
-//   decorators: [withInfo, withKnobs, StoryRouter(), storyWrapper],
-// };
-
-// export const Customized = () => ({
-//   components: { BlogArticleContent },
-//   data() {
-//     return {
-//       article: contentfulArticle
-//     }
-//   },
-//   template: `
-//     <blog-article-content :article="article">
-//       <div>
-//         <h1 class="title">This is extra content appended to the article</h1>
-//       </div>
-//     </blog-article-content>
-//   `
-// });
-
-// Customized.story = {
-//   parameters: {
-//     info: {
-//       // summary: "Hello"
-//     }
-//   },
-// };
+Customized.story = {
+  parameters: {
+    info: {
+      // summary: "Hello"
+    }
+  },
+};
