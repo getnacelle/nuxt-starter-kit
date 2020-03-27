@@ -15,6 +15,10 @@ export default {
       type: String,
       default: ''
     },
+    blogHandle: {
+      type: String,
+      default: 'blog'
+    },
     type: {
       type: String,
       default: 'content'
@@ -44,7 +48,8 @@ export default {
         .content({
           handle: this.handle,
           type: this.type,
-          locale: this.useLocale
+          locale: this.useLocale,
+          blogHandle: this.blogHandle
         })
         .then(result => {
           if (result) {
