@@ -1,7 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import { withKnobs, button } from '@storybook/addon-knobs';
 import InterfaceModal from '../InterfaceModal';
-import store from '../../store/store';
+import store from '../../.storybook/store';
 
 const label = 'Show Modal';
 

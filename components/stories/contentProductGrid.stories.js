@@ -3,7 +3,7 @@ import StoryRouter from 'storybook-vue-router'
 
 import ContentProductGrid from '../ContentProductGrid'
 
-import store from '../../store/store'
+import store from '../../.storybook/store'
 
 // const defaultProduct = {
 //   priceRange: {
@@ -23,7 +23,7 @@ import store from '../../store/store'
 //     id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
 //   }]
 // }
-import { defaultProduct } from '../../.storybook/defaultObjects'
+import { defaultProduct } from '../../tests/mocks/defaultObjects'
 
 const productArray = [defaultProduct, defaultProduct, defaultProduct]
 

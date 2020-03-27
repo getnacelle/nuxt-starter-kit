@@ -1,8 +1,8 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import { withKnobs } from '@storybook/addon-knobs';
 import StoryRouter from 'storybook-vue-router';
-import store from '../../store/store';
-import { defaultProduct } from '../../.storybook/defaultObjects.js';
+import store from '../../.storybook/store';
+import { defaultProduct } from '../../tests/mocks/defaultObjects';
 import ProductShopLook from '../ProductShopLook';
 
 export default {

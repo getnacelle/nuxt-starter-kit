@@ -1,6 +1,6 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
-import store from '../../store/store';
+import store from '../../.storybook/store';
 
 import NacelleProducts from '../NacelleProducts';
 

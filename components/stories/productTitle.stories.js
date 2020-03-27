@@ -2,7 +2,7 @@ import { withInfo } from 'storybook-addon-vue-info';
 
 import ProductTitle from '../ProductTitle';
 
-import store from '../../store/store';
+import store from '../../.storybook/store';
 
 export default {
   title: 'Components | Product',

@@ -2,7 +2,7 @@ import { withActions, action } from '@storybook/addon-actions';
 import { withKnobs, object } from '@storybook/addon-knobs';
 import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
-import store from '../../store/store';
+import store from '../../.storybook/store';
 import RefinementFilters from '../RefinementFilters';
 import searchResults from '../../.storybook/defaults/search-results';
 

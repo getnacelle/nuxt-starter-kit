@@ -1,7 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import { withKnobs, boolean } from '@storybook/addon-knobs';
 
-import store from '../../store/store';
+import store from '../../.storybook/store';
 
 import ProductVariantSelect from '../ProductVariantSelect';
 import CartFlyout from '../CartFlyout';

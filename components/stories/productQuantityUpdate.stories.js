@@ -1,6 +1,6 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import QuantitySelector from '../QuantitySelector';
-import store from '../../store/store';
+import store from '../../.storybook/store';
 
 export default {
   title: 'Components | Product',
