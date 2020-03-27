@@ -38,7 +38,8 @@ export default {
    */
   css: [
     '@nacelle/nacelle-vue-components/dist/base-styles.css',
-    '@/assets/global.css'
+    '@/assets/global.css',
+    'vue-glide-js/dist/vue-glide.css'
   ], 
 
   env: {

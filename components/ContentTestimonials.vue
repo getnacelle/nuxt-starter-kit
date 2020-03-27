@@ -1,18 +1,16 @@
 <template>
   <section class="testimonials section nacelle">
     <div class="container">
-      <component v-if="title.length > 0" :is="titleTag" class="title has-text-centered">
+      <component
+        v-if="title.length > 0"
+        :is="titleTag"
+        class="title has-text-centered"
+      >
         {{ title }}
       </component>
       <div class="glide-wrapper" v-if="slides.length > 0">
-        <vue-glide
-          :type="'carousel'"
-          :perView="slidesPerView"
-        >
-          <vue-glide-slide
-            v-for="(slide, index) in slides"
-            :key="index"
-          >
+        <vue-glide :type="'carousel'" :perView="slidesPerView">
+          <vue-glide-slide v-for="(slide, index) in slides" :key="index">
             <div class="glide__slide-inner">
               <content-testimonial
                 :alignment="alignment"
@@ -24,16 +22,28 @@
           </vue-glide-slide>
           <template slot="control">
             <button class="glide-arrow glide-arrow-prev" data-glide-dir="<">
-              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 768">
-                <path d="M493.5 531l-45 45-192-192 192-192 45 45-147 147z"></path>
+              <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 768 768"
+              >
+                <path
+                  d="M493.5 531l-45 45-192-192 192-192 45 45-147 147z"
+                ></path>
               </svg>
               <span class="is-sr-only">
                 prev
               </span>
             </button>
             <button class="glide-arrow glide-arrow-next" data-glide-dir=">">
-              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 768">
-                <path d="M274.5 531l147-147-147-147 45-45 192 192-192 192z"></path>
+              <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 768 768"
+              >
+                <path
+                  d="M274.5 531l147-147-147-147 45-45 192 192-192 192z"
+                ></path>
               </svg>
               <span class="is-sr-only">
                 next
@@ -47,7 +57,6 @@
 </template>
 
 <script>
-
 import { Glide, GlideSlide } from 'vue-glide-js'
 import ContentTestimonial from './ContentTestimonial'
 
@@ -85,8 +94,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'vue-glide-js/dist/vue-glide.css';
-
 .glide-wrapper {
   margin-left: 2rem;
   margin-right: 2rem;
@@ -119,4 +126,3 @@ export default {
   }
 }
 </style>
-
