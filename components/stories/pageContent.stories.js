@@ -635,102 +635,105 @@ const defaultObj = {
   ],
   shopify: [
     {
-      node: {
-        title: 'Widget Co Hero',
-        handle: 'widget-co-hero',
-        contentHtml: 'Bringing You the Best Widgets!',
-        image: {
-          id: 'Z2lkOi8vc2hvcGlmeS9BcnRpY2xlSW1hZ2UvOTYyOTI3MDExMw==',
-          originalSrc: 'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/contentful-demo-4.jpeg?v=1568650754'
-        },
-        tags: [
-          'field::alignment::left',
-          'field::contentType::ContentHeroBanner',
-          'field::ctaText::Shop Now!',
-          'field::ctaUrl::/shop',
-          'field::textColor::#fff'
-        ]
-      }
+      title: 'Widget Co Hero',
+      handle: 'widget-co-hero',
+      contentHtml: 'Bringing You the Best Widgets!',
+      image: {
+        id: 'Z2lkOi8vc2hvcGlmeS9BcnRpY2xlSW1hZ2UvOTYyOTI3MDExMw==',
+        originalSrc: 'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/contentful-demo-4.jpeg?v=1568650754'
+      },
+      tags: [
+        'field::alignment::left',
+        'field::contentType::ContentHeroBanner',
+        'field::ctaText::Shop Now!',
+        'field::ctaUrl::/shop',
+        'field::textColor::#fff'
+      ],
+      alignment: 'left',
+      contentType: 'ContentHeroBanner',
+      ctaText: 'Shop Now!',
+      ctaUrl: '/shop',
+      textColor: '#fff'
     },
     {
-      node: {
-        title: 'What People Are Saying',
-        handle: 'what-people-are-saying',
-        contentHtml: '',
-        image: null,
-        tags: [
-          'field::contentType::ContentTestimonials'
-        ]
-      }
+      title: 'What People Are Saying',
+      handle: 'what-people-are-saying',
+      contentHtml: '',
+      image: null,
+      tags: [
+        'field::contentType::ContentTestimonials'
+      ],
+      contentType: 'ContentTestimonials'
     },
     {
-      node: {
-        title: 'Mr. Spacely',
-        handle: 'mr-spacely',
-        contentHtml: 'These were exactly what I was looking for!',
-        image: null,
-        tags: [
-          'childSection',
-          'field::contentType::ContentTestimonial'
-        ]
-      }
+      title: 'Mr. Spacely',
+      handle: 'mr-spacely',
+      contentHtml: 'These were exactly what I was looking for!',
+      image: null,
+      tags: [
+        'childSection',
+        'field::contentType::ContentTestimonial'
+      ],
+      contentType: 'ContentTestimonial'
     },
     {
-      node: {
-        title: 'Hundreds of Colors',
-        handle: 'hundreds-of-colors',
-        contentHtml: 'So many options to choose from! Widgets for every occasion!',
-        image: {
-          id: 'Z2lkOi8vc2hvcGlmeS9BcnRpY2xlSW1hZ2UvOTYyOTQ5OTQ4OQ==',
-          originalSrc: 'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/demo-photo6.jpeg?v=1568653303'
-        },
-        tags: [
-          'field::backgroundColor::#D9B18C',
-          'field::contentType::ContentSideBySide',
-          'field::ctaText::/shop',
-          'field::ctaText::Find Your Color',
-          'field::reverseDesktop::true'
-        ]
-      }
+      title: 'Hundreds of Colors',
+      handle: 'hundreds-of-colors',
+      contentHtml: 'So many options to choose from! Widgets for every occasion!',
+      image: {
+        id: 'Z2lkOi8vc2hvcGlmeS9BcnRpY2xlSW1hZ2UvOTYyOTQ5OTQ4OQ==',
+        originalSrc: 'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/demo-photo6.jpeg?v=1568653303'
+      },
+      tags: [
+        'field::backgroundColor::#D9B18C',
+        'field::contentType::ContentSideBySide',
+        'field::ctaUrl::/shop',
+        'field::ctaText::Find Your Color',
+        'field::reverseDesktop::true'
+      ],
+      backgroundColor: '#D9B18C',
+      contentType: 'ContentSideBySide',
+      ctaUrl: '/shop',
+      ctaText: 'Find Your Color',
+      reverseDesktop: 'true'
     },
     {
-      node: {
-        title: 'Mr. Cogswell',
-        handle: 'mr-cogswell',
-        contentHtml: 'Their quality and attention to detail is unparalleled.',
-        image: null,
-        tags: [
-          'childSection',
-          'field::contentType::ContentTestimonial'
-        ]
-      }
+      title: 'Mr. Cogswell',
+      handle: 'mr-cogswell',
+      contentHtml: 'Their quality and attention to detail is unparalleled.',
+      image: null,
+      tags: [
+        'childSection',
+        'field::contentType::ContentTestimonial'
+      ],
+      contentType: 'ContentTestimonial'
     },
     {
-      node: {
-        title: 'Locally Crafted!',
-        handle: 'locally-crafted',
-        contentHtml: 'Our widgets are produced right in your backyard!',
-        image: {
-          id: 'Z2lkOi8vc2hvcGlmeS9BcnRpY2xlSW1hZ2UvOTYyOTQzMzk1Mw==',
-          originalSrc: 'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/IconEb1_822px.jpg?v=1568652668'
-        },
-        tags: [
-          'field::contentType::ContentSideBySide',
-          'field::ctaText::Learn More!',
-          'field::ctaUrl::/about-us'
-        ]
-      }
+      title: 'Locally Crafted!',
+      handle: 'locally-crafted',
+      contentHtml: 'Our widgets are produced right in your backyard!',
+      image: {
+        id: 'Z2lkOi8vc2hvcGlmeS9BcnRpY2xlSW1hZ2UvOTYyOTQzMzk1Mw==',
+        originalSrc: 'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/IconEb1_822px.jpg?v=1568652668'
+      },
+      tags: [
+        'field::contentType::ContentSideBySide',
+        'field::ctaText::Learn More!',
+        'field::ctaUrl::/about-us'
+      ],
+      contentType: 'ContentSideBySide',
+      ctaText: 'Learn More!',
+      ctaUrl: '/about-us'
     },
     {
-      node: {
-        title: "What's New",
-        handle: 'whats-new',
-        contentHtml: '',
-        image: null,
-        tags: [
-          'field::contentType::ContentProductGrid'
-        ]
-      }
+      title: "What's New",
+      handle: 'whats-new',
+      contentHtml: '',
+      image: null,
+      tags: [
+        'field::contentType::ContentProductGrid'
+      ],
+      contentType: 'ContentProductGrid'
     }
   ]
 }
@@ -863,7 +866,7 @@ export const ShopifyContent = () => ({
 });
 
 ShopifyContent.story = {
-  name: 'Shopify content',
+  name: 'Shopify Content',
 
   parameters: {
     info: {
@@ -952,39 +955,33 @@ export const CustomShopifyContentTypes = () => ({
         sections: [
           ...defaultObj.shopify,
           {
-            node: {
-              title: 'New Shopify Section',
-              handle: 'new-shopify-section',
-              contentHtml: 'This is some content',
-              image: {},
-              tags: [
-                'field::contentType::NewShopifySection',
-                'field::customField::true'
-              ]
-            }
+            title: 'New Shopify Section',
+            handle: 'new-shopify-section',
+            contentHtml: 'This is some content',
+            image: {},
+            tags: [
+              'field::contentType::NewShopifySection',
+              'field::customField::true'
+            ]
           },
           {
-            node: {
-              title: 'Custom Slider',
-              handle: 'custom-slider',
-              contentHtml: '',
-              image: null,
-              tags: [
-                'field::contentType::CustomSlider'
-              ]
-            }
+            title: 'Custom Slider',
+            handle: 'custom-slider',
+            contentHtml: '',
+            image: null,
+            tags: [
+              'field::contentType::CustomSlider'
+            ]
           },
           {
-            node: {
-              title: 'Custom Slider Slide',
-              handle: 'custom-slider-slide',
-              contentHtml: '',
-              image: null,
-              tags: [
-                'childSection',
-                'field::contentType::CustomSliderSlide'
-              ]
-            }
+            title: 'Custom Slider Slide',
+            handle: 'custom-slider-slide',
+            contentHtml: '',
+            image: null,
+            tags: [
+              'childSection',
+              'field::contentType::CustomSliderSlide'
+            ]
           }
         ]
       },
