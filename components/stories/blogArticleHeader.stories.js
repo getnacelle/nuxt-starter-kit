@@ -27,7 +27,7 @@ export const Default = () => ({
   },
   data() {
     return {
-      date: '2019-08-09T00:00-07:00'
+      date: 1593835200000
     }
   },
   template: `
@@ -67,7 +67,7 @@ export const CustomContent = () => ({
   },
   data() {
     return {
-      date: '2019-08-09T00:00-07:00'
+      date: 1593835200000
     }
   },
   template: `
