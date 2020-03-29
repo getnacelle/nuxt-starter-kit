@@ -21,6 +21,6 @@ configure(req, module)
 addParameters({
   options: {
     showPanel: true,
-    panelPosition: 'right'
+    panelPosition: 'bottom'
   }
 })
