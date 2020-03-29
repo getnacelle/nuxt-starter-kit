@@ -16,7 +16,10 @@
               <product-card :product="product" />
             </slot>
           </div>
-          <interface-close-button class="close" v-on:close="toggleProductCard" />
+          <interface-close-button
+            class="close"
+            v-on:close="toggleProductCard"
+          />
         </div>
       </div>
     </transition>
@@ -140,4 +143,3 @@ img {
   opacity: 0;
 }
 </style>
-
