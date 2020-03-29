@@ -42,7 +42,7 @@ export const _RefinementFilters = () => ({
   },
   data() {
     return {
-      products: searchResults,
+      products: searchResults.products,
       filtered: [],
     };
   },
