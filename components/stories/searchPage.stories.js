@@ -11,7 +11,7 @@ import RefinementFilters from '../RefinementFilters';
 import SearchResults from '../SearchResults';
 import SearchNoResults from '../SearchNoResults';
 import ProductGrid from '../ProductGrid';
-import searchResults from '../../.storybook/defaults/search-results';
+import searchResults from '../../tests/mocks/search-results';
 
 const defaultFilters = [
   {

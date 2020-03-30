@@ -4,7 +4,7 @@ import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
 import store from '../../.storybook/store';
 import RefinementFilters from '../RefinementFilters';
-import searchResults from '../../.storybook/defaults/search-results';
+import searchResults from '../../tests/mocks/search-results';
 
 const defaultFilters = [
   {

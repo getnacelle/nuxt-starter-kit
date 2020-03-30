@@ -1,4 +1,4 @@
-import multivariateProduct from '../../.storybook/defaults/multivariateProduct'
+import multivariateProduct from '../../tests/mocks/multivariateProduct'
 
 export default {
   install (Vue) {

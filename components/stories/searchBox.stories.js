@@ -7,7 +7,7 @@ import { withInfo } from 'storybook-addon-vue-info'
 import StoryRouter from 'storybook-vue-router'
 import store from '../../.storybook/store'
 import SearchBox from '../SearchBox'
-import searchResults from '../../.storybook/defaults/search-results'
+import searchResults from '../../tests/mocks/search-results'
 
 export default {
   title: 'Components | Search',

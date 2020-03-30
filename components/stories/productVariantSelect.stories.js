@@ -7,7 +7,7 @@ import ProductVariantSelect from '../ProductVariantSelect';
 import CartFlyout from '../CartFlyout';
 import CartFlyoutItem from '../CartFlyoutItem';
 
-import defaultMultivariate from '../../.storybook/defaults/multivariateProduct';
+import defaultMultivariate from '../../tests/mocks/multivariateProduct';
 
 export default {
   title: 'Components | Product',
