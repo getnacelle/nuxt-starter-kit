@@ -3,7 +3,7 @@ import { withKnobs } from '@storybook/addon-knobs';
 import StoryRouter from 'storybook-vue-router';
 import store from '../../.storybook/store';
 import { defaultProduct } from '../../tests/mocks/defaultObjects';
-import ProductShopLook from '../ProductShopLook';
+import ProductShopLook from '../nacelle/ProductShopLook';
 
 export default {
   title: 'Components | Product ',

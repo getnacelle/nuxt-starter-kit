@@ -3,7 +3,7 @@ import { withKnobs, object } from '@storybook/addon-knobs';
 import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
 import store from '../../.storybook/store';
-import RefinementFilters from '../RefinementFilters';
+import RefinementFilters from '../nacelle/RefinementFilters';
 import searchResults from '../../tests/mocks/search-results';
 
 const defaultFilters = [

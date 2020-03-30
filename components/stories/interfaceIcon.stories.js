@@ -2,7 +2,7 @@ import { withInfo } from 'storybook-addon-vue-info'
 import StoryRouter from 'storybook-vue-router'
 import store from '../../.storybook/store'
 
-import InterfaceIcon from '../InterfaceIcon'
+import InterfaceIcon from '../nacelle/InterfaceIcon'
 
 export default {
   title: 'Components | General / Icon',

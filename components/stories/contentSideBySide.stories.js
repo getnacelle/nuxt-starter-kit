@@ -2,7 +2,7 @@ import { withKnobs, text, boolean } from '@storybook/addon-knobs'
 import { withInfo } from 'storybook-addon-vue-info'
 import store from '../../.storybook/store';
 
-import ContentSideBySide from '../ContentSideBySide'
+import ContentSideBySide from '../nacelle/ContentSideBySide'
 
 export default {
   title: 'Components | Content / Side by Side',

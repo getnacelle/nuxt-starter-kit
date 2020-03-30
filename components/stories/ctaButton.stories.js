@@ -1,6 +1,6 @@
 import { withInfo } from 'storybook-addon-vue-info';
 
-import CtaButton from '../CtaButton';
+import CtaButton from '../nacelle/CtaButton';
 
 export default {
   title: 'Components | General',

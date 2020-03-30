@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions'
 import { withInfo } from 'storybook-addon-vue-info'
 import store from '../../.storybook/store';
 
-import ContentHeroBanner from '../ContentHeroBanner'
+import ContentHeroBanner from '../nacelle/ContentHeroBanner'
 
 const defaults = {
   backgroundImgUrl: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-banner-img.png',

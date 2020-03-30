@@ -3,9 +3,9 @@ import { withKnobs, boolean } from '@storybook/addon-knobs';
 
 import store from '../../.storybook/store';
 
-import ProductVariantSelect from '../ProductVariantSelect';
-import CartFlyout from '../CartFlyout';
-import CartFlyoutItem from '../CartFlyoutItem';
+import ProductVariantSelect from '../nacelle/ProductVariantSelect';
+import CartFlyout from '../nacelle/CartFlyout';
+import CartFlyoutItem from '../nacelle/CartFlyoutItem';
 
 import defaultMultivariate from '../../tests/mocks/multivariateProduct';
 

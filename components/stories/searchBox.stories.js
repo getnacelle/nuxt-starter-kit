@@ -6,7 +6,7 @@ import { withKnobs } from '@storybook/addon-knobs'
 import { withInfo } from 'storybook-addon-vue-info'
 import StoryRouter from 'storybook-vue-router'
 import store from '../../.storybook/store'
-import SearchBox from '../SearchBox'
+import SearchBox from '../nacelle/SearchBox'
 import searchResults from '../../tests/mocks/search-results'
 
 export default {

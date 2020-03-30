@@ -1,7 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import store from '../../.storybook/store';
 
-import CartFlyoutSubtotal from '../CartFlyoutSubtotal';
+import CartFlyoutSubtotal from '../nacelle/CartFlyoutSubtotal';
 
 export default {
   title: 'Components | Cart',

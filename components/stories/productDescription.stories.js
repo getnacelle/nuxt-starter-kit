@@ -1,6 +1,6 @@
 import { withInfo } from 'storybook-addon-vue-info';
 
-import ProductDescription from '../ProductDescription';
+import ProductDescription from '../nacelle/ProductDescription';
 
 export default {
   title: 'Components | Product',

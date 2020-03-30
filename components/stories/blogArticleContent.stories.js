@@ -8,7 +8,7 @@ import {
   contentfulArticle
 } from '../../tests/mocks/defaultObjects'
 
-import BlogArticleContent from '../BlogArticleContent'
+import BlogArticleContent from '../nacelle/BlogArticleContent'
 
 const storyWrapper = () => {
   return {

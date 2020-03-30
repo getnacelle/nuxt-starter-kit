@@ -3,7 +3,7 @@ import { withInfo } from 'storybook-addon-vue-info'
 import StoryRouter from 'storybook-vue-router'
 import store from '../../.storybook/store'
 
-import NacelleCollection from '../NacelleCollection'
+import NacelleCollection from '../nacelle/NacelleCollection'
 
 export default {
   title: 'Components | Nacelle Data / Collection',

@@ -6,11 +6,11 @@ import { withKnobs, object } from '@storybook/addon-knobs';
 import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
 import store from '../../.storybook/store';
-import SearchBox from '../SearchBox';
-import RefinementFilters from '../RefinementFilters';
-import SearchResults from '../SearchResults';
-import SearchNoResults from '../SearchNoResults';
-import ProductGrid from '../ProductGrid';
+import SearchBox from '../nacelle/SearchBox';
+import RefinementFilters from '../nacelle/RefinementFilters';
+import SearchResults from '../nacelle/SearchResults';
+import SearchNoResults from '../nacelle/SearchNoResults';
+import ProductGrid from '../nacelle/ProductGrid';
 import searchResults from '../../tests/mocks/search-results';
 
 const defaultFilters = [

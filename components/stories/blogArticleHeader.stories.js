@@ -2,7 +2,7 @@ import { withInfo } from 'storybook-addon-vue-info'
 import { withKnobs, text, array } from '@storybook/addon-knobs'
 import StoryRouter from 'storybook-vue-router'
 
-import BlogArticleHeader from '../BlogArticleHeader'
+import BlogArticleHeader from '../nacelle/BlogArticleHeader'
 
 export default {
   title: 'Components | Content / Blog / Article Header',

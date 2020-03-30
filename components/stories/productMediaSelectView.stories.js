@@ -1,7 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import store from '../../.storybook/store';
 
-import ProductMediaSelectView from '../ProductMediaSelectView';
+import ProductMediaSelectView from '../nacelle/ProductMediaSelectView';
 
 export default {
   title: 'Components | Product',

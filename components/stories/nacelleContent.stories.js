@@ -2,8 +2,8 @@ import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
 import store from '../../.storybook/store';
 
-import NacelleContent from '../NacelleContent';
-import PageContent from '../PageContent';
+import NacelleContent from '../nacelle/NacelleContent';
+import PageContent from '../nacelle/PageContent';
 
 export default {
   title: 'Components | Nacelle Data',

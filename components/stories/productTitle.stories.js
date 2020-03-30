@@ -1,6 +1,6 @@
 import { withInfo } from 'storybook-addon-vue-info';
 
-import ProductTitle from '../ProductTitle';
+import ProductTitle from '../nacelle/ProductTitle';
 
 import store from '../../.storybook/store';
 

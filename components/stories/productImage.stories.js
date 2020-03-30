@@ -1,7 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import store from '../../.storybook/store';
 
-import ProductImage from '../ProductImage';
+import ProductImage from '../nacelle/ProductImage';
 
 export default {
   title: 'Components | Product',

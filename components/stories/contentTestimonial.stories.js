@@ -1,7 +1,7 @@
 import { withKnobs, text, boolean, select } from '@storybook/addon-knobs';
 import { withInfo } from 'storybook-addon-vue-info';
 
-import ContentTestimonial from '../ContentTestimonial';
+import ContentTestimonial from '../nacelle/ContentTestimonial';
 
 const alignmentOptions = {
   Left: 'left',

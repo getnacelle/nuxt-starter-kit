@@ -1,6 +1,6 @@
 import { withInfo } from 'storybook-addon-vue-info';
 
-import InterfaceCloseButton from '../InterfaceCloseButton';
+import InterfaceCloseButton from '../nacelle/InterfaceCloseButton';
 
 export default {
   title: 'Components | General',

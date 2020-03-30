@@ -1,7 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import store from '../../.storybook/store';
 
-import MainNavBurger from '../MainNavBurger';
+import MainNavBurger from '../nacelle/MainNavBurger';
 
 export default {
   title: 'Components | Main Nav',

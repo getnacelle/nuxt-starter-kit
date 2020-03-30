@@ -2,8 +2,8 @@ import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
 import store from '../../.storybook/store';
 
-import CartFlyout from '../CartFlyout';
-import CartFlyoutItem from '../CartFlyoutItem';
+import CartFlyout from '../nacelle/CartFlyout';
+import CartFlyoutItem from '../nacelle/CartFlyoutItem';
 
 export default {
   title: 'Components | Cart',

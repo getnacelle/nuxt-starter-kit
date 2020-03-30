@@ -3,7 +3,7 @@ import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
 import store from '../../.storybook/store';
 
-import MainNavFlyout from '../MainNavFlyout';
+import MainNavFlyout from '../nacelle/MainNavFlyout';
 
 const label = 'Toggle Menu';
 const handler = () => {

@@ -1,7 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import store from '../../.storybook/store';
 
-import ProductAddToCartButton from '../ProductAddToCartButton';
+import ProductAddToCartButton from '../nacelle/ProductAddToCartButton';
 
 export default {
   title: 'Components | Product',

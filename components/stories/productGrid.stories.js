@@ -1,8 +1,8 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
 
-import ProductGrid from '../ProductGrid';
-import InterfaceModal from '../InterfaceModal';
+import ProductGrid from '../nacelle/ProductGrid';
+import InterfaceModal from '../nacelle/InterfaceModal';
 import store from '../../.storybook/store';
 
 import { defaultProduct } from '../../tests/mocks/defaultObjects';

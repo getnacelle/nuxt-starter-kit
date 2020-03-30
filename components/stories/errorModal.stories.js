@@ -1,6 +1,6 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import { withKnobs, button } from '@storybook/addon-knobs';
-import ErrorModal from '../ErrorModal';
+import ErrorModal from '../nacelle/ErrorModal';
 import store from '../../.storybook/store';
 
 const label = 'Trigger Error';

@@ -4,7 +4,7 @@ import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
 import store from '../../.storybook/store';
 
-import SiteHeader from '../SiteHeader';
+import SiteHeader from '../nacelle/SiteHeader';
 
 export default {
   title: 'Components | Site Header',

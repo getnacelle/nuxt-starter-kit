@@ -1,7 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
 
-import InterfaceFeaturedMedia from '../InterfaceFeaturedMedia';
+import InterfaceFeaturedMedia from '../nacelle/InterfaceFeaturedMedia';
 
 export default {
   title: 'Components | General',

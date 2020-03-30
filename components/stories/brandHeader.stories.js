@@ -2,7 +2,7 @@ import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
 import store from '../../.storybook/store';
 
-import brandHeader from '../BrandHeader';
+import brandHeader from '../nacelle/BrandHeader';
 
 export default {
   title: 'Components | General',

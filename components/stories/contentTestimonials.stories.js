@@ -1,6 +1,6 @@
 import { withInfo } from 'storybook-addon-vue-info'
 
-import ContentTestimonials from '../ContentTestimonials'
+import ContentTestimonials from '../nacelle/ContentTestimonials'
 
 export default {
   title: 'Components | Content / Testimonials',

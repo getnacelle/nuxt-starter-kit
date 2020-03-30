@@ -2,17 +2,17 @@ import { withInfo } from 'storybook-addon-vue-info';
 
 import store from '../../.storybook/store';
 
-import ProductImage from '../ProductImage';
-import ProductPrice from '../ProductPrice';
-import ProductTitle from '../ProductTitle';
-import ProductDescription from '../ProductDescription';
-import ProductCategory from '../ProductCategory';
-import ProductAddToCartButton from '../ProductAddToCartButton';
-import ProductQuantityUpdate from '../ProductQuantityUpdate';
-import ProductOptions from '../ProductOptions';
-import ProductVariantSelect from '../ProductVariantSelect';
-import CartFlyout from '../CartFlyout';
-import CartFlyoutItem from '../CartFlyoutItem';
+import ProductImage from '../nacelle/ProductImage';
+import ProductPrice from '../nacelle/ProductPrice';
+import ProductTitle from '../nacelle/ProductTitle';
+import ProductDescription from '../nacelle/ProductDescription';
+import ProductCategory from '../nacelle/ProductCategory';
+import ProductAddToCartButton from '../nacelle/ProductAddToCartButton';
+import ProductQuantityUpdate from '../nacelle/ProductQuantityUpdate';
+import ProductOptions from '../nacelle/ProductOptions';
+import ProductVariantSelect from '../nacelle/ProductVariantSelect';
+import CartFlyout from '../nacelle/CartFlyout';
+import CartFlyoutItem from '../nacelle/CartFlyoutItem';
 
 import defaultMultivariate from '../../tests/mocks/multivariateProduct';
 

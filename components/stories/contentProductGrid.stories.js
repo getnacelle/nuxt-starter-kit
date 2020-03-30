@@ -1,7 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info'
 import StoryRouter from 'storybook-vue-router'
 
-import ContentProductGrid from '../ContentProductGrid'
+import ContentProductGrid from '../nacelle/ContentProductGrid'
 
 import store from '../../.storybook/store'
 

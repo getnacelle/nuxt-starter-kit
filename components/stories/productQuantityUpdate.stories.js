@@ -1,5 +1,5 @@
 import { withInfo } from 'storybook-addon-vue-info';
-import QuantitySelector from '../QuantitySelector';
+import QuantitySelector from '../nacelle/QuantitySelector';
 import store from '../../.storybook/store';
 
 export default {

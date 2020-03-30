@@ -1,7 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info';
 import store from '../../.storybook/store';
 
-import CartFlyoutItemRemoveButton from '../CartFlyoutItemRemoveButton';
+import CartFlyoutItemRemoveButton from '../nacelle/CartFlyoutItemRemoveButton';
 
 export default {
   title: 'Components | Cart',
