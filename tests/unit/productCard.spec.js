@@ -1,10 +1,11 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import storeConfig from '../storeConfig'
 import Vuex from 'vuex'
+import ProductCard from '@/components/nacelle/ProductCard'
 
-import ProductCard from '@/components/ProductCard'
 const localVue = createLocalVue()
 localVue.use(Vuex)
+
 
 describe('ProductCard.vue', () => {
   const defaultProduct = {

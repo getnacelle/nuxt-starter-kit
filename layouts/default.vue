@@ -13,12 +13,12 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import localforage from 'localforage'
-import GlobalHeader from '~/components/GlobalHeader'
-import SiteFooter from '~/components/SiteFooter'
-import EventDispatcher from '~/components/EventDispatcher'
-import CookieBanner from '~/components/CookieBanner'
-import ErrorModal from '~/components/ErrorModal'
-import CartWatch from '~/components/CartWatch'
+import GlobalHeader from '~/components/nacelle/GlobalHeader'
+import SiteFooter from '~/components/nacelle/SiteFooter'
+import EventDispatcher from '~/components/nacelle/EventDispatcher'
+import CookieBanner from '~/components/nacelle/CookieBanner'
+import ErrorModal from '~/components/nacelle/ErrorModal'
+import CartWatch from '~/components/nacelle/CartWatch'
 
 export default {
   components: {

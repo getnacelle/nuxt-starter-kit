@@ -1,6 +1,6 @@
 import storeConfig from '../storeConfig'
 import { mount, createLocalVue } from '@vue/test-utils'
-import RefinementFilters from '@/components/RefinementFilters'
+import RefinementFilters from '@/components/nacelle/RefinementFilters'
 import Vuex from 'vuex'
 
 import refinementFilterInputData from '../mocks/refinementFilterInputData'

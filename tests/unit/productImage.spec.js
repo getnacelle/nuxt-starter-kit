@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import ProductImage from '@/components/ProductImage'
+import ProductImage from '@/components/nacelle/ProductImage'
 import Vuex from 'vuex'
 
 import storeConfig from '../storeConfig'

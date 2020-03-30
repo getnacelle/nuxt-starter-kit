@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import CartFlyoutHeader from '@/components/CartFlyoutHeader'
+import CartFlyoutHeader from '@/components/nacelle/CartFlyoutHeader'
 
 describe('CartFlyoutHeader.vue', () => {
   it('displays the cart header', async() => {

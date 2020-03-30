@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import ProductVariantTitle from '@/components/ProductVariantTitle'
+import ProductVariantTitle from '@/components/nacelle/ProductVariantTitle'
 
 describe('ProductVariantTitle.vue', () => {
   it('renders a variant title', async() => {

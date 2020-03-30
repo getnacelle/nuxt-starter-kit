@@ -1,5 +1,5 @@
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
-import ContentHeroBanner from '@/components/ContentHeroBanner'
+import ContentHeroBanner from '@/components/nacelle/ContentHeroBanner'
 import Vuex from 'vuex'
 
 import storeConfig from '../storeConfig'

@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import nacellePlugin from '../mocks/nacelle-vue-plugin'
-import NacelleProducts from '@/components/NacelleProducts'
+import NacelleProducts from '@/components/nacelle/NacelleProducts'
 
 const delay = () => {
   return new Promise(resolve => {

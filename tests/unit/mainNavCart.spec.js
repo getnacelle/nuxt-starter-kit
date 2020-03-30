@@ -1,11 +1,12 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import storeConfig from '../storeConfig'
+import MainNavCart from '@/components/nacelle/MainNavCart'
 
-import MainNavCart from '@/components/MainNavCart'
 const localVue = createLocalVue()
 
 localVue.use(Vuex)
+
 
 describe('MainNavCart.vue', () => {
   it('displays correct cart quantity', async() => {

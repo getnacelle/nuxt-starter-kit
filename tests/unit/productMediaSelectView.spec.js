@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import ProductMediaSelectView from '@/components/ProductMediaSelectView'
+import ProductMediaSelectView from '@/components/nacelle/ProductMediaSelectView'
 
 describe('ProductMediaSelectView.vue', () => {
   // it('renders a list of thumbnails', async () => {

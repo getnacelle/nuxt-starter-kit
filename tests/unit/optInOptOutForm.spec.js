@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import OptInOptOutForm from '@/components/OptInOptOutForm'
+import OptInOptOutForm from '@/components/nacelle/OptInOptOutForm'
 
 const wrapper = mount(OptInOptOutForm)
 const form = wrapper.find('form')

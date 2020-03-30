@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import ProductOptionSwatch from '@/components/ProductOptionSwatch'
+import ProductOptionSwatch from '@/components/nacelle/ProductOptionSwatch'
 
 describe('ProductOptionSwatch.vue', () => {
   const wrapper = shallowMount(ProductOptionSwatch, {

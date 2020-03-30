@@ -2,11 +2,13 @@
   <div>
     <section class="section">
       <div class="columns is-multiline">
-        /**
-        * Product results show up here
-        */
+        /** * Product results show up here */
         <div class="column is-12">
-          <search-results v-if="productData" :searchData="productData" :searchQuery="query">
+          <search-results
+            v-if="productData"
+            :searchData="productData"
+            :searchQuery="query"
+          >
             <template v-slot:result="{ result }">
               <product-grid :products="result" :columns="4" />
             </template>
@@ -15,26 +17,24 @@
             </template>
           </search-results>
         </div>
-        /**
-        * Blog results show up here
-        */
+        /** * Blog results show up here */
         <div class="column is-6">
-          <search-results v-if="blogData" :searchData="blogData" :searchQuery="query">
-            <template v-slot:result="{ result }">{{result}}</template>
+          <search-results
+            v-if="blogData"
+            :searchData="blogData"
+            :searchQuery="query"
+          >
+            <template v-slot:result="{ result }">{{ result }}</template>
             <template v-slot:no-results>
               <search-no-results />
             </template>
           </search-results>
         </div>
         <div class="column is-6">
-          /**
-          * Event results show up here
-          */
+          /** * Event results show up here */
         </div>
         <div class="column is-12">
-          /**
-          * Page results show up here
-          */
+          /** * Page results show up here */
         </div>
       </div>
     </section>
@@ -43,11 +43,11 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import SearchBox from '~/components/SearchBox'
-import RefinementFilters from '~/components/RefinementFilters'
-import SearchResults from '~/components/SearchResults'
-import ProductGrid from '~/components/ProductGrid'
-import SearchNoResults from '~/components/SearchNoResults'
+import SearchBox from '~/components/nacelle/SearchBox'
+import RefinementFilters from '~/components/nacelle/RefinementFilters'
+import SearchResults from '~/components/nacelle/SearchResults'
+import ProductGrid from '~/components/nacelle/ProductGrid'
+import SearchNoResults from '~/components/nacelle/SearchNoResults'
 export default {
   components: {
     SearchBox,
@@ -56,7 +56,7 @@ export default {
     ProductGrid,
     SearchNoResults
   },
-  data () {
+  data() {
     return {
       filteredData: null
     }
@@ -66,7 +66,7 @@ export default {
     ...mapGetters('search', ['productData'])
   },
   watch: {
-    loadedData (newVal) {
+    loadedData(newVal) {
       if (newVal) {
         if (this.$route.query && this.$route.query.q) {
           this.setQuery({
@@ -77,7 +77,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     if (process.browser) {
       this.getProductData()
     }
@@ -85,7 +85,7 @@ export default {
   methods: {
     ...mapMutations('search', ['setQuery']),
     ...mapActions('search', ['getProductData']),
-    updateFilteredData (data) {
+    updateFilteredData(data) {
       this.filteredData = data
     }
   }

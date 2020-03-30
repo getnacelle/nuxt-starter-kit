@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import RadioInput from '@/components/RadioInput'
+import RadioInput from '@/components/nacelle/RadioInput'
 
 const wrapper = mount(RadioInput)
 const input = wrapper.find('input')

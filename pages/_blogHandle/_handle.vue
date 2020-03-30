@@ -62,9 +62,9 @@
 import { mapGetters } from 'vuex'
 import getBlogArticle from '~/mixins/getBlogArticle'
 import getCollection from '~/mixins/getCollection'
-import InterfaceFeaturedMedia from '~/components/InterfaceFeaturedMedia'
-import BlogArticleHeader from '~/components/BlogArticleHeader'
-import BlogArticleContent from '~/components/BlogArticleContent'
+import InterfaceFeaturedMedia from '~/components/nacelle/InterfaceFeaturedMedia'
+import BlogArticleHeader from '~/components/nacelle/BlogArticleHeader'
+import BlogArticleContent from '~/components/nacelle/BlogArticleContent'
 
 export default {
   components: {

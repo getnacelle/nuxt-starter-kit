@@ -1,7 +1,7 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import storeConfig from '../storeConfig'
 import { shopifyArticle, contentfulArticle } from '../mocks/defaultObjects.js'
-import BlogArticleContent from '~/components/BlogArticleContent'
+import BlogArticleContent from '~/components/nacelle/BlogArticleContent'
 
 import Vuex from 'vuex'
 const localVue = createLocalVue()

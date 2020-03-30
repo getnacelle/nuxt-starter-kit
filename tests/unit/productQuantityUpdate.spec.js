@@ -1,10 +1,10 @@
 import storeConfig from '../storeConfig'
 import Vue from 'vue'
 import Vuex from 'vuex'
-
 import { defaultLineItem } from '../mocks/defaultObjects'
 import { mount } from '@vue/test-utils'
-import QuantitySelector from '@/components/QuantitySelector'
+import QuantitySelector from '@/components/nacelle/QuantitySelector'
+
 Vue.use(Vuex)
 
 describe('QuantitySelector.vue', () => {

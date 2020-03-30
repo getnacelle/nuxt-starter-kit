@@ -7,7 +7,7 @@
 -->
 <template>
   <div>
-    <!-- <section class="section search-section">
+    <section class="section search-section">
       <div class="container">
         <div class="columns">
           <div class="column is-4 is-offset-4">
@@ -15,24 +15,24 @@
           </div>
         </div>
       </div>
-    </section>-->
+    </section>
     <section class="section filtering">
       <div class="column is-12">
         <refinement-filters
           v-if="productData"
           :propertyFilters="[
-              {field:'productType', label:'Product Type'},
-              {field: 'color', label: 'Color'},
-              {field: 'material', label: 'Material'},
-              {field: 'size', label: 'Size'}
-            ]"
+            { field: 'productType', label: 'Product Type' },
+            { field: 'color', label: 'Color' },
+            { field: 'material', label: 'Material' },
+            { field: 'size', label: 'Size' }
+          ]"
           :priceRangeFilters="[
-            {range:[0, 50], label: '< $50'},
-            {range:[50, 100], label: '$50 - 100'},
-            {range:[100, 200], label: '$100 - 200'},
-            {range:[200, 500], label: '$200 - 500'},
-            {range:[500, 0], label: '> $500'},
-            ]"
+            { range: [0, 50], label: '< $50' },
+            { range: [50, 100], label: '$50 - 100' },
+            { range: [100, 200], label: '$100 - 200' },
+            { range: [200, 500], label: '$200 - 500' },
+            { range: [500, 0], label: '> $500' }
+          ]"
           :inputData="productData"
           v-on:updated="updateFilteredData"
         />
@@ -41,10 +41,13 @@
     <section class="section">
       <div class="columns is-multiline">
         <div class="column is-12">
-
-          <refinement-results v-if="filteredData" :searchData="filteredData" :searchQuery="query">
+          <refinement-results
+            v-if="filteredData"
+            :searchData="filteredData"
+            :searchQuery="query"
+          >
             <template v-slot:result="{ result }">
-              <product-grid :products="result" :columns="4"/>
+              <product-grid :products="result" :columns="4" />
             </template>
             <template v-slot:no-results>
               <search-no-results />
@@ -58,11 +61,13 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import SearchBox from '~/components/SearchBox'
-import RefinementFilters from '~/components/RefinementFilters'
-import RefinementResults from '~/components/RefinementResults'
-import ProductGrid from '~/components/ProductGrid'
-import SearchNoResults from '~/components/SearchNoResults'
+import SearchBox from '~/components/nacelle/SearchBox'
+import RefinementFilters from '~/components/nacelle/RefinementFilters'
+import RefinementResults from '~/components/nacelle/RefinementResults'
+import SearchResults from '~/components/nacelle/SearchResults'
+import ProductGrid from '~/components/nacelle/ProductGrid'
+import SearchNoResults from '~/components/nacelle/SearchNoResults'
+
 export default {
   components: {
     SearchBox,
@@ -74,7 +79,6 @@ export default {
   computed: {
     ...mapState('search', ['query', 'loadedData', 'filteredData']),
     ...mapGetters('search', ['productData'])
-
   },
   watch: {
     loadedData(newVal) {

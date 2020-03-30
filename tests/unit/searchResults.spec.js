@@ -1,7 +1,8 @@
 import { mount, createLocalVue } from '@vue/test-utils'
-import SearchResults from '@/components/SearchResults'
+import SearchResults from '@/components/nacelle/SearchResults'
 import storeConfig from '../storeConfig'
 import Vuex from 'vuex'
+
 const localVue = createLocalVue()
 localVue.use(Vuex)
 

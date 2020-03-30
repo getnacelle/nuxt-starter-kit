@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import nacellePlugin from '../mocks/nacelle-vue-plugin'
-import NacelleContent from '@/components/NacelleContent'
+import NacelleContent from '@/components/nacelle/NacelleContent'
 
 const localVue = createLocalVue()
 

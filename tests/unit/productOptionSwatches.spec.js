@@ -1,6 +1,6 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import storeConfig from '../storeConfig'
-import ProductOptionSwatches from '@/components/ProductOptionSwatches'
+import ProductOptionSwatches from '@/components/nacelle/ProductOptionSwatches'
 
 import Vuex from 'vuex'
 const localVue = createLocalVue()
