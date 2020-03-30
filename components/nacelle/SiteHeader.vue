@@ -24,10 +24,10 @@
 </template>
 
 <script>
-import MainNav from './MainNav'
-import MainNavFlyout from './MainNavFlyout'
-import CartFlyout from './CartFlyout'
-import CartFlyoutItem from './CartFlyoutItem'
+import MainNav from '~/components/nacelle/MainNav'
+import MainNavFlyout from '~/components/nacelle/MainNavFlyout'
+import CartFlyout from '~/components/nacelle/CartFlyout'
+import CartFlyoutItem from '~/components/nacelle/CartFlyoutItem'
 export default {
   components: {
     MainNav,
