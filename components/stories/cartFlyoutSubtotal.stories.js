@@ -21,10 +21,10 @@ export const FlyoutSubtotal = () => ({
       title: 'Gray T-Shirt',
       productId: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzM1OTkyMDE4NjE3Mzc=',
       handle: 'gray-t-shirt',
-      price: '29.99',
       quantity: 1,
       variant: {
         id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==',
+        price: '29.99'
       },
     });
 
@@ -35,10 +35,10 @@ export const FlyoutSubtotal = () => ({
       title: 'Black T-Shirt',
       productId: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzM1OTkyMDE4djE3Mzc=',
       handle: 'black-t-shirt',
-      price: '29.99',
       quantity: 1,
       variant: {
         id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWaudC8yODU2ODgyMDAyMzQwMQ==',
+        price: '29.99'
       },
     });
     store.dispatch('cart/addLineItem', {
@@ -48,10 +48,10 @@ export const FlyoutSubtotal = () => ({
       title: 'Brown T-Shirt',
       productId: 'Z2lkOi8vc2hvcGlmeS9QcmzkdWN0LzM1OTkyMDE4djE3Mzc=',
       handle: 'brown-t-shirt',
-      price: '29.99',
       quantity: 1,
       variant: {
         id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWaudC8yODU3ODgyMDAyMzQwMQ==',
+        price: '29.99'
       },
     });
   },
