@@ -20,6 +20,9 @@ export default {
 export const _ErrorModal = () => ({
   store,
   components: { ErrorModal },
+  mounted() {
+    store.commit('cart/setCartError', 'this is an error')
+  },
   template: `
     <error-modal/>
   `,
