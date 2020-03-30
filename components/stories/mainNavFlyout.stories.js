@@ -12,18 +12,29 @@ const handler = () => {
 
 export default {
   title: 'Components | Main Nav',
-  decorators: [withInfo, withKnobs, StoryRouter()],
+  decorators: [withInfo, withKnobs, StoryRouter(),
+    () => {
+      return {
+        template: `
+          <div style="max-width: 450px; margin: 3rem auto; text-align: center"><story/></div>
+        `,
+      };
+    },
+  ],
 };
 
 export const _MainNavFlyout = () => ({
   store,
   components: { MainNavFlyout },
   template: `
-    <main-nav-flyout>
-      <template v-slot:flyout-menu>
-        <router-link class="main-nav-item" :to="'/shop'">Shop</router-link>
-      </template>
-    </main-nav-flyout>
+    <div>
+      <h3>Trigger with the Toggle Menu knob</h3>
+      <main-nav-flyout>
+        <template v-slot:flyout-menu>
+          <router-link class="main-nav-item" :to="'/shop'">Shop</router-link>
+        </template>
+      </main-nav-flyout>
+    </div>
   `,
   created() {
     button(label, handler);
