@@ -1,5 +1,5 @@
 import { mount, createLocalVue } from '@vue/test-utils'
-import ContentTestimonials from '~/components/ContentTestimonials'
+import ContentTestimonials from '~/components/nacelle/ContentTestimonials'
 
 
 describe('ContentTestimonials.vue', () => {

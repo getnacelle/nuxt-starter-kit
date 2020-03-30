@@ -29,9 +29,9 @@ import {
   getProductsPerPage
 } from '@nacelle/nacelle-tools/src/nacelle/fetch-static'
 import getPage from '~/mixins/getPage'
-import PageContent from '~/components/PageContent'
-import ProductGrid from '~/components/ProductGrid'
-import ObserveEmitter from '~/components/ObserveEmitter'
+import PageContent from '~/components/nacelle/PageContent'
+import ProductGrid from '~/components/nacelle/ProductGrid'
+import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 
 export default {
   components: {

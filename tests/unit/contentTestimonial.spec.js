@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import ContentTestimonial from '@/components/ContentTestimonial'
+import ContentTestimonial from '@/components/nacelle/ContentTestimonial'
 
 describe('ContentTestimonial.vue', () => {
   it('renders a testimonial', async () => {

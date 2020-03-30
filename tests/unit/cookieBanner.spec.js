@@ -2,7 +2,7 @@ import { mount, RouterLinkStub, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import * as Cookies from 'es-cookie'
 import storeConfig from '../storeConfig'
-import CookieBanner from '@/components/CookieBanner'
+import CookieBanner from '@/components/nacelle/CookieBanner'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

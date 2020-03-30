@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import ProductAddToCartButton from '@/components/ProductAddToCartButton'
+import ProductAddToCartButton from '@/components/nacelle/ProductAddToCartButton'
 import createStoreConfig from '../storeConfig'
 import Vuex from 'vuex'
 

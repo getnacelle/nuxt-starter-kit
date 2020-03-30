@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import PageContent from '~/components/PageContent'
+import PageContent from '~/components/nacelle/PageContent'
 import { getPageData } from '@nacelle/nacelle-tools'
 export default {
   components: { PageContent },

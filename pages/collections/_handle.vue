@@ -31,9 +31,9 @@
 
 <script>
 import getCollection from '~/mixins/getCollection'
-import ContentHeroBanner from '~/components/ContentHeroBanner'
-import ProductGrid from '~/components/ProductGrid'
-import ObserveEmitter from '~/components/ObserveEmitter'
+import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
+import ProductGrid from '~/components/nacelle/ProductGrid'
+import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 import { mapGetters } from 'vuex'
 export default {
   name: 'collection',

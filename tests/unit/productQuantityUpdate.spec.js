@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 import { defaultLineItem } from '../mocks/defaultObjects'
 import { mount, shallowMount, localVue } from '@vue/test-utils'
-import QuantitySelector from '@/components/QuantitySelector'
+import QuantitySelector from '@/components/nacelle/QuantitySelector'
 
 
 describe('QuantitySelector.vue', () => {
