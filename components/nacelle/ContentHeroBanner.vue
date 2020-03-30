@@ -259,6 +259,10 @@ export default {
       type: String,
       default: 'center'
     },
+    size: {
+      type: String,
+      default: 'medium'
+    },
     mobileFullHeight: {
       type: Boolean,
       default: false

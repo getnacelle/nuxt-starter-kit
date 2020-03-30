@@ -33,8 +33,8 @@ export const getters = {
   freeShippingThresholdPassed(state, getters) {
     if (
       getters.cartSubtotal &&
-          state.freeShippingThreshold &&
-          getters.cartSubtotal > state.freeShippingThreshold
+      state.freeShippingThreshold &&
+      getters.cartSubtotal > state.freeShippingThreshold
     ) {
       return true
     } else {
@@ -200,7 +200,7 @@ export const actions = {
   async saveCheckoutId(context, payload) {
     localforage.setItem('checkout-id', payload)
   },
-  async saveCheckoutUrl(context, payload) {
+  async saveCheckoutUrl (context, payload) {
     localforage.setItem('checkout-url', payload)
   },
   async getCheckoutId(context) {
@@ -223,7 +223,7 @@ export const actions = {
 
     if (
       context.state.checkoutId != null &&
-          context.state.checkoutUrl != null
+      context.state.checkoutUrl != null
     ) {
       const checkoutStatus = await axios({
         method: 'post',
@@ -235,15 +235,15 @@ export const actions = {
         },
         data: {
           query: `query {
-                getCheckout(
-                  id: "${context.state.checkoutId}",
-                  url: "${context.state.checkoutUrl}"
-                ) {
-                  id
-                  url
-                  completed
-                }
-              }`
+            getCheckout(
+              id: "${context.state.checkoutId}",
+              url: "${context.state.checkoutUrl}"
+            ) {
+              id
+              url
+              completed
+            }
+          }`
         }
       }).then(res => res.data.data.getCheckout.completed)
 
@@ -268,9 +268,9 @@ export const actions = {
     let lineItems = ''
     getters.checkoutLineItems.forEach(item => {
       lineItems += `{
-            variantId: "${item.variantId}",
-            quantity: ${item.quantity}
-          }`
+        variantId: "${item.variantId}",
+        quantity: ${item.quantity}
+      }`
     })
     return lineItems
   },

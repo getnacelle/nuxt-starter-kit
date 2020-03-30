@@ -7,7 +7,7 @@
 
 /* secondary background color is F8F7F5 */
 
-@import url('https://fonts.googleapis.com/css?family=Noto+Serif+SC&display=swap'rel='stylesheet');
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif+SC&display=swap');
 @import url('https://use.typekit.net/jcb5tgv.css');
 
 /* Global */
@@ -98,11 +98,6 @@
 
 .nav-flyout .navbar-item img {
   max-height: none;
-}
-
-/* Home Hero Banner */
-section.hero {
-  height: 100vh;
 }
 
 section.hero .hero-body {
