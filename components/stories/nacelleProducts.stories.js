@@ -16,15 +16,13 @@ export const Products = () => ({
     <div>
       <h3>Fetch One Product</h3>
       <nacelle-products :handle="'test 1'">
-        <template v-slot:default="{ product, products }">
+        <template v-slot:default="{ product }">
           <pre>{{ product }}</pre>
-          <pre>{{ products }}</pre>
         </template>
       </nacelle-products>
       <h3>Fetch Array of Products</h3>
       <nacelle-products :handles="['test 1','test 2']">
-        <template v-slot:default="{ product, products }">
-          <pre>{{ product }}</pre>
+        <template v-slot:default="{ products }">
           <pre>{{ products }}</pre>
         </template>
       </nacelle-products>

@@ -7,7 +7,7 @@ import NacelleCollection from '../NacelleCollection'
 
 export default {
   title: 'Components | Nacelle Data / Collection',
-  decorators: [withInfo, StoryRouter()],
+  decorators: [withInfo, withKnobs, StoryRouter()],
 };
 
 export const NoPagination = () => ({
@@ -17,7 +17,9 @@ export const NoPagination = () => ({
     <div>
       <nacelle-collection :handle="'test 1'">
         <template v-slot:default="{ collection, products }">
+          <h3>The collection</h3>
           <pre>{{ collection }}</pre>
+          <h3>Products in the collection</h3>
           <pre>{{ products }}</pre>
         </template>
       </nacelle-collection>
@@ -26,7 +28,7 @@ export const NoPagination = () => ({
 });
 
 NoPagination.story = {
-  name: 'No pagination',
+  name: 'No Pagination',
 
   parameters: {
     info: {
@@ -58,7 +60,10 @@ export const Pagination = () => ({
         :use-button-load-more="buttonLoadMore"
         :button-text="buttonText"
       >
-        <template v-slot:default="{ products }">
+        <template v-slot:default="{ collection, products }">
+          <h3>The collection</h3>
+          <pre>{{ collection }}</pre>
+          <h3>Products in the collection</h3>
           <div v-for="product in products">
             <pre>{{ product }}</pre>
           </div>
