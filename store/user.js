@@ -1,4 +1,4 @@
-import uuid from 'uuidv4'
+import { uuid } from 'uuidv4'
 import localforage from 'localforage'
 import * as Cookies from 'es-cookie'
 
