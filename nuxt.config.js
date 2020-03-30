@@ -37,7 +37,6 @@ export default {
    ** Global CSS
    */
   css: [
-    '@nacelle/nacelle-vue-components/dist/base-styles.css',
     '@/assets/global.css'
   ], 
 
