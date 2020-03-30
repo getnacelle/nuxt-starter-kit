@@ -1,5 +1,5 @@
 import { mapGetters } from 'vuex'
-import { getCollection } from '@nacelle/nacelle-tools'
+import { getCollection } from './getCollection'
 
 export default params => {
   return {

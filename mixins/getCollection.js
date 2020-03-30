@@ -68,9 +68,9 @@ export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {
     computed: {
       selectedProductList() {
         if (
-          this.collection && 
+          this.collection &&
           Array.isArray(this.collection.productLists)
-         ) {
+        ) {
           const list = this.collection.productLists.find(collection => {
             return collection.slug === this.selectedList
           })
@@ -83,7 +83,7 @@ export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {
         return []
       }
     },
-    async created () {
+    async created() {
       // Flag for determining if we update collection in vuex store
       let updateCollection = false
 

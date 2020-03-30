@@ -43,12 +43,12 @@ export default {
       'setFreeShippingThreshold'
     ]),
     ...mapActions('cart', ['updateLocalCart']),
-    handleClose() {
+    handleClose () {
       this.hideCart()
     }
   },
   watch: {
-    lineItems(newValue) {
+    lineItems (newValue) {
       if (newValue.length == 0) {
         this.hideCart()
       }

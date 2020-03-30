@@ -2,14 +2,14 @@ import { getPageData } from '@nacelle/nacelle-tools'
 
 export default ({ pageHandle, locale } = {}) => {
   return {
-    data () {
+    data() {
       return {
         handle: null,
         page: null,
         noPageData: false
       }
     },
-    async asyncData (context) {
+    async asyncData(context) {
       const { params, app, payload } = context
       const { handle } = params
       const { $nacelle } = app
@@ -24,7 +24,7 @@ export default ({ pageHandle, locale } = {}) => {
         ...pageData
       }
     },
-    async created () {
+    async created() {
       this.handle = pageHandle || this.$route.params.handle
 
       if (process.browser && !this.page && !this.noPageData) {

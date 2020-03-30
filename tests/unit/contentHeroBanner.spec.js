@@ -16,7 +16,7 @@ const defaults = {
 }
 
 describe('ContentHeroBanner.vue', () => {
-  it('renders a banner', async () => {
+  it('renders a banner', async() => {
     const store = new Vuex.Store(storeConfig())
     const wrapper = shallowMount(ContentHeroBanner, {
       store,

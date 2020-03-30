@@ -1,49 +1,12 @@
-<!--
-/****
-/* For information about search & filtering, please refer to:
-/*
-/* https://docs.getnacelle.com/nuxt/filtering-products.html#filtering-searching
-/****
--->
 <template>
   <div>
-    <section class="section search-section">
-      <div class="container">
-        <div class="columns">
-          <div class="column is-4 is-offset-4">
-            <search-box position="in-page" />
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="section filtering">
-      <div class="column is-12">
-        <refinement-filters
-          v-if="productData"
-          :propertyFilters="[
-            { field: 'productType', label: 'Product Type' },
-            { field: 'color', label: 'Color' },
-            { field: 'material', label: 'Material' },
-            { field: 'size', label: 'Size' }
-          ]"
-          :priceRangeFilters="[
-            { range: [0, 50], label: '< $50' },
-            { range: [50, 100], label: '$50 - 100' },
-            { range: [100, 200], label: '$100 - 200' },
-            { range: [200, 500], label: '$200 - 500' },
-            { range: [500, 0], label: '> $500' }
-          ]"
-          :inputData="productData"
-          v-on:updated="updateFilteredData"
-        />
-      </div>
-    </section>
     <section class="section">
       <div class="columns is-multiline">
+        /** * Product results show up here */
         <div class="column is-12">
-          <refinement-results
-            v-if="filteredData"
-            :searchData="filteredData"
+          <search-results
+            v-if="productData"
+            :searchData="productData"
             :searchQuery="query"
           >
             <template v-slot:result="{ result }">
@@ -52,7 +15,26 @@
             <template v-slot:no-results>
               <search-no-results />
             </template>
-          </refinement-results>
+          </search-results>
+        </div>
+        /** * Blog results show up here */
+        <div class="column is-6">
+          <search-results
+            v-if="blogData"
+            :searchData="blogData"
+            :searchQuery="query"
+          >
+            <template v-slot:result="{ result }">{{ result }}</template>
+            <template v-slot:no-results>
+              <search-no-results />
+            </template>
+          </search-results>
+        </div>
+        <div class="column is-6">
+          /** * Event results show up here */
+        </div>
+        <div class="column is-12">
+          /** * Page results show up here */
         </div>
       </div>
     </section>
@@ -63,21 +45,24 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import SearchBox from '~/components/nacelle/SearchBox'
 import RefinementFilters from '~/components/nacelle/RefinementFilters'
-import RefinementResults from '~/components/nacelle/RefinementResults'
 import SearchResults from '~/components/nacelle/SearchResults'
 import ProductGrid from '~/components/nacelle/ProductGrid'
 import SearchNoResults from '~/components/nacelle/SearchNoResults'
-
 export default {
   components: {
     SearchBox,
     RefinementFilters,
-    RefinementResults,
+    SearchResults,
     ProductGrid,
     SearchNoResults
   },
+  data() {
+    return {
+      filteredData: null
+    }
+  },
   computed: {
-    ...mapState('search', ['query', 'loadedData', 'filteredData']),
+    ...mapState('search', ['query', 'loadedData']),
     ...mapGetters('search', ['productData'])
   },
   watch: {
@@ -94,17 +79,14 @@ export default {
   },
   created() {
     if (process.browser) {
-      if (!this.filteredData) {
-        this.getProductData()
-      }
+      this.getProductData()
     }
   },
   methods: {
-    ...mapMutations('search', ['setFilteredData']),
     ...mapMutations('search', ['setQuery']),
     ...mapActions('search', ['getProductData']),
     updateFilteredData(data) {
-      this.setFilteredData(data)
+      this.filteredData = data
     }
   }
 }
@@ -118,8 +100,7 @@ export default {
 .fade-leave-active {
   transition: opacity 0.1s;
 }
-.fade-enter,
-.fade-leave-to {
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 .filtering {

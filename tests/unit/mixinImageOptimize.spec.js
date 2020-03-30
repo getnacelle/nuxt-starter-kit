@@ -41,7 +41,7 @@ const ComponentResize = {
 }
 
 describe('ImageOptimize.vue', () => {
-  it('changes the image format to webp', async () => {
+  it('changes the image format to webp', async() => {
     const wrapper = mount(ComponentReformat,
       {
         localVue,
@@ -50,7 +50,7 @@ describe('ImageOptimize.vue', () => {
     expect(wrapper.html()).toContain(`srcset="${shopifyHeroImage}&amp;format=webp"`)
   })
 
-  it('changes the image size to the maximum screen width (using Shopify CDN)', async () => {
+  it('changes the image size to the maximum screen width (using Shopify CDN)', async() => {
     const wrapper = mount(ComponentResize,
       {
         localVue,
@@ -66,7 +66,7 @@ describe('ImageOptimize.vue', () => {
     expect(wrapper.html()).toContain('src="https://cdn.shopify.com/s/files/1/0094/4098/5124/articles/iStock-476157466_1_f5c16680-57e9-43e9-9a9e-ea3017e1bda9_850x.jpg?v=1575587194"')
   })
 
-  it('changes the image size to the maximum screen width (using Cloudinary CDN)', async () => {
+  it('changes the image size to the maximum screen width (using Cloudinary CDN)', async() => {
     const wrapper = mount(ComponentResize,
       {
         localVue,

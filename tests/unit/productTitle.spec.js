@@ -6,7 +6,7 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('ProductTitle.vue', () => {
-  it('renders a title', async () => {
+  it('renders a title', async() => {
     const store = new Vuex.Store(storeConfig())
     const wrapper = shallowMount(ProductTitle, {
       store,
@@ -16,7 +16,7 @@ describe('ProductTitle.vue', () => {
     expect(wrapper.html()).toBe('<h3 class="product-title nacelle">Great Product</h3>')
   })
 
-  it('renders a specific html element when passed', async () => {
+  it('renders a specific html element when passed', async() => {
     const store = new Vuex.Store(storeConfig())
     const wrapper = shallowMount(ProductTitle, {
       store,

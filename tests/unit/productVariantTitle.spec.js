@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import ProductVariantTitle from '@/components/nacelle/ProductVariantTitle'
 
 describe('ProductVariantTitle.vue', () => {
-  it('renders a variant title', async () => {
+  it('renders a variant title', async() => {
     const wrapper = shallowMount(ProductVariantTitle, {
       propsData: { title: 'Great Product' }
     })

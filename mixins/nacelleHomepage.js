@@ -1,5 +1,6 @@
 import { mapState } from 'vuex'
-import { getPage, getCollection } from '@nacelle/nacelle-tools'
+import { getPage } from './getPage'
+import { getCollection } from './getCollection'
 
 export default params => {
   return {

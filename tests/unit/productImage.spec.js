@@ -7,7 +7,7 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('ProductImage/vue', () => {
-  it('renders an image', async () => {
+  it('renders an image', async() => {
     const store = new Vuex.Store(storeConfig())
     const wrapper = shallowMount(ProductImage, {
       store,
