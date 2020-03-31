@@ -1,9 +1,8 @@
-import uuid from 'uuidv4'
+import { uuid } from 'uuidv4'
 import localforage from 'localforage'
 import * as Cookies from 'es-cookie'
 
 export const state = () => ({
-
   anonymousID: null,
   userID: null,
   customerEmail: null,
@@ -12,6 +11,7 @@ export const state = () => ({
   language: 'en-US',
   acceptCookies: false
 })
+
 export const mutations = {
   setUserData(state, payload) {
     const { userID, customerEmail, customerPhone } = payload
@@ -19,19 +19,24 @@ export const mutations = {
     state.customerEmail = customerEmail
     state.customerPhone = customerPhone
   },
+
   setAnonymousID(state, id) {
     state.anonymousID = id
   },
+
   setSessionID(state, id) {
     state.sessionID = id
   },
+
   setLanguage(state, language) {
     state.language = language
   },
+
   setAcceptCookies(state, payload) {
     state.acceptCookies = payload
   }
 }
+
 export const actions = {
   async initUserData(context) {
     await context.dispatch('readAnonymousID')
@@ -71,6 +76,7 @@ export const actions = {
       })
     }
   },
+
   readSession(context) {
     if (process.browser) {
       const sessionCookie = Cookies.get('session-id')
@@ -82,6 +88,7 @@ export const actions = {
       }
     }
   },
+
   refreshSession(context) {
     if (process.browser) {
       Cookies.set('session-id', context.state.sessionID, {
@@ -89,6 +96,7 @@ export const actions = {
       })
     }
   },
+
   createCookieAccept({ commit }) {
     if (process.browser) {
       Cookies.set('nacelle-accept', true, {
@@ -97,6 +105,7 @@ export const actions = {
       commit('setAcceptCookies', true)
     }
   },
+  
   readCookieAccept({ commit }) {
     if (process.browser) {
       const accept = Cookies.get('nacelle-accept')

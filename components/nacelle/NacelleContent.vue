@@ -15,12 +15,16 @@ export default {
       type: String,
       default: ''
     },
+    blogHandle: {
+      type: String,
+      default: 'blog'
+    },
     type: {
       type: String,
       default: 'content'
-    },
+    }
   },
-  data () {
+  data() {
     return {
       content: undefined
     }
@@ -38,15 +42,16 @@ export default {
       return 'en-us'
     }
   },
-  created () {
+  created() {
     if (process.browser || process.client) {
-      this.$nacelle
+      this.$nacelle.data
         .content({
           handle: this.handle,
           type: this.type,
-          locale: this.useLocale
+          locale: this.useLocale,
+          blogHandle: this.blogHandle
         })
-        .then((result) => {
+        .then(result => {
           if (result) {
             this.content = result
           }
@@ -56,6 +61,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 export const state = () => ({
   query: null,
   autocompleteVisible: false,
@@ -19,6 +17,7 @@ export const getters = {
 
     return undefined
   },
+
   hasProductData(state) {
     return (
       state.searchData &&
@@ -26,6 +25,7 @@ export const getters = {
       state.searchData.products.length > 0
     )
   },
+  
   productData(state) {
     if (
       state.searchData &&
@@ -146,13 +146,15 @@ export const actions = {
       commit('dataNotLoaded')
       commit('isSearching')
 
-      axios
-        .get('/data/search.json')
+      this.$nacelle.data.connector.request('data/search.json')
         .then(res => {
           if (res && res.data) {
             commit('dataHasLoaded')
             commit('isNotSearching')
-            commit('setSearchData', res.data)
+
+            const products = res.data.product
+
+            commit('setSearchData', { products })
           }
         })
         .catch(err => {

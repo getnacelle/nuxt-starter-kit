@@ -7,10 +7,13 @@
       <h1 class="article-title title is-3">{{ title }}</h1>
     </slot>
     <slot name="author" :author="author">
-      <p class="article-author">{{ author.firstName }} {{ author.lastName }}</p>
+      <p class="article-author">
+        <span v-if="author.firstName">{{ author.firstName }}</span>
+        <span v-if="author.lastName">{{ author.lastName }}</span>
+      </p>
     </slot>
     <slot name="date" :date="absoluteDate">
-      <p class="article-published">Published on {{absoluteDate}}</p>
+      <p class="article-published">Published on {{ absoluteDate }}</p>
     </slot>
     <slot></slot>
   </header>
@@ -62,5 +65,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

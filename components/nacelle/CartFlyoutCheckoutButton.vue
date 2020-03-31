@@ -31,8 +31,8 @@ export default {
     async checkout() {
       const vm = this
       this.loading = true
-      const processCheckoutObject = await this.$nacelle
-        .checkout({
+      const processCheckoutObject = await this.$nacelle.checkout
+        .process({
           cartItems: vm.checkoutLineItems,
           checkoutId: vm.checkoutIdForBackend
         })

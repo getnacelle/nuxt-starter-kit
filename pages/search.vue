@@ -64,7 +64,6 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import SearchBox from '~/components/nacelle/SearchBox'
 import RefinementFilters from '~/components/nacelle/RefinementFilters'
 import RefinementResults from '~/components/nacelle/RefinementResults'
-import SearchResults from '~/components/nacelle/SearchResults'
 import ProductGrid from '~/components/nacelle/ProductGrid'
 import SearchNoResults from '~/components/nacelle/SearchNoResults'
 

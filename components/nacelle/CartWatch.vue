@@ -1,4 +1,6 @@
-<template> </template>
+<template>
+  <div></div>
+</template>
 
 <script>
 import { mapState, mapMutations } from 'vuex'
@@ -37,7 +39,7 @@ export default {
     ...mapMutations('cart', ['removeLineItemMutation', 'setCartError']),
 
     // This method gets the Nacelle product ID and variant ID from the
-    // line item, and uses $nacelle.isVariantAvailable to check if a user
+    // line item, and uses $nacelle.status.isVariantAvailable to check if a user
     // is allowed to purchase the item.
     async checkAvailability(lineItem) {
       try {
@@ -45,10 +47,12 @@ export default {
         const variantId = variant.id || ''
 
         if (productId.length > 0 && variantId.length > 0) {
-          const variantAvailable = await this.$nacelle.isVariantAvailable({
-            productId,
-            variantId
-          })
+          const variantAvailable = await this.$nacelle.status.isVariantAvailable(
+            {
+              productId,
+              variantId
+            }
+          )
 
           if (!variantAvailable) {
             this.removeLineItemMutation(productId)

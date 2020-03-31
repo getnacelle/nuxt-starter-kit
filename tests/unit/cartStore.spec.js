@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import storeConfig from '../storeConfig'
 import localforage from 'localforage'
-import uuid from 'uuidv4'
+import { uuid, isUuid } from 'uuidv4'
 Vue.use(Vuex)
 
 describe('Cart Store', () => {
@@ -22,7 +22,7 @@ describe('Cart Store', () => {
     })
     expect(store.state.cart.lineItems.length).toEqual(1)
     expect(store.state.cart.lineItems[0].id).toContain('Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==')
-    expect(uuid.is(store.state.cart.lineItems[0].id.split('::')[1])).toBeTruthy()
+    expect(isUuid(store.state.cart.lineItems[0].id.split('::')[1])).toBeTruthy()
   })
 
   it('removes a line item from the line items array', async() => {

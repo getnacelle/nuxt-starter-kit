@@ -26,24 +26,21 @@ export default {
       default: ''
     }
   },
-  data () {
+  data() {
     return {
       products: []
     }
   },
   computed: {
-    product () {
+    product() {
       if (this.products.length > 0) {
         return this.products[0]
       }
 
       return undefined
     },
-    singleProduct () {
-      if (
-        this.handle.length > 0 &&
-        this.handles.length === 0
-      ) {
+    singleProduct() {
+      if (this.handle.length > 0 && this.handles.length === 0) {
         return true
       }
 
@@ -61,7 +58,7 @@ export default {
       return 'en-us'
     }
   },
-  created () {
+  created() {
     if (process.browser || process.client) {
       let handlesArr = []
 
@@ -71,21 +68,16 @@ export default {
         handlesArr = this.handles
       }
 
-      this.$nacelle
+      this.$nacelle.data
         .products({
           handles: handlesArr,
           locale: this.useLocale
         })
-        .then((result) => {
+        .then(result => {
           if (result && result.length > 0) {
             // filter out non-existant products
             this.products = result.filter(product => {
-              return (
-                product &&
-                product.id &&
-                product.handle &&
-                product.title
-              )
+              return product && product.id && product.handle && product.title
             })
           }
         })
@@ -94,6 +86,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

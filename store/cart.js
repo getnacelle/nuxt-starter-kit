@@ -1,6 +1,5 @@
 import localforage from 'localforage'
-import axios from 'axios'
-import uuid from 'uuidv4'
+import { uuid } from 'uuidv4'
 import isEqual from 'lodash.isequal'
 
 export const state = () => ({
@@ -20,6 +19,7 @@ export const getters = {
 
     return 0
   },
+
   cartSubtotal(state) {
     if (state.lineItems.length >= 1) {
       return state.lineItems.reduce(
@@ -30,6 +30,7 @@ export const getters = {
 
     return 0
   },
+
   freeShippingThresholdPassed(state, getters) {
     if (
       getters.cartSubtotal &&
@@ -41,11 +42,13 @@ export const getters = {
       return false
     }
   },
+
   amountUntilFreeShipping(state, getters) {
     if (getters.cartSubtotal != null && state.freeShippingThreshold) {
       return state.freeShippingThreshold - getters.cartSubtotal
     }
   },
+
   checkoutLineItems(state) {
     if (state.lineItems.length > 0) {
       return state.lineItems.map(lineItem => ({
@@ -58,6 +61,7 @@ export const getters = {
       return []
     }
   },
+
   checkoutIdForBackend(state) {
     let checkoutId
     if (state.checkoutId == null) {
@@ -86,12 +90,14 @@ export const mutations = {
       state.lineItems[index].quantity += payload.quantity
     }
   },
+
   removeLineItemMutation(state, payload) {
     const index = state.lineItems.findIndex(
       lineItem => lineItem.id === payload
     )
     state.lineItems.splice(index, 1)
   },
+
   incrementLineItemMutation(state, payload) {
     const index = state.lineItems.findIndex(
       lineItem => lineItem.id === payload
@@ -100,6 +106,7 @@ export const mutations = {
       state.lineItems[index].quantity++
     }
   },
+
   decrementLineItemMutation(state, payload) {
     const index = state.lineItems.findIndex(
       lineItem => lineItem.id === payload
@@ -111,31 +118,40 @@ export const mutations = {
       }
     }
   },
+
   setLineItems(state, payload) {
     state.lineItems.splice(0)
     state.lineItems = payload
   },
+
   setCheckoutId(state, payload) {
     state.checkoutId = payload
   },
+
   setCheckoutUrl(state, payload) {
     state.checkoutUrl = payload
   },
+
   setCheckoutCompleteStatus(state, payload) {
     state.checkoutComplete = payload
   },
+
   showCart(state) {
     state.cartVisible = true
   },
+
   hideCart(state) {
     state.cartVisible = false
   },
+
   toggleCart(state) {
     state.cartVisible = !state.cartVisible
   },
+
   setFreeShippingThreshold(state, payload) {
     state.freeShippingThreshold = payload
   },
+  
   setCartError(state, error) {
     state.error = error
   }
@@ -197,12 +213,15 @@ export const actions = {
       context.commit('setLineItems', lineItems)
     }
   },
+
   async saveCheckoutId(context, payload) {
     localforage.setItem('checkout-id', payload)
   },
+
   async saveCheckoutUrl (context, payload) {
     localforage.setItem('checkout-url', payload)
   },
+
   async getCheckoutId(context) {
     const checkoutId = await localforage.getItem('checkout-id')
     if (checkoutId != null) {
@@ -210,6 +229,7 @@ export const actions = {
       return checkoutId
     }
   },
+
   async getCheckoutUrl(context) {
     const checkoutUrl = await localforage.getItem('checkout-url')
     if (checkoutUrl != null) {
@@ -217,6 +237,7 @@ export const actions = {
       return checkoutUrl
     }
   },
+  
   async verifyCheckoutStatus(context) {
     await context.dispatch('getCheckoutId')
     await context.dispatch('getCheckoutUrl')
@@ -225,27 +246,10 @@ export const actions = {
       context.state.checkoutId != null &&
       context.state.checkoutUrl != null
     ) {
-      const checkoutStatus = await axios({
-        method: 'post',
-        url: this.$nacelle.endpoint,
-        headers: {
-          'Content-Type': 'application/json',
-          'x-nacelle-space-id': context.rootState.space.id,
-          'x-nacelle-space-token': this.$nacelle.token
-        },
-        data: {
-          query: `query {
-            getCheckout(
-              id: "${context.state.checkoutId}",
-              url: "${context.state.checkoutUrl}"
-            ) {
-              id
-              url
-              completed
-            }
-          }`
-        }
-      }).then(res => res.data.data.getCheckout.completed)
+      const checkoutStatus = await this.$nacelle.checkout.get({
+        id: context.state.checkoutId,
+        url: context.state.checkoutUrl
+      }).then(checkoutObj => checkoutObj.completed)
 
       context.commit('setCheckoutCompleteStatus', checkoutStatus)
     }

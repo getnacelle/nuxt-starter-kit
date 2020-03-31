@@ -61,6 +61,8 @@ export default {
         this.$emit('results')
 
         return results
+          .filter(result => typeof result.item !== 'undefined')
+          .map(result => result.item)
       }
 
       this.$emit('no-query')
