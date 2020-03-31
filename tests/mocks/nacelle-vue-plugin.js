@@ -1,4 +1,5 @@
 import { defaultProduct, defaultContent } from './defaultObjects'
+import staticCollectionPage from './static-collection-page'
 import staticCollection from './static-collection'
 
 export default {
@@ -38,8 +39,11 @@ export default {
             })
           })
         },
-        collectionPage({ handle }) {
-          return Promise.resolve([])
+        collectionPage({ handle, paginate, itemsPerPage }) {
+          if (paginate) {
+            return Promise.resolve(staticCollectionPage.slice(0, itemsPerPage))
+          }
+          return Promise.resolve(staticCollectionPage)
         }
       },
       checkout() {
