@@ -48,6 +48,7 @@ export const actions = {
       ...eventProperties(rootState)
     })
   },
+
   productView({ commit, rootState }, product) {
     commit('addEvent', {
       eventType: 'PRODUCT_VIEW',
@@ -55,6 +56,7 @@ export const actions = {
       ...eventProperties(rootState)
     })
   },
+
   addToCart({ commit, rootState }, payload) {
     commit('addEvent', {
       eventType: 'ADD_TO_CART',
@@ -62,6 +64,7 @@ export const actions = {
       ...eventProperties(rootState)
     })
   },
+
   removeFromCart({ commit, rootState }, payload) {
     commit('addEvent', {
       eventType: 'REMOVE_FROM_CART',
@@ -69,6 +72,7 @@ export const actions = {
       ...eventProperties(rootState)
     })
   },
+
   checkoutInit({ commit, rootState }, payload) {
     commit('addEvent', {
       eventType: 'CHECKOUT_INIT',

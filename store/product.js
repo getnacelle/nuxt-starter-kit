@@ -25,6 +25,7 @@ export const mutations = {
   setProduct(state, payload) {
     state.product = payload
   },
+
   setSelectedVariant(state, payload) {
     if (state.product && state.product.variants && payload && payload.id) {
       const variant = state.product.variants.find(
@@ -33,6 +34,7 @@ export const mutations = {
       state.selectedVariant = variant
     }
   },
+
   setSelectedVariantById(state, payload) {
     if (state.product && state.product.variants && payload) {
       const variant = state.product.variants.find(

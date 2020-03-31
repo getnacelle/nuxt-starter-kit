@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* The <page-content> component maps data from your CMS to Nacelle components.
 /* For information about creating pages, please refer to:
@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 import getPage from '~/mixins/getPage'
 import getCollection from '~/mixins/getCollection'
 import PageContent from '~/components/nacelle/PageContent'

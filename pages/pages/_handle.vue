@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <!-- 
+    <!--
     /****
     /* The <page-content> component maps data from your CMS to Nacelle components.
     /* For information about creating pages, please refer to:
@@ -9,20 +9,20 @@
     /****
     -->
     <page-content :page="page" :products="products">
-      <!-- 
+      <!--
         /****
         /* Customize your Nacelle content by taking advantage
         /* of named slots. For more details, refer to:
         /*
         /* https://docs.getnacelle.com/nuxt/pages.html#customizing-homepage-content-output
-        /* 
+        /*
         /* Begin editing sections by uncommenting the <template> tags below.
         /****
       -->
 
       <!-- <template v-slot:section="{ section }"> -->
 
-      <!-- 
+      <!--
         /****
         /* -- Edit Hero Banner --
         /* |   Available slots:  |
@@ -69,7 +69,7 @@
         />
         -->
 
-      <!-- 
+      <!--
         /****
         /* -- Edit Testimonials --
         /****

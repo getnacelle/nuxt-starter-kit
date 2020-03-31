@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* The "Starship Furniture" store will load as default
 /* content in the absence of page data supplied by a CMS
@@ -51,20 +51,20 @@
     </div>
     <!-- End of default content -->
 
-    <!-- 
+    <!--
     /****
     /* The <page-content> component maps data
     /* from your CMS to Nacelle components
     /****
     -->
     <page-content :page="page" :products="products">
-      <!-- 
+      <!--
         /****
         /* Customize your Nacelle content by taking advantage
         /* of named slots. For more details, refer to:
         /*
         /* https://docs.getnacelle.com/nuxt/pages.html#customizing-homepage-content-output
-        /* 
+        /*
         /* Begin editing sections by uncommenting the <template> tags below.
         /****
       -->

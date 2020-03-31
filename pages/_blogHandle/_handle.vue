@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* Customize your Nacelle content by taking advantage
 /* of named slots. For more details, refer to:
@@ -21,11 +21,11 @@
         <transition name="fadeDelay">
           <div v-if="article" class="columns is-centered is-multiline">
             <div class="article-header column is-6 has-text-centered">
-              <!-- 
+              <!--
                 /****
                 /* -- Edit Blog Article Header --
                 /* |       Available slots:      |
-                /* 
+                /*
                 /* name: "tags", data: "tags"
                 /* name: "title", data: "title"
                 /* name: "author", data: "author"

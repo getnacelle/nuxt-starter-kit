@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* Blog data is loaded from your CMS with the getBlog mixin.
 /* For information about connecting your blog, please refer to:

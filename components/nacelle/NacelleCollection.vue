@@ -1,9 +1,7 @@
 <template>
   <div class="nacelle collection-data-load">
     <slot v-if="collection" :collection="collection" :products="products" />
-    <button v-if="showButton" @click="fetchProducts" class="nacelle button">
-      {{ buttonText }}
-    </button>
+    <button v-if="showButton" @click="fetchProducts" class="nacelle button">{{ buttonText }}</button>
     <observe-emitter v-else v-on:observe="fetchProducts" />
   </div>
 </template>
@@ -46,7 +44,7 @@ export default {
       default: 'Load More'
     }
   },
-  data () {
+  data() {
     return {
       collection: undefined,
       products: [],
@@ -57,14 +55,18 @@ export default {
   },
   computed: {
     ...mapGetters('collections', ['getCollection']),
-    showButton () {
-      return (
+    showButton() {
+      if (
         this.useButtonLoadMore &&
         this.collection &&
         this.productIndex < this.selectedProductList.length
-      )
+      ) {
+        return true
+      }
+
+      return false
     },
-    useLocale () {
+    useLocale() {
       if (this.locale && this.locale !== '') {
         return this.locale
       }
@@ -89,7 +91,7 @@ export default {
       return []
     }
   },
-  created () {
+  created() {
     if (process.browser || process.client) {
       const storeCollection = this.getCollection(this.handle)
 
@@ -127,16 +129,7 @@ export default {
         this.collection &&
         this.products.length < this.selectedProductList.length
       ) {
-        let handles = this.selectedProductList
-
         this.isLoadingProducts = true
-
-        if (this.paginate) {
-          handles = this.selectedProductList.slice(
-            this.productIndex,
-            this.productIndex + this.productsPerPage
-          )
-        }
 
         this.$nacelle.data
           .collectionPage({

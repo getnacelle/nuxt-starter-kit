@@ -17,6 +17,7 @@ export const getters = {
 
     return undefined
   },
+
   hasProductData(state) {
     return (
       state.searchData &&
@@ -24,6 +25,7 @@ export const getters = {
       state.searchData.products.length > 0
     )
   },
+  
   productData(state) {
     if (
       state.searchData &&
