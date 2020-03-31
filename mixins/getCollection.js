@@ -85,9 +85,9 @@ Some page templates attempt to locate collections automatically, so this may not
     computed: {
       selectedProductList() {
         if (
-          this.collection && 
+          this.collection &&
           Array.isArray(this.collection.productLists)
-         ) {
+        ) {
           const list = this.collection.productLists.find(collection => {
             return collection.slug === this.selectedList
           })
@@ -100,7 +100,7 @@ Some page templates attempt to locate collections automatically, so this may not
         return []
       }
     },
-    async created () {
+    async created() {
       // Flag for determining if we update collection in vuex store
       let updateCollection = false
 

@@ -132,11 +132,6 @@ span {
   max-height: none;
 }
 
-/* Home Hero Banner */
-section.hero {
-  height: 100vh;
-}
-
 section.hero .hero-body {
   display: -webkit-box;
   display: -ms-flexbox;

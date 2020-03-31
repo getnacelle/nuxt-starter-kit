@@ -37,7 +37,16 @@ export default {
               resolve(staticCollection)
             })
           })
+        },
+        collectionPage({ handle }) {
+          return Promise.resolve([])
         }
+      },
+      checkout() {
+        return Promise.resolve({
+          id: '1234',
+          ur: 'testing'
+        })
       }
     }
   }

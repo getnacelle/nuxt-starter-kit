@@ -46,7 +46,7 @@ export default {
       default: 'Load More'
     }
   },
-  data() {
+  data () {
     return {
       collection: undefined,
       products: [],
@@ -57,14 +57,14 @@ export default {
   },
   computed: {
     ...mapGetters('collections', ['getCollection']),
-    showButton() {
+    showButton () {
       return (
         this.useButtonLoadMore &&
         this.collection &&
         this.productIndex < this.selectedProductList.length
       )
     },
-    useLocale() {
+    useLocale () {
       if (this.locale && this.locale !== '') {
         return this.locale
       }
@@ -89,7 +89,7 @@ export default {
       return []
     }
   },
-  created() {
+  created () {
     if (process.browser || process.client) {
       const storeCollection = this.getCollection(this.handle)
 

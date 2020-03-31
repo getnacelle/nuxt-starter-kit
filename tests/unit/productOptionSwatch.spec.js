@@ -29,7 +29,7 @@ describe('ProductOptionSwatch.vue', () => {
       ]
     }
   })
-  it('renders a swatch', async () => {
+  it('renders a swatch', async() => {
     expect(wrapper.findAll('div').exists()).toBe(true)
     expect(wrapper.text()).toBe('Small')
   })

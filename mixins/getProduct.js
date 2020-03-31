@@ -1,13 +1,13 @@
 export default ({ productHandle, locale } = {}) => {
   return {
-    data () {
+    data() {
       return {
         handle: null,
         product: null,
         noProductData: false
       }
     },
-    async asyncData (context) {
+    async asyncData(context) {
       const { params, payload, app } = context
       const { handle } = params
       const { $nacelle } = app
@@ -37,7 +37,7 @@ Some page templates attempt to locate product data automatically, so this may no
         product: productData
       }
     },
-    async created () {
+    async created() {
       this.handle = productHandle || this.$route.params.handle
 
       if (process.browser) {

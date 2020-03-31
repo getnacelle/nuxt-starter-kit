@@ -1,7 +1,7 @@
-require('dotenv').config()
-
 import path from 'path'
 import fs from 'fs-extra'
+
+require('dotenv').config()
 
 export default {
   mode: process.env.BUILD_MODE,
@@ -76,7 +76,7 @@ export default {
       const staticDir = path.resolve(__dirname, './static/data')
       const routes = fs.readJsonSync(`${staticDir}/routes.json`)
       const routesOnly = routes.map(route => route.route)
-      
+
       return routesOnly
     }
   },
@@ -112,7 +112,7 @@ export default {
 
     // Optional array of data type strings to direct Nacelle to include other data types
     // besides products in search data.
-    // searchDataTypes: null,
+    // searchDataTypes: ['article', 'page', 'blog'],
     
     // Set to true to bypass fetching data from your space and generating
     // static JSON files.

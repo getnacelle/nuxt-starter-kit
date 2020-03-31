@@ -17,7 +17,7 @@ describe('ProductMediaSelectView.vue', () => {
   //   )
   // })
 
-  it('sets a media item as the selected item', async () => {
+  it('sets a media item as the selected item', async() => {
     const wrapper = shallowMount(ProductMediaSelectView, {
       propsData: {
         media: [
@@ -35,7 +35,7 @@ describe('ProductMediaSelectView.vue', () => {
       id: 1
     })
   })
-  it('updates the mediaComponent computed', async () => {
+  it('updates the mediaComponent computed', async() => {
     const wrapper = shallowMount(ProductMediaSelectView, {
       propsData: {
         media: [

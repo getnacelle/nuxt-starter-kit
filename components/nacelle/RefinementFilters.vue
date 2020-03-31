@@ -1,41 +1,82 @@
 <template>
-  <div class="filters">
+  <div>
     <h3>Refine Your Search</h3>
-    <div class="filter" v-for="filter in filters" :key="filter.property.field">
-      <template v-if="filter.values.length > 0">
-        <h4>{{filter.property.label}}</h4>
-        <div class="control">
-          <label class="radio" v-for="value in filter.values" :key="value">
-            <input
-              type="radio"
-              :name="filter.property.field"
-              @click="setFilterActive({property: filter.property.field, value:value})"
-              :checked="filterActive(value)"
-            />
-            {{value}}
-          </label>
-        </div>
-      </template>
-    </div>
+    <select v-model="sortBy">
+      <option selected disabled>Sort By</option>
+      <option value="hi-low">High to Low</option>
+      <option value="low-hi">Low To High</option>
+    </select>
     <button class="button is-text" @click="setFiltersCleared">
       Clear Filters
     </button>
+    <div class="filters">
+      <div
+        class="filter"
+        v-for="filter in filters"
+        :key="filter.property.field"
+      >
+        <h4>{{ filter.property.label }}</h4>
+
+        <div class="facet-values">
+          <div
+            class="value"
+            v-for="value in filter.values"
+            :key="value"
+            @click="
+              toggleFilterActive({ property: filter.property.field, value })
+            "
+          >
+            <refinement-filter-select
+              :value="value"
+              :activeFilters="activeFilters"
+              :property="filter.property.field"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="filter">
+        <h4>Price</h4>
+
+        <div>
+          <div
+            class="value"
+            v-for="priceRange in priceRangeFilters"
+            :key="priceRange.label"
+            @click="togglePriceRangeActive(priceRange)"
+          >
+            <refinement-price-filter-select
+              :priceRange="priceRange"
+              :activePriceRange="activePriceRange || {}"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex'
 import queryString from 'query-string'
+import RefinementFilterSelect from '~/components/nacelle/RefinementFilterSelect'
+import RefinementPriceFilterSelect from '~/components/nacelle/RefinementPriceFilterSelect'
 import { omit } from 'search-params'
 export default {
+  components: {
+    RefinementFilterSelect,
+    RefinementPriceFilterSelect
+  },
   props: {
     inputData: {
       type: Array,
       required: true
     },
-    filterProperties: {
+    propertyFilters: {
       type: Array,
       required: true
+    },
+    priceRangeFilters: {
+      type: Array
     },
     passingConditions: {
       type: Array,
@@ -44,146 +85,293 @@ export default {
   },
   data() {
     return {
+      filters: null,
+      filteredData: null,
       activeFilters: [],
-      passedData: null
+      outputData: null,
+      activePriceRange: null,
+      passedData: null,
+      sortBy: 'Sort By'
     }
   },
   watch: {
+    inputData() {
+      console.log(this.inputData)
+      this.setupFilters()
+      this.computeFilteredData()
+    },
     outputData() {
-      this.$emit('updated', this.outputData)
+      const vm = this
+      vm.$emit('updated', vm.outputData)
+    },
+    filters() {
+      this.computeFilteredData()
+    },
+    activeFilters() {
+      console.log('activeFiltersChanged')
+      this.computeFilteredData()
+    },
+    activePriceRange() {
+      this.computeOutputData()
+    },
+    sortBy() {
+      this.computeOutputData()
     },
     filtersCleared(val) {
-      if (val == true) {
+      console.log(val)
+      if (val === true) {
         this.activeFilters = []
+        this.activePriceRange = null
+        this.sortBy = 'Sort By'
         this.removeFiltersInQueryParams()
       }
     }
   },
   computed: {
-    ...mapState('search', ['filtersCleared']),
-
-    filters() {
-      let vm = this
-      if (vm.inputData && vm.filterProperties) {
-        let propertyValues = vm.filterProperties.map(property => {
-          let rawValues = vm.inputData
-            .map(item => {
-              return item[`${property.field}`]
-            })
-            .filter(value => {
-              return value != '' && value != null
-            })
-          let dedupedValues = Array.from(new Set(rawValues))
-          return {
-            property: property,
-            values: dedupedValues
-          }
-        })
-        return propertyValues
-      }
-    },
-    outputData() {
-      let vm = this
-      if (vm.activeFilters.length > 0 && vm.inputData) {
-        let output = this.inputData.filter(item => {
-          let filterChecks = vm.activeFilters.map(filter => {
-            if (filter.value == item[filter.property]) {
-              return true
-            } else {
-              return false
-            }
-          })
-          let itemShouldPass = filterChecks.every(filterCheck => {
-            return filterCheck == true
-          })
-          return itemShouldPass
-        })
-        return output
-      }
-      
-      return vm.inputData
-    }
+    ...mapState('search', ['filtersCleared'])
   },
   methods: {
-    ...mapMutations('search', ['setFiltersCleared']),
-    ...mapMutations('search', ['setFiltersNotCleared']),
-    filterActive(value) {
-      if (this.activeFilters) {
-        let filterArray = this.activeFilters.filter(filter => {
-          return filter.value == value
-        })
-        if (filterArray.length > 0) {
-          return true
-        } else {
-          return false
-        }
+    ...mapMutations('search', [
+      'setFiltersCleared',
+      'setFiltersNotCleared',
+      'setFilteredData'
+    ]),
+    computeOutputData() {
+      const vm = this
+      const outputWorker = new Worker('/outputWorker.js')
+      outputWorker.postMessage({
+        activeFilters: this.activeFilters,
+        filteredData: this.filteredData,
+        activePriceRange: this.activePriceRange,
+        sortBy: this.sortBy
+      })
+      outputWorker.onmessage = function(e) {
+        vm.outputData = e.data
       }
     },
-    setFilterActive(filter) {
-      let filterInFilters = this.activeFilters.filter(filtersItem => {
-        return filtersItem.property == filter.property
+    computeFilteredData() {
+      const vm = this
+      const filterWorker = new Worker('/filterWorker.js')
+      filterWorker.postMessage({
+        activeFilters: this.activeFilters,
+        inputData: this.inputData
       })
-      if (filterInFilters.length == 0) {
-        this.activeFilters.push(filter)
-      } else {
-        this.activeFilters = this.activeFilters.map(filtersItem => {
-          if (filtersItem.property == filter.property) {
-            return filter
-          } else {
-            return filtersItem
-          }
-        })
+      filterWorker.onmessage = function(e) {
+        vm.filteredData = e.data
+        vm.computeOutputData()
       }
-      this.setFilterInQueryParams(filter)
-      this.setFiltersNotCleared()
+    },
+    setupFilters() {
+      const vm = this
+      if (vm.inputData && vm.propertyFilters) {
+        vm.filters = vm.inputData
+          .reduce((output, item) => {
+            item.facets
+              .filter(facet => facet.name !== 'Title')
+              .forEach(facet => {
+                const index = output.findIndex(arrayItem => {
+                  return facet.name === arrayItem.property
+                })
+                if (index === -1) {
+                  output.push({ property: facet.name, values: [facet.value] })
+                } else {
+                  output[index].values.push(facet.value)
+                }
+              })
+            return output
+          }, [])
+          .map(facet => {
+            const values = Array.from(new Set(facet.values))
+            return { property: facet.property, values: values }
+          })
+          .filter(facet => {
+            return vm.propertyFilters.find(filter => {
+              return filter.field === facet.property
+            })
+          })
+          .map(facet => {
+            const index = vm.propertyFilters.findIndex(filter => {
+              return filter.field === facet.property
+            })
+            return {
+              property: {
+                field: facet.property,
+                label: vm.propertyFilters[index].label
+              },
+              values: facet.values
+            }
+          })
+      }
+    },
+    filterActive(value) {
+      return requestAnimationFrame(() => {
+        if (this.activeFilters) {
+          const filterArray = this.activeFilters.filter(filter => {
+            return filter.value === value
+          })
+          if (filterArray.length > 0) {
+            return true
+          } else {
+            return false
+          }
+        }
+      })
+    },
+    toggleFilterActive(filter) {
+      return requestAnimationFrame(() => {
+        const filterInFilters = this.activeFilters.filter(filtersItem => {
+          return filtersItem.property === filter.property
+        })
+        if (filterInFilters.length === 0) {
+          this.activeFilters.push({
+            property: filter.property,
+            values: [filter.value]
+          })
+        } else {
+          this.activeFilters.map((filtersItem, index) => {
+            if (
+              filtersItem.property === filter.property &&
+              !filtersItem.values.some(value => value === filter.value)
+            ) {
+              filtersItem.values.push(filter.value)
+            } else if (
+              filtersItem.property === filter.property &&
+              filtersItem.values.some(value => value === filter.value)
+            ) {
+              const filterIndex = filtersItem.values.indexOf(filter.value)
+              filtersItem.values.splice(filterIndex, 1)
+            } else {
+              return filtersItem
+            }
+            if (filtersItem.values.length === 0) {
+              this.activeFilters.splice(index, 1)
+            }
+          })
+        }
+        this.setFilterInQueryParams(filter)
+        this.setFiltersNotCleared()
+        this.computeFilteredData()
+      })
+    },
+    togglePriceRangeActive(priceRange) {
+      if (
+        JSON.stringify(this.activePriceRange) === JSON.stringify(priceRange)
+      ) {
+        this.activePriceRange = null
+      } else {
+        this.activePriceRange = priceRange
+      }
     },
     setFilterInQueryParams(filter) {
-      if (process.browser) {
-        let parsed = queryString.parse(location.search)
-        let transformedFilter = {
-          [filter.property]: filter.value
+      return requestAnimationFrame(() => {
+        if (process.browser) {
+          let parsed = queryString.parse(location.search, {
+            arrayFormat: 'comma'
+          })
+
+          let currentParams = this.readFiltersFromQueryParams()
+
+          let transformedParams
+
+          if (currentParams.length > 0) {
+            if (
+              currentParams.some(param => {
+                return param.property === filter.property
+              })
+            ) {
+              currentParams = currentParams.map(param => {
+                if (
+                  param.property === filter.property &&
+                  !param.values.includes(filter.value)
+                ) {
+                  param.values.push(filter.value)
+                  return param
+                } else if (
+                  param.property === filter.property &&
+                  param.values.includes(filter.value)
+                ) {
+                  const index = param.values.indexOf(filter.value)
+                  param.values.splice(index, 1)
+                  return param
+                } else {
+                  return param
+                }
+              })
+            } else {
+              currentParams.push(filter)
+            }
+            transformedParams = {}
+
+            currentParams.forEach(param => {
+              if (param.values && param.values.length > 0) {
+                transformedParams[param.property] = param.values.join(',')
+              } else {
+                transformedParams[param.property] = param.value
+              }
+            })
+          } else {
+            transformedParams = {
+              [filter.property]: filter.value
+            }
+          }
+
+          parsed = { ...parsed, ...transformedParams }
+
+          this.$router.push({ query: parsed })
         }
-        parsed = { ...parsed, ...transformedFilter }
-        this.$router.push({ query: parsed })
-      }
+      })
     },
     removeFiltersInQueryParams() {
       if (process.browser) {
-        let filtersFromUrl = this.filterProperties.map(filter => {
+        const filtersFromUrl = this.propertyFilters.map(filter => {
           return filter.field
         })
-        let queryParamsString = queryString.stringify(
+        const queryParamsString = queryString.stringify(
           queryString.parse(location.search)
         )
-        let queryWithoutFilters = omit(queryParamsString, filtersFromUrl)
+        const queryWithoutFilters = omit(queryParamsString, filtersFromUrl)
           .querystring
         this.$router.push({ query: queryString.parse(queryWithoutFilters) })
       }
     },
-    async readFiltersFromQueryParams() {
-      return new Promise((resolve, reject) => {
-        let parsed = queryString.parse(location.search)
-        let filtersFromUrl = this.filterProperties
-          .map(filter => {
-            return { property: filter.field, value: parsed[filter.field] }
-          })
-          .filter(filter => {
-            return filter.value != undefined
-          })
+    readFiltersFromQueryParams() {
+      let parsed = Object.entries(
+        queryString.parse(location.search, { arrayFormat: 'comma' })
+      )
 
-        if (filtersFromUrl.length > 0) {
-          resolve(filtersFromUrl)
-        } else {
-          resolve([])
-        }
-      })
+      parsed = Object.fromEntries(
+        parsed.map(filter => {
+          if (typeof filter[1] === 'string') {
+            filter[1] = [filter[1]]
+          }
+          return filter
+        })
+      )
+
+      const filtersFromUrl = this.propertyFilters
+        .map(filter => {
+          return { property: filter.field, values: parsed[filter.field] }
+        })
+        .filter(filter => {
+          return (
+            filter.values !== null &&
+            filter.values !== undefined &&
+            filter.values.length > 0
+          )
+        })
+
+      if (filtersFromUrl.length > 0) {
+        return filtersFromUrl
+      } else {
+        return []
+      }
     },
     getPassedData() {
-      let vm = this
+      const vm = this
       if (vm.passingConditions) {
         return vm.inputData.filter(item => {
-          let conditions = vm.passingConditions.map(passingCondition => {
-            let passing = new Function(
+          const conditions = vm.passingConditions.map(passingCondition => {
+            const passing = new Function(
               `return "${passingCondition.value}" ${
                 passingCondition.conditional
               } "${item[passingCondition.property]}"`
@@ -191,49 +379,67 @@ export default {
 
             return passing()
           })
-          let passedConditions = conditions.every(condition => {
-            return condition == true
+          const passedConditions = conditions.every(condition => {
+            return condition === true
           })
-          return passedConditions == true
+          return passedConditions === true
         })
       } else {
         return vm.inputData
       }
-      return vm.inputData
     }
   },
   created() {
     if (process.browser) {
-      // this.passedData = this.getPassedData()
-      let vm = this
-      this.readFiltersFromQueryParams().then(res => {
-        this.activeFilters = res
-        vm.$emit('updated', vm.outputData)
-      })
+      this.passedData = this.getPassedData()
+      this.setupFilters()
+      this.activeFilters = this.readFiltersFromQueryParams()
+      if (this.filteredData && this.outputData.length > 0) {
+        this.$emit('updated', this.outputData)
+      }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .filters {
-  border-right: 1px solid whitesmoke;
-  position: sticky;
-  top: 10rem;
+  display: flex;
+  justify-content: space-between;
+  @media screen and (max-width: 786px) {
+    flex-direction: column;
+  }
 }
 .filter {
+  padding-left: 1rem;
+  border-right: 1px solid rgb(206, 206, 206);
+
+  flex-grow: 3;
+  margin-bottom: 0.5rem;
+  @media screen and (max-width: 786px) {
+    border: none;
+    margin-bottom: 2rem;
+  }
   margin-right: 1rem;
+  &:last-of-type {
+    border-right: unset;
+  }
 }
-.control {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
+.facet-values {
+  columns: 3;
+  @media screen and (max-width: 1200px) {
+    columns: 2;
+  }
+  @media screen and (max-width: 950px) {
+    columns: 1;
+  }
 }
-.radio {
-  margin: unset;
-  margin-bottom: 0.2rem;
+.value {
+  break-inside: avoid;
+  cursor: pointer;
+  user-select: none;
 }
 h3 {
-  font-size: 18pt;
+  font-size: 16pt;
   margin-bottom: 1.5rem;
 }
 h4 {
