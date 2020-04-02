@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <transition name="fade" mode="out-in">
       <div
         v-if="searchResults && searchResults.length == 0"
@@ -10,11 +9,13 @@
         <slot name="no-results"></slot>
       </div>
       <div key="results" class="search-results" v-else>
-            <h2>Showing {{searchResults.length}} {{itemSinglularPlural}} based on selected filters</h2>
+        <h2>
+          Showing {{ searchResults.length }} {{ itemSinglularPlural }} based on
+          selected filters
+        </h2>
         <slot name="result" :result="searchResultsSlice"></slot>
-              <div ref="load-more"></div>
+        <div ref="load-more"></div>
       </div>
-
     </transition>
   </div>
 </template>
@@ -76,9 +77,9 @@ export default {
           keys: this.searchKeys,
           threshold: this.relevanceThreshold
         }
-        const results = new Fuse(this.searchData, options).search(
-          String(this.searchQuery.value)
-        )
+        const results = new Fuse(this.searchData, options)
+          .search(String(this.searchQuery.value))
+          .map(result => result.item)
 
         this.$emit('results')
 

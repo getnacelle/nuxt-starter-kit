@@ -29,7 +29,9 @@
         <product-options
           :options="allOptions"
           v-on:selectedOptionsSet="setSelected"
-          v-on:confirmedSelection="confirmedSelection = true, optionsModalVisible = false"
+          v-on:confirmedSelection="
+            ;(confirmedSelection = true), (optionsModalVisible = false)
+          "
           :onlyOneOption="onlyOneOption"
           :variant="currentVariant"
           :variants="product.variants"
