@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import ProductImage from '@/components/ProductImage'
+import ProductImage from '@/components/nacelle/ProductImage'
 import Vuex from 'vuex'
 
 import storeConfig from '../storeConfig'
@@ -7,7 +7,7 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('ProductImage/vue', () => {
-  it('renders an image', async () => {
+  it('renders an image', async() => {
     const store = new Vuex.Store(storeConfig())
     const wrapper = shallowMount(ProductImage, {
       store,

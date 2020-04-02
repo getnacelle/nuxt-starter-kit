@@ -30,57 +30,61 @@ const eventProperties = rootState => {
     domain
   }
 }
-export const state = () =>  ({
-    log: []
-  })
+export const state = () => ({
+  log: []
+})
 
-  export const mutations = {
-    addEvent(state, event) {
-      state.log.push(event)
-    }
+export const mutations = {
+  addEvent(state, event) {
+    state.log.push(event)
   }
+}
 
- export const actions  = {
-    pageView({ commit, rootState }, payload) {
-      commit('addEvent', {
-        eventType: 'PAGE_VIEW',
-        payload,
-        ...eventProperties(rootState)
-      })
-    },
-    productView({ commit, rootState }, product) {
-      commit('addEvent', {
-        eventType: 'PRODUCT_VIEW',
-        payload: { product },
-        ...eventProperties(rootState)
-      })
-    },
-    addToCart({ commit, rootState }, payload) {
-      commit('addEvent', {
-        eventType: 'ADD_TO_CART',
-        payload,
-        ...eventProperties(rootState)
-      })
-    },
-    removeFromCart({ commit, rootState }, payload) {
-      commit('addEvent', {
-        eventType: 'REMOVE_FROM_CART',
-        payload,
-        ...eventProperties(rootState)
-      })
-    },
-    checkoutInit({ commit, rootState }, payload) {
-      commit('addEvent', {
-        eventType: 'CHECKOUT_INIT',
-        payload,
-        ...eventProperties(rootState)
-      })
-    }
-  }
+export const actions = {
+  pageView({ commit, rootState }, payload) {
+    commit('addEvent', {
+      eventType: 'PAGE_VIEW',
+      payload,
+      ...eventProperties(rootState)
+    })
+  },
 
-  export default {
-    namespaced: true,
-    state,
-    mutations,
-    actions
+  productView({ commit, rootState }, product) {
+    commit('addEvent', {
+      eventType: 'PRODUCT_VIEW',
+      payload: { product },
+      ...eventProperties(rootState)
+    })
+  },
+
+  addToCart({ commit, rootState }, payload) {
+    commit('addEvent', {
+      eventType: 'ADD_TO_CART',
+      payload,
+      ...eventProperties(rootState)
+    })
+  },
+
+  removeFromCart({ commit, rootState }, payload) {
+    commit('addEvent', {
+      eventType: 'REMOVE_FROM_CART',
+      payload,
+      ...eventProperties(rootState)
+    })
+  },
+
+  checkoutInit({ commit, rootState }, payload) {
+    commit('addEvent', {
+      eventType: 'CHECKOUT_INIT',
+      payload,
+      ...eventProperties(rootState)
+    })
   }
+}
+
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions
+}

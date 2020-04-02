@@ -56,6 +56,7 @@ export const getters = {
 
     return {}
   },
+
   getMetatag: (state) => (tag) => {
     if (state.metafields) {
       return state.metafields.find(field => (
@@ -65,6 +66,7 @@ export const getters = {
 
     return {}
   },
+
   getMetaNamespace: (state) => (namespace) => {
     if (state.metafields) {
       return state.metafields.reduce((obj, metafield) => {
@@ -78,6 +80,7 @@ export const getters = {
 
     return {}
   },
+
   getMetafield: (state) => (namespace, key) => {
     if (state.metafields) {
       const metafield = state.metafields.find(field => (
@@ -91,6 +94,7 @@ export const getters = {
 
     return undefined
   },
+
   getLinks: (state) => handle => {
     if (state.linklists) {
       const linklist = state.linklists.find(
@@ -135,7 +139,6 @@ export const actions = {
     }
   }
 }
-
 
 export default {
   namespaced: true,

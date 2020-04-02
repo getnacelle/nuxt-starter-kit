@@ -1,10 +1,11 @@
-import {createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import storeConfig from '../storeConfig'
 import Vuex from 'vuex'
+import ProductCard from '@/components/nacelle/ProductCard'
+
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-import ProductCard from '@/components/ProductCard'
 
 describe('ProductCard.vue', () => {
   const defaultProduct = {
@@ -42,7 +43,7 @@ describe('ProductCard.vue', () => {
     }
   ]
 
-  it('renders a product card', async () => {
+  it('renders a product card', async() => {
     const store = new Vuex.Store(storeConfig())
     const wrapper = mount(ProductCard, {
       stubs: ['router-link'],

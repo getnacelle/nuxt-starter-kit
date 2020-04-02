@@ -1,11 +1,10 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import storeConfig from '../storeConfig'
-import ProductOptionSwatches from '@/components/ProductOptionSwatches'
+import ProductOptionSwatches from '@/components/nacelle/ProductOptionSwatches'
 
 import Vuex from 'vuex'
 const localVue = createLocalVue()
 localVue.use(Vuex)
-
 
 describe('ProductOptionSwatch.vue', () => {
   const store = new Vuex.Store(storeConfig())
@@ -38,7 +37,7 @@ describe('ProductOptionSwatch.vue', () => {
       ]
     }
   })
-  it('renders swatches', async () => {
+  it('renders swatches', async() => {
     expect(wrapper.findAll('.swatches').exists()).toBe(true)
   })
 })

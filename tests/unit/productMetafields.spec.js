@@ -1,7 +1,19 @@
 import { mount } from '@vue/test-utils'
-import MixinTestBench from '@/components/MixinTestBench.vue'
 // import ProductTitle from '@/components/ProductTitle'
 import productMetafields from '../../mixins/productMetafields'
+
+const MixinTestBench = {
+  props: {
+    product: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  data() {
+    return {}
+  },
+  template: '<div></div>'
+}
 
 describe('productMetafields.js', () => {
   const metafields = [{
@@ -33,6 +45,8 @@ describe('productMetafields.js', () => {
         }
       }
     })
+
+    console.log(wrapper.vm)
 
     expect(wrapper.vm.metafieldsObj).toEqual({
       subscriptions: {

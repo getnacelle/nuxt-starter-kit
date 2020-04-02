@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <!-- 
+    <!--
     /****
     /* The <page-content> component maps data from your CMS to Nacelle components.
     /* For information about creating pages, please refer to:
@@ -9,20 +9,20 @@
     /****
     -->
     <page-content :page="page" :products="products">
-      <!-- 
+      <!--
         /****
         /* Customize your Nacelle content by taking advantage
         /* of named slots. For more details, refer to:
         /*
         /* https://docs.getnacelle.com/nuxt/pages.html#customizing-homepage-content-output
-        /* 
+        /*
         /* Begin editing sections by uncommenting the <template> tags below.
         /****
       -->
 
       <!-- <template v-slot:section="{ section }"> -->
 
-      <!-- 
+      <!--
         /****
         /* -- Edit Hero Banner --
         /* |   Available slots:  |
@@ -69,7 +69,7 @@
         />
         -->
 
-      <!-- 
+      <!--
         /****
         /* -- Edit Testimonials --
         /****
@@ -86,50 +86,17 @@
 </template>
 
 <script>
-import PageContent from '~/components/PageContent'
-import { getPageData } from '@nacelle/nacelle-tools'
+import getPage from '~/mixins/getPage'
+import PageContent from '~/components/nacelle/PageContent'
+
 export default {
   components: { PageContent },
+  mixins: [getPage()],
   data() {
     return {
       handle: null,
       page: null,
       noPageData: false
-    }
-  },
-  async asyncData(context) {
-    const { params, app, payload } = context
-    const { handle } = params
-    const { $nacelle } = app
-
-    const pageData = await getPageData({
-      handle: handle,
-      locale: $nacelle.locale,
-      payload
-    })
-
-    return {
-      ...pageData
-    }
-  },
-  async created() {
-    this.handle = this.$route.params.handle
-
-    if (process.browser && !this.page && !this.noPageData) {
-      const pageData = await this.$nacelle.content({
-        handle: this.handle,
-        locale: this.$nacelle.locale
-      })
-
-      if (pageData) {
-        if (pageData.noData) {
-          this.noPageData = true
-        } else {
-          this.page = pageData
-        }
-      } else {
-        this.noPageData = true
-      }
     }
   }
 }

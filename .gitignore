@@ -88,5 +88,8 @@ sw.*
 # Mac OSX
 .DS_Store
 
+# Storybook
+.out
+
 # Nacelle
 static/data

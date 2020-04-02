@@ -50,7 +50,7 @@
 
 <script>
 import getProduct from '~/mixins/getProduct'
-import ProductDetails from '~/components/ProductDetails'
+import ProductDetails from '~/components/nacelle/ProductDetails'
 import productMetafields from '~/mixins/productMetafields'
 import { mapGetters, mapMutations } from 'vuex'
 export default {

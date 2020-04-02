@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* Blog data is loaded from your CMS with the getBlog mixin.
 /* For information about connecting your blog, please refer to:
@@ -45,8 +45,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import getBlog from '~/mixins/getBlog'
-import ArticlePreview from '~/components/ArticlePreview'
-import ObserveEmitter from '~/components/ObserveEmitter'
+import ArticlePreview from '~/components/nacelle/ArticlePreview'
+import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 
 export default {
   components: {

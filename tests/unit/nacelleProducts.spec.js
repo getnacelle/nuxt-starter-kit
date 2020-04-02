@@ -1,7 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import nacellePlugin from '../mocks/nacelle-vue-plugin'
-import NacelleProducts from '@/components/NacelleProducts'
-
+import NacelleProducts from '@/components/nacelle/NacelleProducts'
 
 const delay = () => {
   return new Promise(resolve => {
@@ -14,10 +13,9 @@ const delay = () => {
 describe('NacelleProducts.vue', () => {
   global.process.client = true
 
-  it('loads single product', async () => {
+  it('loads single product', async() => {
     const localVue = createLocalVue()
     localVue.use(nacellePlugin)
-    
 
     const wrapper = shallowMount(NacelleProducts, {
       localVue,
@@ -31,7 +29,7 @@ describe('NacelleProducts.vue', () => {
     expect(typeof wrapper.vm.product !== 'undefined').toBe(true)
   })
 
-  it('loads an array of products', async () => {
+  it('loads an array of products', async() => {
     const localVue = createLocalVue()
     localVue.use(nacellePlugin)
 

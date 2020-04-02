@@ -14,6 +14,7 @@ export const mutations = {
   addCollection(state, collection) {
     state.collections.push(collection)
   },
+
   updateCollection(state, collection) {
     if (collection && collection.handle) {
       const index = state.collections.findIndex(({ handle }) => {

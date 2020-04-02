@@ -1,11 +1,11 @@
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
 import { defaultProduct } from '../mocks/defaultObjects'
-import ProductShopLook from '~/components/ProductShopLook'
+import ProductShopLook from '~/components/nacelle/ProductShopLook'
 
 const localVue = createLocalVue()
 
 describe('ProductShopLook.vue', () => {
-  it('click image opens modal', async () => {
+  it('click image opens modal', async() => {
     const wrapper = shallowMount(ProductShopLook, {
       localVue,
       stubs: { RouterLink: RouterLinkStub },
@@ -17,11 +17,10 @@ describe('ProductShopLook.vue', () => {
     })
 
     const button = wrapper.find('.button')
-   button.trigger('click')
+    button.trigger('click')
 
-setTimeout(() => {
-  expect(wrapper.find('.shop-look-modal').exists()).toBe(true)
-}, 200)
-
+    setTimeout(() => {
+      expect(wrapper.find('.shop-look-modal').exists()).toBe(true)
+    }, 200)
   })
 })

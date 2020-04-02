@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import ProductOptionSwatch from '@/components/ProductOptionSwatch'
+import ProductOptionSwatch from '@/components/nacelle/ProductOptionSwatch'
 
 describe('ProductOptionSwatch.vue', () => {
   const wrapper = shallowMount(ProductOptionSwatch, {
@@ -29,7 +29,7 @@ describe('ProductOptionSwatch.vue', () => {
       ]
     }
   })
-  it('renders a swatch', async () => {
+  it('renders a swatch', async() => {
     expect(wrapper.findAll('div').exists()).toBe(true)
     expect(wrapper.text()).toBe('Small')
   })

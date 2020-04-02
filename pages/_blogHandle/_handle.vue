@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* Customize your Nacelle content by taking advantage
 /* of named slots. For more details, refer to:
@@ -21,11 +21,11 @@
         <transition name="fadeDelay">
           <div v-if="article" class="columns is-centered is-multiline">
             <div class="article-header column is-6 has-text-centered">
-              <!-- 
+              <!--
                 /****
                 /* -- Edit Blog Article Header --
                 /* |       Available slots:      |
-                /* 
+                /*
                 /* name: "tags", data: "tags"
                 /* name: "title", data: "title"
                 /* name: "author", data: "author"
@@ -62,9 +62,9 @@
 import { mapGetters } from 'vuex'
 import getBlogArticle from '~/mixins/getBlogArticle'
 import getCollection from '~/mixins/getCollection'
-import InterfaceFeaturedMedia from '~/components/InterfaceFeaturedMedia'
-import BlogArticleHeader from '~/components/BlogArticleHeader'
-import BlogArticleContent from '~/components/BlogArticleContent'
+import InterfaceFeaturedMedia from '~/components/nacelle/InterfaceFeaturedMedia'
+import BlogArticleHeader from '~/components/nacelle/BlogArticleHeader'
+import BlogArticleContent from '~/components/nacelle/BlogArticleContent'
 
 export default {
   components: {

@@ -1,8 +1,8 @@
 import { shallowMount } from '@vue/test-utils'
-import CtaButton from '@/components/CtaButton'
+import CtaButton from '@/components/nacelle/CtaButton'
 
 describe('CtaButton.vue', () => {
-  it('renders a button by default', async () => {
+  it('renders a button by default', async() => {
     const wrapper = shallowMount(CtaButton, {
       propsData: { to: '/test' }
     })

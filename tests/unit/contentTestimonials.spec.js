@@ -1,6 +1,5 @@
 import { mount, createLocalVue } from '@vue/test-utils'
-import ContentTestimonials from '~/components/ContentTestimonials'
-
+import ContentTestimonials from '~/components/nacelle/ContentTestimonials'
 
 describe('ContentTestimonials.vue', () => {
   const slides = [
@@ -18,7 +17,7 @@ describe('ContentTestimonials.vue', () => {
     }
   ]
 
-  it('renders a testimonial for each slide prop', async () => {
+  it('renders a testimonial for each slide prop', async() => {
     const wrapper = mount(ContentTestimonials, {
       propsData: {
         slides

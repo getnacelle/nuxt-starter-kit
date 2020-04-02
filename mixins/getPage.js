@@ -1,36 +1,55 @@
-import { getPageData } from '@nacelle/nacelle-tools'
-
 export default ({ pageHandle, locale } = {}) => {
   return {
-    data () {
+    data() {
       return {
         handle: null,
         page: null,
         noPageData: false
       }
     },
-    async asyncData (context) {
+    async asyncData(context) {
       const { params, app, payload } = context
       const { handle } = params
       const { $nacelle } = app
 
-      const pageData = await getPageData({
+      if (payload && payload.pageData) {
+        return {
+          page: payload.pageData
+        }
+      }
+
+      if (typeof process.server === 'undefined' || process.server) {
+        return {}
+      }
+
+      const pageData = await $nacelle.data.page({
         handle: pageHandle || handle,
-        locale: locale || $nacelle.locale,
-        payload
+        locale: locale
+      }).catch(error => {
+        console.warn(
+          `Unable to find page data for handle, "${pageHandle || handle}".\n
+Some page templates attempt to locate page data automatically, so this may not reflect a true error.`
+        )
+        return undefined
       })
 
       return {
-        ...pageData
+        page: pageData
       }
     },
-    async created () {
+    async created() {
       this.handle = pageHandle || this.$route.params.handle
 
       if (process.browser && !this.page && !this.noPageData) {
-        const pageData = await this.$nacelle.content({
+        const pageData = await this.$nacelle.data.page({
           handle: this.handle,
-          locale: locale || this.$nacelle.locale
+          locale: locale
+        }).catch(error => {
+          console.warn(
+            `Unable to find page data for handle, "${this.handle}".\n
+  Some page templates attempt to locate page data automatically, so this may not reflect a true error.`
+          )
+          return undefined
         })
 
         if (pageData) {

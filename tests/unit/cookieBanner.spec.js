@@ -1,8 +1,7 @@
 import { mount, RouterLinkStub, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
-import * as Cookies from 'es-cookie'
 import storeConfig from '../storeConfig'
-import CookieBanner from '@/components/CookieBanner'
+import CookieBanner from '@/components/nacelle/CookieBanner'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -20,12 +19,9 @@ describe('CookieBanner.vue', () => {
     }
   })
 
-  
-  
-  it('displays the accept button', async () => {
-    
+  it('displays the accept button', async() => {
     await setTimeout(() => {}, 100)
-    
+
     wrapper.setData({ visible: true })
     const button = wrapper.find('button')
 
@@ -36,14 +32,14 @@ describe('CookieBanner.vue', () => {
     )
   })
 
-  it('closes after the "Accept" button is clicked', async () => {
+  it('closes after the "Accept" button is clicked', async() => {
     await setTimeout(() => {}, 100)
-    
+
     wrapper.setData({ visible: true })
     const button = wrapper.find('button')
-    
+
     button.trigger('click')
-    
+
     setTimeout(() => {
       expect(wrapper.html()).toBe('<div><!----></div>')
     }, 200)

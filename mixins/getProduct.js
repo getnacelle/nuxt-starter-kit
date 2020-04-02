@@ -1,44 +1,66 @@
-import { getProductData } from '@nacelle/nacelle-tools'
-
 export default ({ productHandle, locale } = {}) => {
   return {
-    data () {
+    data() {
       return {
         handle: null,
         product: null,
         noProductData: false
       }
     },
-    async asyncData (context) {
+    async asyncData(context) {
       const { params, payload, app } = context
       const { handle } = params
       const { $nacelle } = app
 
-      const productData = await getProductData({
+      if (payload && payload.productData) {
+        return {
+          product: payload.productData
+        }
+      }
+
+      if (typeof process.server === 'undefined' || process.server) {
+        return {}
+      }
+
+      const productData = await $nacelle.data.product({
         handle: productHandle || handle,
-        locale: locale || $nacelle.locale,
-        payload
+        locale: locale
+      }).catch(error => {
+        console.warn(
+          `Unable to find product data for handle, "${productHandle || handle}".\n
+Some page templates attempt to locate product data automatically, so this may not reflect a true error.`
+        )
+        return undefined
       })
 
       return {
-        ...productData
+        product: productData
       }
     },
-    async created () {
+    async created() {
       this.handle = productHandle || this.$route.params.handle
 
       if (process.browser) {
         if (!this.product && !this.noProductData) {
-          const result = await this.$nacelle.products({
+          const productData = await this.$nacelle.data.product({
             handle: this.handle,
-            locale: locale || this.$nacelle.locale
+            locale: locale
+          }).catch(error => {
+            console.warn(
+              `Unable to find product data for handle, "${this.handle}".\n
+    Some page templates attempt to locate product data automatically, so this may not reflect a true error.`
+            )
+            return undefined
           })
 
-          if (
-            Array.isArray(result) &&
-            result.length > 0
-          ) {
-            this.product = result.pop()
+          if (productData) {
+            if (productData.noData) {
+              this.noproductData = true
+            } else {
+              this.product = productData
+            }
+          } else {
+            this.noproductData = true
           }
         }
       }

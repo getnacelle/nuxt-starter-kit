@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* Product collections are loaded with the getCollection mixin.
 /* For information about creating collections, please refer to:
@@ -31,19 +31,76 @@
 
 <script>
 import getCollection from '~/mixins/getCollection'
-import ContentHeroBanner from '~/components/ContentHeroBanner'
-import ProductGrid from '~/components/ProductGrid'
-import ObserveEmitter from '~/components/ObserveEmitter'
+import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
+import ProductGrid from '~/components/nacelle/ProductGrid'
+import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 import { mapGetters } from 'vuex'
 export default {
   name: 'collection',
   components: {
-    ContentHeroBanner,
-    ProductGrid,
-    ObserveEmitter
+    ContentHeroBanner, ProductGrid, ObserveEmitter
   },
   mixins: [getCollection()],
   computed: {
+    productData() {
+      if (this.products) {
+        return this.products.map(product => {
+          const { tags, variants, ...rest } = product
+
+          /// //////////////////////////
+          /// //////////////////////////
+          // Get product filter facets from variant data
+          const variantOptions = variants.map(variant => {
+            return variant.selectedOptions
+          })
+
+          const variantFacets = variantOptions
+            .reduce((acc, item) => {
+              return acc.concat(item)
+            }, [])
+            .map(option => JSON.stringify(option))
+
+          const facets = Array.from(new Set(variantFacets))
+            .map(option => JSON.parse(option))
+            .map(option => {
+              return { name: option.name.toLowerCase(), value: option.value }
+            })
+
+          /// //////////////////////////
+          /// //////////////////////////
+          // Get product filter facets from tags. Tags should be formatted "filter_property-name_value"
+          const rootFacets = tags.filter(tag => tag.includes('filter'))
+
+          rootFacets.forEach(facet => {
+            const facetFragments = facet.split('_')
+            const facetName = facetFragments[1]
+            const facetValue = () => {
+              const fragments = facetFragments[2].split('-')
+              return fragments
+                .map(fragment => {
+                  return `${fragment
+                    .charAt(0)
+                    .toUpperCase()}${fragment.substring(1)}`
+                })
+                .join(' ')
+            }
+
+            rest[facetName] = facetValue()
+            facets.push({ name: facetName, value: facetValue() })
+          })
+
+          if (product.productType) {
+            facets.push({ name: 'productType', value: product.productType })
+          }
+
+          rest.minPrice = rest.priceRange.min
+
+          return { ...rest, tags, variantOptions, variants, facets }
+        })
+      }
+
+      return []
+    },
     ...mapGetters('space', ['getMetatag']),
     featuredImage() {
       if (

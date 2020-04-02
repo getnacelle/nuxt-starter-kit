@@ -1,10 +1,10 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import ProductAddToCartButton from '@/components/ProductAddToCartButton'
+import ProductAddToCartButton from '@/components/nacelle/ProductAddToCartButton'
 import createStoreConfig from '../storeConfig'
 import Vuex from 'vuex'
 
 describe('Product Add to Cart Button', () => {
-  it('renders the button', async () => {
+  it('renders the button', async() => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -49,7 +49,7 @@ describe('Product Add to Cart Button', () => {
     expect(wrapper.findAll('button').exists()).toBe(true)
   })
 
-  it('adds the item there is only one option/value', async () => {
+  it('adds the item there is only one option/value', async() => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -114,7 +114,7 @@ describe('Product Add to Cart Button', () => {
     expect(store.state.cart.lineItems.length).toBeGreaterThan(0)
   })
 
-  it('displays "add to cart" when there is only one option', async () => {
+  it('displays "add to cart" when there is only one option', async() => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -179,7 +179,7 @@ describe('Product Add to Cart Button', () => {
     expect(wrapper.find('button').text()).toBe('Add to Cart')
   })
 
-  it('displays "select options" even after item is added when there are multiple variants', async () => {
+  it('displays "select options" even after item is added when there are multiple variants', async() => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -258,7 +258,7 @@ describe('Product Add to Cart Button', () => {
     expect(wrapper.find('button').text()).toBe('Select Options')
   })
 
-  it('passes metafield props recieved from parent to cartLineItems', async () => {
+  it('passes metafield props recieved from parent to cartLineItems', async() => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -323,8 +323,8 @@ describe('Product Add to Cart Button', () => {
     wrapper.find('button').trigger('click')
 
     expect(store.getters['cart/checkoutLineItems'][0].metafields).toEqual([
-  { key: 'customProp1', value: 'customValue1' }
-  
+      { key: 'customProp1', value: 'customValue1' }
+
     ])
   })
 })

@@ -1,12 +1,12 @@
-import axios from 'axios'
-
 export const state = () => ({
   query: null,
   autocompleteVisible: false,
   filtersCleared: false,
   searchData: {},
+  filteredData: null,
   loadedData: false,
-  searchLoading: false
+  searchLoading: false,
+  resultsToDisplay: 12
 })
 
 export const getters = {
@@ -17,6 +17,7 @@ export const getters = {
 
     return undefined
   },
+
   hasProductData(state) {
     return (
       state.searchData &&
@@ -24,13 +25,58 @@ export const getters = {
       state.searchData.products.length > 0
     )
   },
+  
   productData(state) {
     if (
       state.searchData &&
       state.searchData.products &&
       state.searchData.products.length > 0
     ) {
-      return state.searchData.products
+      return state.searchData.products.map(product => {
+        const { tags, variants, ...rest } = product
+
+        /// //////////////////////////
+        /// //////////////////////////
+        // Get product filter facets from variant data
+        const variantOptions = variants.map(variant => {
+          return variant.selectedOptions
+        })
+
+        const variantFacets = variantOptions.reduce((acc, item) => {
+          return acc.concat(item)
+        }, []).map(option => JSON.stringify(option))
+
+        const facets = Array.from(new Set(variantFacets)).map(option => JSON.parse(option)).map(option => {
+          return { name: option.name.toLowerCase(), value: option.value }
+        })
+
+        /// //////////////////////////
+        /// //////////////////////////
+        // Get product filter facets from tags. Tags should be formatted "filter_property-name_value"
+        const rootFacets = tags.filter(tag => tag.includes('filter'))
+
+        rootFacets.forEach(facet => {
+          const facetFragments = facet.split('_')
+          const facetName = facetFragments[1]
+          const facetValue = () => {
+            const fragments = facetFragments[2].split('-')
+            return fragments.map(fragment => {
+              return `${fragment.charAt(0).toUpperCase()}${fragment.substring(1)}`
+            }).join(' ')
+          }
+
+          rest[facetName] = facetValue()
+          facets.push({ name: facetName, value: facetValue() })
+        })
+
+        if (product.productType) {
+          facets.push({ name: 'productType', value: product.productType })
+        }
+
+        rest.minPrice = rest.priceRange.min
+
+        return { ...rest, tags, variantOptions, variants, facets }
+      })
     }
 
     return []
@@ -40,6 +86,18 @@ export const getters = {
 export const mutations = {
   setQuery(state, query) {
     state.query = query
+  },
+
+  setFilteredData(state, data) {
+    state.filteredData = data
+  },
+
+  showMoreResults(state) {
+    state.resultsToDisplay = state.resultsToDisplay + 12
+  },
+
+  resetResults(state) {
+    state.resultsToDisplay = 12
   },
 
   setAutocompleteVisible(state) {
@@ -88,15 +146,13 @@ export const actions = {
       commit('dataNotLoaded')
       commit('isSearching')
 
-      axios
-        .get('/data/search.json')
+      this.$nacelle.data.connector.request('data/search.json')
         .then(res => {
           if (res && res.data) {
             commit('dataHasLoaded')
             commit('isNotSearching')
 
-            const products = res.data.products
-              .filter(product => product && product.title && product.variants)
+            const products = res.data.product
 
             commit('setSearchData', { products })
           }
@@ -110,7 +166,6 @@ export const actions = {
 }
 
 export default {
-  namespaced: true,
   state,
   getters,
   mutations,

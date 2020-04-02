@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import ContentSideBySide from '@/components/ContentSideBySide'
+import ContentSideBySide from '@/components/nacelle/ContentSideBySide'
 
 const defaults = {
   imageUrl: 'https://placehold.it/800x800',
@@ -9,7 +9,7 @@ const defaults = {
 }
 
 describe('ContentSideBySide.vue', () => {
-  it('renders a side by side section', async () => {
+  it('renders a side by side section', async() => {
     const wrapper = shallowMount(ContentSideBySide, {
       propsData: { ...defaults }
     })
