@@ -157,6 +157,6 @@ export default {
         useShortDoctype: true
       }
     },
-    transpile: ['@nacelle/nacelle-nuxt-module']
+    transpile: ['@nacelle/nacelle-nuxt-module', '@nacelle/nacelle-tools', 'fuse.js', 'uuidv4']
   }
 }
