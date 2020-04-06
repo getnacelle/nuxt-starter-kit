@@ -39,7 +39,7 @@ export default {
   css: [
     '@/assets/global.css',
     'vue-glide-js/dist/vue-glide.css'
-  ], 
+  ],
 
   env: {
     nacelleSpaceID: process.env.NACELLE_SPACE_ID,
@@ -88,13 +88,13 @@ export default {
   nacelle: {
     /* Required Parameters */
     spaceID: process.env.NACELLE_SPACE_ID,
-    token: process.env.NACELLE_GRAPHQL_TOKEN,
-    
+    token: process.env.NACELLE_GRAPHQL_TOKEN
+
     /* Optional */
-    
+
     // Google Analytics ID
     // gaID: process.env.NACELLE_GA_ID,
-    
+
     // Facebook Pixel Tracking ID
     // fbID: process.env.NACELLE_FB_ID,
 
@@ -113,7 +113,7 @@ export default {
     // Optional array of data type strings to direct Nacelle to include other data types
     // besides products in search data.
     // searchDataTypes: ['article', 'page', 'blog'],
-    
+
     // Set to true to bypass fetching data from your space and generating
     // static JSON files.
     // Only set to true if you have previously performed this step at least once.
