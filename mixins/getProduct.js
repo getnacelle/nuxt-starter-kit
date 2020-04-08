@@ -55,12 +55,12 @@ Some page templates attempt to locate product data automatically, so this may no
 
           if (productData) {
             if (productData.noData) {
-              this.noproductData = true
+              this.noProductData = true
             } else {
               this.product = productData
             }
           } else {
-            this.noproductData = true
+            this.noProductData = true
           }
         }
       }
