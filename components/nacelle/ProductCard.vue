@@ -111,6 +111,11 @@ export default {
   watch: {
     quantityTotal() {
       this.confirmedSelection = false
+    },
+    optionsModalVisible(previous, current) {
+      if (!previous && current) {
+        this.productView(this.product)
+      }
     }
   },
   computed: {
@@ -173,6 +178,7 @@ export default {
 
   methods: {
     ...mapMutations('cart', ['showCart']),
+    ...mapMutations('events', ['productView']),
     handleAddToCartClick() {
       if (!this.allOptionsSelected) {
         this.optionsModalVisible = true
