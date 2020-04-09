@@ -130,8 +130,8 @@ export default {
       if (typeof this.ga !== 'undefined') {
         const vm = this
         this.ga('ec:addProduct', {
-          id: vm.decodeBase64ProductId(vm.logEntry.payload.product.id),
-          name: vm.logEntry.payload.product.title
+          id: vm.decodeBase64ProductId(vm.logEntry.payload.product.variant.id),
+          name: vm.logEntry.payload.product.variant.title
         })
         this.ga('ec:setAction', 'add')
         this.ga('send', 'event', 'UX', 'click', 'add to cart')
@@ -143,8 +143,8 @@ export default {
       if (typeof this.ga !== 'undefined') {
         const vm = this
         this.ga('ec:addProduct', {
-          id: vm.logEntry.payload.product.id,
-          name: vm.logEntry.payload.product.title
+          id: vm.logEntry.payload.product.variant.id,
+          name: vm.logEntry.payload.product.variant.title
         })
         this.ga('ec:setAction', 'remove')
         this.ga('send', 'event', 'UX', 'click', 'remove from cart')
