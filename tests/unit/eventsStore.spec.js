@@ -4,12 +4,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-const product = products[0].node
+const product = products[0]
 
 const { handle, image, metafields, productId, title } = product
 
 const lineItem = {
-  variant: product.variants.edges[0].node,
+  variant: product.variants[0],
   handle,
   image,
   title,
