@@ -66,6 +66,9 @@ Some page templates attempt to locate product data automatically, so this may no
           } else {
             this.noProductData = true
           }
+        } else if (this.product) {
+          this.setProduct(this.product)
+          this.productView(this.product)
         }
       }
     },
