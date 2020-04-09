@@ -46,8 +46,6 @@ describe('productMetafields.js', () => {
       }
     })
 
-    console.log(wrapper.vm)
-
     expect(wrapper.vm.metafieldsObj).toEqual({
       subscriptions: {
         order_interval_unit: 'day',
