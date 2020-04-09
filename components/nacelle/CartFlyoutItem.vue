@@ -1,18 +1,32 @@
 <template>
   <div class="columns is-marginless is-mobile flyout-cart-item nacelle">
-    <router-link class="column is-3" :to="`${pathFragment}${item.handle}`" @click.native="hideCart">
+    <router-link
+      class="column is-3"
+      :to="`${pathFragment}${item.handle}`"
+      @click.native="hideCart"
+    >
       <product-image :source="item.image.thumbnailSrc" :alt="item.title" />
     </router-link>
 
     <div class="column is-9">
-      <router-link :to="`${pathFragment}${item.handle}`" @click.native="hideCart">
-        <product-title class="flyout-item-title" element="h4" :title="item.title" />
+      <router-link
+        :to="`${pathFragment}${item.handle}`"
+        @click.native="hideCart"
+      >
+        <product-title
+          class="flyout-item-title"
+          element="h4"
+          :title="item.title"
+        />
       </router-link>
-      <product-variant-title class="flyout-item-variant-title" :title="item.variant.title" />
+      <product-variant-title
+        class="flyout-item-variant-title"
+        :title="item.variant.title"
+      />
       <div class="flyout-item-details columns is-marginless is-paddingless">
         <product-price class="flyout-item-price" :price="item.variant.price" />
         <quantity-selector :item="item" :quantity="item.quantity" />
-        <cart-flyout-item-remove-button :lineId="item.id" />
+        <cart-flyout-item-remove-button :lineId="item.variant.id" />
       </div>
     </div>
   </div>
