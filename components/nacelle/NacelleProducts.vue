@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { mapMutations, mapActions } from 'vuex'
+
 export default {
   props: {
     handle: {
@@ -82,6 +84,16 @@ export default {
           }
         })
     }
+  },
+  mounted() {
+    if (this.product) {
+      this.setProduct(this.product)
+      this.productView(this.product)
+    }
+  },
+  methods: {
+    ...mapMutations('product', ['setProduct']),
+    ...mapActions('events', ['productView'])
   }
 }
 </script>
