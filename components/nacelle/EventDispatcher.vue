@@ -12,7 +12,7 @@ export default {
     ...mapState('cart', ['lineItems']),
     productIDs() {
       const vm = this
-      const productIDs = this.lineItems.map(item => {
+      const productIDs = vm.lineItems.map(item => {
         return vm.decodeBase64VariantId(item.id)
       })
       return productIDs
@@ -54,12 +54,24 @@ export default {
   },
   methods: {
     decodeBase64ProductId(encodedId) {
-      const decodedId = Buffer.from(encodedId, 'base64').toString('ascii')
-      return decodedId.split('gid://shopify/Product/')[1]
+      const variantIdBase64 = encodedId.split('::')[0]
+      const variantIdString = Buffer.from(variantIdBase64, 'base64').toString(
+        'ascii'
+      )
+      const variantId = variantIdString.split('gid://shopify/Product/')[1]
+
+      return variantId
     },
     decodeBase64VariantId(encodedId) {
-      const decodedId = Buffer.from(encodedId, 'base64').toString('ascii')
-      return decodedId.split('gid://shopify/ProductVariant/')[1]
+      const variantIdBase64 = encodedId.split('::')[0]
+      const variantIdString = Buffer.from(variantIdBase64, 'base64').toString(
+        'ascii'
+      )
+      const variantId = variantIdString.split(
+        'gid://shopify/ProductVariant/'
+      )[1]
+
+      return variantId
     },
     /// / PAGE VIEW METHODS /////////////////////////////////
     facebookPageView() {
