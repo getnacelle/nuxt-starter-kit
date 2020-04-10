@@ -1,6 +1,15 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import nacellePlugin from '../mocks/nacelle-vue-plugin'
+import Vuex from 'vuex'
+import { mount, createLocalVue } from '@vue/test-utils'
 import NacelleProducts from '@/components/nacelle/NacelleProducts'
+import storeConfig from '../storeConfig'
+import nacellePlugin from '../mocks/nacelle-vue-plugin'
+
+const localVue = createLocalVue()
+
+localVue.use(Vuex)
+localVue.use(nacellePlugin)
+
+const store = new Vuex.Store(storeConfig())
 
 const delay = () => {
   return new Promise(resolve => {
@@ -14,11 +23,9 @@ describe('NacelleProducts.vue', () => {
   global.process.client = true
 
   it('loads single product', async() => {
-    const localVue = createLocalVue()
-    localVue.use(nacellePlugin)
-
-    const wrapper = shallowMount(NacelleProducts, {
+    const wrapper = mount(NacelleProducts, {
       localVue,
+      store,
       propsData: {
         handle: 'gray-t-shirt'
       }
@@ -30,11 +37,9 @@ describe('NacelleProducts.vue', () => {
   })
 
   it('loads an array of products', async() => {
-    const localVue = createLocalVue()
-    localVue.use(nacellePlugin)
-
-    const wrapper = shallowMount(NacelleProducts, {
+    const wrapper = mount(NacelleProducts, {
       localVue,
+      store,
       propsData: {
         handles: ['gray-t-shirt', 'gray-t-shirt']
       }
