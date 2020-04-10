@@ -81,14 +81,12 @@ export default {
             this.products = result.filter(product => {
               return product && product.id && product.handle && product.title
             })
+            if (this.product) {
+              this.setProduct(this.product)
+              this.productView(this.product)
+            }
           }
         })
-    }
-  },
-  mounted() {
-    if (this.product) {
-      this.setProduct(this.product)
-      this.productView(this.product)
     }
   },
   methods: {
