@@ -46,7 +46,7 @@ export default {
         case 'REMOVE_FROM_CART':
           vm.googleAnalyticsRemoveFromCart()
           break
-        case 'CHECKOUT':
+        case 'CHECKOUT_INIT':
           vm.facebookCheckoutInitiate()
           break
       }
