@@ -12,8 +12,8 @@ export default {
     ...mapState('cart', ['lineItems']),
     productIDs() {
       const vm = this
-      const productIDs = this.lineItems.map(item => {
-        return vm.decodeBase64ProductId(item.productId)
+      const productIDs = vm.lineItems.map(item => {
+        return vm.decodeBase64VariantId(item.id)
       })
       return productIDs
     },
@@ -46,7 +46,7 @@ export default {
         case 'REMOVE_FROM_CART':
           vm.googleAnalyticsRemoveFromCart()
           break
-        case 'CHECKOUT':
+        case 'CHECKOUT_INIT':
           vm.facebookCheckoutInitiate()
           break
       }
@@ -54,12 +54,24 @@ export default {
   },
   methods: {
     decodeBase64ProductId(encodedId) {
-      const decodedId = Buffer.from(encodedId, 'base64').toString('ascii')
-      return decodedId.split('gid://shopify/Product/')[1]
+      const variantIdBase64 = encodedId.split('::')[0]
+      const variantIdString = Buffer.from(variantIdBase64, 'base64').toString(
+        'ascii'
+      )
+      const variantId = variantIdString.split('gid://shopify/Product/')[1]
+
+      return variantId
     },
     decodeBase64VariantId(encodedId) {
-      const decodedId = Buffer.from(encodedId, 'base64').toString('ascii')
-      return decodedId.split('gid://shopify/ProductVariant/')[1]
+      const variantIdBase64 = encodedId.split('::')[0]
+      const variantIdString = Buffer.from(variantIdBase64, 'base64').toString(
+        'ascii'
+      )
+      const variantId = variantIdString.split(
+        'gid://shopify/ProductVariant/'
+      )[1]
+
+      return variantId
     },
     /// / PAGE VIEW METHODS /////////////////////////////////
     facebookPageView() {
@@ -69,7 +81,8 @@ export default {
     },
     googleAnalyticsPageView() {
       if (typeof this.ga !== 'undefined') {
-        this.ga('send', 'pageview', this.logEntry.page.pageUrl)
+        const vm = this
+        this.ga('send', 'pageview', vm.logEntry.payload.url)
       }
     },
 
@@ -78,10 +91,8 @@ export default {
       if (typeof this.fbq !== 'undefined') {
         const vm = this
         this.fbq('track', 'ViewContent', {
-          content_ids: vm.decodeBase64VariantId(
-            vm.logEntry.product.variants[0].id
-          ),
-          content_name: vm.logEntry.product.title,
+          content_ids: vm.decodeBase64ProductId(vm.logEntry.payload.product.id),
+          content_name: vm.logEntry.payload.product.title,
           content_type: 'product',
           product_catalog_id: vm.facebookCatalogID
         })
@@ -91,8 +102,8 @@ export default {
       if (typeof this.ga !== 'undefined') {
         const vm = this
         this.ga('ec:addProduct', {
-          id: vm.decodeBase64ProductId(vm.logEntry.product.productId),
-          name: vm.logEntry.product.title
+          id: vm.decodeBase64ProductId(vm.logEntry.payload.product.id),
+          name: vm.logEntry.payload.product.title
         })
         this.ga('ec:setAction', 'detail')
         this.ga('send', 'pageview')
@@ -104,10 +115,12 @@ export default {
       if (typeof this.fbq !== 'undefined') {
         const vm = this
         this.fbq('track', 'AddToCart', {
-          content_ids: vm.decodeBase64VariantId(vm.logEntry.product.variant.id),
-          content_name: vm.logEntry.product.title,
+          content_ids: vm.decodeBase64VariantId(
+            vm.logEntry.payload.product.variant.id
+          ),
+          content_name: vm.logEntry.payload.product.variant.title,
           content_type: 'product',
-          value: vm.logEntry.product.variant.price,
+          value: vm.logEntry.payload.product.variant.price,
           currency: 'USD',
           product_catalog_id: vm.facebookCatalogID
         })
@@ -117,8 +130,8 @@ export default {
       if (typeof this.ga !== 'undefined') {
         const vm = this
         this.ga('ec:addProduct', {
-          id: vm.decodeBase64ProductId(vm.logEntry.product.productId),
-          name: vm.logEntry.product.title
+          id: vm.decodeBase64ProductId(vm.logEntry.payload.product.variant.id),
+          name: vm.logEntry.payload.product.variant.title
         })
         this.ga('ec:setAction', 'add')
         this.ga('send', 'event', 'UX', 'click', 'add to cart')
@@ -130,8 +143,8 @@ export default {
       if (typeof this.ga !== 'undefined') {
         const vm = this
         this.ga('ec:addProduct', {
-          id: vm.logEntry.lineItem.productId,
-          name: vm.logEntry.lineItem.title
+          id: vm.logEntry.payload.product.variant.id,
+          name: vm.logEntry.payload.product.variant.title
         })
         this.ga('ec:setAction', 'remove')
         this.ga('send', 'event', 'UX', 'click', 'remove from cart')

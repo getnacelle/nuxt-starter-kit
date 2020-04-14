@@ -152,6 +152,8 @@ export default {
           quantity: this.quantity || 1,
           productId: this.product.id,
           handle: this.product.handle,
+          vendor: this.product.vendor,
+          tags: this.product.tags,
           metafields: this.metafields
         }
         this.addLineItem(lineItem)

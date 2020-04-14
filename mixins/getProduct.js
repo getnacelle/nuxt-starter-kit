@@ -1,3 +1,5 @@
+import { mapMutations, mapActions } from 'vuex'
+
 export default ({ productHandle, locale } = {}) => {
   return {
     data() {
@@ -55,15 +57,24 @@ Some page templates attempt to locate product data automatically, so this may no
 
           if (productData) {
             if (productData.noData) {
-              this.noproductData = true
+              this.noProductData = true
             } else {
               this.product = productData
+              this.setProduct(productData)
+              this.productView(productData)
             }
           } else {
-            this.noproductData = true
+            this.noProductData = true
           }
+        } else if (this.product) {
+          this.setProduct(this.product)
+          this.productView(this.product)
         }
       }
+    },
+    methods: {
+      ...mapMutations('product', ['setProduct']),
+      ...mapActions('events', ['productView'])
     }
   }
 }

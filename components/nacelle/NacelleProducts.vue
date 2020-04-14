@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { mapMutations, mapActions } from 'vuex'
+
 export default {
   props: {
     handle: {
@@ -79,9 +81,17 @@ export default {
             this.products = result.filter(product => {
               return product && product.id && product.handle && product.title
             })
+            if (this.product) {
+              this.setProduct(this.product)
+              this.productView(this.product)
+            }
           }
         })
     }
+  },
+  methods: {
+    ...mapMutations('product', ['setProduct']),
+    ...mapActions('events', ['productView'])
   }
 }
 </script>
