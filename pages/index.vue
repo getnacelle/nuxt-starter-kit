@@ -142,6 +142,11 @@ import ContentSideBySide from '~/components/nacelle/ContentSideBySide'
 import PageContent from '~/components/nacelle/PageContent'
 export default {
   components: { ContentHeroBanner, ContentSideBySide, PageContent },
+  computed: {
+    name() {
+      return this.$store.state.space.name
+    }
+  },
   mixins: [
     getPage({ pageHandle: 'homepage' }),
     getCollection({ pageHandle: 'homepage' })

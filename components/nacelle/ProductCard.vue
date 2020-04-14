@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex'
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 import ProductImage from '~/components/nacelle/ProductImage'
 import ProductTitle from '~/components/nacelle/ProductTitle'
 import ProductPrice from '~/components/nacelle/ProductPrice'
@@ -105,12 +105,19 @@ export default {
     return {
       optionsModalVisible: false,
       confirmedSelection: false,
-      quantity: 0
+      quantity: 0,
+      test: false
     }
   },
   watch: {
     quantityTotal() {
       this.confirmedSelection = false
+    },
+    optionsModalVisible(previous, current) {
+      if (!previous && current) {
+        this.test = true
+        this.productView(this.product)
+      }
     }
   },
   computed: {
@@ -173,6 +180,7 @@ export default {
 
   methods: {
     ...mapMutations('cart', ['showCart']),
+    ...mapActions('events', ['productView']),
     handleAddToCartClick() {
       if (!this.allOptionsSelected) {
         this.optionsModalVisible = true

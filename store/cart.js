@@ -151,7 +151,7 @@ export const mutations = {
   setFreeShippingThreshold(state, payload) {
     state.freeShippingThreshold = payload
   },
-  
+
   setCartError(state, error) {
     state.error = error
   }
@@ -218,7 +218,7 @@ export const actions = {
     localforage.setItem('checkout-id', payload)
   },
 
-  async saveCheckoutUrl (context, payload) {
+  async saveCheckoutUrl(context, payload) {
     localforage.setItem('checkout-url', payload)
   },
 
@@ -237,7 +237,7 @@ export const actions = {
       return checkoutUrl
     }
   },
-  
+
   async verifyCheckoutStatus(context) {
     await context.dispatch('getCheckoutId')
     await context.dispatch('getCheckoutUrl')
