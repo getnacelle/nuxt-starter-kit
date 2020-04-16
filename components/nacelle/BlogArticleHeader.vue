@@ -56,7 +56,7 @@ export default {
     },
     absoluteDate() {
       if (this.publishDate > -1) {
-        return dayjs(this.publishDate).format(this.dateFormatString)
+        return dayjs(this.publishDate * 1000).format(this.dateFormatString)
       }
 
       return ''
