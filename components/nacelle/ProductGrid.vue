@@ -1,12 +1,6 @@
 <template>
   <div class="product-grid columns is-multiline is-paddingless nacelle">
-    <div
-      v-for="product in products"
-      :key="product.id"
-      class="card-wrapper"
-      :class="columnClasses"
-
-    >
+    <div v-for="product in products" :key="product.id" class="card-wrapper" :class="columnClasses">
       <product-card
         :product="product"
         :showQuantityUpdate="showQuantityUpdate"
@@ -34,7 +28,7 @@ export default {
     },
     showQuantityUpdate: {
       type: Boolean,
-      default: false
+      default: true
     },
     showAddToCart: {
       type: Boolean,
@@ -42,7 +36,7 @@ export default {
     }
   },
   computed: {
-    columnClasses () {
+    columnClasses() {
       let classes = 'column'
 
       if (this.columns === 4) {
@@ -62,7 +56,6 @@ export default {
       return classes
     }
   }
-
 }
 </script>
 

@@ -50,7 +50,6 @@ import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 import InterfaceModal from '~/components/nacelle/InterfaceModal'
 import ProductOptions from '~/components/nacelle/ProductOptions'
-import CartFlyoutItem from '~/components/nacelle/CartFlyoutItem'
 import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
 
@@ -62,8 +61,7 @@ export default {
     QuantitySelector,
     ProductAddToCartButton,
     InterfaceModal,
-    ProductOptions,
-    CartFlyoutItem
+    ProductOptions
   },
   mixins: [allOptionsSelected, availableOptions],
   props: {
