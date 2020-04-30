@@ -10,9 +10,9 @@
       <product-price :price="product.priceRange.max" />
     </div>
     <div v-if="product && product.id" class="product-card-actions">
-      <quantity-selector :quantity.sync="quantity" />
+      <quantity-selector v-if="showQuantityUpdate === true" :quantity.sync="quantity" />
       <product-add-to-cart-button
-        v-if="showAddToCart == true"
+        v-if="showAddToCart === true"
         :product="product"
         :variant="currentVariant"
         :allOptionsSelected="allOptionsSelected"
