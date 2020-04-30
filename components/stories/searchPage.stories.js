@@ -1,4 +1,7 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/**
+ * Disabled until we can correctly use webworkers in Storybook
+ *
+ *
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { withActions } from '@storybook/addon-actions';
@@ -119,3 +122,4 @@ Composition.story = {
     },
   },
 };
+*/
