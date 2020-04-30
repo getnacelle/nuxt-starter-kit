@@ -10,9 +10,9 @@
       <product-price :price="product.priceRange.max" />
     </div>
     <div v-if="product && product.id" class="product-card-actions">
-      <quantity-selector :quantity.sync="quantity" />
+      <quantity-selector v-if="showQuantityUpdate === true" :quantity.sync="quantity" />
       <product-add-to-cart-button
-        v-if="showAddToCart == true"
+        v-if="showAddToCart === true"
         :product="product"
         :variant="currentVariant"
         :allOptionsSelected="allOptionsSelected"
@@ -50,7 +50,6 @@ import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 import InterfaceModal from '~/components/nacelle/InterfaceModal'
 import ProductOptions from '~/components/nacelle/ProductOptions'
-import CartFlyoutItem from '~/components/nacelle/CartFlyoutItem'
 import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
 
@@ -62,8 +61,7 @@ export default {
     QuantitySelector,
     ProductAddToCartButton,
     InterfaceModal,
-    ProductOptions,
-    CartFlyoutItem
+    ProductOptions
   },
   mixins: [allOptionsSelected, availableOptions],
   props: {
