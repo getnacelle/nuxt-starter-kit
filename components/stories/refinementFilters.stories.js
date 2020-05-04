@@ -1,3 +1,6 @@
+/**
+ * Disabled until we can correctly use webworkers in Storybook
+ *
 import { withActions, action } from '@storybook/addon-actions';
 import { withKnobs, object } from '@storybook/addon-knobs';
 import { withInfo } from 'storybook-addon-vue-info';
@@ -65,3 +68,4 @@ _RefinementFilters.story = {
     },
   },
 };
+*/

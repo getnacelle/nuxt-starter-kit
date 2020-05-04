@@ -6,8 +6,8 @@ import BlogArticleHeader from '../nacelle/BlogArticleHeader'
 
 export default {
   title: 'Components | Content / Blog / Article Header',
-  decorators: [withInfo, withKnobs, StoryRouter()],
-};
+  decorators: [withInfo, withKnobs, StoryRouter()]
+}
 
 export const Default = () => ({
   components: { BlogArticleHeader },
@@ -27,7 +27,7 @@ export const Default = () => ({
   },
   data() {
     return {
-      date: 1593835200000
+      date: 1593835200
     }
   },
   template: `
@@ -39,15 +39,15 @@ export const Default = () => ({
       :dateFormatString="dateFormat"
     />
   `
-});
+})
 
 Default.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 export const CustomContent = () => ({
   components: { BlogArticleHeader },
@@ -67,7 +67,7 @@ export const CustomContent = () => ({
   },
   data() {
     return {
-      date: 1593835200000
+      date: 1593835200
     }
   },
   template: `
@@ -91,12 +91,12 @@ export const CustomContent = () => ({
       </div>
     </blog-article-header>
   `
-});
+})
 
 CustomContent.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
