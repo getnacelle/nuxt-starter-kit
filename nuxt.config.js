@@ -133,8 +133,10 @@ export default {
   },
 
   generate: {
-    workers: 4,
-    concurrency: 4
+    concurrency: 5,
+    done({ errors }, nuxt) {
+      nuxt.callHook('generate:done', ({ nuxt, errors }))
+    }
   },
 
   build: {
