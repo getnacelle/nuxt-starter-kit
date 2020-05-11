@@ -72,7 +72,8 @@ export default {
 
   sitemap: {
     gzip: true,
-    async routes() {
+    hostname: 'http://localhost:3000', // When deploying, change this to your production URL
+    routes: () => {
       const staticDir = path.resolve(__dirname, './static/data')
       const routes = fs.readJsonSync(`${staticDir}/routes.json`)
       const routesOnly = routes.map(route => route.route)
@@ -132,8 +133,10 @@ export default {
   },
 
   generate: {
-    workers: 4,
-    concurrency: 4
+    concurrency: 5,
+    done({ errors }, nuxt) {
+      nuxt.callHook('generate:done', ({ nuxt, errors }))
+    }
   },
 
   build: {
