@@ -50,93 +50,83 @@ export const actions = {
     // get products
     const products = (await dispatch('getProductData')) || []
 
-    try {
-      if (rootState.account && rootState.account.customer) {
-        const variables = {
-          customerId: rootState.account.customer.id
+    if (rootState.account && rootState.account.customer) {
+      const variables = {
+        customerId: rootState.account.customer.id
+      }
+      const response = await this.$nacelle.wishlist.get(variables)
+      const { data, errors } = response.data
+      if (errors && errors.length) {
+        throw new Error(JSON.stringify(errors))
+      }
+      const { items } = data.getWishlistsByCustomerSourceId
+      if (items) {
+        const shoppingList = items.find(item => item.title === state.title) || {
+          id: null,
+          items: []
         }
-        const response = await this.$nacelle.wishlist.get(variables)
-        const { data, errors } = response.data
-        if (errors && errors.length) {
-          throw new Error(JSON.stringify(errors))
-        }
-        const { items } = data.getWishlistsByCustomerSourceId
-        if (items) {
-          const shoppingList = items.find(
-            item => item.title === state.title
-          ) || { id: null, items: [] }
-          commit('setId', shoppingList.id)
+        commit('setId', shoppingList.id)
 
-          // Need to map handle and variant id to shop product data
-          const wishlistItems = shoppingList.items.reduce(
-            (mappedItems, item) => {
-              const product = products.find(
-                product => product.handle === item.handle
-              )
-              if (product) {
-                const variant = product.variants.find(
-                  variant => variant.id === item.variantId
-                )
-                if (variant) {
-                  mappedItems.push({
-                    product,
-                    variant
-                  })
-                }
-              }
-              return mappedItems
-            },
-            []
+        // Need to map handle and variant id to shop product data
+        const wishlistItems = shoppingList.items.reduce((mappedItems, item) => {
+          const product = products.find(
+            product => product.handle === item.handle
           )
-          const anonymousItemsLength = state.items.length
-          await commit('mergeItems', wishlistItems)
-          if (state.items.length > anonymousItemsLength) {
-            await dispatch('updateWishlist')
-          } else {
-            await dispatch('saveWishlist')
+          if (product) {
+            const variant = product.variants.find(
+              variant => variant.id === item.variantId
+            )
+            if (variant) {
+              mappedItems.push({
+                product,
+                variant
+              })
+            }
           }
-        }
-      } else {
-        const wishlist = await localforage.getItem('wishlist')
-        if (wishlist) {
-          commit('setId', wishlist.id)
-          commit('setItems', wishlist.items)
-          commit('setTitle', wishlist.title)
+          return mappedItems
+        }, [])
+        const anonymousItemsLength = state.items.length
+        await commit('mergeItems', wishlistItems)
+        if (state.items.length > anonymousItemsLength) {
+          await dispatch('updateWishlist')
+        } else {
+          await dispatch('saveWishlist')
         }
       }
-    } catch (error) {
-      throw error
+    } else {
+      const wishlist = await localforage.getItem('wishlist')
+      if (wishlist) {
+        commit('setId', wishlist.id)
+        commit('setItems', wishlist.items)
+        commit('setTitle', wishlist.title)
+      }
     }
   },
 
   async addToWishlist({ commit, dispatch, state, rootState }, payload) {
-    try {
-      if (payload.variant && payload.product) {
-        await commit('pushItem', payload)
-        if (rootState.account && rootState.account.customer) {
-          const variables = {
-            id: state.id,
-            title: state.title,
-            customerId: rootState.account.customer.id,
-            items: state.items.map(item => ({
-              handle: item.product.handle,
-              variantId: item.variant.id
-            }))
-          }
-          const response = await this.$nacelle.wishlist.put(variables)
-          const { data, errors } = response.data
-          if (errors && errors.length) {
-            throw new Error(JSON.stringify(errors))
-          }
-          const { id, customerSourceId, items } = data.putWishlist
-          commit('setId', id)
+    if (payload.variant && payload.product) {
+      await commit('pushItem', payload)
+      if (rootState.account && rootState.account.customer) {
+        const variables = {
+          id: state.id,
+          title: state.title,
+          customerId: rootState.account.customer.id,
+          items: state.items.map(item => ({
+            handle: item.product.handle,
+            variantId: item.variant.id
+          }))
         }
-        dispatch('saveWishlist')
-      } else {
-        console.error('must pass item with valid variant and product')
+        const response = await this.$nacelle.wishlist.put(variables)
+        const { data, errors } = response.data
+        if (errors && errors.length) {
+          throw new Error(JSON.stringify(errors))
+        }
+        const { id, customerSourceId, items } = data.putWishlist
+        commit('setId', id)
       }
-    } catch (error) {
-      throw error
+      dispatch('saveWishlist')
+    } else {
+      console.error('must pass item with valid variant and product')
     }
   },
 
@@ -144,37 +134,8 @@ export const actions = {
     { commit, dispatch, state, rootState },
     { variantId }
   ) {
-    try {
-      if (variantId) {
-        await commit('removeItem', variantId)
-        if (rootState.account && rootState.account.customer) {
-          const variables = {
-            id: state.id,
-            title: state.title,
-            customerId: rootState.account.customer.id,
-            items: state.items.map(item => ({
-              handle: item.product.handle,
-              variantId: item.variant.id
-            }))
-          }
-          const response = await this.$nacelle.wishlist.put(variables)
-          const { data, errors } = response.data
-          if (errors && errors.length) {
-            throw new Error(JSON.stringify(errors))
-          }
-          const { customerSourceId, items } = data.putWishlist
-        }
-        dispatch('saveWishlist')
-      } else {
-        console.error('must pass item with valid variantId')
-      }
-    } catch (error) {
-      throw error
-    }
-  },
-
-  async updateWishlist({ dispatch, rootState, state }) {
-    try {
+    if (variantId) {
+      await commit('removeItem', variantId)
       if (rootState.account && rootState.account.customer) {
         const variables = {
           id: state.id,
@@ -193,9 +154,30 @@ export const actions = {
         const { customerSourceId, items } = data.putWishlist
       }
       dispatch('saveWishlist')
-    } catch (error) {
-      throw error
+    } else {
+      console.error('must pass item with valid variantId')
     }
+  },
+
+  async updateWishlist({ dispatch, rootState, state }) {
+    if (rootState.account && rootState.account.customer) {
+      const variables = {
+        id: state.id,
+        title: state.title,
+        customerId: rootState.account.customer.id,
+        items: state.items.map(item => ({
+          handle: item.product.handle,
+          variantId: item.variant.id
+        }))
+      }
+      const response = await this.$nacelle.wishlist.put(variables)
+      const { data, errors } = response.data
+      if (errors && errors.length) {
+        throw new Error(JSON.stringify(errors))
+      }
+      const { customerSourceId, items } = data.putWishlist
+    }
+    dispatch('saveWishlist')
   },
 
   resetWishlist({ commit }) {
