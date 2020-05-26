@@ -135,12 +135,13 @@
 </template>
 
 <script>
+import nmerge from 'nuxt-merge-asyncdata'
 import getPage from '~/mixins/getPage'
 import getCollection from '~/mixins/getCollection'
 import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
 import ContentSideBySide from '~/components/nacelle/ContentSideBySide'
 import PageContent from '~/components/nacelle/PageContent'
-export default {
+export default nmerge({
   components: { ContentHeroBanner, ContentSideBySide, PageContent },
   computed: {
     name() {
@@ -149,7 +150,7 @@ export default {
   },
   mixins: [
     getPage({ pageHandle: 'homepage' }),
-    getCollection({ pageHandle: 'homepage' })
+    getCollection({ collectionHandle: 'homepage' })
   ]
-}
+})
 </script>

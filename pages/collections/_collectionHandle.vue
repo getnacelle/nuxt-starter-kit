@@ -38,7 +38,9 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'collection',
   components: {
-    ContentHeroBanner, ProductGrid, ObserveEmitter
+    ContentHeroBanner,
+    ProductGrid,
+    ObserveEmitter
   },
   mixins: [getCollection()],
   computed: {

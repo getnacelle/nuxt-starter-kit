@@ -44,11 +44,7 @@
             <div class="column is-9 content">
               <blog-article-content :article="article" :products="products">
                 <!-- Extra HTML added after content -->
-                <nuxt-link
-                  :to="`/${$route.params.blogHandle}/`"
-                  class="breadcrumb"
-                  >Back to Blog</nuxt-link
-                >
+                <nuxt-link :to="`/${$route.params.blogHandle}/`" class="breadcrumb">Back to Blog</nuxt-link>
               </blog-article-content>
             </div>
           </div>
@@ -59,6 +55,7 @@
 </template>
 
 <script>
+import nmerge from 'nuxt-merge-asyncdata'
 import { mapGetters } from 'vuex'
 import getBlogArticle from '~/mixins/getBlogArticle'
 import getCollection from '~/mixins/getCollection'
@@ -66,7 +63,7 @@ import InterfaceFeaturedMedia from '~/components/nacelle/InterfaceFeaturedMedia'
 import BlogArticleHeader from '~/components/nacelle/BlogArticleHeader'
 import BlogArticleContent from '~/components/nacelle/BlogArticleContent'
 
-export default {
+export default nmerge({
   components: {
     InterfaceFeaturedMedia,
     BlogArticleHeader,
@@ -130,7 +127,7 @@ export default {
       }
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

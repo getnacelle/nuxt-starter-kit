@@ -1,27 +1,49 @@
 import { mapMutations } from 'vuex'
 
-export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {
+export default (config = {}) => {
   return {
     data() {
       return {
-        handle: null,
+        collectionHandle: null,
         collection: null,
         noCollectionData: false,
         products: [],
         productIndex: 0,
-        productsPerPage: itemsPerPage || 30,
-        selectedList: selectedList || 'default',
+        productsPerPage: config.itemsPerPage || 30,
+        selectedList: config.selectedList || 'default',
         isLoadingProducts: false
       }
     },
     async asyncData(context) {
-      const { params, store, app, payload } = context
-      const { handle } = params
+      const { params, app, store } = context
+      const { collectionHandle, pageHandle, articleHandle } = params
       const { $nacelle } = app
 
+      let handle = null
+
+      if (config && config.collectionHandle) {
+        handle = config.collectionHandle
+      } else if (collectionHandle) {
+        handle = collectionHandle
+      } else if (pageHandle) {
+        handle = pageHandle
+      } else if (articleHandle) {
+        handle = articleHandle
+      }
+
+      const collectionObj = {
+        collectionHandle: handle,
+        collection: null,
+        products: [],
+        productIndex: 0,
+        selectedList: config.selectedList || 'default',
+        locale: config.locale || $nacelle.locale
+      }
+
       // Check if collection saved in vuex store
+      // Loading from store will allow for restoring scroll position
       const getCollection = store.getters['collections/getCollection']
-      const storeCollection = getCollection(pageHandle || handle)
+      const storeCollection = getCollection(collectionObj.collectionHandle)
 
       if (storeCollection) {
         return {
@@ -29,60 +51,74 @@ export default ({ pageHandle, itemsPerPage, selectedList, locale } = {}) => {
         }
       }
 
-      // Check Nuxt Generate payload
-      if (payload && payload.collectionData) {
-        return {
-          collection: payload.collectionData
+      // If Nuxt Server, use fs to read static json files rather than using
+      // Nacelle SDK method
+      if (process.server) {
+        const fs = require('fs')
+        try {
+          const file = fs.readFileSync(
+            `./static/data/collections/${collectionObj.collectionHandle}::${collectionObj.locale}/static.json`,
+            'utf-8'
+          )
+          collectionObj.collection = JSON.parse(file)
+        } catch (err) {
+          collectionObj.noCollectionData = true
+        }
+
+        if (
+          collectionObj.collection &&
+          collectionObj.collection.productLists &&
+          collectionObj.collection.productLists.length > 0
+        ) {
+          const productList = collectionObj.collection.productLists.find(list => {
+            return list.slug === collectionObj.selectedList
+          })
+
+          const handles = productList.handles.slice(0, collectionObj.itemsPerPage)
+
+          handles.forEach(handle => {
+            const productFile = fs.readFileSync(`./static/data/products/${handle}::${collectionObj.locale}/static.json`, 'utf-8')
+            collectionObj.products.push(JSON.parse(productFile))
+          })
+        }
+      } else {
+        // Use Nacelle SDK methods for loading collection and product data
+        collectionObj.collection = await $nacelle.data.collection({
+          handle: collectionObj.collectionHandle,
+          locale: collectionObj.locale
+        }).catch(() => {
+          collectionObj.noCollectionData = true
+        })
+
+        if (
+          collectionObj.collection &&
+          collectionObj.collection.productLists &&
+          collectionObj.collection.productLists.length > 0
+        ) {
+          collectionObj.products = await $nacelle.data.collectionPage({
+            collection: collectionObj.collection,
+            list: collectionObj.selectedList,
+            paginate: true,
+            itemsPerPage: collectionObj.itemsPerPage,
+            locale: collectionObj.locale
+          })
         }
       }
 
-      // Skip if Nuxt Server
-      if (typeof process.server === 'undefined' || process.server) {
-        return {}
-      }
+      // Update the product index
+      collectionObj.productIndex = collectionObj.products.length
 
-      // If not in store or payload fetch static data
-      const collectionData = await $nacelle.data.collection({
-        handle: pageHandle || handle,
-        locale: locale
-      }).catch(error => {
-        console.warn(
-          `Unable to find collection with handle, "${pageHandle || handle}".\n
-Some page templates attempt to locate collections automatically, so this may not reflect a true error.`
-        )
-        return undefined
-      })
-
-      let products = []
-
-      if (
-        collectionData &&
-        collectionData.collection &&
-        collectionData.collection.productLists
-      ) {
-        products = await $nacelle.data.collectionPage({
-          collection: collectionData,
-          list: selectedList || 'default',
-          paginate: true,
-          itemsPerPage: itemsPerPage || 30,
-          locale: locale
-        })
-      }
-
-      // Create collection object for vuex store and returned async data
-      const collectionObj = {
-        handle: pageHandle || handle,
-        collection: collectionData,
-        products,
-        productIndex: products.length,
-        selectedList: selectedList || 'default'
-      }
-
+      // Store the collection data in Vuex
       store.commit('collections/addCollection', collectionObj)
 
-      return collectionObj
+      // Return updated collection object
+      return {
+        ...collectionObj
+      }
     },
     computed: {
+      // Collections can have many product lists. This returns the currently
+      // selected product list
       selectedProductList() {
         if (
           this.collection &&
@@ -100,59 +136,9 @@ Some page templates attempt to locate collections automatically, so this may not
         return []
       }
     },
-    async created() {
-      // Flag for determining if we update collection in vuex store
-      let updateCollection = false
-
-      this.handle = pageHandle || this.$route.params.handle
-
-      if (process.browser) {
-        // If no collection data, fetch
-        if (!this.collection && !this.noCollectionData) {
-          this.collection = await this.$nacelle.data.collection({
-            handle: this.handle,
-            locale: locale
-          }).catch(error => {
-            console.warn(
-              `Unable to find collection with handle, "${this.handle}".\n
-Some page templates attempt to locate collections automatically, so this may not reflect a true error.`
-            )
-            return undefined
-          })
-          updateCollection = true
-        }
-
-        // Try to get product data if products array is empty
-        if (this.products.length === 0) {
-          if (this.collection && this.collection.productLists) {
-            this.isLoadingProducts = true
-            this.products = await this.$nacelle.data.collectionPage({
-              collection: this.collection,
-              list: this.selectedList,
-              paginate: true,
-              itemsPerPage: this.productsPerPage,
-              locale: locale
-            })
-            updateCollection = true
-          }
-        }
-      }
-
-      this.isLoadingProducts = false
-      this.productIndex = this.products.length
-
-      if (updateCollection) {
-        this.updateCollection({
-          handle: this.handle,
-          collection: this.collection,
-          products: this.products,
-          productIndex: this.products.length,
-          selectedList: this.selectedList
-        })
-      }
-    },
     methods: {
-      ...mapMutations('collections', ['updateCollection']),
+      ...mapMutations('collections', ['updateCollectionProducts']),
+      // Load a new "page" of products
       async fetchMore() {
         if (
           !this.isLoadingProducts &&
@@ -167,7 +153,7 @@ Some page templates attempt to locate collections automatically, so this may not
             paginate: true,
             index: this.productIndex,
             itemsPerPage: this.productsPerPage,
-            locale: locale
+            locale: this.locale
           })
 
           this.products = [
@@ -176,9 +162,9 @@ Some page templates attempt to locate collections automatically, so this may not
           ]
           this.productIndex += this.productsPerPage
           this.isLoadingProducts = false
-          this.updateCollection({
-            handle: this.handle,
-            collection: this.collection,
+
+          this.updateCollectionProducts({
+            handle: this.collectionHandle,
             products: this.products,
             productIndex: this.productIndex
           })
