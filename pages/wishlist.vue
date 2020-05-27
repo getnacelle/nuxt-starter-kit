@@ -1,50 +1,49 @@
 <template>
-  <div class="product-grid columns is-multiline is-paddingless nacelle">
-    <div v-for="item in items" :key="item.product.id" class="card-wrapper" :class="columnClasses">
-      <product-card
-        :product="item.product"
-        :showQuantityUpdate="showQuantityUpdate"
-        :showAddToCart="showAddToCart"
-      />
-    </div>
+  <div class="page page-shop">
+    <content-hero-banner
+      title="Wishlist"
+    />
+    <section class="section">
+      <div class="container">
+        <div class="columns is-multiline">
+          <product-grid
+            v-if="products && products.length > 0"
+            :products="products"
+            :showAddToCart="true"
+            :showQuantityUpdate="true"
+          />
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-import ProductCard from '~/components/nacelle/ProductCard'
+import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
+import ProductGrid from '~/components/nacelle/ProductGrid'
 import { mapState } from 'vuex'
 
 export default {
   components: {
-    ProductCard
+    ContentHeroBanner,
+    ProductGrid
   },
   computed: {
     ...mapState('wishlist', ['items']),
-    columnClasses() {
-      let classes = 'column'
-
-      if (this.columns === 4) {
-        classes = `${classes} is-one-quarter-desktop`
-      }
-
-      if (this.columns === 3) {
-        classes = `${classes} is-one-third-desktop`
-      }
-
-      if (this.columns === 2) {
-        classes = `${classes} is-half-desktop`
-      }
-
-      classes = `${classes} is-half-tablet`
-
-      return classes
+    products() {
+      return this.items.map(item => item.product)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.column {
-  padding-bottom: 3rem;
+.product {
+  .title {
+    font-weight: bold;
+  }
+  img {
+    width: 250px;
+  }
 }
 </style>
