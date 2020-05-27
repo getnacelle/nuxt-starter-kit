@@ -93,3 +93,6 @@ sw.*
 
 # Nacelle
 static/data
+
+# VS Code
+.vscode
