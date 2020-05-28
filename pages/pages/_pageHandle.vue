@@ -39,7 +39,7 @@
              <h1 class="special-title">{{ title }}</h1>
           </template>
         </content-hero-banner>
-        -->
+      -->
 
       <!--
         /****
@@ -53,7 +53,7 @@
           v-if="section.contentType === 'ContentSideBySide'"
           v-bind="section.data"
         />
-        -->
+      -->
 
       <!--
         /****
@@ -67,7 +67,7 @@
           v-if="section.contentType === 'ContentProductGrid'"
           v-bind="section.data"
         />
-        -->
+      -->
 
       <!--
         /****
@@ -78,7 +78,7 @@
           v-if="section.contentType === 'ContentTestimonials'"
           v-bind="section.data"
         />
-        -->
+      -->
 
       <!-- </template> -->
     </page-content>
@@ -86,18 +86,12 @@
 </template>
 
 <script>
+import nmerge from 'nuxt-merge-asyncdata'
 import getPage from '~/mixins/getPage'
 import PageContent from '~/components/nacelle/PageContent'
 
 export default {
   components: { PageContent },
-  mixins: [getPage()],
-  data() {
-    return {
-      handle: null,
-      page: null,
-      noPageData: false
-    }
-  }
+  mixins: [getPage()]
 }
 </script>

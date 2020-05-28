@@ -139,6 +139,12 @@ export default {
     }
   },
 
+  vue: {
+    config: {
+      devtools: true
+    }
+  },
+
   build: {
     postcss: {
       preset: {
