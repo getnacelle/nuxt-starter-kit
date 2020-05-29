@@ -54,6 +54,9 @@ export default {
     ObserveEmitter
   },
   mixins: [getBlog()],
+  created() {
+    this.$store.dispatch('events/blogView', this.blog)
+  },
   computed: {
     ...mapGetters('space', ['getMetatag']),
     blogProducts() {

@@ -1,3 +1,5 @@
+import { mapActions } from 'vuex'
+
 export default (config = {}) => {
   return {
     data() {

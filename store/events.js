@@ -57,6 +57,30 @@ export const actions = {
     })
   },
 
+  collectionView({ commit, rootState }, collection) {
+    commit('addEvent', {
+      eventType: 'COLLECTION_VIEW',
+      payload: { collection },
+      ...eventProperties(rootState)
+    })
+  },
+
+  blogView({ commit, rootState }, blog) {
+    commit('addEvent', {
+      eventType: 'BLOG_VIEW',
+      payload: { blog },
+      ...eventProperties(rootState)
+    })
+  },
+
+  articleView({ commit, rootState }, article) {
+    commit('addEvent', {
+      eventType: 'ARTICLE_VIEW',
+      payload: { article },
+      ...eventProperties(rootState)
+    })
+  },
+
   addToCart({ commit, rootState }, payload) {
     commit('addEvent', {
       eventType: 'ADD_TO_CART',

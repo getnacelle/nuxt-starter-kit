@@ -70,6 +70,9 @@ export default nmerge({
     BlogArticleContent
   },
   mixins: [getCollection(), getBlogArticle()],
+  created() {
+    this.$store.dispatch('events/articleView', this.article)
+  },
   computed: {
     ...mapGetters('space', ['getMetatag'])
   },

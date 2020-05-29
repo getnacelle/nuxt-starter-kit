@@ -1,3 +1,5 @@
+import { mapActions } from 'vuex'
+
 export default (config = {}) => {
   return {
     data() {
@@ -97,6 +99,7 @@ export default (config = {}) => {
       }
     },
     methods: {
+      ...mapActions('events', ['blogView']),
       async fetchMore() {
         if (
           this.blog &&

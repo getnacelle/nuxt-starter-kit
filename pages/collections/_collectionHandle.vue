@@ -43,6 +43,9 @@ export default {
     ObserveEmitter
   },
   mixins: [getCollection()],
+  created() {
+    this.$store.dispatch('events/collectionView', this.collection)
+  },
   computed: {
     productData() {
       if (this.products) {
