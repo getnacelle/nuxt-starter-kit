@@ -1,4 +1,4 @@
-import { mapMutations, mapActions } from 'vuex'
+import { mapMutations } from 'vuex'
 
 export default (config = {}) => {
   return {
