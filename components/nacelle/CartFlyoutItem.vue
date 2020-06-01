@@ -81,7 +81,4 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.flyout-item-price {
-  margin-bottom: 0;
-}
 </style>
