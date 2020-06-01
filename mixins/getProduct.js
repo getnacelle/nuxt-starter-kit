@@ -1,4 +1,4 @@
-import { mapMutations, mapActions } from 'vuex'
+import { mapMutations } from 'vuex'
 
 export default (config = {}) => {
   return {
@@ -47,12 +47,10 @@ export default (config = {}) => {
     async created() {
       if (this.product) {
         this.setProduct(this.product)
-        this.productView(this.product)
       }
     },
     methods: {
-      ...mapMutations('product', ['setProduct']),
-      ...mapActions('events', ['productView'])
+      ...mapMutations('product', ['setProduct'])
     }
   }
 }

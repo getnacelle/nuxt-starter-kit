@@ -59,6 +59,7 @@ import nmerge from 'nuxt-merge-asyncdata'
 import { mapGetters } from 'vuex'
 import getBlogArticle from '~/mixins/getBlogArticle'
 import getCollection from '~/mixins/getCollection'
+import viewEvent from '~/mixins/viewEvent'
 import InterfaceFeaturedMedia from '~/components/nacelle/InterfaceFeaturedMedia'
 import BlogArticleHeader from '~/components/nacelle/BlogArticleHeader'
 import BlogArticleContent from '~/components/nacelle/BlogArticleContent'
@@ -69,7 +70,11 @@ export default nmerge({
     BlogArticleHeader,
     BlogArticleContent
   },
-  mixins: [getCollection(), getBlogArticle()],
+  mixins: [
+    getCollection(),
+    getBlogArticle(),
+    viewEvent('article')
+  ],
   computed: {
     ...mapGetters('space', ['getMetatag'])
   },

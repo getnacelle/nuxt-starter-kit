@@ -45,6 +45,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import getBlog from '~/mixins/getBlog'
+import viewEvent from '~/mixins/viewEvent'
 import ArticlePreview from '~/components/nacelle/ArticlePreview'
 import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 
@@ -53,7 +54,10 @@ export default {
     ArticlePreview,
     ObserveEmitter
   },
-  mixins: [getBlog()],
+  mixins: [
+    getBlog(),
+    viewEvent('blog')
+  ],
   computed: {
     ...mapGetters('space', ['getMetatag']),
     blogProducts() {
