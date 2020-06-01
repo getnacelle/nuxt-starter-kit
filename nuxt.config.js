@@ -37,7 +37,7 @@ export default {
    ** Global CSS
    */
   css: [
-    '@/assets/global.css',
+    '@/assets/global.scss',
     'vue-glide-js/dist/vue-glide.css'
   ],
 
