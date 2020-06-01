@@ -43,12 +43,12 @@ export default {
       'setFreeShippingThreshold'
     ]),
     ...mapActions('cart', ['updateLocalCart']),
-    handleClose () {
+    handleClose() {
       this.hideCart()
     }
   },
   watch: {
-    lineItems (newValue) {
+    lineItems(newValue) {
       if (newValue.length == 0) {
         this.hideCart()
       }
@@ -81,11 +81,6 @@ export default {
   flex-grow: 5;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.32s ease;
 }
 
 .slide-enter, .slide-leave-to /* .fade-leave-active below version 2.1.8 */ {

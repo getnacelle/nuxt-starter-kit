@@ -21,9 +21,31 @@
             exact-active-class="is-active"
             class="main-nav-item"
             @click.native="disableMenu"
-          >{{ link.title }}</nuxt-link>
+            >{{ link.title }}</nuxt-link
+          >
         </div>
         <search-box class="is-hidden-mobile" />
+        <main-nav-wishlist path="/wishlist">
+          <template v-slot:icon>
+            <svg
+              class="icon"
+              width="100%"
+              height="100%"
+              viewBox="0 0 512 469"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              xml:space="preserve"
+              xmlns:serif="http://www.serif.com/"
+              style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
+            >
+              <path
+                d="M471.383,55.578c-26.504,-28.746 -62.871,-44.578 -102.41,-44.578c-29.555,0 -56.621,9.344 -80.45,27.77c-12.023,9.3 -22.918,20.679 -32.523,33.96c-9.602,-13.277 -20.5,-24.66 -32.527,-33.96c-23.825,-18.426 -50.891,-27.77 -80.446,-27.77c-39.539,0 -75.91,15.832 -102.414,44.578c-26.187,28.41 -40.613,67.223 -40.613,109.293c0,43.301 16.137,82.938 50.781,124.742c30.992,37.395 75.535,75.356 127.117,119.313c17.614,15.012 37.579,32.027 58.309,50.152c5.477,4.797 12.504,7.438 19.793,7.438c7.285,0 14.316,-2.641 19.785,-7.43c20.731,-18.129 40.707,-35.152 58.328,-50.172c51.574,-43.949 96.117,-81.906 127.11,-119.305c34.644,-41.8 50.777,-81.437 50.777,-124.742c0,-42.066 -14.426,-80.879 -40.617,-109.289Z"
+                style="fill-rule:nonzero;"
+              />
+            </svg>
+          </template>
+        </main-nav-wishlist>
         <main-nav-cart />
       </div>
     </div>
@@ -62,7 +84,8 @@
               active-class="is-active"
               class="main-nav-item"
               @click.native="disableMenu"
-            >{{ link.title }}</nuxt-link>
+              >{{ link.title }}</nuxt-link
+            >
           </slot>
         </div>
       </div>
@@ -76,14 +99,16 @@
 <script>
 import MainNavCart from '~/components/nacelle/MainNavCart'
 import MainNavBurger from '~/components/nacelle/MainNavBurger'
+import MainNavWishlist from '~/components/nacelle/MainNavWishlist'
 import SearchBox from '~/components/nacelle/SearchBox'
 import Cart from '~/components/nacelle/Cart'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 export default {
-  components:{
+  components: {
     Cart,
     MainNavCart,
     MainNavBurger,
+    MainNavWishlist,
     SearchBox
   },
   props: {
@@ -109,129 +134,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.global-header.is-sticky {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  background-color: #ffffff;
-}
-
-.main-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  border-bottom: 1px solid #d3d3d3;
-}
-
-.main-nav-left,
-.main-nav-right {
-  display: flex;
-  align-items: center;
-}
-
-.main-nav-left {
-  justify-content: flex-start;
-
-  @media only screen and (min-width: 769px) {
-    display: none;
-  }
-}
-
-.main-nav-right {
-  justify-content: flex-end;
-  flex-grow: 1;
-
-  @media screen and (max-width: 786px) {
-    flex-grow: unset;
-  }
-}
-
-.main-nav-brand {
-  @media screen and (max-width: 786px) {
-    margin-left: -1rem;
-  }
-}
-
-.main-nav-menu {
-  display: flex;
-  flex-grow: 1;
-  justify-content: center;
-
-  @media only screen and (max-width: 768px) {
-    display: none;
-  }
-}
-
-button.main-nav-cart {
-  // width: 112px;
-  text-align: right;
-}
-
-.main-nav-item {
-  padding: 1rem;
-}
-
-.main-nav-brand {
-  img {
-    display: block;
-  }
-}
-
-.nav-flyout {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 28rem;
-  background-color: #ffffff;
-  border-left: 1px solid #dedede7a;
-  box-shadow: 20px 0px 20px 20px #e6e6e6c4;
-  z-index: 999;
-
-  @media screen and (max-width: 768px) {
-    width: 100%;
-  }
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.32s ease;
-}
-
-.slide-enter, .slide-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  transform: translateX(-28rem);
-}
-
-.nav-flyout-header {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  border-bottom: 1px solid #d3d3d3;
-}
-
-.nav-flyout-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: 0;
-  outline: 0;
-  cursor: pointer;
-}
-
-.nav-flyout-body {
-  flex-grow: 1;
-  padding: 1rem;
-  overflow: scroll;
-}
-</style>
+<style lang="scss" scoped></style>

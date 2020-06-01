@@ -7,6 +7,7 @@ import user from '../../store/user'
 import space from '../../store/space'
 import search from '../../store/search'
 import collections from '../../store/collections'
+import wishlist from '../../store/wishlist'
 
 export default function createStoreConfig() {
   return {
@@ -19,7 +20,8 @@ export default function createStoreConfig() {
       user,
       space,
       search,
-      collections
+      collections,
+      wishlist
     }
   }
 }

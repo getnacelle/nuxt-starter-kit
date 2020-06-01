@@ -1,8 +1,5 @@
 <template>
-  <button
-    class="main-nav-cart nacelle"
-    @click="toggleCart"
-  >
+  <button class="main-nav-cart nacelle" @click="toggleCart">
     <slot name="icon">
       <svg
         aria-hidden="true"
@@ -19,10 +16,7 @@
       </svg>
     </slot>
     <span class="is-sr-only">Cart</span>
-    <span
-      v-if="quantityTotal > 0"
-      class="cart-count"
-    >
+    <span v-if="quantityTotal > 0" class="cart-count">
       {{ quantityTotal }}
     </span>
   </button>
@@ -42,17 +36,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.icon {
+  width: 2em;
+  height: 2em;
+}
+
 .main-nav-cart {
   position: relative;
   background: none;
   border: 0;
   outline: 0;
   cursor: pointer;
+  text-align: right;
+  color: #3b3b3b;
 }
 
-.icon {
-  width: 2em;
-  height: 2em;
+.main-nav-cart.nacelle:hover,
+.main-nav-cart.nacelle:focus {
+  opacity: 0.8;
+}
+
+.main-nav-cart.nacelle .cart-count {
+  background-color: #3b3b3b;
+  color: #fff;
+  border: 2px solid #fff;
+  font-weight: 600;
+  width: 1.75em;
+  height: 1.75em;
+  -webkit-transform: translate3d(2px, -4px, 0);
+  transform: translate3d(2px, -4px, 0);
 }
 
 .cart-count {
@@ -70,4 +82,3 @@ export default {
   border-radius: 50%;
 }
 </style>
-

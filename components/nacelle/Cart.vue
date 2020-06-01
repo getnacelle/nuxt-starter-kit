@@ -6,7 +6,11 @@
         <messaging-free-shipping-counter />
       </cart-flyout-messaging>
       <div class="cart-items">
-        <cart-item v-for="item in lineItems" :key="item.variant.id" :item="item"></cart-item>
+        <cart-item
+          v-for="item in lineItems"
+          :key="item.variant.id"
+          :item="item"
+        ></cart-item>
       </div>
       <cart-flyout-subtotal />
       <cart-flyout-checkout-button />
@@ -15,13 +19,13 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from "vuex";
-import CartFlyoutHeader from "~/components/nacelle/CartFlyoutHeader";
-import CartFlyoutMessaging from "~/components/nacelle/CartFlyoutMessaging";
-import CartFlyoutSubtotal from "~/components/nacelle/CartFlyoutSubtotal";
-import CartFlyoutCheckoutButton from "~/components/nacelle/CartFlyoutCheckoutButton";
-import MessagingFreeShippingCounter from "~/components/nacelle/MessagingFreeShippingCounter";
-import CartItem from "~/components/nacelle/CartItem";
+import { mapState, mapMutations, mapActions } from 'vuex'
+import CartFlyoutHeader from '~/components/nacelle/CartFlyoutHeader'
+import CartFlyoutMessaging from '~/components/nacelle/CartFlyoutMessaging'
+import CartFlyoutSubtotal from '~/components/nacelle/CartFlyoutSubtotal'
+import CartFlyoutCheckoutButton from '~/components/nacelle/CartFlyoutCheckoutButton'
+import MessagingFreeShippingCounter from '~/components/nacelle/MessagingFreeShippingCounter'
+import CartItem from '~/components/nacelle/CartItem'
 export default {
   components: {
     CartFlyoutHeader,
@@ -32,27 +36,27 @@ export default {
     CartItem
   },
   computed: {
-    ...mapState("cart", ["lineItems", "cartVisible"])
+    ...mapState('cart', ['lineItems', 'cartVisible'])
   },
   methods: {
-    ...mapMutations("cart", [
-      "showCart",
-      "hideCart",
-      "setFreeShippingThreshold"
+    ...mapMutations('cart', [
+      'showCart',
+      'hideCart',
+      'setFreeShippingThreshold'
     ]),
-    ...mapActions("cart", ["updateLocalCart"]),
+    ...mapActions('cart', ['updateLocalCart']),
     handleClose() {
-      this.hideCart();
+      this.hideCart()
     }
   },
   watch: {
     lineItems(newValue) {
       if (newValue.length == 0) {
-        this.hideCart();
+        this.hideCart()
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -79,14 +83,5 @@ export default {
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
   }
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.32s ease;
-}
-
-.slide-enter, .slide-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  transform: translateX(100%);
 }
 </style>

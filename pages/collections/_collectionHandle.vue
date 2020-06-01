@@ -31,6 +31,7 @@
 
 <script>
 import getCollection from '~/mixins/getCollection'
+import viewEvent from '~/mixins/viewEvent'
 import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
 import ProductGrid from '~/components/nacelle/ProductGrid'
 import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
@@ -38,9 +39,14 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'collection',
   components: {
-    ContentHeroBanner, ProductGrid, ObserveEmitter
+    ContentHeroBanner,
+    ProductGrid,
+    ObserveEmitter
   },
-  mixins: [getCollection()],
+  mixins: [
+    getCollection(),
+    viewEvent('collection')
+  ],
   computed: {
     productData() {
       if (this.products) {

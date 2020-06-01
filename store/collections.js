@@ -27,6 +27,19 @@ export const mutations = {
         state.collections.push(collection)
       }
     }
+  },
+
+  updateCollectionProducts(state, payload) {
+    if (payload.products) {
+      const index = state.collections.findIndex(({ handle }) => {
+        return handle === payload.handle
+      })
+
+      if (index > -1) {
+        state.collections[index].products = payload.products
+        state.collections[index].productIndex = payload.productIndex
+      }
+    }
   }
 }
 
