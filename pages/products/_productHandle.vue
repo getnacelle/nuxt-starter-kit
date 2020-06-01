@@ -52,10 +52,15 @@
 import getProduct from '~/mixins/getProduct'
 import ProductDetails from '~/components/nacelle/ProductDetails'
 import productMetafields from '~/mixins/productMetafields'
-import { mapGetters, mapMutations } from 'vuex'
+import viewEvent from '~/mixins/viewEvent'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
   components: { ProductDetails },
-  mixins: [getProduct(), productMetafields],
+  mixins: [
+    getProduct(),
+    productMetafields,
+    viewEvent('product')
+  ],
   computed: {
     ...mapGetters('space', ['getMetatag'])
   },
