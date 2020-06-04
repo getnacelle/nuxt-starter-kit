@@ -6,11 +6,7 @@
         <messaging-free-shipping-counter />
       </cart-flyout-messaging>
       <div class="cart-items">
-        <cart-item
-          v-for="item in lineItems"
-          :key="item.variant.id"
-          :item="item"
-        ></cart-item>
+        <cart-item v-for="item in lineItems" :key="item.variant.id" :item="item"></cart-item>
       </div>
       <cart-flyout-subtotal />
       <cart-flyout-checkout-button />
@@ -83,5 +79,9 @@ export default {
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
   }
+}
+
+.slide-enter, .slide-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  transform: translateX(100%);
 }
 </style>

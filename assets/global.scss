@@ -214,7 +214,7 @@ span {
   transition: transform 0.32s ease;
 }
 
-.slide-enter, .slide-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.nav-flyout.slide-enter, .nav-flyout.slide-leave-to /* .fade-leave-active below version 2.1.8 */ {
   transform: translateX(-28rem);
 }
 
