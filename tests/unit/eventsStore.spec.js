@@ -31,7 +31,7 @@ const incrementCounter = () => {
 describe('Event Store', () => {
   const store = new Vuex.Store(storeConfig())
 
-  it('adds a page view event to log array', async() => {
+  it('adds a page view event to log array', () => {
     store.dispatch('events/pageView', 'New Page')
     expect(store.state.events.log.length).toEqual(counter.length)
     expect(store.state.events.log[counter.log].eventType).toEqual('PAGE_VIEW')
@@ -39,15 +39,17 @@ describe('Event Store', () => {
     incrementCounter()
   })
 
-  it('adds a product view event to log array', async() => {
+  it('adds a product view event to log array', () => {
     store.dispatch('events/productView', product)
     expect(store.state.events.log.length).toEqual(counter.length)
-    expect(store.state.events.log[counter.log].eventType).toEqual('PRODUCT_VIEW')
+    expect(store.state.events.log[counter.log].eventType).toEqual(
+      'PRODUCT_VIEW'
+    )
     expect(store.state.events.log[counter.log].payload).toEqual({ product })
     incrementCounter()
   })
 
-  it('adds an add-to-cart event to log array', async() => {
+  it('adds an add-to-cart event to log array', () => {
     store.dispatch('events/addToCart', lineItem)
     expect(store.state.events.log.length).toEqual(counter.length)
     expect(store.state.events.log[counter.log].eventType).toEqual('ADD_TO_CART')
@@ -55,22 +57,39 @@ describe('Event Store', () => {
     incrementCounter()
   })
 
-  it('adds an remove-from-cart event to log array', async() => {
+  it('adds an remove-from-cart event to log array', () => {
     store.dispatch('events/removeFromCart', lineItem)
     expect(store.state.events.log.length).toEqual(counter.length)
-    expect(store.state.events.log[counter.log].eventType).toEqual('REMOVE_FROM_CART')
+    expect(store.state.events.log[counter.log].eventType).toEqual(
+      'REMOVE_FROM_CART'
+    )
     expect(store.state.events.log[counter.log].payload).toEqual(lineItem)
     incrementCounter()
   })
 
-  it('adds a checkout-init event to log array', async() => {
+  it('adds a checkout-init event to log array', () => {
     store.dispatch('events/addToCart', lineItem)
     incrementCounter()
 
     store.dispatch('events/checkoutInit', { cart: [lineItem] })
     expect(store.state.events.log.length).toEqual(counter.length)
-    expect(store.state.events.log[counter.log].eventType).toEqual('CHECKOUT_INIT')
-    expect(store.state.events.log[counter.log].payload.cart[0]).toEqual(lineItem)
+    expect(store.state.events.log[counter.log].eventType).toEqual(
+      'CHECKOUT_INIT'
+    )
+    expect(store.state.events.log[counter.log].payload.cart[0]).toEqual(
+      lineItem
+    )
     incrementCounter()
+  })
+
+  it('adds a search products event to log array', () => {
+    const searchQuery = 'fitness'
+
+    store.dispatch('events/searchProducts', searchQuery)
+    expect(store.state.events.log.length).toEqual(counter.length)
+    expect(store.state.events.log[counter.log].eventType).toEqual(
+      'SEARCH_PRODUCTS'
+    )
+    expect(store.state.events.log[counter.log].payload).toEqual(searchQuery)
   })
 })

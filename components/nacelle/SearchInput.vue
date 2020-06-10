@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   props: {
     placeholderText: {
@@ -23,7 +23,7 @@ export default {
   },
   watch: {
     $route(newRoute) {
-      if (this.position == 'global') {
+      if (this.position === 'global') {
         this.localQuery = null
         this.$refs['global-search-input'].blur()
       }
@@ -32,7 +32,7 @@ export default {
       if (newVal == null) {
         this.localQuery = null
       }
-      if (this.position != 'global' && newVal) {
+      if (this.position !== 'global' && newVal) {
         this.localQuery = newVal.value
       }
     }
@@ -47,23 +47,39 @@ export default {
   },
   methods: {
     ...mapMutations('search', ['setQuery']),
+    ...mapActions('events', ['searchProducts']),
     setQueryInStore(e) {
       if (e.key !== 'Enter') {
         this.setQuery({ value: this.localQuery, origin: this.position })
       }
+
+      // Check that the key press is a letter or number and that
+      // local query has a value before tracking an event
+      if (/^[a-z0-9]$/i.test(e.key) && this.localQuery) {
+        const trackSearchEvent = this.debounce(this.searchProducts, 500)
+        trackSearchEvent(this.localQuery)
+      }
+    },
+    debounce(fn, debounceTime) {
+      return (...args) => {
+        if (this.timeout !== null) {
+          clearTimeout(this.timeout)
+        }
+
+        this.timeout = setTimeout(() => fn(...args), debounceTime)
+      }
     }
   },
   created() {
-    if (this.query && this.position != 'global') {
+    if (this.query && this.position !== 'global') {
       this.localQuery = this.query.value
     }
   },
   mounted() {
-    if (this.position != 'global') {
+    if (this.position !== 'global') {
       this.$refs[`${this.position}-search-input`].focus()
     }
   }
 }
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
