@@ -29,7 +29,7 @@ export default (config = {}) => {
       if (process.server) {
         const fs = require('fs')
         try {
-          const file = fs.readFileSync(`./static/data/blogs/${blogObj.blogHandle}::${blogObj.locale}/static.json`, 'utf-8')
+          const file = fs.readFileSync(`./static/data/blogs/${blogObj.blogHandle}--${blogObj.locale}/static.json`, 'utf-8')
           blogObj.blog = JSON.parse(file)
         } catch (err) {
           blogObj.noBlogData = true
@@ -47,7 +47,7 @@ export default (config = {}) => {
           const handles = articleList.handles.slice(0, config.itemsPerPage || 30)
 
           handles.forEach(handle => {
-            const articleFile = fs.readFileSync(`./static/data/articles/${blogObj.blogHandle}/${handle}::${blogObj.locale}/static.json`, 'utf-8')
+            const articleFile = fs.readFileSync(`./static/data/articles/${blogObj.blogHandle}/${handle}--${blogObj.locale}/static.json`, 'utf-8')
             blogObj.articles.push(JSON.parse(articleFile))
           })
         }

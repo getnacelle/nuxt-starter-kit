@@ -24,7 +24,7 @@ export default (config = {}) => {
         const fs = require('fs')
         try {
           const file = fs.readFileSync(
-          `./static/data/products/${productObj.productHandle}::${productObj.locale}/static.json`,
+          `./static/data/products/${productObj.productHandle}--${productObj.locale}/static.json`,
           'utf-8'
           )
           productObj.product = JSON.parse(file)
