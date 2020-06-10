@@ -968,3 +968,28 @@ export const defaultContent = {
     }
   ]
 }
+
+export const defaultLocales = {
+  locales: [
+    {
+      country: "US",
+      currency: "USD",
+      displayCountry: "United States of America",
+      displayCountryLocalized: "United States",
+      displayLanguage: "English",
+      language: "en",
+      locale: "en-US",
+      symbol: "$"
+    },
+    {
+      country: "JP",
+      currency: "JPY",
+      displayCountry: "Japan",
+      displayCountryLocalized: "日本",
+      displayLanguage: "日本語",
+      language: "ja",
+      locale: "ja_JP",
+      symbol: "¥"
+    }
+  ]
+}
