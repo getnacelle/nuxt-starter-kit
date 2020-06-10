@@ -57,7 +57,7 @@ export default (config = {}) => {
         const fs = require('fs')
         try {
           const file = fs.readFileSync(
-            `./static/data/collections/${collectionObj.collectionHandle}::${collectionObj.locale}/static.json`,
+            `./static/data/collections/${collectionObj.collectionHandle}--${collectionObj.locale}/static.json`,
             'utf-8'
           )
           collectionObj.collection = JSON.parse(file)
@@ -77,7 +77,7 @@ export default (config = {}) => {
           const handles = productList.handles.slice(0, collectionObj.itemsPerPage)
 
           handles.forEach(handle => {
-            const productFile = fs.readFileSync(`./static/data/products/${handle}::${collectionObj.locale}/static.json`, 'utf-8')
+            const productFile = fs.readFileSync(`./static/data/products/${handle}--${collectionObj.locale}/static.json`, 'utf-8')
             collectionObj.products.push(JSON.parse(productFile))
           })
         }

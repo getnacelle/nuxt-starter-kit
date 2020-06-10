@@ -25,7 +25,7 @@ export const getters = {
       state.searchData.products.length > 0
     )
   },
-  
+
   productData(state) {
     if (
       state.searchData &&
@@ -42,13 +42,17 @@ export const getters = {
           return variant.selectedOptions
         })
 
-        const variantFacets = variantOptions.reduce((acc, item) => {
-          return acc.concat(item)
-        }, []).map(option => JSON.stringify(option))
+        const variantFacets = variantOptions
+          .reduce((acc, item) => {
+            return acc.concat(item)
+          }, [])
+          .map(option => JSON.stringify(option))
 
-        const facets = Array.from(new Set(variantFacets)).map(option => JSON.parse(option)).map(option => {
-          return { name: option.name.toLowerCase(), value: option.value }
-        })
+        const facets = Array.from(new Set(variantFacets))
+          .map(option => JSON.parse(option))
+          .map(option => {
+            return { name: option.name.toLowerCase(), value: option.value }
+          })
 
         /// //////////////////////////
         /// //////////////////////////
@@ -60,9 +64,13 @@ export const getters = {
           const facetName = facetFragments[1]
           const facetValue = () => {
             const fragments = facetFragments[2].split('-')
-            return fragments.map(fragment => {
-              return `${fragment.charAt(0).toUpperCase()}${fragment.substring(1)}`
-            }).join(' ')
+            return fragments
+              .map(fragment => {
+                return `${fragment.charAt(0).toUpperCase()}${fragment.substring(
+                  1
+                )}`
+              })
+              .join(' ')
           }
 
           rest[facetName] = facetValue()
@@ -146,7 +154,8 @@ export const actions = {
       commit('dataNotLoaded')
       commit('isSearching')
 
-      this.$nacelle.data.connector.request('data/search.json')
+      this.$nacelle.data.connector
+        .request('data/search.json')
         .then(res => {
           if (res && res.data) {
             commit('dataHasLoaded')
@@ -169,5 +178,6 @@ export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
+  namespaced: true
 }
