@@ -23,23 +23,12 @@ const defaultLocale = {
   symbol: "$"
 }
 
-const testLocale = {
-  country: "JP",
-  currency: "JPY",
-  displayCountry: "Japan",
-  displayCountryLocalized: "日本",
-  displayLanguage: "日本語",
-  language: "ja",
-  locale: "ja_JP",
-  symbol: "¥"
-}
-
 export default {
   props: {
     localeList: {
       type: Array,
       default() {
-        return [defaultLocale, testLocale]
+        return [defaultLocale]
       }
     }
   },

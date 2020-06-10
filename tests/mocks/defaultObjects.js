@@ -988,7 +988,7 @@ export const defaultLocales = {
       displayCountryLocalized: "日本",
       displayLanguage: "日本語",
       language: "ja",
-      locale: "ja_JP",
+      locale: "ja-JP",
       symbol: "¥"
     }
   ]
