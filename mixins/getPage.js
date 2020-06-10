@@ -22,7 +22,7 @@ export default (config = {}) => {
         const fs = require('fs')
         try {
           const file = fs.readFileSync(
-          `./static/data/pages/${pageObj.pageHandle}::${pageObj.locale}/static.json`,
+          `./static/data/pages/${pageObj.pageHandle}--${pageObj.locale}/static.json`,
           'utf-8'
           )
           pageObj.page = JSON.parse(file)
