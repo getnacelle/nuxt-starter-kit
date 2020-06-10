@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   props: {
     placeholderText: {
@@ -47,9 +47,26 @@ export default {
   },
   methods: {
     ...mapMutations('search', ['setQuery']),
+    ...mapActions('events', ['searchProducts']),
     setQueryInStore(e) {
       if (e.key !== 'Enter') {
         this.setQuery({ value: this.localQuery, origin: this.position })
+      }
+
+      // Check that the key press is a letter or number and that
+      // local query has a value before tracking an event
+      if (/^[a-z0-9]$/i.test(e.key) && this.localQuery) {
+        const trackSearchEvent = this.debounce(this.searchProducts, 500)
+        trackSearchEvent(this.localQuery)
+      }
+    },
+    debounce(fn, debounceTime) {
+      return (...args) => {
+        if (this.timeout !== null) {
+          clearTimeout(this.timeout)
+        }
+
+        this.timeout = setTimeout(() => fn(...args), debounceTime)
       }
     }
   },
@@ -65,5 +82,4 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

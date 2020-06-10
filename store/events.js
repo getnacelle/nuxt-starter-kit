@@ -5,9 +5,7 @@ const eventProperties = rootState => {
   const userID = user && user.userID ? user.userID : null
   const anonymousID = user && user.anonymousID ? user.anonymousID : null
   const cartJsonString =
-    cart && cart.lineItems
-      ? JSON.stringify(cart.lineItems)
-      : null
+    cart && cart.lineItems ? JSON.stringify(cart.lineItems) : null
   let urlParams = null
   let domain = null
   let url = null
@@ -100,6 +98,14 @@ export const actions = {
   checkoutInit({ commit, rootState }, payload) {
     commit('addEvent', {
       eventType: 'CHECKOUT_INIT',
+      payload,
+      ...eventProperties(rootState)
+    })
+  },
+
+  searchProducts({ commit, rootState }, payload) {
+    commit('addEvent', {
+      eventType: 'SEARCH_PRODUCTS',
       payload,
       ...eventProperties(rootState)
     })
