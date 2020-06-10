@@ -23,7 +23,7 @@ export default {
   },
   watch: {
     $route(newRoute) {
-      if (this.position == 'global') {
+      if (this.position === 'global') {
         this.localQuery = null
         this.$refs['global-search-input'].blur()
       }
@@ -32,7 +32,7 @@ export default {
       if (newVal == null) {
         this.localQuery = null
       }
-      if (this.position != 'global' && newVal) {
+      if (this.position !== 'global' && newVal) {
         this.localQuery = newVal.value
       }
     }
@@ -71,12 +71,12 @@ export default {
     }
   },
   created() {
-    if (this.query && this.position != 'global') {
+    if (this.query && this.position !== 'global') {
       this.localQuery = this.query.value
     }
   },
   mounted() {
-    if (this.position != 'global') {
+    if (this.position !== 'global') {
       this.$refs[`${this.position}-search-input`].focus()
     }
   }
