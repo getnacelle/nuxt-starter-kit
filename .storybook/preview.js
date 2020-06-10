@@ -1,7 +1,7 @@
 import { configure, addParameters } from '@storybook/vue'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import '../assets/global.css'
+import '../assets/global.scss'
 import './styles/bulma.css'
 import 'vue-glide-js/dist/vue-glide.css'
 
