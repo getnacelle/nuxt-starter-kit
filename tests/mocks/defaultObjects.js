@@ -968,3 +968,52 @@ export const defaultContent = {
     }
   ]
 }
+
+export const defaultLocales = {
+  locales: [
+    {
+      country: "CA",
+      currency: "CAD",
+      displayCountry: "Canada",
+      displayCountryLocalized: "Canada",
+      displayLanguage: "Français",
+      flag: "🇨🇦",
+      language: "en",
+      locale: "fr-CA",
+      symbol: "$"
+    },
+    {
+      country: "CA",
+      currency: "CAD",
+      displayCountry: "Canada",
+      displayCountryLocalized: "Canada",
+      displayLanguage: "English",
+      flag: "🇨🇦",
+      language: "en",
+      locale: "en-CA",
+      symbol: "$"
+    },
+    {
+      country: "US",
+      currency: "USD",
+      displayCountry: "United States of America",
+      displayCountryLocalized: "United States",
+      displayLanguage: "English",
+      flag: "🇺🇸",
+      language: "en",
+      locale: "en-US",
+      symbol: "$"
+    },
+    {
+      country: "JP",
+      currency: "JPY",
+      displayCountry: "Japan",
+      displayCountryLocalized: "日本",
+      displayLanguage: "日本語",
+      flag: "🇯🇵",
+      language: "ja",
+      locale: "ja-JP",
+      symbol: "¥"
+    }
+  ]
+}
