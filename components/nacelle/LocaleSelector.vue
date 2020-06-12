@@ -5,7 +5,7 @@
       :key="index"
       :value="locale"
     >
-     {{ locale.country }}
+     	{{ locale.flag }} - {{ locale.currency }} - {{ locale.displayLanguage }}
     </option>
   </select>
 </template>
@@ -18,6 +18,7 @@ const defaultLocale = {
   displayCountry: "United States of America",
   displayCountryLocalized: "United States",
   displayLanguage: "English",
+  flag: "🇺🇸",
   language: "en",
   locale: "en-US",
   symbol: "$"

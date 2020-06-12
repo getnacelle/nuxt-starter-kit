@@ -7,7 +7,7 @@
           <strong>{{ name }}</strong>
         </nuxt-link>
 
-        <locale-selector />
+        <locale-selector :localeList="localeList" />
 
       </div>
       <div class="column is-12 has-text-centered">© {{currentYear}}</div>
@@ -54,10 +54,16 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import LocaleSelector from '~/components/nacelle/LocaleSelector'
+import { defaultLocales } from '../../tests/mocks/defaultObjects';
 
 export default {
   components: {
     LocaleSelector,
+  },
+  data() {
+    return {
+      localeList: defaultLocales.locales
+    }
   },
   computed: {
     ...mapState('space', ['id', 'name', 'linklists']),
