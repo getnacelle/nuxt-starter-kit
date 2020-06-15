@@ -218,9 +218,6 @@ export default {
         this.optionsModalVisible = true
       }
     }
-  },
-  mounted() {
-    console.log(this.product)
   }
 }
 </script>

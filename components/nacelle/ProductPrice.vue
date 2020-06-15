@@ -1,15 +1,5 @@
 <template>
-  <span class="product-price nacelle">
-    {{ price | currency({
-      symbol: '$',
-      thousandsSeparator: ',',
-      fractionCount: 2,
-      fractionSeparator: '.',
-      symbolPosition: 'front',
-      symbolSpacing: false
-    }) }}
-
-  </span>
+  <span class="product-price nacelle">{{ price }}</span>
 </template>
 
 <script>

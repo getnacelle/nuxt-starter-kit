@@ -26,7 +26,8 @@ export default {
         currency: priceForCurrency ? this.locale.currency : product.priceRange.currencyCode,
         price: priceForCurrency || fallbackPrice
       }
-      return new Intl.NumberFormat(currencyToDisplay.locale, { style: 'currency', currency: currencyToDisplay.currency }).format(currencyToDisplay.price)
+      const formattedCurrency = new Intl.NumberFormat(currencyToDisplay.locale, { style: 'currency', currency: currencyToDisplay.currency }).format(currencyToDisplay.price)
+      return priceForCurrency ? `${formattedCurrency} ${this.locale.currency}` : formattedCurrency
     }
   }
 }
