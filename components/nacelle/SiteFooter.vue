@@ -54,11 +54,11 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import LocaleSelector from '~/components/nacelle/LocaleSelector'
-import { defaultLocales } from '../../tests/mocks/defaultObjects';
+import { defaultLocales } from '../../tests/mocks/defaultObjects'
 
 export default {
   components: {
-    LocaleSelector,
+    LocaleSelector
   },
   data() {
     return {
@@ -67,17 +67,19 @@ export default {
   },
   computed: {
     ...mapState('space', ['id', 'name', 'linklists']),
-    ...mapGetters('space', ['getLinks']),
+    ...mapGetters('space', ['getLocalizedLinks']),
     aboutMenu() {
-      return this.getLinks('about')
+      return this.getLocalizedLinks('about')
     },
     shopMenu() {
-      return this.getLinks('shop')
+      return this.getLocalizedLinks('shop')
     },
     accountMenu() {
-      return this.getLinks('account')
+      return this.getLocalizedLinks('account')
     },
-     currentYear(){return new Date().getFullYear()  }
+    currentYear() {
+      return new Date().getFullYear()
+    }
   }
 }
 </script>
