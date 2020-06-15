@@ -4,24 +4,22 @@
       v-for="(locale, index) in localeList"
       :key="index"
       :value="locale"
-    >
-     	{{ locale.flag }} - {{ locale.currency }} - {{ locale.displayLanguage }}
-    </option>
+    >{{ locale.flag }} - {{ locale.currency }} - {{ locale.displayLanguage }}</option>
   </select>
 </template>
 
 <script>
 import { mapMutations } from 'vuex'
 const defaultLocale = {
-  country: "US",
-  currency: "USD",
-  displayCountry: "United States of America",
-  displayCountryLocalized: "United States",
-  displayLanguage: "English",
-  flag: "🇺🇸",
-  language: "en",
-  locale: "en-US",
-  symbol: "$"
+  country: 'US',
+  currency: 'USD',
+  displayCountry: 'United States of America',
+  displayCountryLocalized: 'United States',
+  displayLanguage: 'English',
+  flag: '🇺🇸',
+  language: 'en',
+  locale: 'en-US',
+  symbol: '$'
 }
 
 export default {
@@ -40,20 +38,20 @@ export default {
   },
   watch: {
     locale(value, previousValue) {
-      if(previousValue.locale !== value.locale) {
+      if (previousValue.locale !== value.locale) {
         this.setLocale(value)
       }
     }
   },
   methods: {
-    ...mapMutations('user', ['setLocale']),
+    ...mapMutations('user', ['setLocale'])
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  select {
-    margin: 5px;
-    padding: 2.5px;
-  }
+select {
+  margin: 5px;
+  padding: 2.5px;
+}
 </style>
