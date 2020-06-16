@@ -7,13 +7,10 @@
       <router-link :to="`${pathFragment}${product.handle}`">
         <product-title :title="product.title" />
       </router-link>
-      <product-price :price="product.priceRange.max" />
+      <product-price :price="displayPrice" />
     </div>
     <div v-if="product && product.id" class="product-card-actions">
-      <quantity-selector
-        v-if="showQuantityUpdate === true"
-        :quantity.sync="quantity"
-      />
+      <quantity-selector v-if="showQuantityUpdate === true" :quantity.sync="quantity" />
       <product-add-to-cart-button
         v-if="showAddToCart === true"
         :product="product"
@@ -80,6 +77,7 @@ import InterfaceModal from '~/components/nacelle/InterfaceModal'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
+import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
 export default {
   components: {
@@ -92,7 +90,7 @@ export default {
     InterfaceModal,
     ProductOptions
   },
-  mixins: [allOptionsSelected, availableOptions],
+  mixins: [allOptionsSelected, availableOptions, getDisplayPriceForCurrency],
   props: {
     pathFragment: {
       type: String,
@@ -149,8 +147,15 @@ export default {
   },
   computed: {
     ...mapState('cart', ['lineItems']),
+    ...mapState('user', ['locale']),
     ...mapGetters('cart', ['quantityTotal']),
 
+    displayPrice() {
+      return this.getPriceForCurrency({
+        product: this.product,
+        fallbackPrice: this.currentVariant.price
+      })
+    },
     currentVariant() {
       if (this.product.variants && this.product.variants.length == 1) {
         return this.product.variants[0]

@@ -4,6 +4,7 @@
   "author": "Nacelle",
   "scripts": {
     "test": "jest",
+    "test:ci": "jest --no-coverage",
     "test:watch": "jest --watch",
     "dev": "nuxt",
     "build": "nuxt build",
@@ -81,7 +82,9 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.1.2",
     "figures": "^3.1.0",
+    "husky": "^4.2.5",
     "jest": "^26.0.1",
+    "lint-staged": "^10.2.10",
     "nodemon": "^2.0.2",
     "nuxt-generate-cluster": "^2.7.0",
     "prettier": "^1.16.4",
@@ -96,5 +99,20 @@
     "semi": false,
     "printWidth": 80,
     "singleQuote": true
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "prettier --write",
+      "npm run lint"
+    ],
+    "*{json, md}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test:ci"
+    }
   }
 }
