@@ -120,12 +120,12 @@ export default {
   computed: {
     ...mapState('space', ['id', 'name', 'linklists']),
     ...mapState('menu', ['menuVisible']),
-    ...mapGetters('space', ['getLinks']),
+    ...mapGetters('space', ['getLocalizedLinks']),
     mainMenu() {
-      return this.getLinks('main-menu')
+      return this.getLocalizedLinks('main-menu')
     },
     mobileMenu() {
-      return this.getLinks('mobile-menu')
+      return this.getLocalizedLinks('mobile-menu')
     }
   },
   methods: {

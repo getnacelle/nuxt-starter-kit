@@ -1,10 +1,8 @@
 <template>
   <select v-model="locale">
-    <option
-      v-for="(locale, index) in localeList"
-      :key="index"
-      :value="locale"
-    >{{ locale.flag }} - {{ locale.currency }} - {{ locale.displayLanguage }}</option>
+    <option v-for="(locale, index) in localeList" :key="index" :value="locale">
+      {{ locale.flag }} - {{ locale.currency }} - {{ locale.displayLanguage }}
+    </option>
   </select>
 </template>
 
