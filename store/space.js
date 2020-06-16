@@ -106,9 +106,12 @@ export const getters = {
   },
 
   getLocalizedLinks: (state, getters, rootState) => handle => {
-    const locale = rootState.user.locale.locale || ''
-    const appendLocale = locale.length && locale !== 'en-US'
-    const localizedHandle = appendLocale ? `${handle}--${locale}` : handle
+    const locale =
+      rootState.user.locale && rootState.user.locale.locale
+        ? rootState.user.locale.locale.toLowerCase()
+        : ''
+    const appendLocale = locale.length && locale !== 'en-US'.toLowerCase()
+    const localizedHandle = appendLocale ? `${handle}-${locale}` : handle
     const localizedLinks = getters.getLinks(localizedHandle)
 
     return localizedLinks.length ? localizedLinks : getters.getLinks(handle)
