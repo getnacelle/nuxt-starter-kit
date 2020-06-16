@@ -6,12 +6,13 @@ import ProductCard from '@/components/nacelle/ProductCard'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-
 describe('ProductCard.vue', () => {
   const defaultProduct = {
     priceRange: {
-      max: '29.99'
+      max: '29.99',
+      currencyCode: 'USD'
     },
+    priceCurrency: 'USD',
     title: 'Awesome T-Shirt',
     category: "Men's Shirts",
     featuredMedia: {
@@ -43,7 +44,7 @@ describe('ProductCard.vue', () => {
     }
   ]
 
-  it('renders a product card', async() => {
+  it('renders a product card', async () => {
     const store = new Vuex.Store(storeConfig())
     const wrapper = mount(ProductCard, {
       stubs: ['router-link'],
