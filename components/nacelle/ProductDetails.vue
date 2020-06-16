@@ -16,12 +16,9 @@
         :onlyOneOption="true"
         :metafields="[{key:'test', value:'hi'}]"
       />-->
-      <product-category
-        v-if="product.productType"
-        :category="product.productType"
-      />
+      <product-category v-if="product.productType" :category="product.productType" />
       <p class="price">
-        <product-price v-if="currentVariant" :price="currentVariant.price"  />
+        <product-price v-if="currentVariant" :price="displayPrice" />
       </p>
       <product-description :description="product.description" />
       <product-variant-select
@@ -42,16 +39,19 @@ import ProductTitle from '~/components/nacelle/ProductTitle'
 import ProductPrice from '~/components/nacelle/ProductPrice'
 import ProductDescription from '~/components/nacelle/ProductDescription'
 import ProductVariantSelect from '~/components/nacelle/ProductVariantSelect'
+import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
+
 export default {
   components: {
-ProductCategory,
-ProductMediaSelectView,
-ProductTitle,
-ProductPrice,
-ProductDescription,
-ProductVariantSelect
+    ProductCategory,
+    ProductMediaSelectView,
+    ProductTitle,
+    ProductPrice,
+    ProductDescription,
+    ProductVariantSelect
   },
-  data () {
+  mixins: [getDisplayPriceForCurrency],
+  data() {
     return {
       selectedVariant: undefined
     }
@@ -63,7 +63,14 @@ ProductVariantSelect
     }
   },
   computed: {
-    currentVariant () {
+    ...mapState('user', ['locale']),
+    displayPrice() {
+      return this.getPriceForCurrency({
+        product: this.product,
+        fallbackPrice: this.currentVariant.price
+      })
+    },
+    currentVariant() {
       if (this.selectedVariant) {
         return this.selectedVariant
       } else if (
@@ -79,7 +86,7 @@ ProductVariantSelect
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
-    onVariantSelected ({ selectedVariant }) {
+    onVariantSelected({ selectedVariant }) {
       this.selectedVariant = selectedVariant
     }
   }

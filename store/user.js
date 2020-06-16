@@ -9,14 +9,14 @@ export const state = () => ({
   customerPhone: null,
   sessionID: null,
   locale: {
-    country: "US",
-    currency: "USD",
-    displayCountry: "United States of America",
-    displayCountryLocalized: "United States",
-    displayLanguage: "English",
-    language: "en",
-    locale: "en-US",
-    symbol: "$"
+    country: 'US',
+    currency: 'USD',
+    displayCountry: 'United States of America',
+    displayCountryLocalized: 'United States',
+    displayLanguage: 'English',
+    language: 'en',
+    locale: 'en-US',
+    symbol: '$'
   },
   acceptCookies: false
 })
@@ -114,7 +114,7 @@ export const actions = {
       commit('setAcceptCookies', true)
     }
   },
-  
+
   readCookieAccept({ commit }) {
     if (process.browser) {
       const accept = Cookies.get('nacelle-accept')
