@@ -22,7 +22,7 @@ export default (config = {}) => {
         const fs = require('fs')
         try {
           const file = fs.readFileSync(
-          `./static/data/pages/${pageObj.pageHandle}::${pageObj.locale}/static.json`,
+          `./static/data/pages/${pageObj.pageHandle}--${pageObj.locale}/static.json`,
           'utf-8'
           )
           pageObj.page = JSON.parse(file)
@@ -44,8 +44,8 @@ export default (config = {}) => {
     },
     created() {
       this.unsubscribe = this.$store.subscribe(async (mutation, state) => {
-        if (mutation.type === 'user/setLanguage') {
-          this.locale = mutation.payload
+        if (mutation.type === 'user/setLocale') {
+          this.locale = mutation.payload.locale
 
           this.page = await this.$nacelle.data.page({
             handle: this.articleHandle,

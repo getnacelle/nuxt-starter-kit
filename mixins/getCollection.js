@@ -116,6 +116,49 @@ export default (config = {}) => {
         ...collectionObj
       }
     },
+    created() {
+      // Fetch locale specific collection data if user's locale prefer
+      this.unsubscribe = this.$store.subscribe(async (mutation, state) => {
+        if (mutation.type === 'user/setLocale') {
+          this.locale = mutation.payload.locale
+          this.isLoadingProducts = true
+
+          this.collection = await this.$nacelle.data.collection({
+            handle: this.collectionHandle,
+            locale: this.$nacelle.locale
+          }).catch(() => {
+            this.nocollectionData = true
+          })
+
+          if (
+            this.collection &&
+            this.collection.productLists &&
+            this.collection.productLists.length > 0
+          ) {
+            this.products = await this.$nacelle.data.collectionPage({
+              collection: this.collection,
+              selectedList: this.selectedList || 'default',
+              paginate: true,
+              itemsPerPage: this.itemsPerPage || 12,
+              locale: this.$nacelle.locale
+            })
+
+            this.productIndex = this.products.length
+
+            this.updateCollectionProducts({
+              handle: this.collectionHandle,
+              products: this.products,
+              productIndex: this.productIndex
+            })
+          }
+
+          this.isLoadingProducts = false
+        }
+      })
+    },
+    beforeDestroy() {
+      this.unsubscribe()
+    },
     computed: {
       // Collections can have many product lists. This returns the currently
       // selected product list

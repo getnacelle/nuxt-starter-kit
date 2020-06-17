@@ -24,7 +24,7 @@ export default (config = {}) => {
         const fs = require('fs')
         try {
           const file = fs.readFileSync(
-          `./static/data/articles/${articleObj.blogHandle}/${articleObj.articleHandle}::${articleObj.locale}/static.json`,
+          `./static/data/articles/${articleObj.blogHandle}/${articleObj.articleHandle}--${articleObj.locale}/static.json`,
           'utf-8'
           )
           articleObj.article = JSON.parse(file)
@@ -47,8 +47,8 @@ export default (config = {}) => {
     },
     created() {
       this.unsubscribe = this.$store.subscribe(async (mutation, state) => {
-        if (mutation.type === 'user/setLanguage') {
-          this.locale = mutation.payload
+        if (mutation.type === 'user/setLocale') {
+          this.locale = mutation.payload.locale
 
           this.article = await this.$nacelle.data.article({
             handle: this.articleHandle,
