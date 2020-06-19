@@ -48,7 +48,7 @@ export default (config = {}) => {
           this.locale = mutation.payload.locale
 
           this.page = await this.$nacelle.data.page({
-            handle: this.articleHandle,
+            handle: this.pageHandle,
             locale: this.$nacelle.locale
           }).catch(() => {
             this.noPageData = true

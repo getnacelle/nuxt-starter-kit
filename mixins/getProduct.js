@@ -54,7 +54,7 @@ export default (config = {}) => {
           this.locale = mutation.payload.locale
 
           this.product = await this.$nacelle.data.product({
-            handle: this.articleHandle,
+            handle: this.productHandle,
             locale: this.$nacelle.locale
           }).catch(() => {
             this.noProductData = true
