@@ -2661,14 +2661,14 @@ export const defaultLocales = {
       symbol: '$'
     },
     {
-      country: 'US',
-      currency: 'USD',
-      displayCountry: 'United States of America',
-      displayCountryLocalized: 'United States',
+      country: 'MX',
+      currency: 'MXN',
+      displayCountry: 'Mexico',
+      displayCountryLocalized: 'Mexico',
       displayLanguage: 'Español',
-      flag: '🇺🇸',
+      flag: '🇲🇽',
       language: 'es',
-      locale: 'es-US',
+      locale: 'es-MX',
       symbol: '$'
     },
     {

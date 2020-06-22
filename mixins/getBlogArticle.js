@@ -44,6 +44,24 @@ export default (config = {}) => {
       return {
         ...articleObj
       }
+    },
+    created() {
+      this.unsubscribe = this.$store.subscribe(async (mutation, state) => {
+        if (mutation.type === 'user/setLocale') {
+          this.locale = mutation.payload.locale
+
+          this.article = await this.$nacelle.data.article({
+            handle: this.articleHandle,
+            blogHandle: this.blogHandle,
+            locale: this.$nacelle.locale
+          }).catch(() => {
+            this.noArticleData = true
+          })
+        }
+      })
+    },
+    beforeDestroy() {
+      this.unsubscribe()
     }
   }
 }

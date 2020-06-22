@@ -41,6 +41,23 @@ export default (config = {}) => {
       return {
         ...pageObj
       }
+    },
+    created() {
+      this.unsubscribe = this.$store.subscribe(async (mutation, state) => {
+        if (mutation.type === 'user/setLocale') {
+          this.locale = mutation.payload.locale
+
+          this.page = await this.$nacelle.data.page({
+            handle: this.pageHandle,
+            locale: this.$nacelle.locale
+          }).catch(() => {
+            this.noPageData = true
+          })
+        }
+      })
+    },
+    beforeDestroy() {
+      this.unsubscribe()
     }
   }
 }

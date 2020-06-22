@@ -48,9 +48,25 @@ export default (config = {}) => {
       if (this.product) {
         this.setProduct(this.product)
       }
+
+      this.unsubscribe = this.$store.subscribe(async (mutation, state) => {
+        if (mutation.type === 'user/setLocale') {
+          this.locale = mutation.payload.locale
+
+          this.product = await this.$nacelle.data.product({
+            handle: this.productHandle,
+            locale: this.$nacelle.locale
+          }).catch(() => {
+            this.noProductData = true
+          })
+        }
+      })
     },
     methods: {
       ...mapMutations('product', ['setProduct'])
+    },
+    beforeDestroy() {
+      this.unsubscribe()
     }
   }
 }
