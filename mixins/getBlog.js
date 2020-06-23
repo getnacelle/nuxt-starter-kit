@@ -74,6 +74,10 @@ export default (config = {}) => {
         }
       }
 
+      if (blogObj.blog) {
+        blogObj.articleIndex = blogObj.articles.length
+      }
+
       return {
         ...blogObj
       }
@@ -96,6 +100,39 @@ export default (config = {}) => {
         return []
       }
     },
+    created() {
+      this.unsubscribe = this.$store.subscribe(async (mutation, state) => {
+        if (mutation.type === 'user/setLocale') {
+          this.locale = mutation.payload.locale
+
+          this.blog = await this.$nacelle.data.blog({
+            handle: this.blogHandle,
+            locale: this.$nacelle.locale
+          }).catch(() => {
+            this.noBlogData = true
+          })
+
+          if (
+            this.blog &&
+            this.blog.articleLists &&
+            this.blog.articleLists.length > 0
+          ) {
+            this.articles = await this.$nacelle.data.blogPage({
+              blog: this.blog,
+              selectedList: this.selectedList || 'default',
+              paginate: true,
+              itemsPerPage: this.itemsPerPage || 12,
+              locale: this.$nacelle.locale
+            })
+
+            this.articleIndex = this.articles.length
+          }
+        }
+      })
+    },
+    beforeDestroy() {
+      this.unsubscribe()
+    },
     methods: {
       async fetchMore() {
         if (
@@ -112,7 +149,7 @@ export default (config = {}) => {
             paginate: true,
             itemsPerPage: this.articlesPerPage || 12,
             index: this.articleIndex,
-            locale: config.locale
+            locale: this.locale
           })
 
           this.articles = [
