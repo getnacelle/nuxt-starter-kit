@@ -11,7 +11,7 @@
     <content-hero-banner
       v-if="collection"
       :title="collection.title"
-      :backgroundImgUrl="featuredImage"
+      :imageUrl="featuredImage"
     />
     <section class="section">
       <div class="container">

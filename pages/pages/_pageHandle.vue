@@ -26,7 +26,7 @@
         /****
         /* -- Edit Hero Banner --
         /* |   Available slots:  |
-        /* name: "background", data: "backgroundImgUrl", "mobileBackgroundImgUrl", "backgroundAltTag"
+        /* name: "background", data: "imageUrl", "mobileBackgroundImgUrl", "backgroundAltTag"
         /* name: "body", data: "title", "subtitle", "textColor"
         /* name: "cta", data: "ctaUrl", "ctaText", "ctaHandler"
         /****

@@ -5,7 +5,7 @@ import store from '../../.storybook/store';
 import ContentHeroBanner from '../nacelle/ContentHeroBanner'
 
 const defaults = {
-  backgroundImgUrl: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-banner-img.png',
+  imageUrl: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-banner-img.png',
   title: 'Hero Title',
   subtitle: 'Subtitle copy text',
   ctaText: 'CTA BUTTON'
@@ -26,7 +26,7 @@ export const Default = () => ({
   },
   template: `
     <content-hero-banner
-      :backgroundImgUrl="backgroundImgUrl"
+      :imageUrl="imageUrl"
       :title="title"
       :subtitle="subtitle"
       :ctaText="ctaText"
@@ -59,7 +59,7 @@ export const FullHeight = () => ({
   template: `
     <content-hero-banner
       :size="size"
-      :backgroundImgUrl="backgroundImgUrl"
+      :imageUrl="imageUrl"
       :title="title"
       :subtitle="subtitle"
       :ctaText="ctaText"
@@ -92,7 +92,7 @@ export const TextColor = () => ({
   },
   template: `
     <content-hero-banner
-      :backgroundImgUrl="backgroundImgUrl"
+      :imageUrl="imageUrl"
       :title="title"
       :subtitle="subtitle"
       :ctaText="ctaText"
@@ -125,7 +125,7 @@ export const CustomCtaEvent = () => ({
   },
   template: `
     <content-hero-banner
-      :backgroundImgUrl="backgroundImgUrl"
+      :imageUrl="imageUrl"
       :title="title"
       :subtitle="subtitle"
       :ctaText="ctaText"
@@ -162,7 +162,7 @@ export const MobileImage = () => ({
   },
   template: `
     <content-hero-banner
-      :backgroundImgUrl="backgroundImgUrl"
+      :imageUrl="imageUrl"
       :mobileBackgroundImgUrl="mobileBackgroundImgUrl"
       :mobileFullHeight="mobileFullHeight"
       :title="title"
@@ -200,15 +200,15 @@ export const CustomSlots = () => ({
   },
   template: `
     <content-hero-banner
-      :backgroundImgUrl="backgroundImgUrl"
+      :imageUrl="imageUrl"
       :mobileBackgroundImgUrl="mobileBackgroundImgUrl"
       :mobileFullHeight="mobileFullHeight"
       :title="title"
       :subtitle="subtitle"
       :ctaText="ctaText"
     >
-      <template v-slot:background="{ backgroundImgUrl }">
-        <img :src="backgroundImgUrl" width="300px" alt="" />
+      <template v-slot:background="{ imageUrl }">
+        <img :src="imageUrl" width="300px" alt="" />
       </template>
       <template v-slot:body>
         <h5>Testing Slots</h5>

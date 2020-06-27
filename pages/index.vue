@@ -10,7 +10,7 @@
     <div v-if="this.noPageData">
       <content-hero-banner
         id="hero-banner"
-        backgroundImgUrl="https://nacelle-assets.s3-us-west-2.amazonaws.com/hero-banner.jpg"
+        imageUrl="https://nacelle-assets.s3-us-west-2.amazonaws.com/hero-banner.jpg"
         backgroundAltTag="Update your new Nacelle Store"
         :title="name"
         ctaText="Shop Now"
@@ -75,7 +75,7 @@
         /****
         /* -- Edit Hero Banner --
         /* |   Available slots:  |
-        /* name: "background", data: "backgroundImgUrl", "mobileBackgroundImgUrl", "backgroundAltTag"
+        /* name: "background", data: "imageUrl", "mobileBackgroundImgUrl", "backgroundAltTag"
         /* name: "body", data: "title", "subtitle", "textColor"
         /* name: "cta", data: "ctaUrl", "ctaText", "ctaHandler"
         /****
