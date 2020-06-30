@@ -31,7 +31,7 @@
         class="column is-half sbs-copy"
         :style="backgroundColor ? `background-color: ${backgroundColor}` : null"
       >
-        <slot name="body" :title="title" :copy="contentHtml">
+        <slot name="body" :title="title" :contentHtml="contentHtml">
           <div class="has-text-centered">
             <component :is="titleTag" class="title">{{ title }}</component>
             <div class="content" v-html="contentHtml" />

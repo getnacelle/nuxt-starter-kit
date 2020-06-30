@@ -45,7 +45,7 @@
         /****
         /* -- Edit Side-by-Side Section --
         /* |       Available slots:       |
-        /* name: "body", data: "title", "copy"
+        /* name: "body", data: "title", "contentHtml"
         /* name: "cta", data: "ctaUrl", "ctaText", "ctaHandler"
         /****
 

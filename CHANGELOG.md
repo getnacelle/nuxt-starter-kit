@@ -1,3 +1,11 @@
+## [1.0.2](https://github.com/getnacelle/nacelle-nuxt-starter/compare/v1.0.1...v1.0.2) (2020-06-29)
+
+### Changed
+- **Contentful Content Schema** - pull `contentType` from `sys` rather than using a specific field.
+- [`PageContent.vue`] - How we map Contentful and Shopify content sections has been simplified and reduced to a single method, `mapSection`.
+- [`ContentHeroBanner.vue`] - Updated to use `imageUrl` prop instead of `backgroundImgUrl` to align with other content components.
+- [`ContentSideBySide.vue`] - Updated to use `contentHtml` prop instead of `copy` to align with other content components.
+
 ## [1.0.1](https://github.com/getnacelle/nacelle-nuxt-starter/compare/v1.0.0...v1.0.1) (2020-06-23)
 
 ### Added
