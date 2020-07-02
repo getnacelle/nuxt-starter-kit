@@ -214,7 +214,7 @@ export default {
         }
       }
 
-      if (contentType === 'ContentProductGrid') {
+      if (contentType.toLowerCase().includes('productgrid')) {
         data.products = this.products
       }
 
