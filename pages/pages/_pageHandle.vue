@@ -26,7 +26,7 @@
         /****
         /* -- Edit Hero Banner --
         /* |   Available slots:  |
-        /* name: "background", data: "backgroundImgUrl", "mobileBackgroundImgUrl", "backgroundAltTag"
+        /* name: "background", data: "imageUrl", "mobileBackgroundImgUrl", "backgroundAltTag"
         /* name: "body", data: "title", "subtitle", "textColor"
         /* name: "cta", data: "ctaUrl", "ctaText", "ctaHandler"
         /****
@@ -45,7 +45,7 @@
         /****
         /* -- Edit Side-by-Side Section --
         /* |       Available slots:       |
-        /* name: "body", data: "title", "copy"
+        /* name: "body", data: "title", "contentHtml"
         /* name: "cta", data: "ctaUrl", "ctaText", "ctaHandler"
         /****
 

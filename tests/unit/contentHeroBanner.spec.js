@@ -10,7 +10,7 @@ localVue.use(Vuex)
 const store = new Vuex.Store(storeConfig())
 
 const defaults = {
-  backgroundImgUrl:
+  imageUrl:
   'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-banner-img.png',
   title: 'Hero Title',
   subtitle: 'Subtitle copy text',

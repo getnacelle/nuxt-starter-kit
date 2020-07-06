@@ -27,19 +27,19 @@
 <script>
 import { BLOCKS } from '@contentful/rich-text-types'
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
-import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
-import ContentSideBySide from '~/components/nacelle/ContentSideBySide'
-import ContentTestimonials from '~/components/nacelle/ContentTestimonials'
-import ContentTestimonial from '~/components/nacelle/ContentTestimonial'
-import ContentProductGrid from '~/components/nacelle/ContentProductGrid'
+import HeroBanner from '~/components/nacelle/ContentHeroBanner'
+import SideBySide from '~/components/nacelle/ContentSideBySide'
+import Testimonials from '~/components/nacelle/ContentTestimonials'
+import Testimonial from '~/components/nacelle/ContentTestimonial'
+import ProductGrid from '~/components/nacelle/ContentProductGrid'
 
 export default {
   components: {
-    ContentHeroBanner,
-    ContentSideBySide,
-    ContentTestimonials,
-    ContentTestimonial,
-    ContentProductGrid
+    HeroBanner,
+    SideBySide,
+    Testimonials,
+    Testimonial,
+    ProductGrid
   },
   props: {
     page: {
@@ -74,12 +74,12 @@ export default {
       if (this.page && this.page.sections && this.page.sections.length > 0) {
         const { source, sections } = this.page
         if (source === 'contentful') {
-          return sections.map(this.mapContentfulSection)
+          return sections.map(this.mapSection)
         }
 
         if (source === 'shopify') {
           return this.reduceShopifySections(sections).map(
-            this.mapShopifySection
+            this.mapSection
           )
         }
 
@@ -109,6 +109,23 @@ export default {
     }
   },
   methods: {
+    getImgSrc (img) {
+      // extract url from Contentful or Shopify image object
+      if (!img) { return '' }
+      const { originalSrc, fields } = img
+      let src = fields && fields.file.url
+      if (originalSrc) {
+        src = originalSrc
+      }
+      return src || ''
+    },
+    getContentType (section) {
+      return section 
+        && section.sys
+        && section.sys.contentType.sys.id 
+        || section.contentType
+        && section.contentType.replace('Content', '')
+    },
     defaultContentToHtml (content) {
       const options = {
         renderNode: {
@@ -124,7 +141,7 @@ export default {
       return sections.reduce((sections, section, index) => {
         if (index > 0 && section.tags.includes('childSection')) {
           const parent = sections[sections.length - 1]
-          const child = this.mapShopifySection(section)
+          const child = this.mapSection(section)
 
           if (parent.children) {
             parent.children.push(child)
@@ -132,218 +149,77 @@ export default {
             parent.children = [child]
           }
         } else {
+          section.fields = { ...section }
           sections.push(section)
         }
 
         return sections
       }, [])
     },
-    mapShopifySection (section) {
-      const { title, handle, contentHtml, contentType, ...fields } = section
-      const clickHandler = () => {
-        this.$router.push(fields.ctaUrl)
-      }
+
+    mapSection (section) {
+      // extract the contentType
+      const contentType = this.getContentType(section)
+
+      // map fields
       let data = {}
+      const keys = Object.keys(section.fields)
 
-      if (contentType === 'ContentHeroBanner') {
-        const {
-          ctaText,
-          ctaUrl,
-          image,
-          size,
-          alignment,
-          mobileFullHeight,
-          textColor,
-          mobileBackgroundImgUrl,
-          backgroundAltTag
-        } = section
+      // reverse loop for performance
+      for (let i = keys.length; i--;) {
+        const key = keys[i]
+        data[key] = section.fields[key]
 
-        data = {
-          title,
-          subtitle: contentHtml || '',
-          ctaText,
-          ctaUrl,
-          ctaHandler: clickHandler,
-          backgroundImgUrl: image ? image.originalSrc : '',
-          size,
-          alignment,
-          mobileFullHeight: mobileFullHeight === 'true',
-          textColor,
-          mobileBackgroundImgUrl,
-          backgroundAltTag
+        switch (key) {
+          // case fallthrough for duplicated actions
+          case 'mobileFullHeight':
+          case 'reverseDesktop':
+          case 'reverseMobile':
+            data[key] = `${data[key]}` == 'true'
+            break;
+          case 'ctaUrl':
+            data.ctaHandler = () => { this.$router.push(data[key]) }
+            break;
+          case 'columns':
+            data[key] = parseInt(data[key], 10) || 4
+            break;
+          case 'image':
+          case 'featuredMedia':
+            data.imageUrl = this.getImgSrc(data[key])
+            break;
+          case 'mobileBackgroundImage':
+            data.mobileBackgroundImgUrl = this.getImgSrc(data[key])
+            break;
+          case 'content':
+            data.contentHtml = this.contentToHtml(data[key]) || ''
+            break;
+          case 'slides':
+            data[key] = data[key].map(({
+                fields: { name, quotation, featuredMedia }
+              }) => ({
+                name,
+                quote: quotation,
+                imageUrl: this.getImgSrc(featuredMedia)
+              }))
+            break;
+          case 'children':
+            data.slides = data[key].map(({
+                data: { title, contentHtml, image }
+              }) => ({
+                name: title,
+                quote: contentHtml,
+                imageUrl: this.getImgSrc(image)
+              }))
+            break;
         }
-      } else if (contentType === 'ContentSideBySide') {
-        const {
-          ctaText,
-          ctaUrl,
-          image,
-          backgroundColor,
-          reverseDesktop,
-          reverseMobile
-        } = section
+      }
 
-        data = {
-          title,
-          copy: contentHtml,
-          ctaText,
-          ctaUrl,
-          ctaHandler: clickHandler,
-          backgroundColor,
-          imageUrl: image ? image.originalSrc : '',
-          reverseDesktop: reverseDesktop === 'true',
-          reverseMobile: reverseMobile === 'true'
-        }
-      } else if (contentType === 'ContentTestimonials') {
-        const { slidesPerView, alignment } = section
-        let slides = []
-
-        if (section.children) {
-          slides = section.children.map(child => {
-            return {
-              name: child.data.title,
-              quote: child.data.contentHtml,
-              imageUrl: child.data.image
-                ? child.data.image.originalSrc
-                : undefined
-            }
-          })
-        }
-
-        data = {
-          title,
-          slides,
-          slidesPerView: slidesPerView || 1,
-          alignment
-        }
-      } else if (contentType === 'ContentProductGrid') {
-        const { columns } = section
-
-        data = {
-          title,
-          products: this.products,
-          columns: columns || 4
-        }
-      } else {
-        data = {
-          title,
-          handle,
-          contentHtml,
-          ...fields
-        }
+      if (contentType.toLowerCase().includes('productgrid')) {
+        data.products = this.products
       }
 
       return {
-        handle,
-        contentType,
-        data
-      }
-    },
-    mapContentfulSection (section) {
-      const { fields } = section
-      const { contentType, handle, title, content, featuredMedia } = fields
-      const contentHtml = content ? this.contentToHtml(content) : ''
-      const imageSrc =
-        featuredMedia && featuredMedia.fields
-          ? featuredMedia.fields.file.url
-          : ''
-      let data = {}
-
-      if (fields) {
-        if (fields.contentType === 'ContentHeroBanner') {
-          const {
-            subtitle,
-            ctaUrl,
-            ctaText,
-            size,
-            alignment,
-            mobileFullHeight,
-            textColor,
-            mobileBackgroundImage,
-            backgroundAltTag
-          } = fields
-          const clickHandler = () => {
-            this.$router.push(fields.ctaUrl)
-          }
-
-          data = {
-            title,
-            subtitle,
-            ctaText,
-            ctaUrl,
-            ctaHandler: clickHandler,
-            backgroundImgUrl: imageSrc,
-            size,
-            alignment,
-            mobileFullHeight: String(mobileFullHeight) === 'true',
-            textColor,
-            mobileBackgroundImgUrl: mobileBackgroundImage
-              ? mobileBackgroundImage.fields.file.url
-              : '',
-            backgroundAltTag
-          }
-        } else if (fields.contentType === 'ContentSideBySide') {
-          const {
-            ctaText,
-            ctaUrl,
-            backgroundColor,
-            reverseDesktop,
-            reverseMobile
-          } = fields
-          const clickHandler = () => {
-            this.$router.push(fields.ctaUrl)
-          }
-
-          data = {
-            title,
-            copy: contentHtml,
-            ctaText,
-            ctaUrl,
-            ctaHandler: clickHandler,
-            backgroundColor,
-            imageUrl: imageSrc,
-            reverseDesktop: String(reverseDesktop) === 'true',
-            reverseMobile: String(reverseMobile) === 'true'
-          }
-        } else if (fields.contentType === 'ContentTestimonials') {
-          const { slidesPerView, alignment } = fields
-          let slides = []
-
-          if (fields.slides) {
-            slides = fields.slides.map(child => {
-              return {
-                name: child.fields.name,
-                quote: child.fields.quotation,
-                imageUrl: child.fields.featuredMedia
-                  ? child.fields.featuredMedia.fields.file.url
-                  : undefined
-              }
-            })
-          }
-
-          data = {
-            title,
-            slides,
-            slidesPerView: slidesPerView || 1,
-            alignment
-          }
-        } else if (fields.contentType === 'ContentProductGrid') {
-          const { columns } = fields
-
-          data = {
-            title,
-            products: this.products,
-            columns: parseInt(columns, 10) || 4
-          }
-        } else {
-          data = {
-            ...fields,
-            contentHtml
-          }
-        }
-      }
-
-      return {
-        handle,
+        handle: section.fields.handle,
         contentType,
         data
       }
