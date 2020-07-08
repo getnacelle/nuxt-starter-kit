@@ -52,7 +52,7 @@ export default {
 
     if (process.env.DEV_MODE === 'true') {
       console.log('dev mode active!')
-      // localforage.clear()
+      localforage.clear()
     }
     this.readSession()
   },
