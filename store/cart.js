@@ -4,9 +4,6 @@ import isEqual from 'lodash.isequal'
 
 export const state = () => ({
   lineItems: [],
-  checkoutId: null,
-  checkoutUrl: null,
-  checkoutComplete: false,
   cartVisible: false,
   freeShippingThreshold: null,
   error: null
@@ -61,16 +58,6 @@ export const getters = {
       return []
     }
   },
-
-  checkoutIdForBackend(state) {
-    let checkoutId
-    if (state.checkoutId == null) {
-      checkoutId = ''
-    } else {
-      checkoutId = state.checkoutId
-    }
-    return checkoutId
-  }
 }
 
 export const mutations = {
@@ -124,18 +111,6 @@ export const mutations = {
     state.lineItems = payload
   },
 
-  setCheckoutId(state, payload) {
-    state.checkoutId = payload
-  },
-
-  setCheckoutUrl(state, payload) {
-    state.checkoutUrl = payload
-  },
-
-  setCheckoutCompleteStatus(state, payload) {
-    state.checkoutComplete = payload
-  },
-
   showCart(state) {
     state.cartVisible = true
   },
@@ -158,16 +133,16 @@ export const mutations = {
 }
 
 export const actions = {
-  async addLineItem(context, payload) {
-    context.commit('addLineItemMutation', payload)
-    context.dispatch('saveLineItems', context.state.lineItems)
-    // context.commit('showCart')
-    if (context.rootState.events) {
-      context.dispatch(
+  async addLineItem({ state, rootState, commit, dispatch }, payload) {
+    commit('addLineItemMutation', payload)
+    dispatch('saveLineItems', state.lineItems)
+
+    if (rootState.events) {
+      dispatch(
         'events/addToCart',
         {
           product: payload,
-          cart: context.state.lineItems
+          cart: state.lineItems
         },
         { root: true }
       )
@@ -193,146 +168,30 @@ export const actions = {
     dispatch('saveLineItems', state.lineItems)
   },
 
-  async incrementLineItem(context, payload) {
-    context.commit('incrementLineItemMutation', payload)
-    context.dispatch('saveLineItems', context.state.lineItems)
+  async incrementLineItem({ state, commit, dispatch }, payload) {
+    commit('incrementLineItemMutation', payload)
+    dispatch('saveLineItems', state.lineItems)
   },
 
-  async decrementLineItem(context, payload) {
-    context.commit('decrementLineItemMutation', payload)
-    context.dispatch('saveLineItems', context.state.lineItems)
+  async decrementLineItem({ state, commit, dispatch }, payload) {
+    commit('decrementLineItemMutation', payload)
+    dispatch('saveLineItems', state.lineItems)
   },
 
-  async saveLineItems(context) {
-    localforage.setItem('line-items', context.state.lineItems)
+  async saveLineItems({ state }) {
+    localforage.setItem('line-items', state.lineItems)
   },
 
-  async getLineItems(context) {
+  async resetLineItems({ commit }) {
+    await localforage.removeItem('line-items')
+    commit('setLineItems', [])
+  },
+
+  async initializeCart({ commit }) {
     const lineItems = await localforage.getItem('line-items')
-    if (lineItems != null) {
-      context.commit('setLineItems', lineItems)
-    }
-  },
-
-  async saveCheckoutId(context, payload) {
-    localforage.setItem('checkout-id', payload)
-  },
-
-  async saveCheckoutUrl(context, payload) {
-    localforage.setItem('checkout-url', payload)
-  },
-
-  async getCheckoutId(context) {
-    const checkoutId = await localforage.getItem('checkout-id')
-    if (checkoutId != null) {
-      context.commit('setCheckoutId', checkoutId)
-      return checkoutId
-    }
-  },
-
-  async getCheckoutUrl(context) {
-    const checkoutUrl = await localforage.getItem('checkout-url')
-    if (checkoutUrl != null) {
-      context.commit('setCheckoutUrl', checkoutUrl)
-      return checkoutUrl
-    }
-  },
-
-  async verifyCheckoutStatus(context) {
-    await context.dispatch('getCheckoutId')
-    await context.dispatch('getCheckoutUrl')
-
-    if (
-      context.state.checkoutId != null &&
-      context.state.checkoutUrl != null
-    ) {
-      const checkoutStatus = await this.$nacelle.checkout.get({
-        id: context.state.checkoutId,
-        url: context.state.checkoutUrl
-      }).then(checkoutObj => checkoutObj.completed)
-
-      context.commit('setCheckoutCompleteStatus', checkoutStatus)
-    }
-  },
-  async removeLineItemsIfCheckoutComplete(context) {
-    if (context.state.checkoutComplete === true) {
-      await localforage.removeItem('line-items')
-      await localforage.removeItem('checkout-id')
-      await localforage.removeItem('checkout-url')
-    }
-  },
-
-  async updateLocalCart(context) {
-    await context.dispatch('verifyCheckoutStatus')
-    await context.dispatch('removeLineItemsIfCheckoutComplete')
-    await context.dispatch('getLineItems')
-  },
-
-  async createCheckoutArray({ getters }) {
-    let lineItems = ''
-    getters.checkoutLineItems.forEach(item => {
-      lineItems += `{
-        variantId: "${item.variantId}",
-        quantity: ${item.quantity}
-      }`
-    })
-    return lineItems
-  },
-
-  async getCheckoutIdForBackend({ state }) {
-    let checkoutId
-    if (state.checkoutId == null) {
-      checkoutId = ''
-    } else {
-      checkoutId = state.checkoutId
-    }
-    return checkoutId
-  },
-
-  async getLinkerParam() {
-    return new Promise((resolve, reject) => {
-      const gaClient = process.browser ? window.ga : undefined
-
-      if (typeof gaClient !== 'undefined') {
-        gaClient((tracker) => resolve(tracker.get('linkerParam')))
-      }
-
-      // if no ga resolve with empty string
-      resolve('')
-    })
-  },
-
-  async saveAndRedirect({ dispatch, rootState }, payload) {
-    if (payload && process.browser) {
-      await dispatch('saveCheckoutId', payload.id)
-
-      let url
-      const linkerParam = await dispatch('getLinkerParam')
-
-      if (payload.url.includes('?')) {
-        url = `${payload.url}&c=${JSON.stringify(rootState.user.userData)}&${linkerParam}`
-      } else {
-        url = `${payload.url}?c=${JSON.stringify(rootState.user.userData)}&${linkerParam}`
-      }
-
-      await dispatch('saveCheckoutUrl', url)
-
-      window.location = url
-    }
-  },
-
-  async processCheckout(
-    { state, dispatch, commit, rootState, context },
-    payload
-  ) {
-    // let lineItems = await dispatch('createCheckoutArray')
-    // let checkoutId = await dispatch('getCheckoutIdForBackend')
-
-    if (rootState.events) {
-      dispatch('events/checkoutInit', { cart: state.lineItems }, { root: true })
-    }
-
-    await dispatch('saveAndRedirect', payload)
+    commit('setLineItems', lineItems || [])
+    commit('setFreeShippingThreshold', 100)
+    commit('hideCart')
   }
 }
 
