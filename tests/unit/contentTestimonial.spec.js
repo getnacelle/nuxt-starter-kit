@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import ContentTestimonial from '@/components/nacelle/ContentTestimonial'
 
 describe('ContentTestimonial.vue', () => {
-  it('renders a testimonial', async() => {
+  it('renders a testimonial', async () => {
     const wrapper = shallowMount(ContentTestimonial, {
       propsData: {
         name: 'user',
@@ -10,12 +10,12 @@ describe('ContentTestimonial.vue', () => {
       }
     })
 
-    expect(wrapper.contains('blockquote')).toBe(true)
+    expect(wrapper.find('blockquote').exists()).toBe(true)
     expect(wrapper.classes()).toContain('testimonial')
-    expect(wrapper.contains('figure')).toBe(false)
+    expect(wrapper.find('figure').exists()).toBe(false)
   })
 
-  it('renders image if image prop set', async() => {
+  it('renders image if image prop set', async () => {
     const wrapper = shallowMount(ContentTestimonial, {
       propsData: {
         name: 'user',

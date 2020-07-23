@@ -229,20 +229,6 @@ describe('Cart Store', () => {
     ])
   })
 
-  it('sets a checkoutId', async() => {
-    const store = new Vuex.Store(storeConfig())
-    await localforage.clear()
-    await store.commit('cart/setCheckoutId', '1234567899')
-    expect(store.state.cart.checkoutId).toEqual('1234567899')
-  })
-
-  it('gets a checkoutId', async() => {
-    const store = new Vuex.Store(storeConfig())
-    await localforage.setItem('checkout-id', '1234567778')
-    await store.dispatch('cart/getCheckoutId')
-    expect(store.state.cart.checkoutId).toEqual('1234567778')
-  })
-
   it('saves an array of line items', async() => {
     const store = new Vuex.Store(storeConfig())
     const lineUuid = uuid()

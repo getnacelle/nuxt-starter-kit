@@ -26,6 +26,6 @@ describe('SearchInput.vue', () => {
     jest.runAllTimers()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.searchProducts).toHaveBeenCalledTimes(1)
-    expect(wrapper.vm.searchProducts).toHaveBeenCalledWith('a')
+    expect(wrapper.vm.searchProducts).toHaveBeenCalledWith({ query: 'a' })
   })
 })

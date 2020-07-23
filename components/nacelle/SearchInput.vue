@@ -57,7 +57,7 @@ export default {
       // local query has a value before tracking an event
       if (/^[a-z0-9]$/i.test(e.key) && this.localQuery) {
         const trackSearchEvent = this.debounce(this.searchProducts, 500)
-        trackSearchEvent(this.localQuery)
+        trackSearchEvent({ query: this.localQuery })
       }
     },
     debounce(fn, debounceTime) {

@@ -83,7 +83,7 @@ describe('Event Store', () => {
   })
 
   it('adds a search products event to log array', () => {
-    const searchQuery = 'fitness'
+    const searchQuery = { query: 'fitness' }
 
     store.dispatch('events/searchProducts', searchQuery)
     expect(store.state.events.log.length).toEqual(counter.length)

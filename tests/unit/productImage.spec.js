@@ -7,7 +7,7 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('ProductImage/vue', () => {
-  it('renders an image', async() => {
+  it('renders an image', async () => {
     const store = new Vuex.Store(storeConfig())
     const wrapper = shallowMount(ProductImage, {
       store,
@@ -17,12 +17,12 @@ describe('ProductImage/vue', () => {
           'https://www.sparkawards.com/wp-content/uploads/2011/05/Product_Lg_Type-1024x791.jpg',
         alt: 'chair'
       },
-      data: function() {
+      data() {
         return {
           visible: true
         }
       }
     })
-    expect(wrapper.contains('picture')).toBe(true)
+    expect(wrapper.find('picture').exists()).toBe(true)
   })
 })

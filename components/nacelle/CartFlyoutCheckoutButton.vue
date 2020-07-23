@@ -22,33 +22,25 @@ export default {
       loading: false
     }
   },
-  computed: {
-    ...mapGetters('cart', ['checkoutLineItems', 'checkoutIdForBackend'])
-  },
   methods: {
     ...mapMutations('cart', ['setCartError']),
-    ...mapActions('cart', ['processCheckout']),
+    ...mapActions('checkout', ['processCheckout']),
     async checkout() {
-      const vm = this
       this.loading = true
-      const processCheckoutObject = await this.$nacelle.checkout
-        .process({
-          cartItems: vm.checkoutLineItems,
-          checkoutId: vm.checkoutIdForBackend
-        })
-        .then(data => {
-          if (data && data.id && data.url) {
-            return data
+      try {
+        await this.processCheckout({
+          async beforeCreate() {
+            // Allows processing of cart before checkout creation.
+          },
+          async beforeRedirect() {
+            // Allows processing after checkout create and before redirecting.
           }
-
-          throw new Error('checkout failure')
         })
-        .catch(err => {
-          console.log(err)
-          vm.setCartError(err)
-          vm.loading = false
-        })
-      this.processCheckout(processCheckoutObject)
+      } catch(err) {
+        console.log(err)
+        this.setCartError(err)
+        this.loading = false
+      }
     }
   }
 }

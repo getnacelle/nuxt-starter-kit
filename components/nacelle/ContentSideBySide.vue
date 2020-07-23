@@ -31,10 +31,10 @@
         class="column is-half sbs-copy"
         :style="backgroundColor ? `background-color: ${backgroundColor}` : null"
       >
-        <slot name="body" :title="title" :copy="copy">
+        <slot name="body" :title="title" :contentHtml="contentHtml">
           <div class="has-text-centered">
             <component :is="titleTag" class="title">{{ title }}</component>
-            <div class="content" v-html="copy" />
+            <div class="content" v-html="contentHtml" />
           </div>
         </slot>
         <slot name="cta" :ctaUrl="ctaUrl" :ctaText="ctaText" :ctaHandler="ctaHandler">
@@ -76,7 +76,7 @@ export default {
       type: String,
       default: ''
     },
-    copy: {
+    contentHtml: {
       type: String,
       default: ''
     },

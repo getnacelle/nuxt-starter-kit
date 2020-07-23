@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils'
+import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
 import MainNavWishlist from '@/components/nacelle/MainNavWishlist'
 import createStoreConfig from '../storeConfig'
 import Vuex from 'vuex'
@@ -12,7 +12,10 @@ describe('Main Nav Wishlist Button', () => {
     const wrapper = shallowMount(MainNavWishlist, {
       localVue,
       store,
-      propsData: {}
+      propsData: {},
+      stubs: {
+        NuxtLink: RouterLinkStub
+      }
     })
     expect(wrapper.find('.main-nav-wishlist').exists()).toBe(true)
   })
@@ -68,9 +71,11 @@ describe('Main Nav Wishlist Button', () => {
     const wrapper = shallowMount(MainNavWishlist, {
       localVue,
       store,
-      propsData: {}
+      propsData: {},
+      stubs: {
+        NuxtLink: RouterLinkStub
+      }
     })
-    console.log(wrapper.find('.wishlist-count'))
     expect(+wrapper.find('.wishlist-count').text()).toBe(1)
   })
 })
