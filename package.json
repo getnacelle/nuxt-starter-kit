@@ -1,6 +1,6 @@
 {
   "name": "@nacelle/nacelle-starter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Nacelle",
   "scripts": {
     "test": "jest",
