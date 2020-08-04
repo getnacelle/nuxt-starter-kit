@@ -34,7 +34,7 @@ export default nmerge({
   },
   mixins: [
     getPage({ pageHandle: 'shop' }),
-    getCollection({ collectionHandle: 'shop' })
+    getCollection({ collectionHandle: 'nacelle-gen-shop-all' })
   ]
 })
 </script>
