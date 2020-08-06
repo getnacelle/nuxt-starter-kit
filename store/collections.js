@@ -4,9 +4,7 @@ export const state = () => ({
 
 export const getters = {
   getCollection: state => handle => {
-    return state.collections.find(collection => (
-      collection.handle === handle
-    ))
+    return state.collections.find(collection => collection.handle === handle)
   }
 }
 
@@ -43,9 +41,39 @@ export const mutations = {
   }
 }
 
+export const actions = {
+  addCollection({ commit }, collection) {
+    commit('addCollection', collection)
+    commit(
+      'products/upsertProducts',
+      collection.products.map(product => ({ product })),
+      { root: true }
+    )
+  },
+
+  updateCollection({ commit }, collection) {
+    commit('updateCollection', collection)
+    commit(
+      'products/upsertProducts',
+      collection.products.map(product => ({ product })),
+      { root: true }
+    )
+  },
+
+  updateCollectionProducts({ commit }, payload) {
+    commit('updateCollectionProducts', payload)
+    commit(
+      'products/upsertProducts',
+      payload.products.map(product => ({ product })),
+      { root: true }
+    )
+  }
+}
+
 export default {
   namespaced: true,
   state,
-  getters,
-  mutations
+  mutations,
+  actions,
+  getters
 }
