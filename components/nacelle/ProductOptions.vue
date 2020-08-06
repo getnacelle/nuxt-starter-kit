@@ -47,19 +47,17 @@ export default {
     ProductOptionSwatches
   },
   watch: {
+    selectedOptions() {
+      if (this.allOptionsSelected == true) {
+        this.$emit('selectedOptionsSet', this.selectedOptions)
+      }
+    },
     clearOptionValue(val) {
       if (val == true) {
         setTimeout(() => {
           this.clearOptionValue = false
           this.$emit('clear')
         }, 100)
-      }
-    }
-  },
-  watch: {
-    allOptionsSelected(val) {
-      if (val == true) {
-        this.$emit('selectedOptionsSet', this.selectedOptions)
       }
     }
   },
@@ -72,12 +70,12 @@ export default {
       }
     },
     allOptionsSelected() {
-      let vm = this
+      const vm = this
       if (this.options.length == 1 && this.options[0].values.length == 1) {
         return true
       } else {
-        let optionsSelected = this.options.map(option => {
-          let searchOptions = this.selectedOptions.filter(selected => {
+        const optionsSelected = this.options.map(option => {
+          const searchOptions = this.selectedOptions.filter(selected => {
             return selected.name == option.name
           })
           if (searchOptions.length == 1) {
@@ -114,14 +112,14 @@ export default {
   },
   methods: {
     setSelectedOptions(selectedOption) {
-      let vm = this
-      let searchOptions = this.selectedOptions.filter(option => {
+      const vm = this
+      const searchOptions = this.selectedOptions.filter(option => {
         return option.name == selectedOption.name
       })
       if (searchOptions.length == 0) {
         vm.selectedOptions.push(selectedOption)
       } else {
-        let index = vm.selectedOptions.findIndex(option => {
+        const index = vm.selectedOptions.findIndex(option => {
           return option.name == selectedOption.name
         })
         vm.selectedOptions.splice(index, 1, selectedOption)
