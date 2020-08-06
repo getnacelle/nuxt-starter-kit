@@ -43,7 +43,7 @@ describe('ProductCard.vue', () => {
       }
     }
   ]
-  store.state.collections.products = {
+  store.state.products.products = {
     [defaultProduct.handle]: { product: defaultProduct }
   }
 

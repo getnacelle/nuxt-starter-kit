@@ -142,7 +142,6 @@ export default {
     product() {
       return this.getProductData(this.productHandle).product
     },
-
     displayPrice() {
       return this.getPriceForCurrency({
         product: this.product,
@@ -150,18 +149,12 @@ export default {
       })
     },
     currentVariant() {
-      if (this.product.variants && this.product.variants.length == 1) {
-        return this.product.variants[0]
-      } else {
-        return this.selectedVariant
-      }
+      return this.product.variants && this.product.variants.length === 1
+        ? this.product.variants[0]
+        : this.selectedVariant || {}
     },
     currentVariantId() {
-      if (this.currentVariant && this.currentVariant.id) {
-        return this.currentVariant.id
-      }
-
-      return undefined
+      return this.currentVariant && this.currentVariant.id
     },
     mediaSrc() {
       if (
