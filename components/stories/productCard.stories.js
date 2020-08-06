@@ -9,28 +9,32 @@ import { defaultProduct } from '../../tests/mocks/defaultObjects'
 export default {
   title: 'Components | Product / Product Card',
 
-  decorators: [withInfo, StoryRouter(), () => {
+  decorators: [
+    withInfo,
+    StoryRouter(),
+    () => {
       return {
         template: `
           <div style="max-width: 450px; margin: 3rem auto;"><story/></div>
         `
       }
-    }],
-};
+    }
+  ]
+}
 
 export const Default = () => ({
   components: { ProductCard },
   store,
   template: '<product-card />'
-});
+})
 
 Default.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 export const WithSampleData = () => ({
   store,
@@ -41,13 +45,13 @@ export const WithSampleData = () => ({
       variant: defaultProduct.variants[0]
     }
   },
-  template: '<product-card :product="product" :variant="variant"/>'
-});
+  template: '<product-card :productHandle="product.handle" :variant="variant"/>'
+})
 
 WithSampleData.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}

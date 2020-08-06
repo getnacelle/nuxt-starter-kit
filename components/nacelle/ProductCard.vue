@@ -10,7 +10,10 @@
       <product-price :price="displayPrice" />
     </div>
     <div v-if="product && product.id" class="product-card-actions">
-      <quantity-selector v-if="showQuantityUpdate === true" :quantity.sync="quantity" />
+      <quantity-selector
+        v-if="showQuantityUpdate === true"
+        :quantity.sync="quantity"
+      />
       <product-add-to-cart-button
         v-if="showAddToCart === true"
         :product="product"
@@ -96,23 +99,9 @@ export default {
       type: String,
       default: '/products/'
     },
-    product: {
-      type: Object,
-      default: () => {
-        return {
-          priceRange: {
-            min: '0.0',
-            max: '0.00'
-          },
-          title: null,
-          featuredMedia: {
-            src: undefined
-          },
-          id: null,
-          handle: '',
-          variants: []
-        }
-      }
+    productHandle: {
+      type: String,
+      default: ''
     },
     variant: {
       type: Object
@@ -149,6 +138,10 @@ export default {
     ...mapState('cart', ['lineItems']),
     ...mapState('user', ['locale']),
     ...mapGetters('cart', ['quantityTotal']),
+    ...mapGetters('products', ['getProductData']),
+    product() {
+      return this.getProductData(this.productHandle).product
+    },
 
     displayPrice() {
       return this.getPriceForCurrency({
