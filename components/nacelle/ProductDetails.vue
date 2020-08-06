@@ -16,7 +16,10 @@
         :onlyOneOption="true"
         :metafields="[{key:'test', value:'hi'}]"
       />-->
-      <product-category v-if="product.productType" :category="product.productType" />
+      <product-category
+        v-if="product.productType"
+        :category="product.productType"
+      />
       <p class="price">
         <product-price v-if="currentVariant" :price="displayPrice" />
       </p>
@@ -57,13 +60,21 @@ export default {
     }
   },
   props: {
-    product: {
-      type: Object,
-      default: () => {}
+    productHandle: {
+      type: String,
+      default: ''
     }
+    // product: {
+    //   type: Object,
+    //   default: ''
+    // }
   },
   computed: {
     ...mapState('user', ['locale']),
+    ...mapGetters('products', ['getProductData']),
+    product() {
+      return this.getProductData(this.productHandle).product
+    },
     displayPrice() {
       return this.getPriceForCurrency({
         product: this.product,
