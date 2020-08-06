@@ -27,13 +27,32 @@ export const state = () => ({
 })
 
 export const getters = {
-  currentProduct: state => {
-    return state.products[state.currentProductHandle]
+  getCurrentProductData: state => {
+    const productData =
+      state.products[state.currentProductHandle] || defaultProductData
+    return productData
+  },
+  getProduct: state => handle => {
+    const productData = state.products[handle] || defaultProductData
+    return productData.product
+  },
+  getCartProduct: state => handle => {
+    const productData = state.products[handle] || defaultProductData
+    const product = productData.product
+    return {
+      image: product.featuredMedia,
+      title: product.title,
+      productId: product.id,
+      price: productData.currentPrice,
+      handle: product.handle,
+      variant: productData.selectedVariant
+    }
   },
   getProductData: state => handle => {
-    return state.products[handle] || defaultProductData
+    const productData = state.products[handle] || defaultProductData
+    return productData
   },
-  currentVariant: state => handle => {
+  getSelectedVariant: state => handle => {
     const productData = state.products[handle]
     if (!productData) {
       return

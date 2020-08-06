@@ -20,7 +20,7 @@ describe('Event Store', () => {
     store.commit('products/upsertProducts', [{ product: defaultProduct }])
 
     expect(
-      store.getters['products/currentVariant'](defaultProduct.handle).id
+      store.getters['products/getSelectedVariant'](defaultProduct.handle).id
     ).toEqual(defaultProduct.variants[0].id)
   })
 

@@ -103,9 +103,6 @@ export default {
       type: String,
       default: ''
     },
-    variant: {
-      type: Object
-    },
     showQuantityUpdate: {
       type: Boolean,
       default: true
@@ -138,7 +135,11 @@ export default {
     ...mapState('cart', ['lineItems']),
     ...mapState('user', ['locale']),
     ...mapGetters('cart', ['quantityTotal']),
-    ...mapGetters('products', ['getProductData']),
+    ...mapGetters('products', [
+      'getProductData',
+      'getSelectedVariant',
+      'getCartProduct'
+    ]),
     product() {
       return this.getProductData(this.productHandle).product
     },
@@ -149,9 +150,7 @@ export default {
       })
     },
     currentVariant() {
-      return this.product.variants && this.product.variants.length === 1
-        ? this.product.variants[0]
-        : this.selectedVariant || {}
+      return this.getSelectedVariant(this.productHandle) || {}
     },
     currentVariantId() {
       return this.currentVariant && this.currentVariant.id
@@ -168,14 +167,7 @@ export default {
       return undefined
     },
     cartProduct() {
-      return {
-        image: this.product.featuredMedia,
-        title: this.product.title,
-        productId: this.product.id,
-        price: this.currentPrice,
-        handle: this.product.handle,
-        variant: this.currentVariant
-      }
+      return this.getCartProduct(this.productHandle)
     },
     productLineItems() {
       const vm = this
