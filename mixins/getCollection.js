@@ -1,4 +1,4 @@
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default (config = {}) => {
   return {
@@ -70,25 +70,35 @@ export default (config = {}) => {
           collectionObj.collection.productLists &&
           collectionObj.collection.productLists.length > 0
         ) {
-          const productList = collectionObj.collection.productLists.find(list => {
-            return list.slug === collectionObj.selectedList
-          })
+          const productList = collectionObj.collection.productLists.find(
+            list => {
+              return list.slug === collectionObj.selectedList
+            }
+          )
 
-          const handles = productList.handles.slice(0, collectionObj.itemsPerPage)
+          const handles = productList.handles.slice(
+            0,
+            collectionObj.itemsPerPage
+          )
 
           handles.forEach(handle => {
-            const productFile = fs.readFileSync(`./static/data/products/${handle}--${collectionObj.locale}/static.json`, 'utf-8')
+            const productFile = fs.readFileSync(
+              `./static/data/products/${handle}--${collectionObj.locale}/static.json`,
+              'utf-8'
+            )
             collectionObj.products.push(JSON.parse(productFile))
           })
         }
       } else {
         // Use Nacelle SDK methods for loading collection and product data
-        collectionObj.collection = await $nacelle.data.collection({
-          handle: collectionObj.collectionHandle,
-          locale: collectionObj.locale
-        }).catch(() => {
-          collectionObj.noCollectionData = true
-        })
+        collectionObj.collection = await $nacelle.data
+          .collection({
+            handle: collectionObj.collectionHandle,
+            locale: collectionObj.locale
+          })
+          .catch(() => {
+            collectionObj.noCollectionData = true
+          })
 
         if (
           collectionObj.collection &&
@@ -109,7 +119,7 @@ export default (config = {}) => {
       collectionObj.productIndex = collectionObj.products.length
 
       // Store the collection data in Vuex
-      store.commit('collections/addCollection', collectionObj)
+      store.dispatch('collections/addCollection', collectionObj)
 
       // Return updated collection object
       return {
@@ -123,12 +133,14 @@ export default (config = {}) => {
           this.locale = mutation.payload.locale
           this.isLoadingProducts = true
 
-          this.collection = await this.$nacelle.data.collection({
-            handle: this.collectionHandle,
-            locale: this.$nacelle.locale
-          }).catch(() => {
-            this.nocollectionData = true
-          })
+          this.collection = await this.$nacelle.data
+            .collection({
+              handle: this.collectionHandle,
+              locale: this.$nacelle.locale
+            })
+            .catch(() => {
+              this.nocollectionData = true
+            })
 
           if (
             this.collection &&
@@ -163,10 +175,7 @@ export default (config = {}) => {
       // Collections can have many product lists. This returns the currently
       // selected product list
       selectedProductList() {
-        if (
-          this.collection &&
-          Array.isArray(this.collection.productLists)
-        ) {
+        if (this.collection && Array.isArray(this.collection.productLists)) {
           const list = this.collection.productLists.find(collection => {
             return collection.slug === this.selectedList
           })
@@ -180,7 +189,7 @@ export default (config = {}) => {
       }
     },
     methods: {
-      ...mapMutations('collections', ['updateCollectionProducts']),
+      ...mapActions('collections', ['updateCollectionProducts']),
       // Load a new "page" of products
       async fetchMore() {
         if (
@@ -199,10 +208,7 @@ export default (config = {}) => {
             locale: this.locale
           })
 
-          this.products = [
-            ...this.products,
-            ...nextPageProducts
-          ]
+          this.products = [...this.products, ...nextPageProducts]
           this.productIndex += this.productsPerPage
           this.isLoadingProducts = false
 

@@ -10,7 +10,10 @@
       <product-price :price="displayPrice" />
     </div>
     <div v-if="product && product.id" class="product-card-actions">
-      <quantity-selector v-if="showQuantityUpdate === true" :quantity.sync="quantity" />
+      <quantity-selector
+        v-if="showQuantityUpdate === true"
+        :quantity.sync="quantity"
+      />
       <product-add-to-cart-button
         v-if="showAddToCart === true"
         :product="product"
@@ -96,26 +99,9 @@ export default {
       type: String,
       default: '/products/'
     },
-    product: {
-      type: Object,
-      default: () => {
-        return {
-          priceRange: {
-            min: '0.0',
-            max: '0.00'
-          },
-          title: null,
-          featuredMedia: {
-            src: undefined
-          },
-          id: null,
-          handle: '',
-          variants: []
-        }
-      }
-    },
-    variant: {
-      type: Object
+    productHandle: {
+      type: String,
+      default: ''
     },
     showQuantityUpdate: {
       type: Boolean,
@@ -149,7 +135,14 @@ export default {
     ...mapState('cart', ['lineItems']),
     ...mapState('user', ['locale']),
     ...mapGetters('cart', ['quantityTotal']),
-
+    ...mapGetters('products', [
+      'getProductData',
+      'getSelectedVariant',
+      'getCartProduct'
+    ]),
+    product() {
+      return this.getProductData(this.productHandle).product
+    },
     displayPrice() {
       return this.getPriceForCurrency({
         product: this.product,
@@ -157,18 +150,10 @@ export default {
       })
     },
     currentVariant() {
-      if (this.product.variants && this.product.variants.length == 1) {
-        return this.product.variants[0]
-      } else {
-        return this.selectedVariant
-      }
+      return this.getSelectedVariant(this.productHandle) || {}
     },
     currentVariantId() {
-      if (this.currentVariant && this.currentVariant.id) {
-        return this.currentVariant.id
-      }
-
-      return undefined
+      return this.currentVariant && this.currentVariant.id
     },
     mediaSrc() {
       if (
@@ -182,14 +167,7 @@ export default {
       return undefined
     },
     cartProduct() {
-      return {
-        image: this.product.featuredMedia,
-        title: this.product.title,
-        productId: this.product.id,
-        price: this.currentPrice,
-        handle: this.product.handle,
-        variant: this.currentVariant
-      }
+      return this.getCartProduct(this.productHandle)
     },
     productLineItems() {
       const vm = this

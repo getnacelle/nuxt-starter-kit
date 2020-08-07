@@ -11,20 +11,23 @@
       <product-title :title="product.title" />
       <!-- <product-add-to-cart-button
         :product="product"
-        :variant="currentVariant"
+        :variant="selectedVariant"
         :allOptionsSelected="true"
         :onlyOneOption="true"
         :metafields="[{key:'test', value:'hi'}]"
       />-->
-      <product-category v-if="product.productType" :category="product.productType" />
+      <product-category
+        v-if="product.productType"
+        :category="product.productType"
+      />
       <p class="price">
-        <product-price v-if="currentVariant" :price="displayPrice" />
+        <product-price v-if="selectedVariant" :price="displayPrice" />
       </p>
       <product-description :description="product.description" />
       <product-variant-select
-        v-if="currentVariant"
+        v-if="selectedVariant"
         :product="product"
-        :variant="currentVariant"
+        :variant="selectedVariant"
         v-on:variant-selected="onVariantSelected"
       />
     </div>
@@ -52,42 +55,38 @@ export default {
   },
   mixins: [getDisplayPriceForCurrency],
   data() {
-    return {
-      selectedVariant: undefined
-    }
+    return {}
   },
   props: {
-    product: {
-      type: Object,
-      default: () => {}
+    productHandle: {
+      type: String,
+      default: ''
     }
   },
   computed: {
     ...mapState('user', ['locale']),
+    ...mapGetters('products', ['getProductData', 'getSelectedVariant']),
+    product() {
+      return this.getProductData(this.productHandle).product
+    },
     displayPrice() {
       return this.getPriceForCurrency({
         product: this.product,
-        fallbackPrice: this.currentVariant.price
+        fallbackPrice: this.selectedVariant.price
       })
     },
-    currentVariant() {
-      if (this.selectedVariant) {
-        return this.selectedVariant
-      } else if (
-        this.product &&
-        this.product.variants &&
-        this.product.variants.length
-      ) {
-        return this.product.variants[0]
-      }
-
-      return undefined
+    selectedVariant() {
+      return this.getSelectedVariant(this.productHandle)
     }
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
+    ...mapMutations('products', ['setSelectedVariant']),
     onVariantSelected({ selectedVariant }) {
-      this.selectedVariant = selectedVariant
+      this.setSelectedVariant({
+        productHandle: this.productHandle,
+        variantId: selectedVariant.id
+      })
     }
   }
 }

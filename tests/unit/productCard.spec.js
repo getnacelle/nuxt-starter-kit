@@ -43,15 +43,17 @@ describe('ProductCard.vue', () => {
       }
     }
   ]
+  store.state.products.products = {
+    [defaultProduct.handle]: { product: defaultProduct }
+  }
 
   it('renders a product card', async () => {
-    const store = new Vuex.Store(storeConfig())
     const wrapper = mount(ProductCard, {
       stubs: ['router-link'],
       store,
       localVue,
       propsData: {
-        product: defaultProduct
+        productHandle: defaultProduct.handle
       }
     })
 

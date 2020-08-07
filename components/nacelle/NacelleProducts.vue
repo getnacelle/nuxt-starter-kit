@@ -82,7 +82,7 @@ export default {
               return product && product.id && product.handle && product.title
             })
             if (this.product) {
-              this.setProduct(this.product)
+              this.upsertProducts([this.product])
               this.productView(this.product)
             }
           }
@@ -90,7 +90,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('product', ['setProduct']),
+    ...mapMutations('products', ['upsertProducts']),
     ...mapActions('events', ['productView'])
   }
 }
