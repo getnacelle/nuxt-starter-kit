@@ -1,6 +1,13 @@
+## [1.0.3](https://github.com/getnacelle/nacelle-nuxt-starter/compare/v1.0.1...v1.0.3) (2020-07-23)
+
+### Changed
+
+- Refactored `cart` Vuex store and split functionality into `cart` and `checkout` Vuex modules.
+
 ## [1.0.2](https://github.com/getnacelle/nacelle-nuxt-starter/compare/v1.0.1...v1.0.2) (2020-06-29)
 
 ### Changed
+
 - **Contentful Content Schema** - pull `contentType` from `sys` rather than using a specific field.
 - [`PageContent.vue`] - How we map Contentful and Shopify content sections has been simplified and reduced to a single method, `mapSection`.
 - [`ContentHeroBanner.vue`] - Updated to use `imageUrl` prop instead of `backgroundImgUrl` to align with other content components.

@@ -86,12 +86,16 @@
 </template>
 
 <script>
-import nmerge from 'nuxt-merge-asyncdata'
 import getPage from '~/mixins/getPage'
 import PageContent from '~/components/nacelle/PageContent'
 
 export default {
   components: { PageContent },
-  mixins: [getPage()]
+  mixins: [getPage()],
+  data() {
+    return {
+      products: []
+    }
+  }
 }
 </script>
