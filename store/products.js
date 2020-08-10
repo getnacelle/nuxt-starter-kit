@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 const defaultProductData = {
   product: {
     priceRange: {
@@ -13,6 +15,7 @@ const defaultProductData = {
     handle: '',
     variants: []
   },
+  recommendations: [],
   selectedVariant: undefined,
   metafields: [],
   quantity: 1,
@@ -34,7 +37,7 @@ export const getters = {
   },
   getProduct: state => handle => {
     const productData = state.products[handle] || defaultProductData
-    return productData.product
+    return productData.product || defaultProductData.product
   },
   getCartProduct: state => handle => {
     const productData = state.products[handle] || defaultProductData
@@ -112,7 +115,28 @@ export const mutations = {
   }
 }
 
-export const actions = {}
+export const actions = {
+  loadProductRecommendations: async ({ state, commit }, { productHandle }) => {
+    if (!productHandle) {
+      return
+    }
+
+    const existingProduct = state.products[productHandle]
+    if (existingProduct && existingProduct.recommendations.length) {
+      return existingProduct.recommendations
+    }
+
+    const recommendationData = await axios.get(
+      'https://nacellestatic-dev.s3.amazonaws.com/6789/merchandising/products/commander-sofa--en-us.json'
+    )
+
+    console.log('recommendationData', recommendationData)
+
+    products = []
+
+    commit('upsertProducts', products)
+  }
+}
 
 export default {
   namespaced: true,
