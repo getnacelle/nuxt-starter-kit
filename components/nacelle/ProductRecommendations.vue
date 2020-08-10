@@ -1,15 +1,16 @@
 <template>
   <div class="product-recommendations">
-    <div v-for="productHandle in productHandles" :key="productHandle">
-      <slot :productHandle="productHandle">
-        <span>{{ productHandle }}</span>
+    <div v-for="handle in recommendations" :key="handle">
+      <slot :productHandle="handle">
+        <!-- <product-card :productHandle="handle"></product-card> -->
+        <span>{{ handle }}</span>
       </slot>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import ProductCard from '~/components/nacelle/ProductCard'
 
 export default {
@@ -22,10 +23,17 @@ export default {
       default: ''
     }
   },
-  async asyncData(context) {
-    const { store } = context
-    console.log('context', context)
-    await store.dispatch('loadProductRecommendations', { productHandle })
+  computed: {
+    ...mapGetters('products', ['getRecommendations']),
+    recommendations() {
+      return this.getRecommendations(this.productHandle)
+    }
+  },
+  methods: {
+    ...mapActions('products', ['loadProductRecommendations'])
+  },
+  created() {
+    this.loadProductRecommendations({ productHandle: this.productHandle })
   }
 }
 </script>

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Vue from 'vue'
 
 const defaultProductData = {
   product: {
@@ -38,6 +39,10 @@ export const getters = {
   getProduct: state => handle => {
     const productData = state.products[handle] || defaultProductData
     return productData.product || defaultProductData.product
+  },
+  getRecommendations: state => handle => {
+    const productData = state.products[handle] || defaultProductData
+    return productData.recommendations
   },
   getCartProduct: state => handle => {
     const productData = state.products[handle] || defaultProductData
@@ -116,7 +121,32 @@ export const mutations = {
 }
 
 export const actions = {
-  loadProductRecommendations: async ({ state, commit }, { productHandle }) => {
+  loadProduct: async ({ rootState, commit }, { productHandle }) => {
+    const locale = rootState.user.locale.locale
+    const loadFromFile = () => {
+      const fs = require('fs')
+      const file = fs.readFileSync(
+        `./static/data/products/${productHandle}--${locale}/static.json`,
+        'utf-8'
+      )
+      return JSON.parse(file)
+    }
+
+    const loadFromNacelle = async () => {
+      return await Vue.prototype.$nuxt.$nacelle.data.product({
+        handle: productHandle,
+        locale: locale
+      })
+    }
+
+    const product = process.server ? loadFromFile() : await loadFromNacelle()
+
+    commit('upsertProducts', [{ product }])
+  },
+  loadProductRecommendations: async (
+    { state, dispatch, commit },
+    { productHandle }
+  ) => {
     if (!productHandle) {
       return
     }
@@ -126,15 +156,26 @@ export const actions = {
       return existingProduct.recommendations
     }
 
-    const recommendationData = await axios.get(
+    const recommendationsData = await axios.get(
       'https://nacellestatic-dev.s3.amazonaws.com/6789/merchandising/products/commander-sofa--en-us.json'
     )
+    const recommendations = JSON.parse(recommendationsData.data)
+    if (!recommendations || !recommendations.length) {
+      return
+    }
 
-    console.log('recommendationData', recommendationData)
+    recommendations.forEach(handle =>
+      dispatch('loadProduct', { productHandle: handle })
+    )
 
-    products = []
+    const productUpdate = {
+      product: {
+        handle: productHandle
+      },
+      recommendations
+    }
 
-    commit('upsertProducts', products)
+    commit('upsertProducts', [productUpdate])
   }
 }
 
