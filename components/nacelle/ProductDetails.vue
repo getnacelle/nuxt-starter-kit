@@ -6,6 +6,15 @@
         :featuredMedia="product.featuredMedia"
         :media="product.media"
       />
+      <h2>Related Products</h2>
+      <product-recommendations
+        :productHandle="productHandle"
+        :maxToShow="3"
+        :orientation="'horizontal'"
+        v-slot:default="{ product }"
+      >
+        <!-- <span>{{ product.title }}</span> -->
+      </product-recommendations>
     </div>
     <div class="column is-5 is-offset-1">
       <product-title :title="product.title" />
@@ -16,9 +25,6 @@
         :onlyOneOption="true"
         :metafields="[{key:'test', value:'hi'}]"
       />-->
-      <product-recommendations :productHandle="productHandle">
-        <!-- <span>{{ product.title }}</span> -->
-      </product-recommendations>
       <product-category
         v-if="product.productType"
         :category="product.productType"

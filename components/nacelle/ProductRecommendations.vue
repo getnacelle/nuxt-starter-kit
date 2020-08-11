@@ -1,7 +1,7 @@
 <template>
-  <div class="product-recommendations">
+  <div class="product-recommendations" :class="orientation">
     <div v-for="handle in recommendations" :key="handle">
-      <slot>
+      <slot :product="getProduct(handle)">
         <product-card :productHandle="handle"></product-card>
       </slot>
     </div>
@@ -20,12 +20,27 @@ export default {
     productHandle: {
       type: String,
       default: ''
+    },
+    maxToShow: {
+      type: Number,
+      default: 0
+    },
+    orientation: {
+      type: String,
+      default: 'horizontal',
+      validator: function(value) {
+        return ['horizontal', 'vertical'].includes(value)
+      }
     }
   },
   computed: {
-    ...mapGetters('products', ['getRecommendations']),
+    ...mapGetters('products', ['getRecommendations', 'getProduct']),
     recommendations() {
-      return this.getRecommendations(this.productHandle)
+      const allRecommendations = this.getRecommendations(this.productHandle)
+      return allRecommendations.slice(
+        0,
+        this.maxToShow || allRecommendations.length
+      )
     }
   },
   methods: {
@@ -39,5 +54,15 @@ export default {
 
 <style lang="scss" scoped>
 .product-recommendations {
+  display: grid;
+  grid-gap: 1rem;
+}
+.product-recommendations.horizontal {
+  grid-auto-flow: column;
+  grid-template-rows: 1fr;
+}
+.product-recommendations.vertical {
+  grid-auto-flow: row;
+  grid-template-columns: 1fr;
 }
 </style>
