@@ -1,9 +1,11 @@
 <template>
   <div class="product-recommendations">
-    <div v-for="handle in recommendations" :key="handle">
-      <slot :productHandle="handle">
-        <!-- <product-card :productHandle="handle"></product-card> -->
-        <span>{{ handle }}</span>
+    <div
+      v-for="(handle, index) in getRecommendations(productHandle)"
+      :key="index"
+    >
+      <slot>
+        <product-card :productHandle="handle"></product-card>
       </slot>
     </div>
   </div>
@@ -24,10 +26,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('products', ['getRecommendations']),
-    recommendations() {
-      return this.getRecommendations(this.productHandle)
-    }
+    ...mapGetters('products', ['getRecommendations'])
   },
   methods: {
     ...mapActions('products', ['loadProductRecommendations'])

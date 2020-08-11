@@ -28,6 +28,7 @@
     "cookies": "^0.8.0",
     "core-js": "^2.6.9",
     "dayjs": "^1.8.23",
+    "deepmerge": "^4.2.2",
     "dotenv": "^8.0.0",
     "es-cookie": "^1.2.0",
     "eslint-plugin-jest": "^23.8.2",

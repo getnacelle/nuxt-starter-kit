@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Vue from 'vue'
+import * as deepmerge from 'deepmerge'
 
 const defaultProductData = {
   product: {
@@ -96,7 +97,12 @@ export const mutations = {
 
       const existingProductData = state.products[handle] || defaultProductData
 
-      state.products[handle] = { ...existingProductData, ...productData }
+      state.products = {
+        ...state.products,
+        [handle]: deepmerge(existingProductData, productData, {
+          arrayMerge: (dest, source) => source
+        })
+      }
     }),
 
   setCurrentProductHandle: (state, handle) =>
@@ -152,8 +158,12 @@ export const actions = {
     }
 
     const existingProduct = state.products[productHandle]
-    if (existingProduct && existingProduct.recommendations.length) {
-      return existingProduct.recommendations
+    if (
+      existingProduct &&
+      existingProduct.recommendations &&
+      existingProduct.recommendations.length
+    ) {
+      return
     }
 
     const recommendationsData = await axios.get(
@@ -164,8 +174,10 @@ export const actions = {
       return
     }
 
-    recommendations.forEach(handle =>
-      dispatch('loadProduct', { productHandle: handle })
+    await Promise.all(
+      recommendations.map(async handle => {
+        await dispatch('loadProduct', { productHandle: handle })
+      })
     )
 
     const productUpdate = {

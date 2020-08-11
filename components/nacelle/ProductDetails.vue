@@ -7,9 +7,6 @@
         :media="product.media"
       />
     </div>
-    <product-recommendations
-      :productHandle="productHandle"
-    ></product-recommendations>
     <div class="column is-5 is-offset-1">
       <product-title :title="product.title" />
       <!-- <product-add-to-cart-button
@@ -19,6 +16,9 @@
         :onlyOneOption="true"
         :metafields="[{key:'test', value:'hi'}]"
       />-->
+      <product-recommendations :productHandle="productHandle">
+        <!-- <span>{{ product.title }}</span> -->
+      </product-recommendations>
       <product-category
         v-if="product.productType"
         :category="product.productType"
@@ -46,7 +46,7 @@ import ProductPrice from '~/components/nacelle/ProductPrice'
 import ProductDescription from '~/components/nacelle/ProductDescription'
 import ProductVariantSelect from '~/components/nacelle/ProductVariantSelect'
 import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
-import ProductRecommendations from '~/components/nacelle/ProductVariantSelect'
+import ProductRecommendations from '~/components/nacelle/ProductRecommendations'
 
 export default {
   components: {
