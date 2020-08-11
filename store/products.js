@@ -166,9 +166,19 @@ export const actions = {
       return
     }
 
-    const recommendationsData = await axios.get(
-      'https://nacellestatic-dev.s3.amazonaws.com/6789/merchandising/products/commander-sofa--en-us.json'
-    )
+    let recommendationsData
+    try {
+      const nacelleStaticUrl = process.env.DEV_MODE
+        ? 'nacellestatic-dev.s3.amazonaws.com'
+        : 'nacellestatic.s3.amazonaws.com'
+      recommendationsData = await axios.get(
+        `https://${nacelleStaticUrl}/${process.env.nacelleSpaceID}/merchandising/products/${productHandle}.json`
+      )
+    } catch (error) {
+      console.log(`No recommendations found for ${productHandle}`)
+      return
+    }
+
     const recommendations = JSON.parse(recommendationsData.data)
     if (!recommendations || !recommendations.length) {
       return
