@@ -150,7 +150,7 @@ export const actions = {
     commit('upsertProducts', [{ product }])
   },
   loadProductRecommendations: async (
-    { state, dispatch, commit },
+    { rootState, state, dispatch, commit },
     { productHandle }
   ) => {
     if (!productHandle) {
@@ -166,29 +166,22 @@ export const actions = {
       return
     }
 
-    let recommendationsData
-    try {
-      const nacelleStaticUrl = process.env.DEV_MODE
-        ? 'nacellestatic-dev.s3.amazonaws.com'
-        : 'nacellestatic.s3.amazonaws.com'
-      recommendationsData = await axios.get(
-        `https://${nacelleStaticUrl}/${process.env.nacelleSpaceID}/merchandising/products/${productHandle}.json`
-      )
-    } catch (error) {
-      console.log(`No recommendations found for ${productHandle}`)
-      return
-    }
+    const locale = (rootState.user.locale.locale || 'en-us').toLowerCase()
+    const nacelleStaticUrl = process.env.DEV_MODE
+      ? 'nacellestatic-dev.s3.amazonaws.com'
+      : 'nacellestatic.s3.amazonaws.com'
+    const recommendationsData = await axios.get(
+      `https://${nacelleStaticUrl}/${process.env.nacelleSpaceID}/merchandising/products/${productHandle}--${locale}.json`
+    )
 
     const recommendations = JSON.parse(recommendationsData.data)
     if (!recommendations || !recommendations.length) {
       return
     }
 
-    await Promise.all(
-      recommendations.map(async handle => {
-        await dispatch('loadProduct', { productHandle: handle })
-      })
-    )
+    recommendations.map(handle => {
+      dispatch('loadProduct', { productHandle: handle })
+    })
 
     const productUpdate = {
       product: {
