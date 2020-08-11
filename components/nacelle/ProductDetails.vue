@@ -6,15 +6,6 @@
         :featuredMedia="product.featuredMedia"
         :media="product.media"
       />
-      <h2>Related Products</h2>
-      <product-recommendations
-        :productHandle="productHandle"
-        :maxToShow="3"
-        :orientation="'horizontal'"
-        v-slot:default="{ product }"
-      >
-        <!-- <span>{{ product.title }}</span> -->
-      </product-recommendations>
     </div>
     <div class="column is-5 is-offset-1">
       <product-title :title="product.title" />
@@ -52,7 +43,6 @@ import ProductPrice from '~/components/nacelle/ProductPrice'
 import ProductDescription from '~/components/nacelle/ProductDescription'
 import ProductVariantSelect from '~/components/nacelle/ProductVariantSelect'
 import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
-import ProductRecommendations from '~/components/nacelle/ProductRecommendations'
 
 export default {
   components: {
@@ -61,8 +51,7 @@ export default {
     ProductTitle,
     ProductPrice,
     ProductDescription,
-    ProductVariantSelect,
-    ProductRecommendations
+    ProductVariantSelect
   },
   mixins: [getDisplayPriceForCurrency],
   data() {

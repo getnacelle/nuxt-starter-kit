@@ -46,6 +46,15 @@
             </div>
           </div>
         </div>
+        <h3 class="title is-4">Recommended Products</h3>
+        <product-recommendations
+          :productHandle="productHandle"
+          :maxToShow="3"
+          :orientation="'horizontal'"
+          v-slot:default="{ product }"
+        >
+          <!-- <span>{{ product.title }}</span> -->
+        </product-recommendations>
       </div>
     </section>
   </div>
@@ -54,11 +63,13 @@
 <script>
 import getProduct from '~/mixins/getProduct'
 import ProductDetails from '~/components/nacelle/ProductDetails'
+import ProductRecommendations from '~/components/nacelle/ProductRecommendations'
 import productMetafields from '~/mixins/productMetafields'
 import viewEvent from '~/mixins/viewEvent'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
+
 export default {
-  components: { ProductDetails },
+  components: { ProductDetails, ProductRecommendations },
   mixins: [getProduct(), productMetafields, viewEvent('product')],
   computed: {
     ...mapGetters('space', ['getMetatag'])

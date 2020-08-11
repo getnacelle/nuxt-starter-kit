@@ -149,6 +149,7 @@ export const actions = {
 
     commit('upsertProducts', [{ product }])
   },
+
   loadProductRecommendations: async (
     { rootState, state, dispatch, commit },
     { productHandle }
@@ -170,11 +171,43 @@ export const actions = {
     const nacelleStaticUrl = process.env.DEV_MODE
       ? 'nacellestatic-dev.s3.amazonaws.com'
       : 'nacellestatic.s3.amazonaws.com'
-    const recommendationsData = await axios.get(
-      `https://${nacelleStaticUrl}/${process.env.nacelleSpaceID}/merchandising/products/${productHandle}--${locale}.json`
-    )
 
-    const recommendations = JSON.parse(recommendationsData.data)
+    let productRecommendations
+    try {
+      const recommendationsData = await axios.get(
+        `https://${nacelleStaticUrl}/${process.env.nacelleSpaceID}/merchandising/products/${productHandle}--${locale}.json`
+      )
+      productRecommendations = JSON.parse(recommendationsData.data)
+    } catch (error) {
+      console.log(
+        `Unable to load product recommendations for ${productHandle}.`
+      )
+    }
+
+    let rulesRecommendations
+    try {
+      const merchandisingRulesData = await axios.get(
+        `https://${nacelleStaticUrl}/${process.env.nacelleSpaceID}/merchandising-rules.json`
+      )
+      const merchandisingRules = merchandisingRulesData.data.rules.find(rule =>
+        rule.inputs.includes(productHandle)
+      )
+      rulesRecommendations = merchandisingRules
+        ? merchandisingRules.outputs
+        : []
+    } catch (error) {
+      console.log(
+        `Unable to load product recommendation rules for ${productHandle}.`
+      )
+    }
+
+    const recommendations =
+      rulesRecommendations && rulesRecommendations.length
+        ? rulesRecommendations
+        : productRecommendations && productRecommendations.length
+        ? productRecommendations
+        : []
+
     if (!recommendations || !recommendations.length) {
       return
     }
