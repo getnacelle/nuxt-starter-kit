@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Vue from 'vue'
-import * as deepmerge from 'deepmerge'
+import deepmerge from 'deepmerge'
 
 const defaultProductData = {
   product: {
