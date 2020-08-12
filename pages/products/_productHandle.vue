@@ -49,7 +49,7 @@
         <h3 class="title is-4">Recommended Products</h3>
         <product-recommendations
           :productHandle="productHandle"
-          :maxToShow="3"
+          :limit="3"
           :orientation="'horizontal'"
           v-slot:default="{ product }"
         >

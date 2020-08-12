@@ -21,7 +21,7 @@ export default {
       type: String,
       default: ''
     },
-    maxToShow: {
+    limit: {
       type: Number,
       default: 0
     },
@@ -36,11 +36,11 @@ export default {
   computed: {
     ...mapGetters('products', ['getRecommendations', 'getProduct']),
     recommendations() {
-      const allRecommendations = this.getRecommendations(this.productHandle)
-      return allRecommendations.slice(
-        0,
-        this.maxToShow || allRecommendations.length
-      )
+      const recommendations = this.getRecommendations(this.productHandle, {
+        limit: this.limit
+      })
+      const handles = recommendations.map(r => r.handle)
+      return handles
     }
   },
   methods: {

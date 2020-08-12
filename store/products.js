@@ -37,14 +37,38 @@ export const getters = {
       state.products[state.currentProductHandle] || defaultProductData
     return productData
   },
+
   getProduct: state => handle => {
     const productData = state.products[handle] || defaultProductData
     return productData.product || defaultProductData.product
   },
-  getRecommendations: state => handle => {
+
+  /**
+   * @param {string} handle - Product handle to get recommendations for.
+   * @param {string} options.limit - Default is 0 (all). Max number of recommendtations to get. 0 gets all.
+   * @param {string} options.source - Default is 'rule'. Source of recommendations. Possible values: 'all', 'rule', or 'generated'.
+   * @param {boolean} options.cascade - Default is true. Use alternate source if no recommendations available?
+   */
+  getRecommendations: state => (handle, options = {}) => {
+    const defaultOptions = {
+      limit: 0,
+      source: 'rule',
+      cascade: true
+    }
+    const { limit, source, cascade } = { ...defaultOptions, ...options }
     const productData = state.products[handle] || defaultProductData
-    return productData.recommendations
+    const recommendationsData = productData.recommendations
+    const sourceRecommendations = recommendationsData.filter(
+      r => r.source === source
+    )
+    const recommendations =
+      sourceRecommendations.length || !cascade
+        ? sourceRecommendations
+        : recommendationsData
+
+    return recommendations.slice(0, limit || recommendations.length)
   },
+
   getCartProduct: state => handle => {
     const productData = state.products[handle] || defaultProductData
     const product = productData.product
@@ -57,10 +81,12 @@ export const getters = {
       variant: productData.selectedVariant
     }
   },
+
   getProductData: state => handle => {
     const productData = state.products[handle] || defaultProductData
     return productData
   },
+
   getSelectedVariant: state => handle => {
     const productData = state.products[handle]
     if (!productData) {
@@ -172,12 +198,12 @@ export const actions = {
       ? 'nacellestatic-dev.s3.amazonaws.com'
       : 'nacellestatic.s3.amazonaws.com'
 
-    let productRecommendations
+    let generatedRecommendations
     try {
       const recommendationsData = await axios.get(
         `https://${nacelleStaticUrl}/${process.env.nacelleSpaceID}/merchandising/products/${productHandle}--${locale}.json`
       )
-      productRecommendations = JSON.parse(recommendationsData.data)
+      generatedRecommendations = JSON.parse(recommendationsData.data)
     } catch (error) {
       console.log(
         `Unable to load product recommendations for ${productHandle}.`
@@ -201,18 +227,22 @@ export const actions = {
       )
     }
 
-    const recommendations =
-      rulesRecommendations && rulesRecommendations.length
-        ? rulesRecommendations
-        : productRecommendations && productRecommendations.length
-        ? productRecommendations
-        : []
+    const recommendations = [
+      ...(generatedRecommendations || []).map(handle => ({
+        handle,
+        source: 'generated'
+      })),
+      ...(rulesRecommendations || []).map(handle => ({
+        handle,
+        source: 'rule'
+      }))
+    ]
 
     if (!recommendations || !recommendations.length) {
       return
     }
 
-    recommendations.map(handle => {
+    recommendations.map(({ handle }) => {
       dispatch('loadProduct', { productHandle: handle })
     })
 
