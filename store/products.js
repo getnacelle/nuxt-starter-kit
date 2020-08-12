@@ -16,7 +16,7 @@ const defaultProductData = {
     handle: '',
     variants: []
   },
-  selectedVariant: undefined,
+  selectedVariantId: undefined,
   metafields: [],
   quantity: 1,
   allOptionsSelected: false,
@@ -56,13 +56,12 @@ export const getters = {
     return productData
   },
   getSelectedVariant: state => handle => {
-    const productData = state.products[handle]
-    if (!productData) {
-      return
-    }
+    const productData = state.products[handle] || defaultProductData
 
-    if (productData.selectedVariant) {
-      return productData.selectedVariant
+    if (productData.selectedVariantId) {
+      return productData.product.variants.find(
+        variant => variant.id === productData.selectedVariantId
+      )
     }
 
     if (
@@ -108,15 +107,19 @@ export const mutations = {
       !productData ||
       !productData.product ||
       !productData.product.variants ||
-      !variantId
+      !variantId ||
+      !productData.product.variants.map(v => v.id).includes(variantId)
     ) {
       return
     }
 
-    const variant = productData.product.variants.find(
-      variant => variant.id === variantId
-    )
-    productData.selectedVariant = variant
+    state.products = {
+      ...state.products,
+      [productHandle]: {
+        ...state.products[productHandle],
+        selectedVariantId: variantId
+      }
+    }
   }
 }
 

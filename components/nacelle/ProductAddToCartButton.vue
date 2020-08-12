@@ -1,37 +1,15 @@
 <template>
   <div>
     <button
-      v-if="isProductVariantSelectChild"
       :disabled="disableAtcButton"
       @click="addToCart"
-      class="add-to-cart-button button is-primary nacelle"
-    >
-      <span v-if="showSelectOptions">Select Options</span>
-      <span v-if="showOutOfStock">Out of Stock</span>
-      <span v-if="showAddToCart">Add to Cart</span>
-      <span v-if="variantInLineItems">Added!</span>
-    </button>
-    <button
       class="button is-primary"
-      @click="addToCart"
-      v-else
-      :disabled="disableAtcButton"
     >
       <slot>
-        <span v-if="!onlyOneOption && product.availableForSale">
-          Select Options
-        </span>
-        <span
-          v-if="
-            onlyOneOption &&
-              !variantInLineItems &&
-              variant.availableForSale == true
-          "
-        >
-          Add to Cart
-        </span>
+        <span v-if="showSelectOptions">Select Options</span>
+        <span v-if="showAddToCart">Add to Cart</span>
         <span v-if="showOutOfStock">Out of Stock</span>
-        <span v-if="onlyOneOption && variantInLineItems">Added!</span>
+        <span v-if="variantInLineItems">Added!</span>
       </slot>
     </button>
   </div>
@@ -83,11 +61,11 @@ export default {
     },
 
     showSelectOptions() {
-      return (
-        !this.variantInLineItems &&
-        !this.allOptionsSelected &&
-        this.product.availableForSale
-      )
+      return this.isProductVariantSelectChild
+        ? !this.variantInLineItems &&
+            !this.allOptionsSelected &&
+            this.product.availableForSale
+        : !this.onlyOneOption && this.product.availableForSale
     },
 
     disableAtcButton() {
@@ -104,15 +82,18 @@ export default {
       return (
         (!this.variantInLineItems &&
           this.allOptionsSelected &&
-          (!this.variant || !this.variant.availableForSale)) ||
+          this.variant &&
+          !this.variant.availableForSale) ||
         !this.product.availableForSale
       )
     },
 
     showAddToCart() {
       return (
+        (this.isProductVariantSelectChild
+          ? this.allOptionsSelected
+          : this.onlyOneOption) &&
         !this.variantInLineItems &&
-        this.allOptionsSelected &&
         this.variant &&
         this.variant.availableForSale
       )

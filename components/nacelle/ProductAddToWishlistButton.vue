@@ -36,7 +36,7 @@ export default {
       return this.getSelectedVariant(this.productHandle)
     },
     isSavedInWishlist() {
-      return !!this.getItemByVariantId(this.variant.id)
+      return this.variant && !!this.getItemByVariantId(this.variant.id)
     }
   }
 }
