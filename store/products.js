@@ -206,7 +206,7 @@ export const actions = {
       generatedRecommendations = JSON.parse(recommendationsData.data)
     } catch (error) {
       console.log(
-        `Unable to load product recommendations for ${productHandle}.`
+        `Unable to load generated product recommendations for ${productHandle}.`
       )
     }
 
