@@ -26,8 +26,7 @@
       ></product-add-to-cart-button>
       <product-add-to-wishlist-button
         class="circle-button is-primary"
-        :variant="currentVariant"
-        :product="product"
+        :productHandle="productHandle"
       >
         <template v-slot:icon>
           <svg
