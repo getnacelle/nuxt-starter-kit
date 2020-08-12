@@ -1,3 +1,6 @@
+import Vue from 'vue'
+import deepmerge from 'deepmerge'
+
 const defaultProductData = {
   product: {
     priceRange: {
@@ -34,7 +37,7 @@ export const getters = {
   },
   getProduct: state => handle => {
     const productData = state.products[handle] || defaultProductData
-    return productData.product
+    return productData.product || defaultProductData.product
   },
   getCartProduct: state => handle => {
     const productData = state.products[handle] || defaultProductData
@@ -88,7 +91,12 @@ export const mutations = {
 
       const existingProductData = state.products[handle] || defaultProductData
 
-      state.products[handle] = { ...existingProductData, ...productData }
+      state.products = {
+        ...state.products,
+        [handle]: deepmerge(existingProductData, productData, {
+          arrayMerge: (dest, source) => source
+        })
+      }
     }),
 
   setCurrentProductHandle: (state, handle) =>
@@ -112,7 +120,30 @@ export const mutations = {
   }
 }
 
-export const actions = {}
+export const actions = {
+  loadProduct: async ({ rootState, commit }, { productHandle }) => {
+    const locale = rootState.user.locale.locale
+    const loadFromFile = () => {
+      const fs = require('fs')
+      const file = fs.readFileSync(
+        `./static/data/products/${productHandle}--${locale}/static.json`,
+        'utf-8'
+      )
+      return JSON.parse(file)
+    }
+
+    const loadFromNacelle = async () => {
+      return await Vue.prototype.$nuxt.$nacelle.data.product({
+        handle: productHandle,
+        locale: locale
+      })
+    }
+
+    const product = process.server ? loadFromFile() : await loadFromNacelle()
+
+    commit('upsertProducts', [{ product }])
+  }
+}
 
 export default {
   namespaced: true,
