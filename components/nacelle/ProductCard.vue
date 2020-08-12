@@ -16,8 +16,7 @@
       />
       <product-add-to-cart-button
         v-if="showAddToCart === true"
-        :product="product"
-        :variant="currentVariant"
+        :productHandle="productHandle"
         :allOptionsSelected="allOptionsSelected"
         :confirmedSelection="confirmedSelection"
         @click.native="handleAddToCartClick"
