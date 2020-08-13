@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
