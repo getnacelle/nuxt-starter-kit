@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import deepmerge from 'deepmerge'
+import uniqWith from 'lodash.uniqwith'
+import isEqual from 'lodash.isequal'
 
 const defaultProductData = {
   product: {
@@ -17,11 +19,9 @@ const defaultProductData = {
     variants: []
   },
   selectedVariantId: undefined,
+  selectedOptions: [],
   metafields: [],
-  quantity: 1,
-  allOptionsSelected: false,
-  confirmedSelection: false,
-  onlyOneOption: false
+  quantity: 1
 }
 
 export const state = () => ({
@@ -51,24 +51,143 @@ export const getters = {
       variant: productData.selectedVariant
     }
   },
+  allOptions: state => handle => {
+    const productData = state.products[handle]
+    if (!productData) {
+      return false
+    }
+
+    const {
+      product: { variants }
+    } = productData
+
+    if (!variants) {
+      return []
+    }
+
+    const flattenedOptions = variants
+      .filter(v => !!v.selectedOptions)
+      .map(v => v.selectedOptions)
+      .map(s =>
+        s.map(option =>
+          option.name === 'Color'
+            ? {
+                name: option.name,
+                value: option.value,
+                swatchSrc: variant.swatchSrc
+              }
+            : option
+        )
+      )
+      .flat()
+
+    const optionNames = [...new Set(flattenedOptions.map(o => o.name))]
+
+    const optionValuesByName = optionNames.map(name => {
+      const values = uniqWith(
+        flattenedOptions
+          .filter(o => o.name === name)
+          .map(option => ({
+            value: option.value,
+            ...(option.swatchSrc && { swatchSrc: option.swatchSrc })
+          })),
+        isEqual
+      )
+
+      return {
+        name,
+        values
+      }
+    })
+
+    return optionValuesByName
+  },
+  applicableOptions: state => handle => {
+    const productData = state.products[handle]
+    if (!productData) {
+      return []
+    }
+
+    const {
+      product: { variants },
+      selectedOptions
+    } = productData
+
+    const flattenedOptions = selectedOptions
+      .map(o =>
+        variants.map(v =>
+          v.selectedOptions
+            .filter(JSON.stringify(o) === JSON.stringify(s))
+            .map(s => {
+              if (s.__typename) {
+                delete s.__typename
+              }
+              return v.selectedOptions
+            })
+        )
+      )
+      .flat(3)
+      .filter(option => !!option)
+
+    const uniqueFlattenedOptions = [...new Set(flattenedOptions)]
+
+    return uniqueFlattenedOptions
+  },
+  onlyOneOption: (state, getters) => handle => {
+    const allOptions = getters.allOptions(handle)
+    return allOptions.length === 1 && allOptions[0].values.length === 1
+  },
+  allOptionsSelected: (state, getters) => handle => {
+    const productData = state.products[handle]
+    if (!productData) {
+      return false
+    }
+    const {
+      product: { variants },
+      selectedOptions
+    } = productData
+
+    if (variants && variants.length === 1) {
+      return true
+    }
+
+    const allOptions = getters.allOptions(handle)
+    if (
+      allOptions &&
+      selectedOptions &&
+      selectedOptions.length === allOptions.length
+    ) {
+      return true
+    }
+
+    if (
+      allOptions &&
+      allOptions.length === 1 &&
+      allOptions[0].values.length === 1
+    ) {
+      return true
+    }
+
+    return false
+  },
   getProductData: state => handle => {
     const productData = state.products[handle] || defaultProductData
     return productData
   },
   getSelectedVariant: state => handle => {
     const productData = state.products[handle] || defaultProductData
+    const {
+      product: { variants },
+      selectedVariantId
+    } = productData
 
-    if (productData.selectedVariantId) {
-      return productData.product.variants.find(
+    if (selectedVariantId) {
+      return variants.find(
         variant => variant.id === productData.selectedVariantId
       )
     }
 
-    if (
-      productData.product &&
-      productData.product.variants &&
-      productData.product.variants.length > 0
-    ) {
+    if (variants && variants.length) {
       return productData.product.variants[0]
     }
 
@@ -100,6 +219,33 @@ export const mutations = {
 
   setCurrentProductHandle: (state, handle) =>
     (state.currentProductHandle = handle),
+
+  setSelectedOptions(state, { productHandle, options }) {
+    const productData = state.products[productHandle]
+    if (!productData) {
+      return
+    }
+
+    const {
+      product: { variants }
+    } = productData
+
+    const stringifiedOptions = options.map(o => JSON.stringify(o))
+    const variantMatch = variants.find(v =>
+      v.selectedOptions.every(o =>
+        stringifiedOptions.includes(JSON.stringify(o))
+      )
+    )
+
+    state.products = {
+      ...state.products,
+      [productHandle]: {
+        ...state.products[productHandle],
+        selectedOptions: options,
+        ...(variantMatch && { selectedVariantId: variantMatch.id })
+      }
+    }
+  },
 
   setSelectedVariant(state, { productHandle, variantId }) {
     const productData = state.products[productHandle]

@@ -33,11 +33,8 @@ import availableOptions from '~/mixins/availableOptions'
 
 export default {
   props: {
-    product: {
-      type: Object
-    },
-    variant: {
-      type: Object
+    productHandle: {
+      type: String
     },
     showQuantitySelect: {
       type: Boolean,
@@ -56,6 +53,14 @@ export default {
     ProductAddToCartButton
   },
   computed: {
+    ...mapGetters('products', ['getProduct', 'getSelectedVariant']),
+    product() {
+      return this.getProduct(this.productHandle)
+    },
+
+    variant() {
+      return this.getSelectedVariant(this.productHandle)
+    },
     showProductOptions() {
       return (
         Array.isArray(this.allOptions) &&
