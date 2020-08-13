@@ -16,8 +16,7 @@
       />
       <product-add-to-cart-button
         v-if="showAddToCart === true"
-        :product="product"
-        :variant="currentVariant"
+        :productHandle="productHandle"
         :allOptionsSelected="allOptionsSelected"
         :confirmedSelection="confirmedSelection"
         @click.native="handleAddToCartClick"
@@ -26,8 +25,7 @@
       ></product-add-to-cart-button>
       <product-add-to-wishlist-button
         class="circle-button is-primary"
-        :variant="currentVariant"
-        :product="product"
+        :productHandle="productHandle"
       >
         <template v-slot:icon>
           <svg

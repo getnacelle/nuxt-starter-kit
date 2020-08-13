@@ -28,7 +28,7 @@ export const AddToWishlistButton = () => ({
       }
     }
   },
-  template: `<product-add-to-wishlist-button :product="product" :variant="variant">
+  template: `<product-add-to-wishlist-button :productHandle="product.handle">
       <template v-slot:icon>
         <svg
           width="120%"

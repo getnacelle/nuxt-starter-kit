@@ -6,7 +6,7 @@
         @change="$emit('variant-selected', { selectedVariant })"
       >
         <option :selected="typeof selectedVariant === undefined">
-          Choose a {{attributeName}}
+          Choose a {{ attributeName }}
         </option>
 
         <option
@@ -23,14 +23,11 @@
     </div>
     <div v-if="showAddToCart && selectedVariant" class="columns is-mobile">
       <div class="column is-half">
-        <quantity-selector
-          :quantity.sync="quantity"
-        />
+        <quantity-selector :quantity.sync="quantity" />
       </div>
       <div class="column is-half">
         <product-add-to-cart-button
-          :product="product"
-          :variant="selectedVariant"
+          :productHandle="product.handle"
           :allOptionsSelected="true"
           :onlyOneOption="true"
           :quantity="quantity"
@@ -91,21 +88,21 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       selectedVariant: undefined,
       quantity: 0
     }
   },
   computed: {
-    productHasVariants () {
+    productHasVariants() {
       return (
         this.product &&
         this.product.variants &&
         this.product.variants.length > 0
       )
     },
-    hideDropdown () {
+    hideDropdown() {
       return (
         this.hideForSingleVariant &&
         this.productHasVariants &&
@@ -113,7 +110,7 @@ export default {
       )
     }
   },
-  created () {
+  created() {
     if (this.variant && this.variant.availableForSale === true) {
       this.selectedVariant = this.variant
     } else if (this.productHasVariants) {

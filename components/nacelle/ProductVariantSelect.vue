@@ -16,8 +16,7 @@
       <div class="column auto">
         <product-add-to-cart-button
           :quantity="quantity"
-          :product="product"
-          :variant="selectedVariant"
+          :productHandle="product.handle"
           :allOptionsSelected="allOptionsSelected"
         />
       </div>

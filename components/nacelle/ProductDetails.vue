@@ -9,13 +9,6 @@
     </div>
     <div class="column is-5 is-offset-1">
       <product-title :title="product.title" />
-      <!-- <product-add-to-cart-button
-        :product="product"
-        :variant="selectedVariant"
-        :allOptionsSelected="true"
-        :onlyOneOption="true"
-        :metafields="[{key:'test', value:'hi'}]"
-      />-->
       <product-category
         v-if="product.productType"
         :category="product.productType"
