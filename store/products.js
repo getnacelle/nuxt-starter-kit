@@ -11,6 +11,7 @@ const defaultProductData = {
       currencyCode: 'USD'
     },
     title: null,
+    media: [],
     featuredMedia: {
       src: undefined
     },
@@ -51,7 +52,7 @@ export const getters = {
       variant: productData.selectedVariant
     }
   },
-  allOptions: state => handle => {
+  getAllOptions: state => handle => {
     const productData = state.products[handle]
     if (!productData) {
       return false
@@ -102,40 +103,11 @@ export const getters = {
 
     return optionValuesByName
   },
-  applicableOptions: state => handle => {
-    const productData = state.products[handle]
-    if (!productData) {
-      return []
-    }
-
-    const {
-      product: { variants },
-      selectedOptions
-    } = productData
-
-    const flattenedOptions = selectedOptions
-      .map(o =>
-        variants.map(v =>
-          v.selectedOptions
-            .filter(JSON.stringify(o) === JSON.stringify(s))
-            .map(s => {
-              if (s.__typename) {
-                delete s.__typename
-              }
-              return v.selectedOptions
-            })
-        )
-      )
-      .flat(3)
-      .filter(option => !!option)
-
-    const uniqueFlattenedOptions = [...new Set(flattenedOptions)]
-
-    return uniqueFlattenedOptions
-  },
   onlyOneOption: (state, getters) => handle => {
-    const allOptions = getters.allOptions(handle)
-    return allOptions.length === 1 && allOptions[0].values.length === 1
+    const allOptions = getters.getAllOptions(handle)
+    return (
+      allOptions && allOptions.length === 1 && allOptions[0].values.length === 1
+    )
   },
   allOptionsSelected: (state, getters) => handle => {
     const productData = state.products[handle]
@@ -151,7 +123,7 @@ export const getters = {
       return true
     }
 
-    const allOptions = getters.allOptions(handle)
+    const allOptions = getters.getAllOptions(handle)
     if (
       allOptions &&
       selectedOptions &&

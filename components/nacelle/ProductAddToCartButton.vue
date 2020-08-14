@@ -33,13 +33,16 @@ export default {
 
     quantity: { type: Number, default: 1 },
     allOptionsSelected: { type: Boolean, default: false },
-    confirmedSelection: { type: Boolean, default: false },
-    onlyOneOption: { type: Boolean, default: false }
+    confirmedSelection: { type: Boolean, default: false }
   },
 
   computed: {
     ...mapState('cart', ['lineItems']),
-    ...mapGetters('products', ['getProduct', 'getSelectedVariant']),
+    ...mapGetters('products', [
+      'getProduct',
+      'getSelectedVariant',
+      'onlyOneOption'
+    ]),
 
     product() {
       return this.getProduct(this.productHandle)
@@ -65,7 +68,8 @@ export default {
         ? !this.variantInLineItems &&
             !this.allOptionsSelected &&
             this.product.availableForSale
-        : !this.onlyOneOption && this.product.availableForSale
+        : !this.onlyOneOption(this.productHandle) &&
+            this.product.availableForSale
     },
 
     disableAtcButton() {
@@ -92,7 +96,7 @@ export default {
       return (
         (this.isProductVariantSelectChild
           ? this.allOptionsSelected
-          : this.onlyOneOption) &&
+          : this.onlyOneOption(this.productHandle)) &&
         !this.variantInLineItems &&
         this.variant &&
         this.variant.availableForSale

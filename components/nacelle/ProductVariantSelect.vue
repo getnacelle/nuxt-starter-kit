@@ -2,11 +2,9 @@
   <div class="variant-select nacelle">
     <product-options
       v-show="showProductOptions"
-      :options="allOptions"
-      :variant="selectedVariant"
+      :productHandle="productHandle"
       v-on:selectedOptionsSet="setSelected"
-      :variants="product.variants"
-      v-on:clear="selectedOptions = []"
+      v-on:clear="setSelected([])"
     />
     <slot name="above-button"></slot>
     <div class="columns is-mobile">
@@ -17,7 +15,7 @@
         <product-add-to-cart-button
           :quantity="quantity"
           :productHandle="product.handle"
-          :allOptionsSelected="allOptionsSelected"
+          :allOptionsSelected="allOptionsSelected(productHandle)"
         />
       </div>
     </div>
@@ -25,12 +23,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
-import allOptionsSelected from '~/mixins/allOptionsSelected'
-import availableOptions from '~/mixins/availableOptions'
 
 export default {
   props: {
@@ -47,19 +43,25 @@ export default {
       quantity: 0
     }
   },
-  mixins: [allOptionsSelected, availableOptions],
   components: {
     ProductOptions,
     QuantitySelector,
     ProductAddToCartButton
   },
   computed: {
-    ...mapGetters('products', ['getProduct', 'getSelectedVariant']),
+    ...mapGetters('products', [
+      'getProduct',
+      'getSelectedVariant',
+      'allOptionsSelected',
+      'getAllOptions'
+    ]),
     product() {
       return this.getProduct(this.productHandle)
     },
-
-    variant() {
+    allOptions() {
+      return this.getAllOptions(this.productHandle)
+    },
+    selectedVariant() {
       return this.getSelectedVariant(this.productHandle)
     },
     showProductOptions() {
@@ -72,11 +74,17 @@ export default {
     },
     displayQuantitySelect() {
       return (
-        this.allOptionsSelected &&
+        this.allOptionsSelected(this.productHandle) &&
         this.selectedVariant &&
         this.selectedVariant.availableForSale &&
         this.showQuantitySelect
       )
+    }
+  },
+  methods: {
+    ...mapMutations('products', ['setSelectedOptions']),
+    setSelected(options) {
+      this.setSelectedOptions({ productHandle: this.productHandle, options })
     }
   }
 }
