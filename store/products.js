@@ -52,10 +52,18 @@ export const getters = {
       variant: productData.selectedVariant
     }
   },
+  getSelectedOptions: state => handle => {
+    const productData = state.products[handle]
+    if (!productData) {
+      return []
+    }
+
+    return productData.selectedOptions || []
+  },
   getAllOptions: state => handle => {
     const productData = state.products[handle]
     if (!productData) {
-      return false
+      return []
     }
 
     const {
@@ -63,7 +71,7 @@ export const getters = {
     } = productData
 
     if (!variants) {
-      return []
+      return
     }
 
     const flattenedOptions = variants
@@ -192,17 +200,48 @@ export const mutations = {
   setCurrentProductHandle: (state, handle) =>
     (state.currentProductHandle = handle),
 
-  setSelectedOptions(state, { productHandle, options }) {
+  clearSelectedOptions(state, productHandle) {
+    const productData = state.products[productHandle]
+    if (!productData) {
+      return
+    }
+
+    state.products = {
+      ...state.products,
+      [productHandle]: {
+        ...state.products[productHandle],
+        selectedOptions: []
+      }
+    }
+  },
+
+  setSelectedOption(state, { productHandle, option }) {
     const productData = state.products[productHandle]
     if (!productData) {
       return
     }
 
     const {
-      product: { variants }
+      product: { variants },
+      selectedOptions
     } = productData
 
-    const stringifiedOptions = options.map(o => JSON.stringify(o))
+    const isValidOption = option && option.name
+
+    const newSelectedOptions = isValidOption
+      ? [...selectedOptions.filter(o => o.name !== option.name), option]
+      : selectedOptions
+
+    state.products = {
+      ...state.products,
+      [productHandle]: {
+        ...state.products[productHandle],
+        selectedOptions: newSelectedOptions
+      }
+    }
+
+    const stringifiedOptions = newSelectedOptions.map(o => JSON.stringify(o))
+
     const variantMatch = variants.find(v =>
       v.selectedOptions.every(o =>
         stringifiedOptions.includes(JSON.stringify(o))
@@ -213,7 +252,6 @@ export const mutations = {
       ...state.products,
       [productHandle]: {
         ...state.products[productHandle],
-        selectedOptions: options,
         ...(variantMatch && { selectedVariantId: variantMatch.id })
       }
     }

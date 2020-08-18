@@ -19,9 +19,7 @@
       <product-description :description="product.description" />
       <product-variant-select
         v-if="selectedVariant"
-        :product="product"
-        :variant="selectedVariant"
-        v-on:variant-selected="onVariantSelected"
+        :productHandle="productHandle"
       />
     </div>
   </div>
@@ -74,13 +72,7 @@ export default {
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
-    ...mapMutations('products', ['setSelectedVariant']),
-    onVariantSelected({ selectedVariant }) {
-      this.setSelectedVariant({
-        productHandle: this.productHandle,
-        variantId: selectedVariant.id
-      })
-    }
+    ...mapMutations('products', ['setSelectedVariant'])
   }
 }
 </script>

@@ -3,7 +3,7 @@
     <div class="option" v-for="option in options" :key="option.name">
       <h3 class="option-label">{{ option.name }}</h3>
       <product-option-swatches
-        v-on:optionSet="setSelectedOptions"
+        v-on:optionSet="(option) => setSelectedOption({productHandle, option})"
         :option="option"
         :variants="variants"
         :selectedOptions="selectedOptions"
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import ProductOptionSwatches from '~/components/nacelle/ProductOptionSwatches'
 export default {
   props: {
@@ -41,7 +41,6 @@ export default {
   },
   data() {
     return {
-      selectedOptions: [],
       clearOptionValue: false
     }
   },
@@ -49,11 +48,6 @@ export default {
     ProductOptionSwatches
   },
   watch: {
-    selectedOptions() {
-      if (this.allOptionsSelected(this.productHandle) == true) {
-        this.$emit('selectedOptionsSet', this.selectedOptions)
-      }
-    },
     clearOptionValue(val) {
       if (val == true) {
         setTimeout(() => {
@@ -68,9 +62,13 @@ export default {
       'getProduct',
       'getSelectedVariant',
       'getAllOptions',
-      'allOptionsSelected'
+      'allOptionsSelected',
+      'getSelectedOptions'
     ]),
 
+    selectedOptions() {
+      return this.getSelectedOptions(this.productHandle)
+    },
     options() {
       return this.getAllOptions(this.productHandle)
     },
@@ -90,23 +88,13 @@ export default {
     }
   },
   methods: {
-    setSelectedOptions(selectedOption) {
-      const vm = this
-      const searchOptions = this.selectedOptions.filter(option => {
-        return option.name == selectedOption.name
-      })
-      if (searchOptions.length == 0) {
-        vm.selectedOptions.push(selectedOption)
-      } else {
-        const index = vm.selectedOptions.findIndex(option => {
-          return option.name == selectedOption.name
-        })
-        vm.selectedOptions.splice(index, 1, selectedOption)
-      }
-    },
+    ...mapMutations('products', ['setSelectedOption', 'clearSelectedOptions']),
     confirmSelection() {
       this.$emit('confirmedSelection')
     }
+  },
+  created() {
+    this.clearSelectedOptions(this.productHandle)
   }
 }
 </script>

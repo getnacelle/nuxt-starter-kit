@@ -32,7 +32,6 @@ export default {
     },
 
     quantity: { type: Number, default: 1 },
-    allOptionsSelected: { type: Boolean, default: false },
     confirmedSelection: { type: Boolean, default: false }
   },
 
@@ -41,7 +40,8 @@ export default {
     ...mapGetters('products', [
       'getProduct',
       'getSelectedVariant',
-      'onlyOneOption'
+      'onlyOneOption',
+      'allOptionsSelected'
     ]),
 
     product() {
@@ -66,7 +66,7 @@ export default {
     showSelectOptions() {
       return this.isProductVariantSelectChild
         ? !this.variantInLineItems &&
-            !this.allOptionsSelected &&
+            !this.allOptionsSelected(this.productHandle) &&
             this.product.availableForSale
         : !this.onlyOneOption(this.productHandle) &&
             this.product.availableForSale
@@ -74,10 +74,11 @@ export default {
 
     disableAtcButton() {
       return (
-        !this.allOptionsSelected ||
-        (this.allOptionsSelected && this.variant === undefined) ||
+        !this.allOptionsSelected(this.productHandle) ||
+        (this.allOptionsSelected(this.productHandle) &&
+          this.variant === undefined) ||
         (!this.variantInLineItems &&
-          this.allOptionsSelected &&
+          this.allOptionsSelected(this.productHandle) &&
           !this.variant.availableForSale)
       )
     },
@@ -95,7 +96,7 @@ export default {
     showAddToCart() {
       return (
         (this.isProductVariantSelectChild
-          ? this.allOptionsSelected
+          ? this.allOptionsSelected(this.productHandle)
           : this.onlyOneOption(this.productHandle)) &&
         !this.variantInLineItems &&
         this.variant &&
@@ -121,7 +122,10 @@ export default {
     ...mapMutations('cart', ['showCart']),
 
     addToCart() {
-      if (this.allOptionsSelected && this.product.availableForSale) {
+      if (
+        this.allOptionsSelected(this.productHandle) &&
+        this.product.availableForSale
+      ) {
         const lineItem = {
           image: this.product.featuredMedia,
           title: this.product.title,

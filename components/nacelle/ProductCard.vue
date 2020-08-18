@@ -52,7 +52,6 @@
         <h3 class="modal-title">Choose Your Options</h3>
         <product-options
           :productHandle="productHandle"
-          v-on:selectedOptionsSet="setSelected"
           v-on:confirmedSelection="
             ;(confirmedSelection = true), (optionsModalVisible = false)
           "
@@ -177,10 +176,6 @@ export default {
   methods: {
     ...mapMutations('cart', ['showCart']),
     ...mapActions('events', ['productView']),
-    ...mapMutations('products', ['setSelectedOptions']),
-    setSelected(options) {
-      this.setSelectedOptions({ productHandle: this.productHandle, options })
-    },
     handleAddToCartClick() {
       if (!this.allOptionsSelected(this.productHandle)) {
         this.optionsModalVisible = true

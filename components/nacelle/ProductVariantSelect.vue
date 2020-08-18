@@ -3,8 +3,6 @@
     <product-options
       v-show="showProductOptions"
       :productHandle="productHandle"
-      v-on:selectedOptionsSet="setSelected"
-      v-on:clear="setSelected([])"
     />
     <slot name="above-button"></slot>
     <div class="columns is-mobile">
@@ -31,7 +29,8 @@ import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 export default {
   props: {
     productHandle: {
-      type: String
+      type: String,
+      default: ''
     },
     showQuantitySelect: {
       type: Boolean,
@@ -79,12 +78,6 @@ export default {
         this.selectedVariant.availableForSale &&
         this.showQuantitySelect
       )
-    }
-  },
-  methods: {
-    ...mapMutations('products', ['setSelectedOptions']),
-    setSelected(options) {
-      this.setSelectedOptions({ productHandle: this.productHandle, options })
     }
   }
 }

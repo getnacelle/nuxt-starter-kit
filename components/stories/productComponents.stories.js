@@ -1,25 +1,25 @@
-import { withInfo } from 'storybook-addon-vue-info';
+import { withInfo } from 'storybook-addon-vue-info'
 
-import store from '../../.storybook/store';
+import store from '../../.storybook/store'
 
-import ProductImage from '../nacelle/ProductImage';
-import ProductPrice from '../nacelle/ProductPrice';
-import ProductTitle from '../nacelle/ProductTitle';
-import ProductDescription from '../nacelle/ProductDescription';
-import ProductCategory from '../nacelle/ProductCategory';
-import ProductAddToCartButton from '../nacelle/ProductAddToCartButton';
-import ProductQuantityUpdate from '../nacelle/ProductQuantityUpdate';
-import ProductOptions from '../nacelle/ProductOptions';
-import ProductVariantSelect from '../nacelle/ProductVariantSelect';
-import CartFlyout from '../nacelle/CartFlyout';
-import CartFlyoutItem from '../nacelle/CartFlyoutItem';
+import ProductImage from '../nacelle/ProductImage'
+import ProductPrice from '../nacelle/ProductPrice'
+import ProductTitle from '../nacelle/ProductTitle'
+import ProductDescription from '../nacelle/ProductDescription'
+import ProductCategory from '../nacelle/ProductCategory'
+import ProductAddToCartButton from '../nacelle/ProductAddToCartButton'
+import ProductQuantityUpdate from '../nacelle/ProductQuantityUpdate'
+import ProductOptions from '../nacelle/ProductOptions'
+import ProductVariantSelect from '../nacelle/ProductVariantSelect'
+import CartFlyout from '../nacelle/CartFlyout'
+import CartFlyoutItem from '../nacelle/CartFlyoutItem'
 
-import defaultMultivariate from '../../tests/mocks/multivariateProduct';
+import defaultMultivariate from '../../tests/mocks/multivariateProduct'
 
 export default {
   title: 'Components | Product/Composition',
-  decorators: [withInfo],
-};
+  decorators: [withInfo]
+}
 
 export const Pdp = () => ({
   components: {
@@ -33,19 +33,19 @@ export const Pdp = () => ({
     ProductOptions,
     ProductVariantSelect,
     CartFlyout,
-    CartFlyoutItem,
+    CartFlyoutItem
   },
   store,
   data() {
     return {
       product: defaultMultivariate,
-      variant: defaultMultivariate.variants[0],
-    };
+      variant: defaultMultivariate.variants[0]
+    }
   },
   methods: {
     onVariantSelect({ options, selectedVariant }) {
-      this.variant = selectedVariant;
-    },
+      this.variant = selectedVariant
+    }
   },
 
   template: `
@@ -62,7 +62,7 @@ export const Pdp = () => ({
           <product-price :price="variant.price"></product-price>
           <div class="columns is-marginless is-paddingless">
             <product-variant-select
-              :product="product"
+              :productHandle="product.handle"
               :variant="variant"
               v-on:variant-selected="onVariantSelect"
             />
@@ -70,8 +70,8 @@ export const Pdp = () => ({
         </div>
       </div>
     </div>
-  </section>`,
-});
+  </section>`
+})
 
 Pdp.story = {
   name: 'PDP',
@@ -79,6 +79,6 @@ Pdp.story = {
   parameters: {
     info: {
       // summary: "Hello"
-    },
-  },
-};
+    }
+  }
+}
