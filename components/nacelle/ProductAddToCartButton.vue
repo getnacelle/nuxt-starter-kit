@@ -6,10 +6,10 @@
       class="button is-primary"
     >
       <slot>
-        <span v-if="showSelectOptions">Select Options</span>
         <span v-if="showAddToCart">Add to Cart</span>
-        <span v-if="showOutOfStock">Out of Stock</span>
-        <span v-if="variantInLineItems">Added!</span>
+        <span v-else-if="showSelectOptions">Select Options</span>
+        <span v-else-if="variantInLineItems">Added!</span>
+        <span v-else-if="showOutOfStock">Out of Stock</span>
       </slot>
     </button>
   </div>
@@ -64,6 +64,7 @@ export default {
     },
 
     showSelectOptions() {
+      console.log()
       return this.isProductVariantSelectChild
         ? !this.variantInLineItems &&
             !this.allOptionsSelected(this.productHandle) &&
