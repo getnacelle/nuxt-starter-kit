@@ -57,13 +57,12 @@ export const getters = {
     fallbackPrice
   }) => {
     const productData = state.products[productHandle]
-    if (!productData) {
+    if (!productData || !productData.product) {
       return
     }
 
-    const {
-      product: { variants, priceRange }
-    } = productData
+    const { product } = productData
+    const { variants, priceRange } = product
     const { locale, currency } = rootState.user.locale
 
     if (priceRange.currencyCode === currency) {
@@ -73,31 +72,29 @@ export const getters = {
       }).format(fallbackPrice)
     }
 
-    let priceForCurrency
-    for (let i = 0; i < variants.length; i++) {
-      if (variants[i].priceRules) {
-        for (let u = 0; u < variants[i].priceRules.length; u++) {
-          if (
-            variants[i].priceRules[u].priceCurrency === currency &&
-            (!priceForCurrency ||
-              priceForCurrency < variants[i].priceRules[u].price)
-          ) {
-            priceForCurrency = variants[i].priceRules[u].price
-            break
-          }
-        }
-      }
-    }
+    const priceForCurrency = Math.max(
+      0,
+      ...variants
+        .filter(!!variant.priceRules)
+        .map(variant =>
+          variant.priceRules
+            .filter(priceRule.priceCurrency === currency)
+            .map(priceRule => priceRule.price)
+        )
+        .flat()
+    )
 
     const currencyToDisplay = {
       locale: priceForCurrency ? locale : product.locale,
       currency: priceForCurrency ? currency : priceRange.currencyCode,
       price: priceForCurrency || fallbackPrice
     }
+
     const formattedCurrency = new Intl.NumberFormat(currencyToDisplay.locale, {
       style: 'currency',
       currency: currencyToDisplay.currency
     }).format(currencyToDisplay.price)
+
     return priceForCurrency
       ? `${formattedCurrency} ${currency}`
       : formattedCurrency
