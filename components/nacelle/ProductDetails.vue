@@ -33,7 +33,6 @@ import ProductTitle from '~/components/nacelle/ProductTitle'
 import ProductPrice from '~/components/nacelle/ProductPrice'
 import ProductDescription from '~/components/nacelle/ProductDescription'
 import ProductVariantSelect from '~/components/nacelle/ProductVariantSelect'
-import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
 export default {
   components: {
@@ -44,7 +43,6 @@ export default {
     ProductDescription,
     ProductVariantSelect
   },
-  mixins: [getDisplayPriceForCurrency],
   data() {
     return {}
   },
@@ -56,13 +54,17 @@ export default {
   },
   computed: {
     ...mapState('user', ['locale']),
-    ...mapGetters('products', ['getProductData', 'getSelectedVariant']),
+    ...mapGetters('products', [
+      'getProductData',
+      'getSelectedVariant',
+      'getPriceForCurrency'
+    ]),
     product() {
       return this.getProductData(this.productHandle).product
     },
     displayPrice() {
       return this.getPriceForCurrency({
-        product: this.product,
+        productHandle: this.productHandle,
         fallbackPrice: this.selectedVariant.price
       })
     },

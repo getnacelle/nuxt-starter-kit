@@ -52,6 +52,56 @@ export const getters = {
       variant: productData.selectedVariant
     }
   },
+  getPriceForCurrency: (state, getters, rootState) => ({
+    productHandle,
+    fallbackPrice
+  }) => {
+    const productData = state.products[productHandle]
+    if (!productData) {
+      return
+    }
+
+    const {
+      product: { variants, priceRange }
+    } = productData
+    const { locale, currency } = rootState.user.locale
+
+    if (priceRange.currencyCode === currency) {
+      return new Intl.NumberFormat(product.locale, {
+        style: 'currency',
+        currency: priceRange.currencyCode
+      }).format(fallbackPrice)
+    }
+
+    let priceForCurrency
+    for (let i = 0; i < variants.length; i++) {
+      if (variants[i].priceRules) {
+        for (let u = 0; u < variants[i].priceRules.length; u++) {
+          if (
+            variants[i].priceRules[u].priceCurrency === currency &&
+            (!priceForCurrency ||
+              priceForCurrency < variants[i].priceRules[u].price)
+          ) {
+            priceForCurrency = variants[i].priceRules[u].price
+            break
+          }
+        }
+      }
+    }
+
+    const currencyToDisplay = {
+      locale: priceForCurrency ? locale : product.locale,
+      currency: priceForCurrency ? currency : priceRange.currencyCode,
+      price: priceForCurrency || fallbackPrice
+    }
+    const formattedCurrency = new Intl.NumberFormat(currencyToDisplay.locale, {
+      style: 'currency',
+      currency: currencyToDisplay.currency
+    }).format(currencyToDisplay.price)
+    return priceForCurrency
+      ? `${formattedCurrency} ${currency}`
+      : formattedCurrency
+  },
   getSelectedOptions: state => handle => {
     const productData = state.products[handle]
     if (!productData) {

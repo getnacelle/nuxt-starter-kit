@@ -71,7 +71,6 @@ import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 import ProductAddToWishlistButton from '~/components/nacelle/ProductAddToWishlistButton'
 import InterfaceModal from '~/components/nacelle/InterfaceModal'
 import ProductOptions from '~/components/nacelle/ProductOptions'
-import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
 export default {
   components: {
@@ -84,7 +83,6 @@ export default {
     InterfaceModal,
     ProductOptions
   },
-  mixins: [getDisplayPriceForCurrency],
   props: {
     pathFragment: {
       type: String,
@@ -131,7 +129,8 @@ export default {
       'getSelectedVariant',
       'getCartProduct',
       'allOptionsSelected',
-      'getAllOptions'
+      'getAllOptions',
+      'getPriceForCurrency'
     ]),
     product() {
       return this.getProductData(this.productHandle).product
@@ -141,7 +140,7 @@ export default {
     },
     displayPrice() {
       return this.getPriceForCurrency({
-        product: this.product,
+        productHandle: this.productHandle,
         fallbackPrice: this.selectedVariant.price
       })
     },
