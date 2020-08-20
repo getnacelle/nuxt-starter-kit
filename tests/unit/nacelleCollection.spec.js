@@ -55,9 +55,10 @@ describe('NacelleCollection.vue', () => {
 
     // update test collection in store with dummy data
     store.dispatch('collections/updateCollection', {
-      handle,
+      collectionHandle: handle,
       collection: {
-        id
+        id,
+        handle
       },
       products: [{}, {}, {}],
       productIndex: 3

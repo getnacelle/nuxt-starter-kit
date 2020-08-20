@@ -48,7 +48,6 @@ export default {
   },
   data() {
     return {
-      collectionHandle: null,
       collection: null,
       noCollectionData: false,
       products: [],
@@ -92,31 +91,37 @@ export default {
       }
 
       return []
+    },
+    collectionObject() {
+      return {
+        collectionHandle: this.handle,
+        collection: this.collection,
+        products: this.products,
+        productIndex: this.productIndex,
+        selectedList: this.selectedList,
+        locale: this.useLocale
+      }
+    },
+    collectionPageOptions() {
+      return {
+        collection: this.collection,
+        list: this.selectedList || 'default',
+        paginate: true,
+        index: this.productIndex,
+        itemsPerPage: this.productsPerPage || 12,
+        locale: this.locale || this.$nacelle.locale
+      }
     }
   },
   async fetch() {
-    const { $nacelle } = this
-    const handle = this._props && this._props.handle
-    const selectedList = this._props && this._props.selectedList
-    const locale = this._props && this._props.locale
-
-    const collectionObj = {
-      collectionHandle: handle,
-      collection: null,
-      products: [],
-      productIndex: 0,
-      selectedList: selectedList || 'default',
-      locale: locale || $nacelle.locale
-    }
-
     // Check if collection saved in vuex store
     // Loading from store will allow for restoring scroll position
-    const storeCollection = this.getCollection(collectionObj.collectionHandle)
-
+    const storeCollection = this.getCollection(this.handle)
     if (storeCollection) {
-      return {
-        ...storeCollection
-      }
+      this.collection = storeCollection.collection
+      this.products = storeCollection.products
+      this.productIndex = storeCollection.productIndex
+      return
     }
 
     // If Nuxt Server, use fs to read static json files rather than using
@@ -125,39 +130,74 @@ export default {
       const fs = require('fs')
       try {
         const file = fs.readFileSync(
-          `./static/data/collections/${collectionObj.collectionHandle}--${collectionObj.locale}/static.json`,
+          `./static/data/collections/${this.handle}--${this.useLocale}/static.json`,
           'utf-8'
         )
-        collectionObj.collection = JSON.parse(file)
+        this.collection = JSON.parse(file)
       } catch (err) {
-        collectionObj.noCollectionData = true
+        this.noCollectionData = true
       }
 
-      if (
-        collectionObj.collection &&
-        collectionObj.collection.productLists &&
-        collectionObj.collection.productLists.length > 0
-      ) {
-        const productList = collectionObj.collection.productLists.find(
-          list => {
-            return list.slug === collectionObj.selectedList
-          }
-        )
+      if (this.selectedProductList.length) {
+        const productList = this.collection.productLists
+          .find(list => list.slug === this.selectedList)
 
-        const handles = productList.handles.slice(
-          0,
-          collectionObj.itemsPerPage
-        )
-
+        const handles = productList.handles.slice(0, this.itemsPerPage)
+        const products = []
         handles.forEach(handle => {
           const productFile = fs.readFileSync(
-            `./static/data/products/${handle}--${collectionObj.locale}/static.json`,
+            `./static/data/products/${handle}--${this.useLocale}/static.json`,
             'utf-8'
           )
-          collectionObj.products.push(JSON.parse(productFile))
+          products.push(JSON.parse(productFile))
         })
+        this.products = products
       }
     } else {
+      await this.fetchData()
+    }
+
+    // Update the product index
+    this.productIndex = this.products.length
+    // Store the collection data in Vuex
+    this.addCollection(this.collectionObject)
+  },
+  async created() {
+    // Wait for fetch, if nothing try again (needed for vue testing)
+    this.$nextTick(async () => {
+      if (!this.collection) {
+        await this.fetchData()
+      }
+    })
+    
+    // Fetch locale specific collection data if user's locale prefer
+    this.unsubscribe = this.$store.subscribe(async (mutation, state) => {
+      if (mutation.type === 'user/setLocale') {
+        this.isLoadingProducts = true
+
+        await this.fetchCollection()
+
+        if (this.selectedProductList.length) {
+          this.products = await this.fetchCollectionProducts(this.collectionPageOptions)
+          this.productIndex = this.products.length
+
+          this.updateCollectionProducts({
+            handle: this.handle,
+            products: this.products,
+            productIndex: this.productIndex
+          })
+        }
+
+        this.isLoadingProducts = false
+      }
+    })
+  },
+  beforeDestroy() {
+    this.unsubscribe()
+  },
+  methods: {
+    ...mapActions('collections', ['addCollection', 'updateCollectionProducts']),
+    async fetchData() {
       if (process.browser || process.client) {
         const storeCollection = this.getCollection(this.handle)
 
@@ -166,65 +206,30 @@ export default {
           this.products = storeCollection.products
         } else {
           // Use Nacelle SDK methods for loading collection and product data
-          collectionObj.collection = await $nacelle.data
-            .collection({
-              handle: collectionObj.collectionHandle,
-              locale: collectionObj.locale
-            })
-            .catch(() => {
-              collectionObj.noCollectionData = true
-            })
+          await this.fetchCollection()
 
-          if (
-            collectionObj.collection &&
-            collectionObj.collection.productLists &&
-            collectionObj.collection.productLists.length > 0
-          ) {
-            collectionObj.products = await $nacelle.data.collectionPage({
-              collection: collectionObj.collection,
-              list: collectionObj.selectedList,
-              paginate: true,
-              itemsPerPage: collectionObj.itemsPerPage,
-              locale: collectionObj.locale
-            })
+          if (this.selectedProductList.length) {
+            this.products = await this.$nacelle.data.collectionPage(this.collectionPageOptions)
           }
-          this.$nacelle.data
-            .collection({
-              handle: this.handle,
-              locale: this.useLocale
-            })
-            .then(result => {
-              if (result) {
-                this.collection = result
-                this.products = []
-                this.addCollection({
-                  handle: this.handle,
-                  collection: this.collection,
-                  products: this.products,
-                  productIndex: 0
-                })
-                this.fetchProducts()
-              }
-            })
+
+          // Update the product index
+          this.productIndex = this.products.length
+
+          // Store the collection data in Vuex
+          this.addCollection(this.collectionObject)
         }
       }
-    }
-
-    // Update the product index
-    collectionObj.productIndex = collectionObj.products.length
-
-    // Store the collection data in Vuex
-    this.addCollection(collectionObj)
-
-    // Return updated collection object
-    this.collectionHandle = collectionObj.collectionHandle
-    this.collection = collectionObj.collection
-    this.products = collectionObj.products
-    this.collection = collectionObj.collection
-    this.productIndex = collectionObj.productIndex
-  },
-  methods: {
-    ...mapActions('collections', ['addCollection', 'updateCollectionProducts']),
+    },
+    async fetchCollection() {
+      this.collection = await this.$nacelle.data
+        .collection({
+          handle: this.handle,
+          locale: this.useLocale
+        })
+        .catch(() => {
+          this.noCollectionData = true
+        })
+    },
     // Load a new "page" of products
     async fetchMore() {
       if (
@@ -234,21 +239,14 @@ export default {
       ) {
         this.isLoadingProducts = true
 
-        const nextPageProducts = await this.$nacelle.data.collectionPage({
-          collection: this.collection,
-          list: this.selectedList,
-          paginate: true,
-          index: this.productIndex,
-          itemsPerPage: this.productsPerPage,
-          locale: this.locale
-        })
+        const nextPageProducts = await this.$nacelle.data.collectionPage(this.collectionPageOptions)
 
         this.products = [...this.products, ...nextPageProducts]
         this.productIndex += this.productsPerPage
         this.isLoadingProducts = false
 
         this.updateCollectionProducts({
-          handle: this.collectionHandle,
+          handle: this.handle,
           products: this.products,
           productIndex: this.productIndex
         })
