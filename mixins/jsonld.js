@@ -1,10 +1,11 @@
 /**
  * Make sure to test your generated ld+json Structured Data
  * ---
- * https://search.google.com/structured-data/testing-tool/u/0/
+ * https://search.google.com/test/rich-results
  */
 
 import { mapGetters } from 'vuex'
+import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
 
 export default (type) => {
   return {
@@ -14,7 +15,18 @@ export default (type) => {
       }
     },
     computed: {
-      ...mapGetters('space', ['getMetatag'])
+      ...mapGetters('space', ['getMetatag']),
+      content() {
+        if (this.article && this.article.source === 'contentful') {
+          return documentToPlainTextString(this.article.fields.content)
+        }
+  
+        if (this.article.content) {
+          return this.article.content
+        }
+  
+        return ''
+      }
     },
 
     created() {
@@ -32,7 +44,7 @@ export default (type) => {
             ...this.product.featuredMedia && {
               image: [this.product.featuredMedia.src]
             },
-            description: this.product.description,
+            description: this.strip(this.product.description),
             brand: {
               '@type': 'Thing',
               name: this.product.vendor
@@ -86,7 +98,7 @@ export default (type) => {
         ...this.article && {
           article: {
             '@type': 'Article',
-            articleBody: this.strip(this.article.content),
+            articleBody: this.strip(this.content),
             mainEntityOfPage: {
               '@type': 'WebPage',
               '@id': `https://${this.$store.state.space.domain}${this.$route.path}`
@@ -103,6 +115,9 @@ export default (type) => {
             },
             ...this.article.createdAt && {
               dateCreated: (new Date(this.article.createdAt * 1000)).toISOString()
+            },
+            ...this.article.updatedAt && {
+              dateModified: (new Date(this.article.updatedAt * 1000)).toISOString()
             },
             ...this.article.author && {
               author: {
