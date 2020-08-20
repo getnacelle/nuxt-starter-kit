@@ -7,4 +7,4 @@ curl $1 > tmp_file
 
 pbcopy < tmp_file
 
-open "https://search.google.com/structured-data/testing-tool/u/0/#new-test-code-tab"
+open "https://search.google.com/test/rich-results"
