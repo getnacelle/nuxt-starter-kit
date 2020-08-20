@@ -4,12 +4,12 @@ import ContentSideBySide from '@/components/nacelle/ContentSideBySide'
 const defaults = {
   imageUrl: 'https://placehold.it/800x800',
   title: 'Hero Title',
-  copy: 'Subtitle copy text',
+  contentHtml: 'Subtitle copy text',
   ctaText: 'CTA BUTTON'
 }
 
 describe('ContentSideBySide.vue', () => {
-  it('renders a side by side section', async() => {
+  it('renders a side by side section', async () => {
     const wrapper = shallowMount(ContentSideBySide, {
       propsData: { ...defaults }
     })

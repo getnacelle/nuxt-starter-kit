@@ -5,10 +5,7 @@ module.exports = {
     node: true,
     'jest/globals': true
   },
-  extends: [
-    'plugin:vue/essential',
-    'standard'
-  ],
+  extends: ['plugin:vue/essential', 'standard'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
@@ -17,11 +14,15 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
-  plugins: [
-    'vue',
-    'jest'
-  ],
+  plugins: ['vue', 'jest'],
   rules: {
-    "space-before-function-paren": ["error", "never"]
+    'space-before-function-paren': [
+      'error',
+      {
+        anonymous: 'always',
+        named: 'never',
+        asyncArrow: 'always'
+      }
+    ]
   }
 }

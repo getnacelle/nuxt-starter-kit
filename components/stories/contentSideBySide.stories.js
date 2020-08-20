@@ -19,7 +19,7 @@ export const Default = () => ({
     title: {
       default: text('Title', 'Section Title')
     },
-    copy: {
+    contentHtml: {
       default: text('Copy', 'Lorem ipsum dolor set...')
     },
     ctaText: {
@@ -39,7 +39,7 @@ export const Default = () => ({
     <content-side-by-side
       :imageUrl="imageUrl"
       :title="title"
-      :copy="copy"
+      :contentHtml="contentHtml"
       :ctaText="ctaText"
       :backgroundColor="backgroundColor"
       :reverseDesktop="reverseDesktop"
@@ -66,7 +66,7 @@ export const CustomSlots = () => ({
     title: {
       default: text('Title', 'Section Title')
     },
-    copy: {
+    contentHtml: {
       default: text('Copy', 'Lorem ipsum dolor set...')
     },
     ctaText: {
@@ -86,7 +86,7 @@ export const CustomSlots = () => ({
     <content-side-by-side
       :imageUrl="imageUrl"
       :title="title"
-      :copy="copy"
+      :contentHtml="contentHtml"
       :ctaText="ctaText"
       :backgroundColor="backgroundColor"
       :reverseDesktop="reverseDesktop"

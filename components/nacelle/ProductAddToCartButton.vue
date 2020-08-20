@@ -95,7 +95,6 @@ export default {
 
   computed: {
     ...mapState('cart', ['lineItems']),
-    ...mapGetters('cart', ['checkoutLineItems']),
 
     variantInLineItems() {
       const vm = this
@@ -139,8 +138,7 @@ export default {
       'addLineItem',
       'removeLineItem',
       'incrementLineItem',
-      'decrementLineItem',
-      'getLineItems'
+      'decrementLineItem'
     ]),
     ...mapMutations('cart', ['showCart']),
     addToCart() {

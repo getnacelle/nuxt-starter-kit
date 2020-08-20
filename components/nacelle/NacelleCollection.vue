@@ -1,13 +1,15 @@
 <template>
   <div class="nacelle collection-data-load">
     <slot v-if="collection" :collection="collection" :products="products" />
-    <button v-if="showButton" @click="fetchProducts" class="nacelle button">{{ buttonText }}</button>
+    <button v-if="showButton" @click="fetchProducts" class="nacelle button">
+      {{ buttonText }}
+    </button>
     <observe-emitter v-else v-on:observe="fetchProducts" />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
 
 export default {
@@ -121,7 +123,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('collections', ['addCollection', 'updateCollection']),
+    ...mapActions('collections', ['addCollection', 'updateCollection']),
     fetchProducts() {
       if (
         !this.isLoadingProducts &&

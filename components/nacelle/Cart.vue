@@ -40,7 +40,6 @@ export default {
       'hideCart',
       'setFreeShippingThreshold'
     ]),
-    ...mapActions('cart', ['updateLocalCart']),
     handleClose() {
       this.hideCart()
     }

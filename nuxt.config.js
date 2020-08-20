@@ -20,12 +20,7 @@ export default {
       }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      {
-        rel: 'stylesheet',
-        type: 'text/css',
-        href: `//dmf8x4ovgacxs.cloudfront.net/${process.env.NACELLE_SPACE_ID}/styles.css`
-      }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
   /*
@@ -91,7 +86,7 @@ export default {
   nacelle: {
     /* Required Parameters */
     spaceID: process.env.NACELLE_SPACE_ID,
-    token: process.env.NACELLE_GRAPHQL_TOKEN
+    token: process.env.NACELLE_GRAPHQL_TOKEN,
 
     /* Optional */
 
@@ -132,6 +127,10 @@ export default {
     // Customize the build process by creating a new NacelleClient class
     // object.
     // buildClient: null,
+
+    // Enables attempting to fetch data from a user's preferred locale and falling back
+    // fetching default locale data.
+    isMultiLocale: true
   },
 
   generate: {

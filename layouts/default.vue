@@ -30,8 +30,8 @@ export default {
     CartWatch
   },
   methods: {
-    ...mapMutations('cart', ['hideCart', 'setFreeShippingThreshold']),
-    ...mapActions('cart', ['updateLocalCart']),
+    ...mapActions('cart', ['initializeCart']),
+    ...mapActions('checkout', ['initializeCheckout']),
     ...mapActions('user', ['readSession'])
   },
   data() {
@@ -42,15 +42,13 @@ export default {
   computed: {
     ...mapGetters('space', ['getMetatag'])
   },
-  mounted() {
+  async mounted() {
     if (this.$refs.header) {
       this.headerHeight = this.$refs.header.$el.clientHeight
     }
 
-    this.updateLocalCart()
-    this.setFreeShippingThreshold(100)
-
-    this.hideCart()
+    await this.initializeCheckout()
+    await this.initializeCart()
 
     if (process.env.DEV_MODE === 'true') {
       console.log('dev mode active!')

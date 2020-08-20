@@ -7,7 +7,7 @@
       <router-link :to="`${pathFragment}${product.handle}`">
         <product-title :title="product.title" />
       </router-link>
-      <product-price :price="product.priceRange.max" />
+      <product-price :price="displayPrice" />
     </div>
     <div v-if="product && product.id" class="product-card-actions">
       <quantity-selector
@@ -80,6 +80,7 @@ import InterfaceModal from '~/components/nacelle/InterfaceModal'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 import allOptionsSelected from '~/mixins/allOptionsSelected'
 import availableOptions from '~/mixins/availableOptions'
+import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
 export default {
   components: {
@@ -92,32 +93,15 @@ export default {
     InterfaceModal,
     ProductOptions
   },
-  mixins: [allOptionsSelected, availableOptions],
+  mixins: [allOptionsSelected, availableOptions, getDisplayPriceForCurrency],
   props: {
     pathFragment: {
       type: String,
       default: '/products/'
     },
-    product: {
-      type: Object,
-      default: () => {
-        return {
-          priceRange: {
-            min: '0.0',
-            max: '0.00'
-          },
-          title: null,
-          featuredMedia: {
-            src: undefined
-          },
-          id: null,
-          handle: '',
-          variants: []
-        }
-      }
-    },
-    variant: {
-      type: Object
+    productHandle: {
+      type: String,
+      default: ''
     },
     showQuantityUpdate: {
       type: Boolean,
@@ -149,21 +133,27 @@ export default {
   },
   computed: {
     ...mapState('cart', ['lineItems']),
+    ...mapState('user', ['locale']),
     ...mapGetters('cart', ['quantityTotal']),
-
+    ...mapGetters('products', [
+      'getProductData',
+      'getSelectedVariant',
+      'getCartProduct'
+    ]),
+    product() {
+      return this.getProductData(this.productHandle).product
+    },
+    displayPrice() {
+      return this.getPriceForCurrency({
+        product: this.product,
+        fallbackPrice: this.currentVariant.price
+      })
+    },
     currentVariant() {
-      if (this.product.variants && this.product.variants.length == 1) {
-        return this.product.variants[0]
-      } else {
-        return this.selectedVariant
-      }
+      return this.getSelectedVariant(this.productHandle) || {}
     },
     currentVariantId() {
-      if (this.currentVariant && this.currentVariant.id) {
-        return this.currentVariant.id
-      }
-
-      return undefined
+      return this.currentVariant && this.currentVariant.id
     },
     mediaSrc() {
       if (
@@ -177,14 +167,7 @@ export default {
       return undefined
     },
     cartProduct() {
-      return {
-        image: this.product.featuredMedia,
-        title: this.product.title,
-        productId: this.product.id,
-        price: this.currentPrice,
-        handle: this.product.handle,
-        variant: this.currentVariant
-      }
+      return this.getCartProduct(this.productHandle)
     },
     productLineItems() {
       const vm = this

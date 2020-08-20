@@ -13,7 +13,7 @@
             class="shop-look-product"
           >
             <slot name="product-card" :product="product">
-              <product-card :product="product" />
+              <product-card :productHandle="product.handle" />
             </slot>
           </div>
           <interface-close-button

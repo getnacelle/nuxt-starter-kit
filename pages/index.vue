@@ -10,7 +10,7 @@
     <div v-if="this.noPageData">
       <content-hero-banner
         id="hero-banner"
-        backgroundImgUrl="https://nacelle-assets.s3-us-west-2.amazonaws.com/hero-banner.jpg"
+        imageUrl="https://nacelle-assets.s3-us-west-2.amazonaws.com/hero-banner.jpg"
         backgroundAltTag="Update your new Nacelle Store"
         :title="name"
         ctaText="Shop Now"
@@ -24,7 +24,7 @@
       <content-side-by-side
         imageUrl="https://nacelle-assets.s3-us-west-2.amazonaws.com/starship1.jpg"
         title="Image With Text"
-        copy="Connect Nacelle to your CMS to update content"
+        contentHtml="Connect Nacelle to your CMS to update content"
         ctaText="Shop Now"
         ctaUrl="/shop"
         backgroundColor="#f2eee8"
@@ -37,7 +37,7 @@
       <content-side-by-side
         imageUrl="https://nacelle-assets.s3-us-west-2.amazonaws.com/starship2.jpg"
         title="Image With Text"
-        copy="Connect Nacelle to your CMS to update content"
+        contentHtml="Connect Nacelle to your CMS to update content"
         ctaText="Shop Now"
         ctaUrl="/shop"
         backgroundColor="#f2eee8"
@@ -75,7 +75,7 @@
         /****
         /* -- Edit Hero Banner --
         /* |   Available slots:  |
-        /* name: "background", data: "backgroundImgUrl", "mobileBackgroundImgUrl", "backgroundAltTag"
+        /* name: "background", data: "imageUrl", "mobileBackgroundImgUrl", "backgroundAltTag"
         /* name: "body", data: "title", "subtitle", "textColor"
         /* name: "cta", data: "ctaUrl", "ctaText", "ctaHandler"
         /****
@@ -94,7 +94,7 @@
         /****
         /* -- Edit Side-by-Side Section --
         /* |       Available slots:       |
-        /* name: "body", data: "title", "copy"
+        /* name: "body", data: "title", "contentHtml"
         /* name: "cta", data: "ctaUrl", "ctaText", "ctaHandler"
         /****
 

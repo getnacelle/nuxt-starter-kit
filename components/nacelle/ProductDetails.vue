@@ -11,7 +11,7 @@
       <product-title :title="product.title" />
       <!-- <product-add-to-cart-button
         :product="product"
-        :variant="currentVariant"
+        :variant="selectedVariant"
         :allOptionsSelected="true"
         :onlyOneOption="true"
         :metafields="[{key:'test', value:'hi'}]"
@@ -21,13 +21,13 @@
         :category="product.productType"
       />
       <p class="price">
-        <product-price v-if="currentVariant" :price="currentVariant.price"  />
+        <product-price v-if="selectedVariant" :price="displayPrice" />
       </p>
       <product-description :description="product.description" />
       <product-variant-select
-        v-if="currentVariant"
+        v-if="selectedVariant"
         :product="product"
-        :variant="currentVariant"
+        :variant="selectedVariant"
         v-on:variant-selected="onVariantSelected"
       />
     </div>
@@ -42,45 +42,51 @@ import ProductTitle from '~/components/nacelle/ProductTitle'
 import ProductPrice from '~/components/nacelle/ProductPrice'
 import ProductDescription from '~/components/nacelle/ProductDescription'
 import ProductVariantSelect from '~/components/nacelle/ProductVariantSelect'
+import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
+
 export default {
   components: {
-ProductCategory,
-ProductMediaSelectView,
-ProductTitle,
-ProductPrice,
-ProductDescription,
-ProductVariantSelect
+    ProductCategory,
+    ProductMediaSelectView,
+    ProductTitle,
+    ProductPrice,
+    ProductDescription,
+    ProductVariantSelect
   },
-  data () {
-    return {
-      selectedVariant: undefined
-    }
+  mixins: [getDisplayPriceForCurrency],
+  data() {
+    return {}
   },
   props: {
-    product: {
-      type: Object,
-      default: () => {}
+    productHandle: {
+      type: String,
+      default: ''
     }
   },
   computed: {
-    currentVariant () {
-      if (this.selectedVariant) {
-        return this.selectedVariant
-      } else if (
-        this.product &&
-        this.product.variants &&
-        this.product.variants.length
-      ) {
-        return this.product.variants[0]
-      }
-
-      return undefined
+    ...mapState('user', ['locale']),
+    ...mapGetters('products', ['getProductData', 'getSelectedVariant']),
+    product() {
+      return this.getProductData(this.productHandle).product
+    },
+    displayPrice() {
+      return this.getPriceForCurrency({
+        product: this.product,
+        fallbackPrice: this.selectedVariant.price
+      })
+    },
+    selectedVariant() {
+      return this.getSelectedVariant(this.productHandle)
     }
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
-    onVariantSelected ({ selectedVariant }) {
-      this.selectedVariant = selectedVariant
+    ...mapMutations('products', ['setSelectedVariant']),
+    onVariantSelected({ selectedVariant }) {
+      this.setSelectedVariant({
+        productHandle: this.productHandle,
+        variantId: selectedVariant.id
+      })
     }
   }
 }

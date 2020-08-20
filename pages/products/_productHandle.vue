@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* Individual products are loaded with the getProduct mixin.
 /* For instructions related to connecting your invetory to
@@ -11,7 +11,10 @@
   <div class="product">
     <section class="section">
       <div class="container">
-        <product-details v-if="product" :product="product" />
+        <product-details
+          v-if="product && product.handle"
+          :productHandle="product.handle"
+        />
       </div>
     </section>
     <section class="section product-meta" v-if="product">

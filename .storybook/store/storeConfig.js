@@ -2,7 +2,7 @@ import cart from '../../store/cart'
 import menu from '../../store/menu'
 import modal from '../../store/modal'
 import events from '../../store/events'
-import product from '../../store/product'
+import products from '../../store/products'
 import user from '../../store/user'
 import space from '../../store/space'
 import search from '../../store/search'
@@ -16,7 +16,7 @@ export default function createStoreConfig() {
       menu,
       modal,
       events,
-      product,
+      products,
       user,
       space,
       search,
