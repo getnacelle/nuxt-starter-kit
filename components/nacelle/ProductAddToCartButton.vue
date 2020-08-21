@@ -6,10 +6,10 @@
       class="button is-primary"
     >
       <slot>
-        <span v-if="showSelectOptions">Select Options</span>
         <span v-if="showAddToCart">Add to Cart</span>
-        <span v-if="showOutOfStock">Out of Stock</span>
-        <span v-if="variantInLineItems">Added!</span>
+        <span v-else-if="showSelectOptions">Select Options</span>
+        <span v-else-if="variantInLineItems">Added!</span>
+        <span v-else-if="showOutOfStock">Out of Stock</span>
       </slot>
     </button>
   </div>
@@ -32,14 +32,17 @@ export default {
     },
 
     quantity: { type: Number, default: 1 },
-    allOptionsSelected: { type: Boolean, default: false },
-    confirmedSelection: { type: Boolean, default: false },
-    onlyOneOption: { type: Boolean, default: false }
+    confirmedSelection: { type: Boolean, default: false }
   },
 
   computed: {
     ...mapState('cart', ['lineItems']),
-    ...mapGetters('products', ['getProduct', 'getSelectedVariant']),
+    ...mapGetters('products', [
+      'getProduct',
+      'getSelectedVariant',
+      'onlyOneOption',
+      'allOptionsSelected'
+    ]),
 
     product() {
       return this.getProduct(this.productHandle)
@@ -61,19 +64,22 @@ export default {
     },
 
     showSelectOptions() {
+      console.log()
       return this.isProductVariantSelectChild
         ? !this.variantInLineItems &&
-            !this.allOptionsSelected &&
+            !this.allOptionsSelected(this.productHandle) &&
             this.product.availableForSale
-        : !this.onlyOneOption && this.product.availableForSale
+        : !this.onlyOneOption(this.productHandle) &&
+            this.product.availableForSale
     },
 
     disableAtcButton() {
       return (
-        !this.allOptionsSelected ||
-        (this.allOptionsSelected && this.variant === undefined) ||
+        !this.allOptionsSelected(this.productHandle) ||
+        (this.allOptionsSelected(this.productHandle) &&
+          this.variant === undefined) ||
         (!this.variantInLineItems &&
-          this.allOptionsSelected &&
+          this.allOptionsSelected(this.productHandle) &&
           !this.variant.availableForSale)
       )
     },
@@ -91,8 +97,8 @@ export default {
     showAddToCart() {
       return (
         (this.isProductVariantSelectChild
-          ? this.allOptionsSelected
-          : this.onlyOneOption) &&
+          ? this.allOptionsSelected(this.productHandle)
+          : this.onlyOneOption(this.productHandle)) &&
         !this.variantInLineItems &&
         this.variant &&
         this.variant.availableForSale
@@ -117,7 +123,10 @@ export default {
     ...mapMutations('cart', ['showCart']),
 
     addToCart() {
-      if (this.allOptionsSelected && this.product.availableForSale) {
+      if (
+        this.allOptionsSelected(this.productHandle) &&
+        this.product.availableForSale
+      ) {
         const lineItem = {
           image: this.product.featuredMedia,
           title: this.product.title,

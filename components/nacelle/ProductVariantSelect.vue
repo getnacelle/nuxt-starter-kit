@@ -2,11 +2,7 @@
   <div class="variant-select nacelle">
     <product-options
       v-show="showProductOptions"
-      :options="allOptions"
-      :variant="selectedVariant"
-      v-on:selectedOptionsSet="setSelected"
-      :variants="product.variants"
-      v-on:clear="selectedOptions = []"
+      :productHandle="productHandle"
     />
     <slot name="above-button"></slot>
     <div class="columns is-mobile">
@@ -17,7 +13,7 @@
         <product-add-to-cart-button
           :quantity="quantity"
           :productHandle="product.handle"
-          :allOptionsSelected="allOptionsSelected"
+          :allOptionsSelected="allOptionsSelected(productHandle)"
         />
       </div>
     </div>
@@ -25,19 +21,16 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
-import allOptionsSelected from '~/mixins/allOptionsSelected'
-import availableOptions from '~/mixins/availableOptions'
 
 export default {
   props: {
-    product: {
-      type: Object
-    },
-    variant: {
-      type: Object
+    productHandle: {
+      type: String,
+      default: ''
     },
     showQuantitySelect: {
       type: Boolean,
@@ -49,13 +42,27 @@ export default {
       quantity: 0
     }
   },
-  mixins: [allOptionsSelected, availableOptions],
   components: {
     ProductOptions,
     QuantitySelector,
     ProductAddToCartButton
   },
   computed: {
+    ...mapGetters('products', [
+      'getProduct',
+      'getSelectedVariant',
+      'allOptionsSelected',
+      'getAllOptions'
+    ]),
+    product() {
+      return this.getProduct(this.productHandle)
+    },
+    allOptions() {
+      return this.getAllOptions(this.productHandle)
+    },
+    selectedVariant() {
+      return this.getSelectedVariant(this.productHandle)
+    },
     showProductOptions() {
       return (
         Array.isArray(this.allOptions) &&
@@ -66,7 +73,7 @@ export default {
     },
     displayQuantitySelect() {
       return (
-        this.allOptionsSelected &&
+        this.allOptionsSelected(this.productHandle) &&
         this.selectedVariant &&
         this.selectedVariant.availableForSale &&
         this.showQuantitySelect

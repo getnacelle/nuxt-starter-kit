@@ -1,9 +1,9 @@
 <template>
   <div v-if="options" class="options nacelle">
     <div class="option" v-for="option in options" :key="option.name">
-      <h3 class="option-label">{{option.name}}</h3>
+      <h3 class="option-label">{{ option.name }}</h3>
       <product-option-swatches
-        v-on:optionSet="setSelectedOptions"
+        v-on:optionSet="(option) => setSelectedOption({productHandle, option})"
         :option="option"
         :variants="variants"
         :selectedOptions="selectedOptions"
@@ -12,34 +12,35 @@
     </div>
     <button
       class="button is-primary"
-      :disabled="!allOptionsSelected || allOptionsSelected && variant == undefined"
+      :disabled="
+        !allOptionsSelected(productHandle) || (allOptionsSelected(productHandle) && variant == undefined)
+      "
       v-if="isChildOfModal"
       @click="confirmSelection"
     >
-      <span v-if="allOptionsSelected && variant != undefined">Confirm Selection</span>
-      <span v-if="allOptionsSelected && variant == undefined">Select other options</span>
-      <span v-if="!allOptionsSelected">Select your options</span>
+      <span v-if="allOptionsSelected(productHandle) && variant != undefined"
+        >Confirm Selection</span
+      >
+      <span v-if="allOptionsSelected(productHandle) && variant == undefined"
+        >Select other options</span
+      >
+      <span v-if="!allOptionsSelected(productHandle)">Select your options</span>
     </button>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
 import ProductOptionSwatches from '~/components/nacelle/ProductOptionSwatches'
 export default {
   props: {
-    options: {
-      type: Array
-    },
-    variants: {
-      type: Array
-    },
-    variant: {
-      type: Object
+    productHandle: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      selectedOptions: [],
       clearOptionValue: false
     }
   },
@@ -47,11 +48,6 @@ export default {
     ProductOptionSwatches
   },
   watch: {
-    selectedOptions() {
-      if (this.allOptionsSelected == true) {
-        this.$emit('selectedOptionsSet', this.selectedOptions)
-      }
-    },
     clearOptionValue(val) {
       if (val == true) {
         setTimeout(() => {
@@ -62,72 +58,43 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('products', [
+      'getProduct',
+      'getSelectedVariant',
+      'getAllOptions',
+      'allOptionsSelected',
+      'getSelectedOptions'
+    ]),
+
+    selectedOptions() {
+      return this.getSelectedOptions(this.productHandle)
+    },
+    options() {
+      return this.getAllOptions(this.productHandle)
+    },
+    variants() {
+      return this.getProduct(this.productHandle).variants
+    },
+
+    variant() {
+      return this.getSelectedVariant(this.productHandle)
+    },
     isChildOfModal() {
       if (this.$parent.$options._componentTag == 'interface-modal') {
         return true
       } else {
         return false
       }
-    },
-    allOptionsSelected() {
-      const vm = this
-      if (this.options.length == 1 && this.options[0].values.length == 1) {
-        return true
-      } else {
-        const optionsSelected = this.options.map(option => {
-          const searchOptions = this.selectedOptions.filter(selected => {
-            return selected.name == option.name
-          })
-          if (searchOptions.length == 1) {
-            return true
-          } else if (option.values.length == 1) {
-            return true
-          } else {
-            return false
-          }
-        })
-
-        if (
-          optionsSelected.every(option => {
-            return option == true
-          })
-        ) {
-          return true
-        } else {
-          return false
-        }
-      }
-
-      // if (this.selectedOptions.length == this.options.length) {
-      //   return true
-      // } else if (
-      //   this.options.length == 1 &&
-      //   this.options[0].values.length == 1
-      // ) {
-      //   return true
-      // } else {
-      //   return false
-      // }
     }
   },
   methods: {
-    setSelectedOptions(selectedOption) {
-      const vm = this
-      const searchOptions = this.selectedOptions.filter(option => {
-        return option.name == selectedOption.name
-      })
-      if (searchOptions.length == 0) {
-        vm.selectedOptions.push(selectedOption)
-      } else {
-        const index = vm.selectedOptions.findIndex(option => {
-          return option.name == selectedOption.name
-        })
-        vm.selectedOptions.splice(index, 1, selectedOption)
-      }
-    },
+    ...mapMutations('products', ['setSelectedOption', 'clearSelectedOptions']),
     confirmSelection() {
       this.$emit('confirmedSelection')
     }
+  },
+  created() {
+    this.clearSelectedOptions(this.productHandle)
   }
 }
 </script>
