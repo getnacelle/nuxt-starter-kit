@@ -1,3 +1,6 @@
+import Vue from 'vue'
+import deepmerge from 'deepmerge'
+
 const defaultProductData = {
   product: {
     priceRange: {
@@ -13,7 +16,7 @@ const defaultProductData = {
     handle: '',
     variants: []
   },
-  selectedVariant: undefined,
+  selectedVariantId: undefined,
   metafields: [],
   quantity: 1,
   allOptionsSelected: false,
@@ -34,7 +37,7 @@ export const getters = {
   },
   getProduct: state => handle => {
     const productData = state.products[handle] || defaultProductData
-    return productData.product
+    return productData.product || defaultProductData.product
   },
   getCartProduct: state => handle => {
     const productData = state.products[handle] || defaultProductData
@@ -53,13 +56,12 @@ export const getters = {
     return productData
   },
   getSelectedVariant: state => handle => {
-    const productData = state.products[handle]
-    if (!productData) {
-      return
-    }
+    const productData = state.products[handle] || defaultProductData
 
-    if (productData.selectedVariant) {
-      return productData.selectedVariant
+    if (productData.selectedVariantId) {
+      return productData.product.variants.find(
+        variant => variant.id === productData.selectedVariantId
+      )
     }
 
     if (
@@ -88,7 +90,12 @@ export const mutations = {
 
       const existingProductData = state.products[handle] || defaultProductData
 
-      state.products[handle] = { ...existingProductData, ...productData }
+      state.products = {
+        ...state.products,
+        [handle]: deepmerge(existingProductData, productData, {
+          arrayMerge: (dest, source) => source
+        })
+      }
     }),
 
   setCurrentProductHandle: (state, handle) =>
@@ -100,19 +107,46 @@ export const mutations = {
       !productData ||
       !productData.product ||
       !productData.product.variants ||
-      !variantId
+      !variantId ||
+      !productData.product.variants.map(v => v.id).includes(variantId)
     ) {
       return
     }
 
-    const variant = productData.product.variants.find(
-      variant => variant.id === variantId
-    )
-    productData.selectedVariant = variant
+    state.products = {
+      ...state.products,
+      [productHandle]: {
+        ...state.products[productHandle],
+        selectedVariantId: variantId
+      }
+    }
   }
 }
 
-export const actions = {}
+export const actions = {
+  loadProduct: async ({ rootState, commit }, { productHandle }) => {
+    const locale = rootState.user.locale.locale
+    const loadFromFile = () => {
+      const fs = require('fs')
+      const file = fs.readFileSync(
+        `./static/data/products/${productHandle}--${locale}/static.json`,
+        'utf-8'
+      )
+      return JSON.parse(file)
+    }
+
+    const loadFromNacelle = async () => {
+      return await Vue.prototype.$nuxt.$nacelle.data.product({
+        handle: productHandle,
+        locale: locale
+      })
+    }
+
+    const product = process.server ? loadFromFile() : await loadFromNacelle()
+
+    commit('upsertProducts', [{ product }])
+  }
+}
 
 export default {
   namespaced: true,

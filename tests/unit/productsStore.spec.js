@@ -36,7 +36,7 @@ describe('Event Store', () => {
     })
 
     expect(
-      store.state.products.products[defaultProduct.handle].selectedVariant.id
+      store.state.products.products[defaultProduct.handle].selectedVariantId
     ).toEqual(variantId)
   })
 })

@@ -1,39 +1,42 @@
 <template>
-  <div @click="toggle" class="add-to-wishlist" :class="isSavedInWishlist ? 'saved' : 'not-saved'">
+  <div
+    @click="toggle"
+    class="add-to-wishlist"
+    :class="isSavedInWishlist ? 'saved' : 'not-saved'"
+  >
     <slot name="icon"></slot>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   props: {
-    product: {
-      type: Object
-    },
-    variant: {
-      type: Object
+    productHandle: {
+      type: String,
+      default: ''
     }
   },
   methods: {
     ...mapActions('wishlist', ['addToWishlist', 'removeFromWishlist']),
     toggle() {
       const { variant, product } = this
-      if (this.isSavedInWishlist) {
-        this.removeFromWishlist({ variantId: variant.id })
-      } else {
-        this.addToWishlist({
-          product,
-          variant
-        })
-      }
+      this.isSavedInWishlist
+        ? this.removeFromWishlist({ variantId: variant.id })
+        : this.addToWishlist({ product, variant })
     }
   },
   computed: {
+    ...mapGetters('products', ['getProduct', 'getSelectedVariant']),
+    ...mapGetters('wishlist', ['getItemByVariantId']),
+    product() {
+      return this.getProduct(this.productHandle)
+    },
+    variant() {
+      return this.getSelectedVariant(this.productHandle)
+    },
     isSavedInWishlist() {
-      return !!this.$store.getters['wishlist/getItemByVariantId'](
-        this.variant.id
-      )
+      return this.variant && !!this.getItemByVariantId(this.variant.id)
     }
   }
 }
