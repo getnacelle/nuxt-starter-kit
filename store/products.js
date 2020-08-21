@@ -1,3 +1,4 @@
+import axios from 'axios'
 import Vue from 'vue'
 import deepmerge from 'deepmerge'
 import uniqWith from 'lodash.uniqwith'
@@ -19,6 +20,7 @@ const defaultProductData = {
     handle: '',
     variants: []
   },
+  recommendations: [],
   selectedVariantId: undefined,
   selectedOptions: [],
   metafields: [],
@@ -128,10 +130,10 @@ export const getters = {
         s.map(option =>
           option.name === 'Color'
             ? {
-                name: option.name,
-                value: option.value,
-                swatchSrc: variant.swatchSrc
-              }
+              name: option.name,
+              value: option.value,
+              swatchSrc: variant.swatchSrc
+            }
             : option
         )
       )
@@ -217,8 +219,32 @@ export const getters = {
     if (variants && variants.length) {
       return productData.product.variants[0]
     }
+  },
 
-    return
+  /**
+   * @param {string} handle - Product handle to get recommendations for.
+   * @param {string} options.limit - Default is 0 (all). Max number of recommendtations to get. 0 gets all.
+   * @param {string} options.source - Default is 'rule'. Source of recommendations. Possible values: 'all', 'rule', or 'generated'.
+   * @param {boolean} options.cascade - Default is true. Use alternate source if no recommendations available?
+   */
+  getRecommendations: state => (handle, options = {}) => {
+    const defaultOptions = {
+      limit: 0,
+      source: 'rule',
+      cascade: true
+    }
+    const { limit, source, cascade } = { ...defaultOptions, ...options }
+    const productData = state.products[handle] || defaultProductData
+    const recommendationsData = productData.recommendations
+    const sourceRecommendations = recommendationsData.filter(
+      r => r.source === source
+    )
+    const recommendations =
+      sourceRecommendations.length || !cascade
+        ? sourceRecommendations
+        : recommendationsData
+
+    return recommendations.slice(0, limit || recommendations.length)
   }
 }
 
@@ -348,6 +374,86 @@ export const actions = {
     const product = process.server ? loadFromFile() : await loadFromNacelle()
 
     commit('upsertProducts', [{ product }])
+  },
+
+  loadProductRecommendations: async (
+    { rootState, state, dispatch, commit },
+    { productHandle }
+  ) => {
+    if (!productHandle) {
+      return
+    }
+
+    const existingProduct = state.products[productHandle]
+    if (
+      existingProduct &&
+      existingProduct.recommendations &&
+      existingProduct.recommendations.length
+    ) {
+      return
+    }
+
+    const locale = (rootState.user.locale.locale || 'en-us').toLowerCase()
+    const nacelleStaticUrl = process.env.DEV_MODE
+      ? 'nacellestatic-dev.s3.amazonaws.com'
+      : 'nacellestatic.s3.amazonaws.com'
+
+    let generatedRecommendations
+    try {
+      const recommendationsData = await axios.get(
+        `https://${nacelleStaticUrl}/${process.env.nacelleSpaceID}/merchandising/products/${productHandle}--${locale}.json`
+      )
+      generatedRecommendations = JSON.parse(recommendationsData.data)
+    } catch (error) {
+      console.log(
+        `Unable to load generated product recommendations for ${productHandle}.`
+      )
+    }
+
+    let rulesRecommendations
+    try {
+      const merchandisingRulesData = await axios.get(
+        `https://${nacelleStaticUrl}/${process.env.nacelleSpaceID}/merchandising-rules.json`
+      )
+      const merchandisingRules = merchandisingRulesData.data.rules.find(rule =>
+        rule.inputs.includes(productHandle)
+      )
+      rulesRecommendations = merchandisingRules
+        ? merchandisingRules.outputs
+        : []
+    } catch (error) {
+      console.log(
+        `Unable to load product recommendation rules for ${productHandle}.`
+      )
+    }
+
+    const recommendations = [
+      ...(generatedRecommendations || []).map(handle => ({
+        handle,
+        source: 'generated'
+      })),
+      ...(rulesRecommendations || []).map(handle => ({
+        handle,
+        source: 'rule'
+      }))
+    ]
+
+    if (!recommendations || !recommendations.length) {
+      return
+    }
+
+    recommendations.map(({ handle }) => {
+      dispatch('loadProduct', { productHandle: handle })
+    })
+
+    const productUpdate = {
+      product: {
+        handle: productHandle
+      },
+      recommendations
+    }
+
+    commit('upsertProducts', [productUpdate])
   }
 }
 

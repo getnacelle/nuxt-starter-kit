@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import ProductCategory from '~/components/nacelle/ProductCategory'
 import ProductMediaSelectView from '~/components/nacelle/ProductMediaSelectView'
 import ProductTitle from '~/components/nacelle/ProductTitle'
