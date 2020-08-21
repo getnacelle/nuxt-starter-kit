@@ -66,11 +66,17 @@ import ProductDetails from '~/components/nacelle/ProductDetails'
 import ProductRecommendations from '~/components/nacelle/ProductRecommendations'
 import productMetafields from '~/mixins/productMetafields'
 import viewEvent from '~/mixins/viewEvent'
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import jsonld from '~/mixins/jsonld'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   components: { ProductDetails, ProductRecommendations },
-  mixins: [getProduct(), productMetafields, viewEvent('product')],
+  mixins: [
+    getProduct(),
+    productMetafields,
+    viewEvent('product'),
+    jsonld('product')
+  ],
   computed: {
     ...mapGetters('space', ['getMetatag'])
   },

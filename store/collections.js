@@ -4,7 +4,7 @@ export const state = () => ({
 
 export const getters = {
   getCollection: state => handle => {
-    return state.collections.find(collection => collection.handle === handle)
+    return state.collections.find(({ collectionHandle }) => collectionHandle === handle)
   }
 }
 
@@ -14,9 +14,9 @@ export const mutations = {
   },
 
   updateCollection(state, collection) {
-    if (collection && collection.handle) {
-      const index = state.collections.findIndex(({ handle }) => {
-        return handle === collection.handle
+    if (collection && collection.collectionHandle) {
+      const index = state.collections.findIndex(({ collectionHandle }) => {
+        return collectionHandle === collection.handle
       })
 
       if (index > -1) {
@@ -29,8 +29,8 @@ export const mutations = {
 
   updateCollectionProducts(state, payload) {
     if (payload.products) {
-      const index = state.collections.findIndex(({ handle }) => {
-        return handle === payload.handle
+      const index = state.collections.findIndex(({ collectionHandle }) => {
+        return collectionHandle === payload.handle
       })
 
       if (index > -1) {

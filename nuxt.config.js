@@ -42,6 +42,8 @@ export default {
     buildMode: process.env.BUILD_MODE
   },
 
+  plugins: ['~/plugins/jsonld'],
+
   modules: [
     '@nuxtjs/pwa',
     '@nuxtjs/dotenv',

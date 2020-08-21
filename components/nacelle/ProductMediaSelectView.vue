@@ -61,9 +61,9 @@ export default {
   computed: {
     mediaComponent() {
       if (this.selectedMedia) {
-        if (this.selectedMedia.type == 'image') {
+        if (this.selectedMedia.type === 'image') {
           return 'ProductImage'
-        } else if (this.selectedMedia.type == 'video') {
+        } else if (this.selectedMedia.type === 'video') {
           return 'ProductVideo'
         }
       }

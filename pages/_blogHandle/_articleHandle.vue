@@ -60,6 +60,7 @@ import { mapGetters } from 'vuex'
 import getBlogArticle from '~/mixins/getBlogArticle'
 import getCollection from '~/mixins/getCollection'
 import viewEvent from '~/mixins/viewEvent'
+import jsonld from '~/mixins/jsonld'
 import InterfaceFeaturedMedia from '~/components/nacelle/InterfaceFeaturedMedia'
 import BlogArticleHeader from '~/components/nacelle/BlogArticleHeader'
 import BlogArticleContent from '~/components/nacelle/BlogArticleContent'
@@ -73,7 +74,8 @@ export default nmerge({
   mixins: [
     getCollection(),
     getBlogArticle(),
-    viewEvent('article')
+    viewEvent('article'),
+    jsonld('article')
   ],
   computed: {
     ...mapGetters('space', ['getMetatag'])

@@ -92,6 +92,7 @@ sw.*
 
 # Nacelle
 static/data
+tmp_file
 
 # VS Code
 .vscode

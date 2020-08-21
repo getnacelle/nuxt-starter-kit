@@ -16,18 +16,15 @@
       />
       <product-add-to-cart-button
         v-if="showAddToCart === true"
-        :product="product"
-        :variant="currentVariant"
-        :allOptionsSelected="allOptionsSelected"
+        :productHandle="productHandle"
+        :allOptionsSelected="allOptionsSelected(productHandle)"
         :confirmedSelection="confirmedSelection"
         @click.native="handleAddToCartClick"
-        :onlyOneOption="onlyOneOption"
         :quantity="quantity"
       ></product-add-to-cart-button>
       <product-add-to-wishlist-button
         class="circle-button is-primary"
-        :variant="currentVariant"
-        :product="product"
+        :productHandle="productHandle"
       >
         <template v-slot:icon>
           <svg
@@ -54,14 +51,10 @@
       >
         <h3 class="modal-title">Choose Your Options</h3>
         <product-options
-          :options="allOptions"
-          v-on:selectedOptionsSet="setSelected"
+          :productHandle="productHandle"
           v-on:confirmedSelection="
             ;(confirmedSelection = true), (optionsModalVisible = false)
           "
-          :onlyOneOption="onlyOneOption"
-          :variant="currentVariant"
-          :variants="product.variants"
         />
       </interface-modal>
     </div>
@@ -78,9 +71,6 @@ import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 import ProductAddToWishlistButton from '~/components/nacelle/ProductAddToWishlistButton'
 import InterfaceModal from '~/components/nacelle/InterfaceModal'
 import ProductOptions from '~/components/nacelle/ProductOptions'
-import allOptionsSelected from '~/mixins/allOptionsSelected'
-import availableOptions from '~/mixins/availableOptions'
-import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
 export default {
   components: {
@@ -93,7 +83,6 @@ export default {
     InterfaceModal,
     ProductOptions
   },
-  mixins: [allOptionsSelected, availableOptions, getDisplayPriceForCurrency],
   props: {
     pathFragment: {
       type: String,
@@ -138,22 +127,28 @@ export default {
     ...mapGetters('products', [
       'getProductData',
       'getSelectedVariant',
-      'getCartProduct'
+      'getCartProduct',
+      'allOptionsSelected',
+      'getAllOptions',
+      'getPriceForCurrency'
     ]),
     product() {
       return this.getProductData(this.productHandle).product
     },
+    allOptions() {
+      return this.getAllOptions(this.productHandle)
+    },
     displayPrice() {
       return this.getPriceForCurrency({
-        product: this.product,
-        fallbackPrice: this.currentVariant.price
+        productHandle: this.productHandle,
+        fallbackPrice: this.selectedVariant.price
       })
     },
-    currentVariant() {
+    selectedVariant() {
       return this.getSelectedVariant(this.productHandle) || {}
     },
-    currentVariantId() {
-      return this.currentVariant && this.currentVariant.id
+    selectedVariantId() {
+      return this.selectedVariant && this.selectedVariant.id
     },
     mediaSrc() {
       if (
@@ -174,17 +169,6 @@ export default {
       return this.lineItems.filter(item => {
         return item.productId == vm.product.id
       })
-    },
-    onlyOneOption() {
-      if (
-        this.allOptions &&
-        this.allOptions.length == 1 &&
-        this.allOptions[0].values.length == 1
-      ) {
-        return true
-      } else {
-        return false
-      }
     }
   },
 
@@ -192,7 +176,7 @@ export default {
     ...mapMutations('cart', ['showCart']),
     ...mapActions('events', ['productView']),
     handleAddToCartClick() {
-      if (!this.allOptionsSelected) {
+      if (!this.allOptionsSelected(this.productHandle)) {
         this.optionsModalVisible = true
       }
     }

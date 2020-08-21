@@ -9,13 +9,6 @@
     </div>
     <div class="column is-5 is-offset-1">
       <product-title :title="product.title" />
-      <!-- <product-add-to-cart-button
-        :product="product"
-        :variant="selectedVariant"
-        :allOptionsSelected="true"
-        :onlyOneOption="true"
-        :metafields="[{key:'test', value:'hi'}]"
-      />-->
       <product-category
         v-if="product.productType"
         :category="product.productType"
@@ -26,23 +19,20 @@
       <product-description :description="product.description" />
       <product-variant-select
         v-if="selectedVariant"
-        :product="product"
-        :variant="selectedVariant"
-        v-on:variant-selected="onVariantSelected"
+        :productHandle="productHandle"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import ProductCategory from '~/components/nacelle/ProductCategory'
 import ProductMediaSelectView from '~/components/nacelle/ProductMediaSelectView'
 import ProductTitle from '~/components/nacelle/ProductTitle'
 import ProductPrice from '~/components/nacelle/ProductPrice'
 import ProductDescription from '~/components/nacelle/ProductDescription'
 import ProductVariantSelect from '~/components/nacelle/ProductVariantSelect'
-import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
 export default {
   components: {
@@ -53,7 +43,6 @@ export default {
     ProductDescription,
     ProductVariantSelect
   },
-  mixins: [getDisplayPriceForCurrency],
   data() {
     return {}
   },
@@ -65,13 +54,17 @@ export default {
   },
   computed: {
     ...mapState('user', ['locale']),
-    ...mapGetters('products', ['getProduct', 'getSelectedVariant']),
+    ...mapGetters('products', [
+      'getProductData',
+      'getSelectedVariant',
+      'getPriceForCurrency'
+    ]),
     product() {
-      return this.getProduct(this.productHandle)
+      return this.getProductData(this.productHandle).product
     },
     displayPrice() {
       return this.getPriceForCurrency({
-        product: this.product,
+        productHandle: this.productHandle,
         fallbackPrice: this.selectedVariant.price
       })
     },
@@ -81,13 +74,7 @@ export default {
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
-    ...mapMutations('products', ['setSelectedVariant']),
-    onVariantSelected({ selectedVariant }) {
-      this.setSelectedVariant({
-        productHandle: this.productHandle,
-        variantId: selectedVariant.id
-      })
-    }
+    ...mapMutations('products', ['setSelectedVariant'])
   }
 }
 </script>
