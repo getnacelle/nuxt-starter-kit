@@ -1,3 +1,11 @@
+## [1.0.4](https://github.com/getnacelle/nacelle-nuxt-starter/compare/v1.0.1...v1.0.4) (2020-07-23)
+
+### Changed
+
+- Updated [@nacelle/nacelle-nuxt-module](https://www.npmjs.com/package/@nacelle/nacelle-nuxt-module) version.
+- [`pages/shop.vue`] - Changed "Shop All" collection handle to `nacelle-gen-shop-all`.
+- Refactored product details components and moved logic into newly created getters in `store/products.js`.
+
 ## [1.0.3](https://github.com/getnacelle/nacelle-nuxt-starter/compare/v1.0.1...v1.0.3) (2020-07-23)
 
 ### Changed
