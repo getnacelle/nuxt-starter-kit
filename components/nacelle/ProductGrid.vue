@@ -1,8 +1,13 @@
 <template>
   <div class="product-grid columns is-multiline is-paddingless nacelle">
-    <div v-for="product in products" :key="product.id" class="card-wrapper" :class="columnClasses">
+    <div
+      v-for="product in products"
+      :key="product.id"
+      class="card-wrapper"
+      :class="columnClasses"
+    >
       <product-card
-        :product="product"
+        :productHandle="product.handle"
         :showQuantityUpdate="showQuantityUpdate"
         :showAddToCart="showAddToCart"
       />

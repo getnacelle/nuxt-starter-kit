@@ -9,37 +9,30 @@
     </div>
     <div class="column is-5 is-offset-1">
       <product-title :title="product.title" />
-      <!-- <product-add-to-cart-button
-        :product="product"
-        :variant="currentVariant"
-        :allOptionsSelected="true"
-        :onlyOneOption="true"
-        :metafields="[{key:'test', value:'hi'}]"
-      />-->
-      <product-category v-if="product.productType" :category="product.productType" />
+      <product-category
+        v-if="product.productType"
+        :category="product.productType"
+      />
       <p class="price">
-        <product-price v-if="currentVariant" :price="displayPrice" />
+        <product-price v-if="selectedVariant" :price="displayPrice" />
       </p>
       <product-description :description="product.description" />
       <product-variant-select
-        v-if="currentVariant"
-        :product="product"
-        :variant="currentVariant"
-        v-on:variant-selected="onVariantSelected"
+        v-if="selectedVariant"
+        :productHandle="productHandle"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import ProductCategory from '~/components/nacelle/ProductCategory'
 import ProductMediaSelectView from '~/components/nacelle/ProductMediaSelectView'
 import ProductTitle from '~/components/nacelle/ProductTitle'
 import ProductPrice from '~/components/nacelle/ProductPrice'
 import ProductDescription from '~/components/nacelle/ProductDescription'
 import ProductVariantSelect from '~/components/nacelle/ProductVariantSelect'
-import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
 export default {
   components: {
@@ -50,45 +43,38 @@ export default {
     ProductDescription,
     ProductVariantSelect
   },
-  mixins: [getDisplayPriceForCurrency],
   data() {
-    return {
-      selectedVariant: undefined
-    }
+    return {}
   },
   props: {
-    product: {
-      type: Object,
-      default: () => {}
+    productHandle: {
+      type: String,
+      default: ''
     }
   },
   computed: {
     ...mapState('user', ['locale']),
+    ...mapGetters('products', [
+      'getProductData',
+      'getSelectedVariant',
+      'getPriceForCurrency'
+    ]),
+    product() {
+      return this.getProductData(this.productHandle).product
+    },
     displayPrice() {
       return this.getPriceForCurrency({
-        product: this.product,
-        fallbackPrice: this.currentVariant.price
+        productHandle: this.productHandle,
+        fallbackPrice: this.selectedVariant.price
       })
     },
-    currentVariant() {
-      if (this.selectedVariant) {
-        return this.selectedVariant
-      } else if (
-        this.product &&
-        this.product.variants &&
-        this.product.variants.length
-      ) {
-        return this.product.variants[0]
-      }
-
-      return undefined
+    selectedVariant() {
+      return this.getSelectedVariant(this.productHandle)
     }
   },
   methods: {
     ...mapMutations('cart', ['showCart']),
-    onVariantSelected({ selectedVariant }) {
-      this.selectedVariant = selectedVariant
-    }
+    ...mapMutations('products', ['setSelectedVariant'])
   }
 }
 </script>

@@ -20,12 +20,7 @@ export default {
       }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      {
-        rel: 'stylesheet',
-        type: 'text/css',
-        href: `//dmf8x4ovgacxs.cloudfront.net/${process.env.NACELLE_SPACE_ID}/styles.css`
-      }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
   /*
@@ -46,6 +41,8 @@ export default {
     nacelleToken: process.env.NACELLE_GRAPHQL_TOKEN,
     buildMode: process.env.BUILD_MODE
   },
+
+  plugins: ['~/plugins/jsonld'],
 
   modules: [
     '@nuxtjs/pwa',

@@ -80,7 +80,6 @@ dist
 
 # IDE / Editor
 .idea
-.editorconfig
 
 # Service worker
 sw.*
@@ -93,6 +92,7 @@ sw.*
 
 # Nacelle
 static/data
+tmp_file
 
 # VS Code
 .vscode

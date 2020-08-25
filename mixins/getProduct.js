@@ -24,20 +24,22 @@ export default (config = {}) => {
         const fs = require('fs')
         try {
           const file = fs.readFileSync(
-          `./static/data/products/${productObj.productHandle}--${productObj.locale}/static.json`,
-          'utf-8'
+            `./static/data/products/${productObj.productHandle}--${productObj.locale}/static.json`,
+            'utf-8'
           )
           productObj.product = JSON.parse(file)
         } catch (err) {
           productObj.noProductData = true
         }
       } else {
-        productObj.product = await $nacelle.data.product({
-          handle: productObj.productHandle,
-          locale: productObj.locale
-        }).catch(() => {
-          productObj.noProductData = true
-        })
+        productObj.product = await $nacelle.data
+          .product({
+            handle: productObj.productHandle,
+            locale: productObj.locale
+          })
+          .catch(() => {
+            productObj.noProductData = true
+          })
       }
 
       return {
@@ -46,24 +48,26 @@ export default (config = {}) => {
     },
     async created() {
       if (this.product) {
-        this.setProduct(this.product)
+        this.upsertProducts([{ product: this.product }])
       }
 
       this.unsubscribe = this.$store.subscribe(async (mutation, state) => {
         if (mutation.type === 'user/setLocale') {
           this.locale = mutation.payload.locale
 
-          this.product = await this.$nacelle.data.product({
-            handle: this.productHandle,
-            locale: this.$nacelle.locale
-          }).catch(() => {
-            this.noProductData = true
-          })
+          this.product = await this.$nacelle.data
+            .product({
+              handle: this.productHandle,
+              locale: this.$nacelle.locale
+            })
+            .catch(() => {
+              this.noProductData = true
+            })
         }
       })
     },
     methods: {
-      ...mapMutations('product', ['setProduct'])
+      ...mapMutations('products', ['upsertProducts'])
     },
     beforeDestroy() {
       this.unsubscribe()

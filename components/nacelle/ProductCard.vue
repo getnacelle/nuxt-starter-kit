@@ -10,21 +10,21 @@
       <product-price :price="displayPrice" />
     </div>
     <div v-if="product && product.id" class="product-card-actions">
-      <quantity-selector v-if="showQuantityUpdate === true" :quantity.sync="quantity" />
+      <quantity-selector
+        v-if="showQuantityUpdate === true"
+        :quantity.sync="quantity"
+      />
       <product-add-to-cart-button
         v-if="showAddToCart === true"
-        :product="product"
-        :variant="currentVariant"
-        :allOptionsSelected="allOptionsSelected"
+        :productHandle="productHandle"
+        :allOptionsSelected="allOptionsSelected(productHandle)"
         :confirmedSelection="confirmedSelection"
         @click.native="handleAddToCartClick"
-        :onlyOneOption="onlyOneOption"
         :quantity="quantity"
       ></product-add-to-cart-button>
       <product-add-to-wishlist-button
         class="circle-button is-primary"
-        :variant="currentVariant"
-        :product="product"
+        :productHandle="productHandle"
       >
         <template v-slot:icon>
           <svg
@@ -51,14 +51,10 @@
       >
         <h3 class="modal-title">Choose Your Options</h3>
         <product-options
-          :options="allOptions"
-          v-on:selectedOptionsSet="setSelected"
+          :productHandle="productHandle"
           v-on:confirmedSelection="
             ;(confirmedSelection = true), (optionsModalVisible = false)
           "
-          :onlyOneOption="onlyOneOption"
-          :variant="currentVariant"
-          :variants="product.variants"
         />
       </interface-modal>
     </div>
@@ -75,9 +71,6 @@ import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
 import ProductAddToWishlistButton from '~/components/nacelle/ProductAddToWishlistButton'
 import InterfaceModal from '~/components/nacelle/InterfaceModal'
 import ProductOptions from '~/components/nacelle/ProductOptions'
-import allOptionsSelected from '~/mixins/allOptionsSelected'
-import availableOptions from '~/mixins/availableOptions'
-import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
 export default {
   components: {
@@ -90,32 +83,14 @@ export default {
     InterfaceModal,
     ProductOptions
   },
-  mixins: [allOptionsSelected, availableOptions, getDisplayPriceForCurrency],
   props: {
     pathFragment: {
       type: String,
       default: '/products/'
     },
-    product: {
-      type: Object,
-      default: () => {
-        return {
-          priceRange: {
-            min: '0.0',
-            max: '0.00'
-          },
-          title: null,
-          featuredMedia: {
-            src: undefined
-          },
-          id: null,
-          handle: '',
-          variants: []
-        }
-      }
-    },
-    variant: {
-      type: Object
+    productHandle: {
+      type: String,
+      default: ''
     },
     showQuantityUpdate: {
       type: Boolean,
@@ -149,26 +124,31 @@ export default {
     ...mapState('cart', ['lineItems']),
     ...mapState('user', ['locale']),
     ...mapGetters('cart', ['quantityTotal']),
-
+    ...mapGetters('products', [
+      'getProductData',
+      'getSelectedVariant',
+      'getCartProduct',
+      'allOptionsSelected',
+      'getAllOptions',
+      'getPriceForCurrency'
+    ]),
+    product() {
+      return this.getProductData(this.productHandle).product
+    },
+    allOptions() {
+      return this.getAllOptions(this.productHandle)
+    },
     displayPrice() {
       return this.getPriceForCurrency({
-        product: this.product,
-        fallbackPrice: this.currentVariant.price
+        productHandle: this.productHandle,
+        fallbackPrice: this.selectedVariant.price
       })
     },
-    currentVariant() {
-      if (this.product.variants && this.product.variants.length == 1) {
-        return this.product.variants[0]
-      } else {
-        return this.selectedVariant
-      }
+    selectedVariant() {
+      return this.getSelectedVariant(this.productHandle) || {}
     },
-    currentVariantId() {
-      if (this.currentVariant && this.currentVariant.id) {
-        return this.currentVariant.id
-      }
-
-      return undefined
+    selectedVariantId() {
+      return this.selectedVariant && this.selectedVariant.id
     },
     mediaSrc() {
       if (
@@ -182,31 +162,13 @@ export default {
       return undefined
     },
     cartProduct() {
-      return {
-        image: this.product.featuredMedia,
-        title: this.product.title,
-        productId: this.product.id,
-        price: this.currentPrice,
-        handle: this.product.handle,
-        variant: this.currentVariant
-      }
+      return this.getCartProduct(this.productHandle)
     },
     productLineItems() {
       const vm = this
       return this.lineItems.filter(item => {
         return item.productId == vm.product.id
       })
-    },
-    onlyOneOption() {
-      if (
-        this.allOptions &&
-        this.allOptions.length == 1 &&
-        this.allOptions[0].values.length == 1
-      ) {
-        return true
-      } else {
-        return false
-      }
     }
   },
 
@@ -214,7 +176,7 @@ export default {
     ...mapMutations('cart', ['showCart']),
     ...mapActions('events', ['productView']),
     handleAddToCartClick() {
-      if (!this.allOptionsSelected) {
+      if (!this.allOptionsSelected(this.productHandle)) {
         this.optionsModalVisible = true
       }
     }

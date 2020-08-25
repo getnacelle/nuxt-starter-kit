@@ -26,7 +26,7 @@ describe('NacelleCollection.vue', () => {
     }
   })
 
-  it('loads a collection', async() => {
+  it('loads a collection', async () => {
     const localVue = createLocalVue()
     localVue.use(nacellePlugin)
     localVue.use(Vuex)
@@ -45,7 +45,7 @@ describe('NacelleCollection.vue', () => {
     expect(typeof wrapper.vm.collection !== 'undefined').toBe(true)
   })
 
-  it('loads a collection from vuex store', async() => {
+  it('loads a collection from vuex store', async () => {
     const id = 'i am from the store'
     const handle = 'test'
     const localVue = createLocalVue()
@@ -54,14 +54,13 @@ describe('NacelleCollection.vue', () => {
     const store = new Vuex.Store(storeConfig())
 
     // update test collection in store with dummy data
-    store.commit('collections/updateCollection', {
-      handle,
+    store.dispatch('collections/updateCollection', {
+      collectionHandle: handle,
       collection: {
-        id
+        id,
+        handle
       },
-      products: [
-        {}, {}, {}
-      ],
+      products: [{}, {}, {}],
       productIndex: 3
     })
 

@@ -1,12 +1,12 @@
-import { withInfo } from 'storybook-addon-vue-info';
-import store from '../../.storybook/store';
+import { withInfo } from 'storybook-addon-vue-info'
+import store from '../../.storybook/store'
 
-import ProductAddToCartButton from '../nacelle/ProductAddToCartButton';
+import ProductAddToCartButton from '../nacelle/ProductAddToCartButton'
 
 export default {
   title: 'Components | Product',
-  decorators: [withInfo],
-};
+  decorators: [withInfo]
+}
 
 export const AddToCartButton = () => ({
   store,
@@ -16,25 +16,25 @@ export const AddToCartButton = () => ({
       product: {
         availableForSale: false,
         image: {
-          source: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/shirt.jpg',
+          source: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/shirt.jpg'
         },
         title: 'Gray T-Shirt',
         productId: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzM1OTkyMDE4NjE3Mzc=',
-        handle: 'gray-t-shirt',
+        handle: 'gray-t-shirt'
       },
 
       variant: {
-        id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==',
-      },
-    };
+        id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
+      }
+    }
   },
-  template: '<product-add-to-cart-button :product="product" :variant="variant"/>',
-});
+  template: '<product-add-to-cart-button :productHandle="product.handle" />'
+})
 
 AddToCartButton.story = {
   parameters: {
     info: {
       // summary: "Hello"
-    },
-  },
-};
+    }
+  }
+}

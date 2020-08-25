@@ -1,69 +1,15 @@
 <template>
   <div>
     <button
-      v-if="isProductVariantSelectChild"
       :disabled="disableAtcButton"
       @click="addToCart"
-      class="add-to-cart-button button is-primary nacelle"
-    >
-      <span
-        v-if="
-          !variantInLineItems && !allOptionsSelected && product.availableForSale
-        "
-        >Select Options</span
-      >
-      <span
-        v-if="
-          (!variantInLineItems && allOptionsSelected && variant == undefined) ||
-            (!variantInLineItems &&
-              allOptionsSelected &&
-              variant.availableForSale === false) ||
-            !product.availableForSale
-        "
-        >Out of Stock</span
-      >
-      <span
-        v-if="
-          !variantInLineItems &&
-            allOptionsSelected &&
-            variant &&
-            variant.availableForSale == true
-        "
-        >Add to Cart</span
-      >
-      <span v-if="variantInLineItems">Added!</span>
-    </button>
-    <button
       class="button is-primary"
-      @click="addToCart"
-      v-else
-      :disabled="disableAtcButton"
     >
       <slot>
-        <span v-if="!onlyOneOption && product.availableForSale"
-          >Select Options</span
-        >
-        <span
-          v-if="
-            onlyOneOption &&
-              !variantInLineItems &&
-              variant.availableForSale == true
-          "
-          >Add to Cart</span
-        >
-        <span
-          v-if="
-            (!variantInLineItems &&
-              allOptionsSelected &&
-              variant == undefined) ||
-              (!variantInLineItems &&
-                allOptionsSelected &&
-                variant.availableForSale === false) ||
-              !product.availableForSale
-          "
-          >Out of Stock</span
-        >
-        <span v-if="onlyOneOption && variantInLineItems">Added!</span>
+        <span v-if="showAddToCart">Add to Cart</span>
+        <span v-else-if="showSelectOptions">Select Options</span>
+        <span v-else-if="variantInLineItems">Added!</span>
+        <span v-else-if="showOutOfStock">Out of Stock</span>
       </slot>
     </button>
   </div>
@@ -74,11 +20,9 @@ import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 
 export default {
   props: {
-    product: {
-      type: Object
-    },
-    variant: {
-      type: Object
+    productHandle: {
+      type: String,
+      default: ''
     },
     metafields: {
       type: Array,
@@ -88,41 +32,76 @@ export default {
     },
 
     quantity: { type: Number, default: 1 },
-    allOptionsSelected: { type: Boolean, default: false },
-    confirmedSelection: { type: Boolean, default: false },
-    onlyOneOption: { type: Boolean, default: false }
+    confirmedSelection: { type: Boolean, default: false }
   },
 
   computed: {
     ...mapState('cart', ['lineItems']),
+    ...mapGetters('products', [
+      'getProduct',
+      'getSelectedVariant',
+      'onlyOneOption',
+      'allOptionsSelected'
+    ]),
+
+    product() {
+      return this.getProduct(this.productHandle)
+    },
+
+    variant() {
+      return this.getSelectedVariant(this.productHandle)
+    },
 
     variantInLineItems() {
-      const vm = this
-      if (vm.variant != null) {
-        const lineItem = vm.lineItems.findIndex(lineItem => {
-          return lineItem.variant.id === vm.variant.id
-        })
-        if (lineItem !== -1) {
-          return true
-        } else {
-          return false
-        }
-      } else {
-        return false
-      }
+      return (
+        !!this.variant &&
+        this.lineItems.map(l => l.variant.id).includes(this.variant.id)
+      )
     },
 
     isProductVariantSelectChild() {
       return this.$parent.$options._componentTag === 'product-variant-select'
     },
 
+    showSelectOptions() {
+      console.log()
+      return this.isProductVariantSelectChild
+        ? !this.variantInLineItems &&
+            !this.allOptionsSelected(this.productHandle) &&
+            this.product.availableForSale
+        : !this.onlyOneOption(this.productHandle) &&
+            this.product.availableForSale
+    },
+
     disableAtcButton() {
       return (
-        !this.allOptionsSelected ||
-        (this.allOptionsSelected && this.variant === undefined) ||
+        !this.allOptionsSelected(this.productHandle) ||
+        (this.allOptionsSelected(this.productHandle) &&
+          this.variant === undefined) ||
+        (!this.variantInLineItems &&
+          this.allOptionsSelected(this.productHandle) &&
+          !this.variant.availableForSale)
+      )
+    },
+
+    showOutOfStock() {
+      return (
         (!this.variantInLineItems &&
           this.allOptionsSelected &&
-          this.variant.availableForSale !== true)
+          this.variant &&
+          !this.variant.availableForSale) ||
+        !this.product.availableForSale
+      )
+    },
+
+    showAddToCart() {
+      return (
+        (this.isProductVariantSelectChild
+          ? this.allOptionsSelected(this.productHandle)
+          : this.onlyOneOption(this.productHandle)) &&
+        !this.variantInLineItems &&
+        this.variant &&
+        this.variant.availableForSale
       )
     }
   },
@@ -140,9 +119,14 @@ export default {
       'incrementLineItem',
       'decrementLineItem'
     ]),
+
     ...mapMutations('cart', ['showCart']),
+
     addToCart() {
-      if (this.allOptionsSelected && this.product.availableForSale) {
+      if (
+        this.allOptionsSelected(this.productHandle) &&
+        this.product.availableForSale
+      ) {
         const lineItem = {
           image: this.product.featuredMedia,
           title: this.product.title,

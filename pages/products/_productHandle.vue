@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* Individual products are loaded with the getProduct mixin.
 /* For instructions related to connecting your invetory to
@@ -11,7 +11,10 @@
   <div class="product">
     <section class="section">
       <div class="container">
-        <product-details v-if="product" :product="product" />
+        <product-details
+          v-if="product && product.handle"
+          :productHandle="product.handle"
+        />
       </div>
     </section>
     <section class="section product-meta" v-if="product">
@@ -43,6 +46,15 @@
             </div>
           </div>
         </div>
+        <h3 class="title is-4">Recommended Products</h3>
+        <product-recommendations
+          :productHandle="productHandle"
+          :limit="3"
+          :orientation="'horizontal'"
+          v-slot:default="{ product }"
+        >
+          <!-- <span>{{ product.title }}</span> -->
+        </product-recommendations>
       </div>
     </section>
   </div>
@@ -51,15 +63,19 @@
 <script>
 import getProduct from '~/mixins/getProduct'
 import ProductDetails from '~/components/nacelle/ProductDetails'
+import ProductRecommendations from '~/components/nacelle/ProductRecommendations'
 import productMetafields from '~/mixins/productMetafields'
 import viewEvent from '~/mixins/viewEvent'
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import jsonld from '~/mixins/jsonld'
+import { mapGetters, mapMutations } from 'vuex'
+
 export default {
-  components: { ProductDetails },
+  components: { ProductDetails, ProductRecommendations },
   mixins: [
     getProduct(),
     productMetafields,
-    viewEvent('product')
+    viewEvent('product'),
+    jsonld('product')
   ],
   computed: {
     ...mapGetters('space', ['getMetatag'])

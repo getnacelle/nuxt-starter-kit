@@ -1,6 +1,6 @@
 <template>
   <div class="quantity-updater no-select nacelle">
-    <div class="quantity-value">{{quantityInCart}}</div>
+    <div class="quantity-value">{{ quantityInCart }}</div>
     <div class="switches">
       <div class="increment switch" @click="increment">
         <span>+</span>
@@ -14,7 +14,6 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import allOptionsSelected from '~/mixins/allOptionsSelected'
 
 export default {
   props: {

@@ -3,7 +3,7 @@ import checkout from '../store/checkout'
 import menu from '../store/menu'
 import modal from '../store/modal'
 import events from '../store/events'
-import product from '../store/product'
+import products from '../store/products'
 import user from '../store/user'
 import space from '../store/space'
 import search from '../store/search'
@@ -18,7 +18,7 @@ export default () => {
       menu,
       modal,
       events,
-      product,
+      products,
       user,
       space,
       search,
