@@ -10,7 +10,7 @@
       :style="swatchBg"
       class="inside-color"
     />
-    <span v-if="swatchStyle != 'bubble'">{{value}}</span>
+    <span v-if="swatchStyle != 'bubble'">{{ value }}</span>
   </div>
 </template>
 
