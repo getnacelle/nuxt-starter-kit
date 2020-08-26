@@ -5,6 +5,9 @@ export const state = () => ({
 export const mutations = {}
 
 export const actions = {
+  async nuxtClientInit(ctx, context) {
+    await this.$nacelle.nacelleNuxtServerInit(ctx, context)
+  },
   async nuxtServerInit(ctx, context) {
     await this.$nacelle.nacelleNuxtServerInit(ctx, context)
   }
