@@ -130,8 +130,7 @@ export const getters = {
           option.name === 'Color'
             ? {
                 name: option.name,
-                value: option.value,
-                swatchSrc: v.swatchSrc
+                value: option.value
               }
             : option
         )
