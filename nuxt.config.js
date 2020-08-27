@@ -19,9 +19,7 @@ export default {
         content: process.env.npm_package_description || ''
       }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
   /*
    ** Customize the progress-bar color
@@ -31,10 +29,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: [
-    '@/assets/global.scss',
-    'vue-glide-js/dist/vue-glide.css'
-  ],
+  css: ['@/assets/global.scss', 'vue-glide-js/dist/vue-glide.css'],
 
   env: {
     nacelleSpaceID: process.env.NACELLE_SPACE_ID,
@@ -42,7 +37,10 @@ export default {
     buildMode: process.env.BUILD_MODE
   },
 
-  plugins: ['~/plugins/jsonld'],
+  plugins: [
+    { src: '~/plugins/nuxt-client-init.js', ssr: false },
+    '~/plugins/jsonld'
+  ],
 
   modules: [
     '@nuxtjs/pwa',
@@ -136,7 +134,7 @@ export default {
   generate: {
     concurrency: 5,
     done({ errors }, nuxt) {
-      nuxt.callHook('generate:done', ({ nuxt, errors }))
+      nuxt.callHook('generate:done', { nuxt, errors })
     }
   },
 
@@ -167,6 +165,11 @@ export default {
         useShortDoctype: true
       }
     },
-    transpile: ['@nacelle/nacelle-nuxt-module', '@nacelle/nacelle-tools', 'fuse.js', 'uuidv4']
+    transpile: [
+      '@nacelle/nacelle-nuxt-module',
+      '@nacelle/nacelle-tools',
+      'fuse.js',
+      'uuidv4'
+    ]
   }
 }
