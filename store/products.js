@@ -132,7 +132,6 @@ export const getters = {
             ? {
               name: option.name,
               value: option.value,
-              swatchSrc: variant.swatchSrc
             }
             : option
         )
@@ -147,7 +146,6 @@ export const getters = {
           .filter(o => o.name === name)
           .map(option => ({
             value: option.value,
-            ...(option.swatchSrc && { swatchSrc: option.swatchSrc })
           })),
         isEqual
       )

@@ -27,9 +27,6 @@ export default {
     swatchStyle: {
       type: String
     },
-    swatchSrc: {
-      type: String
-    },
     selected: {
       type: Boolean
     },
@@ -55,6 +52,13 @@ export default {
       }
 
       return ''
+    },
+    swatchSrc() {
+      if (!this.value) {
+        return
+      }
+      const basePath = (process.env.contentAssetStorage || '').trimRight('/')
+      return `${basePath}/swatches/${this.value}.png`
     },
     swatchBg() {
       if (this.swatchSrc) {

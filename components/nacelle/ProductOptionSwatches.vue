@@ -4,7 +4,6 @@
       v-for="value in option.values"
       v-on:swatchValue="setOptionValue"
       :value="value.value"
-      :swatchSrc="value.swatchSrc"
       :key="value.value"
       :optionName="option.name"
       :swatchStyle="swatchStyle"
