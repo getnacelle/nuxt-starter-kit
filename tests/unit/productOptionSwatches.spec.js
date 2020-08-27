@@ -30,14 +30,12 @@ describe('ProductOptionSwatch.vue', () => {
               name: 'Color',
               value: 'Red'
             }
-          ],
-          swatchSrc:
-            'https://nacell-demo-assets.s3.amazonaws.com/swatches/Red.png'
+          ]
         }
       ]
     }
   })
-  it('renders swatches', async() => {
+  it('renders swatches', async () => {
     expect(wrapper.findAll('.swatches').exists()).toBe(true)
   })
 })

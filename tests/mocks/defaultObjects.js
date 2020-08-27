@@ -95,7 +95,6 @@ export const defaultMultivariate = {
         { name: 'Size', value: 'Small', __typename: 'SelectedOption' },
         { name: 'Color', value: 'Red', __typename: 'SelectedOption' }
       ],
-      swatchSrc: 'https://nacell-demo-assets.s3.amazonaws.com/swatches/Red.png',
       __typename: 'Variant'
     },
     {
@@ -107,7 +106,6 @@ export const defaultMultivariate = {
         { name: 'Size', value: 'Medium', __typename: 'SelectedOption' },
         { name: 'Color', value: 'Red', __typename: 'SelectedOption' }
       ],
-      swatchSrc: 'https://nacell-demo-assets.s3.amazonaws.com/swatches/Red.png',
       __typename: 'Variant'
     },
     {
@@ -119,7 +117,6 @@ export const defaultMultivariate = {
         { name: 'Size', value: 'Large', __typename: 'SelectedOption' },
         { name: 'Color', value: 'Red', __typename: 'SelectedOption' }
       ],
-      swatchSrc: 'https://nacell-demo-assets.s3.amazonaws.com/swatches/Red.png',
       __typename: 'Variant'
     },
     {
@@ -131,8 +128,6 @@ export const defaultMultivariate = {
         { name: 'Size', value: 'Small', __typename: 'SelectedOption' },
         { name: 'Color', value: 'Blue', __typename: 'SelectedOption' }
       ],
-      swatchSrc:
-        'https://nacell-demo-assets.s3.amazonaws.com/swatches/Blue.png',
       __typename: 'Variant'
     },
     {
@@ -144,8 +139,6 @@ export const defaultMultivariate = {
         { name: 'Size', value: 'Medium', __typename: 'SelectedOption' },
         { name: 'Color', value: 'Blue', __typename: 'SelectedOption' }
       ],
-      swatchSrc:
-        'https://nacell-demo-assets.s3.amazonaws.com/swatches/Blue.png',
       __typename: 'Variant'
     }
   ],
