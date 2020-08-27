@@ -10,7 +10,7 @@
       :style="swatchBg"
       class="inside-color"
     />
-    <span v-if="swatchStyle != 'bubble'">{{value}}</span>
+    <span v-if="swatchStyle != 'bubble'">{{ value }}</span>
   </div>
 </template>
 
@@ -25,9 +25,6 @@ export default {
       type: String
     },
     swatchStyle: {
-      type: String
-    },
-    swatchSrc: {
       type: String
     },
     selected: {
@@ -55,6 +52,13 @@ export default {
       }
 
       return ''
+    },
+    swatchSrc() {
+      if (!this.value) {
+        return
+      }
+      const basePath = (process.env.contentAssetStorage || '').trimRight('/')
+      return `${basePath}/swatches/${this.value}.png`
     },
     swatchBg() {
       if (this.swatchSrc) {

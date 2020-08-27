@@ -125,18 +125,16 @@ export const getters = {
 
     const flattenedOptions = variants
       .filter(v => !!v.selectedOptions)
-      .flatMap(v => {
-        return v.selectedOptions.map(option =>
+      .flatMap(v =>
+        v.selectedOptions.map(option =>
           option.name === 'Color'
             ? {
-              name: option.name,
-              value: option.value,
-              swatchSrc: v.swatchSrc
-            }
+                name: option.name,
+                value: option.value
+              }
             : option
-
         )
-      })
+      )
 
     const optionNames = [...new Set(flattenedOptions.map(o => o.name))]
 
@@ -145,8 +143,7 @@ export const getters = {
         flattenedOptions
           .filter(o => o.name === name)
           .map(option => ({
-            value: option.value,
-            ...(option.swatchSrc && { swatchSrc: option.swatchSrc })
+            value: option.value
           })),
         isEqual
       )

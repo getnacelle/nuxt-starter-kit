@@ -34,7 +34,8 @@ export default {
   env: {
     nacelleSpaceID: process.env.NACELLE_SPACE_ID,
     nacelleToken: process.env.NACELLE_GRAPHQL_TOKEN,
-    buildMode: process.env.BUILD_MODE
+    buildMode: process.env.BUILD_MODE,
+    contentAssetStorage: process.env.CONTENT_ASSET_STORAGE || ''
   },
 
   plugins: [

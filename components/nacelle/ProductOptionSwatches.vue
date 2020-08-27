@@ -1,14 +1,13 @@
 <template>
   <div class="swatches columns is-marginless is-multiline nacelle">
     <product-option-swatch
-      v-on:swatchValue="setOptionValue"
       v-for="value in option.values"
+      v-on:swatchValue="setOptionValue"
       :value="value.value"
-      :swatchSrc="value.swatchSrc"
       :key="value.value"
       :optionName="option.name"
       :swatchStyle="swatchStyle"
-      :class="{selected: value.value == selectedOptionValue}"
+      :class="{ selected: value.value == selectedOptionValue }"
       :variants="variants"
       :selectedOptions="selectedOptions"
     />
