@@ -125,19 +125,16 @@ export const getters = {
 
     const flattenedOptions = variants
       .filter(v => !!v.selectedOptions)
-      .map(v => v.selectedOptions)
-      .map(s =>
-        s.map(option =>
+      .flatMap(v =>
+        v.selectedOptions.map(option =>
           option.name === 'Color'
             ? {
-              name: option.name,
-              value: option.value,
-              swatchSrc: variant.swatchSrc
-            }
+                name: option.name,
+                value: option.value
+              }
             : option
         )
       )
-      .flat()
 
     const optionNames = [...new Set(flattenedOptions.map(o => o.name))]
 
@@ -146,8 +143,7 @@ export const getters = {
         flattenedOptions
           .filter(o => o.name === name)
           .map(option => ({
-            value: option.value,
-            ...(option.swatchSrc && { swatchSrc: option.swatchSrc })
+            value: option.value
           })),
         isEqual
       )
@@ -394,9 +390,7 @@ export const actions = {
     }
 
     const locale = (rootState.user.locale.locale || 'en-us').toLowerCase()
-    const nacelleStaticUrl = process.env.DEV_MODE
-      ? 'nacellestatic-dev.s3.amazonaws.com'
-      : 'nacellestatic.s3.amazonaws.com'
+    const nacelleStaticUrl = 'nacellestatic.s3.amazonaws.com'
 
     let generatedRecommendations
     try {

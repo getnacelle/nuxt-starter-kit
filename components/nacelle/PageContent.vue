@@ -63,24 +63,26 @@ export default {
     }
   },
   computed: {
-    contentToHtml () {
+    contentToHtml() {
       if (this.customContentToHtml) {
         return this.contentToHtmlFn
       }
 
       return this.defaultContentToHtml
     },
-    mappedSections () {
+    mappedSections() {
       if (this.page && this.page.sections && this.page.sections.length > 0) {
-        const { source, sections } = this.page
-        if (source === 'contentful') {
-          return sections.map(this.mapSection)
+        const { cmsSyncSource, sections } = this.page
+        if (cmsSyncSource === 'contentful') {
+          return sections
+            .filter(section => {
+              return section && section.sys && section.sys.contentType
+            })
+            .map(this.mapSection)
         }
 
-        if (source === 'shopify') {
-          return this.reduceShopifySections(sections).map(
-            this.mapSection
-          )
+        if (cmsSyncSource === 'shopify') {
+          return this.reduceShopifySections(sections).map(this.mapSection)
         }
 
         return sections
@@ -88,7 +90,7 @@ export default {
 
       return []
     },
-    body () {
+    body() {
       if (this.page) {
         const { source } = this.page
 
@@ -109,9 +111,11 @@ export default {
     }
   },
   methods: {
-    getImgSrc (img) {
+    getImgSrc(img) {
       // extract url from Contentful or Shopify image object
-      if (!img) { return '' }
+      if (!img) {
+        return ''
+      }
       const { originalSrc, fields } = img
       let src = fields && fields.file.url
       if (originalSrc) {
@@ -119,14 +123,13 @@ export default {
       }
       return src || ''
     },
-    getContentType (section) {
-      return section 
-        && section.sys
-        && section.sys.contentType.sys.id 
-        || section.contentType
-        && section.contentType.replace('Content', '')
+    getContentType(section) {
+      return (
+        (section && section.sys && section.sys.contentType.sys.id) ||
+        (section.contentType && section.contentType.replace('Content', ''))
+      )
     },
-    defaultContentToHtml (content) {
+    defaultContentToHtml(content) {
       const options = {
         renderNode: {
           [BLOCKS.EMBEDDED_ASSET]: node => `
@@ -137,7 +140,7 @@ export default {
 
       return documentToHtmlString(content, options)
     },
-    reduceShopifySections (sections) {
+    reduceShopifySections(sections) {
       return sections.reduce((sections, section, index) => {
         if (index > 0 && section.tags.includes('childSection')) {
           const parent = sections[sections.length - 1]
@@ -157,16 +160,16 @@ export default {
       }, [])
     },
 
-    mapSection (section) {
+    mapSection(section) {
       // extract the contentType
       const contentType = this.getContentType(section)
 
       // map fields
-      let data = {}
+      const data = {}
       const keys = Object.keys(section.fields)
 
       // reverse loop for performance
-      for (let i = keys.length; i--;) {
+      for (let i = keys.length; i--; ) {
         const key = keys[i]
         data[key] = section.fields[key]
 
@@ -176,41 +179,43 @@ export default {
           case 'reverseDesktop':
           case 'reverseMobile':
             data[key] = `${data[key]}` == 'true'
-            break;
+            break
           case 'ctaUrl':
-            data.ctaHandler = () => { this.$router.push(data[key]) }
-            break;
+            data.ctaHandler = () => {
+              this.$router.push(data[key])
+            }
+            break
           case 'columns':
             data[key] = parseInt(data[key], 10) || 4
-            break;
+            break
           case 'image':
           case 'featuredMedia':
             data.imageUrl = this.getImgSrc(data[key])
-            break;
+            break
           case 'mobileBackgroundImage':
             data.mobileBackgroundImgUrl = this.getImgSrc(data[key])
-            break;
+            break
           case 'content':
             data.contentHtml = this.contentToHtml(data[key]) || ''
-            break;
+            break
           case 'slides':
-            data[key] = data[key].map(({
-                fields: { name, quotation, featuredMedia }
-              }) => ({
+            data[key] = data[key].map(
+              ({ fields: { name, quotation, featuredMedia } }) => ({
                 name,
                 quote: quotation,
                 imageUrl: this.getImgSrc(featuredMedia)
-              }))
-            break;
+              })
+            )
+            break
           case 'children':
-            data.slides = data[key].map(({
-                data: { title, contentHtml, image }
-              }) => ({
+            data.slides = data[key].map(
+              ({ data: { title, contentHtml, image } }) => ({
                 name: title,
                 quote: contentHtml,
                 imageUrl: this.getImgSrc(image)
-              }))
-            break;
+              })
+            )
+            break
         }
       }
 

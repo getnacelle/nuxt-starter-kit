@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/getnacelle/nacelle-nuxt-starter/compare/v1.0.1...v1.0.5) (2020-09-01)
+
+### Changed
+
+- Minor bug fixes
+- Updated product option swatches to use easily configurable local or remote url paths
+
 ## [1.0.4](https://github.com/getnacelle/nacelle-nuxt-starter/compare/v1.0.1...v1.0.4) (2020-07-23)
 
 ### Changed

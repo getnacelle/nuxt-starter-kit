@@ -57,14 +57,17 @@ export const getters = {
     } else {
       return []
     }
-  },
+  }
 }
 
 export const mutations = {
   addLineItemMutation(state, payload) {
-    const index = state.lineItems.findIndex((lineItem) => {
+    const index = state.lineItems.findIndex(lineItem => {
       if (lineItem.variant.id === payload.variant.id) {
-        const areMetafieldsEqual = isEqual(payload.metafields, lineItem.metafields)
+        const areMetafieldsEqual = isEqual(
+          payload.metafields,
+          lineItem.metafields
+        )
 
         return areMetafieldsEqual // match only if metafields are the same.
       }
@@ -80,24 +83,20 @@ export const mutations = {
 
   removeLineItemMutation(state, payload) {
     const index = state.lineItems.findIndex(
-      lineItem => lineItem.id === payload
+      lineItem => lineItem.variant.id === payload
     )
     state.lineItems.splice(index, 1)
   },
 
   incrementLineItemMutation(state, payload) {
-    const index = state.lineItems.findIndex(
-      lineItem => lineItem.id === payload
-    )
+    const index = state.lineItems.findIndex(lineItem => lineItem.id === payload)
     if (index !== -1) {
       state.lineItems[index].quantity++
     }
   },
 
   decrementLineItemMutation(state, payload) {
-    const index = state.lineItems.findIndex(
-      lineItem => lineItem.id === payload
-    )
+    const index = state.lineItems.findIndex(lineItem => lineItem.id === payload)
     if (index !== -1 && state.lineItems[index].quantity >= 1) {
       state.lineItems[index].quantity--
       if (state.lineItems[index].quantity === 0) {
@@ -151,9 +150,7 @@ export const actions = {
 
   async removeLineItem({ state, rootState, dispatch, commit }, payload) {
     if (rootState.events) {
-      const lineItem = state.lineItems.find(
-        item => item.variant.id === payload
-      )
+      const lineItem = state.lineItems.find(item => item.variant.id === payload)
       dispatch(
         'events/removeFromCart',
         {

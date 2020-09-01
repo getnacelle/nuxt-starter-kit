@@ -17,7 +17,6 @@ export default {
           __typename: 'SelectedOption'
         }
       ],
-      swatchSrc: 'https://nacell-demo-assets.s3.amazonaws.com/swatches/Red.png',
       __typename: 'Variant'
     },
     {
@@ -37,7 +36,6 @@ export default {
           __typename: 'SelectedOption'
         }
       ],
-      swatchSrc: 'https://nacell-demo-assets.s3.amazonaws.com/swatches/Red.png',
       __typename: 'Variant'
     }
     // {
@@ -57,7 +55,6 @@ export default {
     //       __typename: 'SelectedOption'
     //     }
     //   ],
-    //   swatchSrc: 'https://nacell-demo-assets.s3.amazonaws.com/swatches/Red.png',
     //   __typename: 'Variant'
     // }
     // {
@@ -77,8 +74,6 @@ export default {
     //       __typename: 'SelectedOption'
     //     }
     //   ],
-    //   swatchSrc:
-    //     'https://nacell-demo-assets.s3.amazonaws.com/swatches/Blue.png',
     //   __typename: 'Variant'
     // }
     // {
@@ -98,8 +93,6 @@ export default {
     //       __typename: 'SelectedOption'
     //     }
     //   ],
-    //   swatchSrc:
-    //     'https://nacell-demo-assets.s3.amazonaws.com/swatches/Blue.png',
     //   __typename: 'Variant'
     // }
   ],
