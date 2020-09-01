@@ -390,9 +390,7 @@ export const actions = {
     }
 
     const locale = (rootState.user.locale.locale || 'en-us').toLowerCase()
-    const nacelleStaticUrl = process.env.DEV_MODE
-      ? 'nacellestatic-dev.s3.amazonaws.com'
-      : 'nacellestatic.s3.amazonaws.com'
+    const nacelleStaticUrl = 'nacellestatic.s3.amazonaws.com'
 
     let generatedRecommendations
     try {
