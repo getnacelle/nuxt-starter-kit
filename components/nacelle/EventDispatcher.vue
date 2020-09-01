@@ -11,9 +11,8 @@ export default {
     ...mapGetters('cart', ['quantityTotal']),
     ...mapState('cart', ['lineItems']),
     productIDs() {
-      const vm = this
-      const productIDs = vm.lineItems.map(item => {
-        return vm.decodeBase64VariantId(item.id)
+      const productIDs = this.lineItems.map(item => {
+        return this.decodeBase64VariantId(item.id)
       })
       return productIDs
     },
@@ -29,25 +28,24 @@ export default {
   },
   watch: {
     log(log) {
-      const vm = this
-      switch (vm.logEntry.eventType) {
+      switch (this.logEntry.eventType) {
         case 'PAGE_VIEW':
-          vm.facebookPageView()
-          vm.googleAnalyticsPageView()
+          this.facebookPageView()
+          this.googleAnalyticsPageView()
           break
         case 'PRODUCT_VIEW':
-          vm.facebookProductView()
-          vm.googleAnalyticsProductView()
+          this.facebookProductView()
+          this.googleAnalyticsProductView()
           break
         case 'ADD_TO_CART':
-          vm.facebookAddToCart()
-          vm.googleAnalyticsAddToCart()
+          this.facebookAddToCart()
+          this.googleAnalyticsAddToCart()
           break
         case 'REMOVE_FROM_CART':
-          vm.googleAnalyticsRemoveFromCart()
+          this.googleAnalyticsRemoveFromCart()
           break
         case 'CHECKOUT_INIT':
-          vm.facebookCheckoutInitiate()
+          this.facebookCheckoutInitiate()
           break
       }
     }
@@ -81,29 +79,28 @@ export default {
     },
     googleAnalyticsPageView() {
       if (typeof this.ga !== 'undefined') {
-        const vm = this
-        this.ga('send', 'pageview', vm.logEntry.payload.url)
+        this.ga('send', 'pageview', this.logEntry.payload.path)
       }
     },
 
     /// / PRODUCT VIEW METHODS //////////////////////////////
     facebookProductView() {
       if (typeof this.fbq !== 'undefined') {
-        const vm = this
         this.fbq('track', 'ViewContent', {
-          content_ids: vm.decodeBase64ProductId(vm.logEntry.payload.product.id),
-          content_name: vm.logEntry.payload.product.title,
+          content_ids: this.decodeBase64ProductId(
+            this.logEntry.payload.product.id
+          ),
+          content_name: this.logEntry.payload.product.title,
           content_type: 'product',
-          product_catalog_id: vm.facebookCatalogID
+          product_catalog_id: this.facebookCatalogID
         })
       }
     },
     googleAnalyticsProductView() {
       if (typeof this.ga !== 'undefined') {
-        const vm = this
         this.ga('ec:addProduct', {
-          id: vm.decodeBase64ProductId(vm.logEntry.payload.product.id),
-          name: vm.logEntry.payload.product.title
+          id: this.decodeBase64ProductId(this.logEntry.payload.product.id),
+          name: this.logEntry.payload.product.title
         })
         this.ga('ec:setAction', 'detail')
         this.ga('send', 'pageview')
@@ -113,25 +110,25 @@ export default {
     /// / ADD TO CART METHODS ///////////////////////////////
     facebookAddToCart() {
       if (typeof this.fbq !== 'undefined') {
-        const vm = this
         this.fbq('track', 'AddToCart', {
-          content_ids: vm.decodeBase64VariantId(
-            vm.logEntry.payload.product.variant.id
+          content_ids: this.decodeBase64VariantId(
+            this.logEntry.payload.product.variant.id
           ),
-          content_name: vm.logEntry.payload.product.variant.title,
+          content_name: this.logEntry.payload.product.variant.title,
           content_type: 'product',
-          value: vm.logEntry.payload.product.variant.price,
+          value: this.logEntry.payload.product.variant.price,
           currency: 'USD',
-          product_catalog_id: vm.facebookCatalogID
+          product_catalog_id: this.facebookCatalogID
         })
       }
     },
     googleAnalyticsAddToCart() {
       if (typeof this.ga !== 'undefined') {
-        const vm = this
         this.ga('ec:addProduct', {
-          id: vm.decodeBase64ProductId(vm.logEntry.payload.product.variant.id),
-          name: vm.logEntry.payload.product.variant.title
+          id: this.decodeBase64ProductId(
+            this.logEntry.payload.product.variant.id
+          ),
+          name: this.logEntry.payload.product.variant.title
         })
         this.ga('ec:setAction', 'add')
         this.ga('send', 'event', 'UX', 'click', 'add to cart')
@@ -141,10 +138,9 @@ export default {
     /// / REMOVE FROM CART METHODS ///////////////////////////////
     googleAnalyticsRemoveFromCart() {
       if (typeof this.ga !== 'undefined') {
-        const vm = this
         this.ga('ec:addProduct', {
-          id: vm.logEntry.payload.product.variant.id,
-          name: vm.logEntry.payload.product.variant.title
+          id: this.logEntry.payload.product.variant.id,
+          name: this.logEntry.payload.product.variant.title
         })
         this.ga('ec:setAction', 'remove')
         this.ga('send', 'event', 'UX', 'click', 'remove from cart')
@@ -154,14 +150,13 @@ export default {
     /// / CHECKOUT INITIATION METHODS ///////////////////////////////
     facebookCheckoutInitiate() {
       if (typeof this.fbq !== 'undefined') {
-        const vm = this
         this.fbq('track', 'InitiateCheckout', {
-          content_ids: vm.productIDs.map(id => {
-            return vm.decodeBase64ProductId(id)
+          content_ids: this.productIDs.map(id => {
+            return this.decodeBase64ProductId(id)
           }),
           content_type: 'product',
-          num_items: vm.quantityTotal,
-          product_catalog_id: vm.facebookCatalogID
+          num_items: this.quantityTotal,
+          product_catalog_id: this.facebookCatalogID
         })
       }
     }
