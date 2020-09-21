@@ -148,7 +148,7 @@ export default type => {
 
     methods: {
       strip(html) {
-        return html.replace(/<[^>]*>?/gm, '')
+        return typeof html === 'string' && html.replace(/<[^>]*>?/gm, '')
       }
     },
 
