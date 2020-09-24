@@ -1,10 +1,8 @@
-import path from 'path'
-import fs from 'fs-extra'
-
 require('dotenv').config()
 
 export default {
   mode: process.env.BUILD_MODE,
+  target: 'static',
   /*
    ** Headers of the page
    */
@@ -46,7 +44,6 @@ export default {
   modules: [
     '@nuxtjs/pwa',
     '@nuxtjs/dotenv',
-    '@nacelle/nacelle-nuxt-module',
     '@nuxtjs/sitemap',
     '@nuxtjs/axios',
     'nuxt-polyfill',
@@ -66,17 +63,17 @@ export default {
     ]
   },
 
-  sitemap: {
-    gzip: true,
-    hostname: 'http://localhost:3000', // When deploying, change this to your production URL
-    routes: () => {
-      const staticDir = path.resolve(__dirname, './static/data')
-      const routes = fs.readJsonSync(`${staticDir}/routes.json`)
-      const routesOnly = routes.map(route => route.route)
+  // sitemap: {
+  //   gzip: true,
+  //   hostname: 'http://localhost:3000', // When deploying, change this to your production URL
+  //   routes: () => {
+  //     const staticDir = path.resolve(__dirname, './static/data')
+  //     const routes = fs.readJsonSync(`${staticDir}/routes.json`)
+  //     const routesOnly = routes.map(route => route.route)
 
-      return routesOnly
-    }
-  },
+  //     return routesOnly
+  //   }
+  // },
 
   /*
    ** Nacelle Configuration
@@ -132,13 +129,6 @@ export default {
     isMultiLocale: true
   },
 
-  generate: {
-    concurrency: 5,
-    done({ errors }, nuxt) {
-      nuxt.callHook('generate:done', { nuxt, errors })
-    }
-  },
-
   vue: {
     config: {
       devtools: true
@@ -167,8 +157,6 @@ export default {
       }
     },
     transpile: [
-      '@nacelle/nacelle-nuxt-module',
-      '@nacelle/nacelle-tools',
       'fuse.js',
       'uuidv4'
     ]
