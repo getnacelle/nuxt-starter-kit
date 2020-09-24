@@ -1,6 +1,10 @@
 <template>
   <div class="product-recommendations" :class="orientation">
-    <div v-for="handle in recommendations" :key="handle">
+    <div
+      v-for="handle in recommendations"
+      :key="handle"
+      @click="onClick(handle)"
+    >
       <slot :product="getProduct(handle)">
         <product-card :productHandle="handle"></product-card>
       </slot>
@@ -28,7 +32,7 @@ export default {
     orientation: {
       type: String,
       default: 'horizontal',
-      validator: function(value) {
+      validator(value) {
         return ['horizontal', 'vertical'].includes(value)
       }
     }
@@ -44,7 +48,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions('products', ['loadProductRecommendations'])
+    ...mapActions('products', ['loadProductRecommendations']),
+    ...mapActions('events', ['productRecommendation']),
+    onClick(handle) {
+      this.productRecommendation({
+        sourceHandles: [this.productHandle],
+        recommendedHandles: this.recommendations,
+        clickedHandle: handle
+      })
+    }
   },
   created() {
     this.loadProductRecommendations({ productHandle: this.productHandle })
