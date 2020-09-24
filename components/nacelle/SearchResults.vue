@@ -17,6 +17,7 @@
 
 <script>
 import Fuse from 'fuse.js'
+import { mapActions } from 'vuex'
 
 export default {
   props: {
@@ -60,14 +61,34 @@ export default {
 
         this.$emit('results')
 
-        return results
+        const cleanResults = results
           .filter(result => typeof result.item !== 'undefined')
           .map(result => result.item)
+
+        const trackSearchEvent = this.debounce(this.search, 500)
+        trackSearchEvent({
+          query: this.searchQuery.value,
+          resultCount: cleanResults.length
+        })
+
+        return cleanResults
       }
 
       this.$emit('no-query')
 
       return this.searchData
+    }
+  },
+  methods: {
+    ...mapActions('events', ['search']),
+    debounce(fn, debounceTime) {
+      return (...args) => {
+        if (this.timeout !== null) {
+          clearTimeout(this.timeout)
+        }
+
+        this.timeout = setTimeout(() => fn(...args), debounceTime)
+      }
     }
   }
 }

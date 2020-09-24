@@ -17,7 +17,7 @@ describe('SearchInput.vue', () => {
       localVue
     })
 
-    wrapper.vm.searchProducts = jest.fn()
+    wrapper.vm.setQuery = jest.fn()
 
     // Simulate typing and triggering the keyup event
     wrapper.find('input').setValue('a')
@@ -25,7 +25,7 @@ describe('SearchInput.vue', () => {
 
     jest.runAllTimers()
     await wrapper.vm.$nextTick()
-    expect(wrapper.vm.searchProducts).toHaveBeenCalledTimes(1)
-    expect(wrapper.vm.searchProducts).toHaveBeenCalledWith({ query: 'a' })
+    expect(wrapper.vm.setQuery).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.setQuery).toHaveBeenCalledWith({ value: 'a' })
   })
 })
