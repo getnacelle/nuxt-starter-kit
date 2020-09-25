@@ -55,23 +55,20 @@ export default {
           keys: this.searchKeys,
           threshold: this.relevanceThreshold
         }
-        const results = new Fuse(this.searchData, options).search(
-          String(this.searchQuery.value)
-        )
-
-        this.$emit('results')
-
-        const cleanResults = results
+        const results = new Fuse(this.searchData, options)
+          .search(String(this.searchQuery.value))
           .filter(result => typeof result.item !== 'undefined')
           .map(result => result.item)
+
+        this.$emit('results')
 
         const trackSearchEvent = this.debounce(this.search, 500)
         trackSearchEvent({
           query: this.searchQuery.value,
-          resultCount: cleanResults.length
+          resultCount: results.length
         })
 
-        return cleanResults
+        return results
       }
 
       this.$emit('no-query')

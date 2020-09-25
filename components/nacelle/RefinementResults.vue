@@ -22,7 +22,7 @@
 
 <script>
 import Fuse from 'fuse.js'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   props: {
     searchKeys: {
@@ -83,6 +83,12 @@ export default {
 
         this.$emit('results')
 
+        const trackSearchEvent = this.debounce(this.search, 500)
+        trackSearchEvent({
+          query: this.searchQuery.value,
+          resultCount: results.length
+        })
+
         return results
       }
 
@@ -95,7 +101,17 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('search', ['showMoreResults', 'resetResults'])
+    ...mapMutations('search', ['showMoreResults', 'resetResults']),
+    ...mapActions('events', ['search']),
+    debounce(fn, debounceTime) {
+      return (...args) => {
+        if (this.timeout !== null) {
+          clearTimeout(this.timeout)
+        }
+
+        this.timeout = setTimeout(() => fn(...args), debounceTime)
+      }
+    }
   },
   mounted() {
     setTimeout(() => {
