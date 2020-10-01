@@ -28,25 +28,27 @@ export default {
   },
   watch: {
     log(log) {
-      switch (this.logEntry.eventType) {
-        case 'pageView':
-          this.facebookPageView()
-          this.googleAnalyticsPageView()
-          break
-        case 'productView':
-          this.facebookProductView()
-          this.googleAnalyticsProductView()
-          break
-        case 'cartAdd':
-          this.facebookAddToCart()
-          this.googleAnalyticsAddToCart()
-          break
-        case 'cartRemove':
-          this.googleAnalyticsRemoveFromCart()
-          break
-        case 'checkoutInit':
-          this.facebookCheckoutInitiate()
-          break
+      if (process.client) {
+        switch (this.logEntry.eventType) {
+          case 'pageView':
+            this.facebookPageView()
+            this.googleAnalyticsPageView()
+            break
+          case 'productView':
+            this.facebookProductView()
+            this.googleAnalyticsProductView()
+            break
+          case 'cartAdd':
+            this.facebookAddToCart()
+            this.googleAnalyticsAddToCart()
+            break
+          case 'cartRemove':
+            this.googleAnalyticsRemoveFromCart()
+            break
+          case 'checkoutInit':
+            this.facebookCheckoutInitiate()
+            break
+        }
       }
     }
   },
@@ -79,7 +81,7 @@ export default {
     },
     googleAnalyticsPageView() {
       if (typeof this.ga !== 'undefined') {
-        this.ga('send', 'pageview', this.logEntry.payload.path)
+        this.ga('send', 'pageview', this.logEntry.path)
       }
     },
 
@@ -87,10 +89,8 @@ export default {
     facebookProductView() {
       if (typeof this.fbq !== 'undefined') {
         this.fbq('track', 'ViewContent', {
-          content_ids: this.decodeBase64ProductId(
-            this.logEntry.payload.product.id
-          ),
-          content_name: this.logEntry.payload.product.title,
+          content_ids: this.decodeBase64ProductId(this.logEntry.product.id),
+          content_name: this.logEntry.product.title,
           content_type: 'product',
           product_catalog_id: this.facebookCatalogID
         })
@@ -99,8 +99,8 @@ export default {
     googleAnalyticsProductView() {
       if (typeof this.ga !== 'undefined') {
         this.ga('ec:addProduct', {
-          id: this.decodeBase64ProductId(this.logEntry.payload.product.id),
-          name: this.logEntry.payload.product.title
+          id: this.decodeBase64ProductId(this.logEntry.product.id),
+          name: this.logEntry.product.title
         })
         this.ga('ec:setAction', 'detail')
         this.ga('send', 'pageview')
@@ -112,11 +112,11 @@ export default {
       if (typeof this.fbq !== 'undefined') {
         this.fbq('track', 'AddToCart', {
           content_ids: this.decodeBase64VariantId(
-            this.logEntry.payload.product.variant.id
+            this.logEntry.product.variant.id
           ),
-          content_name: this.logEntry.payload.product.variant.title,
+          content_name: this.logEntry.product.variant.title,
           content_type: 'product',
-          value: this.logEntry.payload.product.variant.price,
+          value: this.logEntry.product.variant.price,
           currency: 'USD',
           product_catalog_id: this.facebookCatalogID
         })
@@ -125,10 +125,8 @@ export default {
     googleAnalyticsAddToCart() {
       if (typeof this.ga !== 'undefined') {
         this.ga('ec:addProduct', {
-          id: this.decodeBase64ProductId(
-            this.logEntry.payload.product.variant.id
-          ),
-          name: this.logEntry.payload.product.variant.title
+          id: this.decodeBase64ProductId(this.logEntry.product.variant.id),
+          name: this.logEntry.product.variant.title
         })
         this.ga('ec:setAction', 'add')
         this.ga('send', 'event', 'UX', 'click', 'add to cart')
@@ -139,8 +137,8 @@ export default {
     googleAnalyticsRemoveFromCart() {
       if (typeof this.ga !== 'undefined') {
         this.ga('ec:addProduct', {
-          id: this.logEntry.payload.product.variant.id,
-          name: this.logEntry.payload.product.variant.title
+          id: this.logEntry.product.variant.id,
+          name: this.logEntry.product.variant.title
         })
         this.ga('ec:setAction', 'remove')
         this.ga('send', 'event', 'UX', 'click', 'remove from cart')
