@@ -28,25 +28,27 @@ export default {
   },
   watch: {
     log(log) {
-      switch (this.logEntry.eventType) {
-        case 'pageView':
-          this.facebookPageView()
-          this.googleAnalyticsPageView()
-          break
-        case 'productView':
-          this.facebookProductView()
-          this.googleAnalyticsProductView()
-          break
-        case 'cartAdd':
-          this.facebookAddToCart()
-          this.googleAnalyticsAddToCart()
-          break
-        case 'cartRemove':
-          this.googleAnalyticsRemoveFromCart()
-          break
-        case 'checkoutInit':
-          this.facebookCheckoutInitiate()
-          break
+      if (process.client) {
+        switch (this.logEntry.eventType) {
+          case 'pageView':
+            this.facebookPageView()
+            this.googleAnalyticsPageView()
+            break
+          case 'productView':
+            this.facebookProductView()
+            this.googleAnalyticsProductView()
+            break
+          case 'cartAdd':
+            this.facebookAddToCart()
+            this.googleAnalyticsAddToCart()
+            break
+          case 'cartRemove':
+            this.googleAnalyticsRemoveFromCart()
+            break
+          case 'checkoutInit':
+            this.facebookCheckoutInitiate()
+            break
+        }
       }
     }
   },
