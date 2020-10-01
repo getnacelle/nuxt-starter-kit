@@ -29,22 +29,22 @@ export default {
   watch: {
     log(log) {
       switch (this.logEntry.eventType) {
-        case 'PAGE_VIEW':
+        case 'pageView':
           this.facebookPageView()
           this.googleAnalyticsPageView()
           break
-        case 'PRODUCT_VIEW':
+        case 'productView':
           this.facebookProductView()
           this.googleAnalyticsProductView()
           break
-        case 'ADD_TO_CART':
+        case 'cartAdd':
           this.facebookAddToCart()
           this.googleAnalyticsAddToCart()
           break
-        case 'REMOVE_FROM_CART':
+        case 'cartRemove':
           this.googleAnalyticsRemoveFromCart()
           break
-        case 'CHECKOUT_INIT':
+        case 'checkoutInit':
           this.facebookCheckoutInitiate()
           break
       }
