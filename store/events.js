@@ -25,11 +25,13 @@ export const mutations = {
 
 export const actions = {
   pageView({ commit, rootState }, payload) {
-    commit('addEvent', {
-      eventType: 'pageView',
-      ...eventProperties(rootState),
-      ...payload
-    })
+    if (process.client) {
+      commit('addEvent', {
+        eventType: 'pageView',
+        ...eventProperties(rootState),
+        ...payload
+      })
+    }
   },
 
   productView({ commit, rootState }, product) {
