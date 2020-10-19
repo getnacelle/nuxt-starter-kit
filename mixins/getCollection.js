@@ -80,13 +80,18 @@ export default (config = {}) => {
             0,
             collectionObj.itemsPerPage
           )
-
           handles.forEach(handle => {
-            const productFile = fs.readFileSync(
-              `./static/data/products/${handle}--${collectionObj.locale}/static.json`,
-              'utf-8'
-            )
-            collectionObj.products.push(JSON.parse(productFile))
+            try {
+              const productFile = fs.readFileSync(
+                `./static/data/products/${handle}--${collectionObj.locale}/static.json`,
+                'utf-8'
+              )
+              collectionObj.products.push(JSON.parse(productFile))
+            } catch (err) {
+              console.warn(
+                `Product data could not be found for: ./static/data/products/${handle}--${collectionObj.locale}/static.json`
+              )
+            }
           })
         }
       } else {
