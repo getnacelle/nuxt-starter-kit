@@ -1,7 +1,7 @@
 <template>
   <div class="app nacelle">
     <global-header ref="header" />
-    <nuxt :style="{ 'margin-top': `${headerHeight}px` }" />
+    <nuxt :style="{ 'margin-top': `${headerHeight}px` }" keep-alive :keep-alive-props="{max:2}"/>
     <site-footer />
     <cookie-banner />
     <event-dispatcher />

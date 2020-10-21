@@ -1,8 +1,8 @@
 <template>
   <div
-    :class="[swatchStyle, availableClass, swatchNameClass]"
+    :class="[swatchStyle, availableClass, swatchNameClass, swatchSelected]"
     class="option-swatch nacelle no-select"
-    @click="emitValue"
+    @click="setSelected"
   >
     <div
       v-if="swatchStyle == 'bubble'"
@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import flattenDeep from 'lodash.flattendeep'
 export default {
   props: {
     value: {
@@ -33,15 +32,15 @@ export default {
     variants: {
       type: Array
     },
-    selectedOptions: {
-      type: Array
+    productId: {
+      type: String
     }
   },
   methods: {
-    emitValue() {
-      if (this.optionAvailable) {
-        this.$emit('swatchValue', this.value)
-      }
+    setSelected() {
+      // if (this.optionAvailable) {
+      this.$store.commit(`${this.productId}/setSelected`, { name: this.optionName, value: this.value }, { root: true })
+      // }
     }
   },
   computed: {
@@ -69,129 +68,34 @@ export default {
 
       return null
     },
-    variantsWithOptionValue() {
-      if (this.variants) {
-        let vm = this
-        return this.variants.filter(variant => {
-          if (
-            variant.selectedOptions.filter(option => {
-              return option.value == vm.value
-            }).length > 0 &&
-            variant.availableForSale
-          ) {
-            return true
-          } else {
-            return false
-          }
-        })
+
+    swatchSelected() {
+      if (JSON.stringify(this.selectedVariant.selectedOptions).includes(this.value)) {
+        return 'selected'
+      } else {
+        return 'not-selected'
       }
     },
 
-    optionAvailable() {
-      let vm = this
-      if (
-        vm.variantsWithOptionValue &&
-        vm.variantsWithOptionValue.length == 1 &&
-        vm.selectedOptions.length > 0
-      ) {
-        let matches = flattenDeep(
-          vm.variantsWithOptionValue[0].selectedOptions.map(option => {
-            if (option.name != vm.optionName) {
-              return vm.selectedOptions.map(selectedOption => {
-                if (selectedOption.name == option.name) {
-                  if (selectedOption.value == option.value) {
-                    return true
-                  } else {
-                    return false
-                  }
-                }
-              })
-            }
-          })
-        )
-        if (matches.includes(false)) {
-          return false
-        } else {
-          return this.variantsWithOptionValue[0].availableForSale
-        }
-        // this is the last piece. for the variant that remains, determine whether or not its options are selected
-        //
-      } else if (
-        vm.variantsWithOptionValue &&
-        vm.variantsWithOptionValue.length == 1 &&
-        vm.selectedOptions.length == 0
-      ) {
-        return true
-      } else if (
-        vm.variantsWithOptionValue &&
-        this.variantsWithOptionValue.length > 1
-      ) {
-        // return this.variantsWithOptionValue.filter(variant =>{
-        //   if(vm.selectedOptions.filter(option=>{
-        //     if(option.name )
-        //   }))
-        // })
-        return true
-      } else {
-        return false
-
-        // IF MULTIPLE DIMENSIONS ////////////////////////////////
-        // let variantsWithThisOptionValue = this.variants.filter(variant => {
-        //   if (
-        //     variant.selectedOptions.filter(option => {
-        //       return option.value == vm.value
-        //     }).length > 0
-        //   ) {
-        //     return true
-        //   } else {
-        //     return false
-        //   }
-        // })
-        // if (variantsWithThisOptionValue.length == 1) {
-        //   return variantsWithThisOptionValue[0].availableForSale
-        // } else if (variantsWithThisOptionValue.length > 1) {
-        //   return true
-        // } else {
-        //   return false
-        // }
-
-        // if (variants.length == 1) {
-        //   return variants[0].availableForSale
-        // } else {
-        //   let availableVariants = variants.filter(variant => {
-        //     return variant.availableForSale == true
-        //   })
-
-        //   if (availableVariants.length > 0 && vm.selectedOptions.length > 0) {
-        //     let variantsWithThisOption = vm.selectedOptions.filter(option => {
-        //       return option.value == vm.value
-        //     })
-        //     console.log(variantsWithThisOption)
-        //     if (variantsWithThisOption.length > 0) {
-        //       return true
-        //     } else {
-        //       return variantsWithThisOption[0].availableForSale
-        //     }
-        //   } else if (availableVariants.length > 0) {
-        //     return true
-        //   } else {
-        //     return false
-        //   }
-        // }
+    selectedVariant() {
+      if (this.$store.getters[[`${this.productId}/selectedVariant`]]) {
+        return this.$store.getters[`${this.productId}/selectedVariant`]
       }
+      return null
     },
     availableClass() {
-      if (this.optionAvailable) {
-        return 'available'
-      } else {
-        return 'not-available'
-      }
+      return 'available'
+      // if (swatchSelected) {
+      //   return 'available'
+      // } else {
+      //   return 'not-available'
+      // }
     },
     swatchNameClass() {
       if (this.optionName) {
-        let formattedOptionName = this.optionName.replace(' ', '-')
         return `swatch-${this.optionName}`
       }
+      return ''
     }
   }
 }

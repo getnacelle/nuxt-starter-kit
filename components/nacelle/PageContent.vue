@@ -32,6 +32,7 @@ import SideBySide from '~/components/nacelle/ContentSideBySide'
 import Testimonials from '~/components/nacelle/ContentTestimonials'
 import Testimonial from '~/components/nacelle/ContentTestimonial'
 import ProductGrid from '~/components/nacelle/ContentProductGrid'
+import CollectionGrid from '~/components/nacelle/CollectionGrid'
 
 export default {
   components: {
@@ -39,7 +40,8 @@ export default {
     SideBySide,
     Testimonials,
     Testimonial,
-    ProductGrid
+    ProductGrid,
+    CollectionGrid
   },
   props: {
     page: {
@@ -169,7 +171,7 @@ export default {
       const keys = Object.keys(section.fields)
 
       // reverse loop for performance
-      for (let i = keys.length; i--; ) {
+      for (let i = keys.length; i--;) {
         const key = keys[i]
         data[key] = section.fields[key]
 

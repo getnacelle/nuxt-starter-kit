@@ -1,28 +1,24 @@
 <template>
   <div>
     <button
-      :disabled="disableAtcButton"
+      :disabled="buttonState === 'disabled'"
       @click="addToCart"
       class="button is-primary"
     >
       <slot>
-        <span v-if="showAddToCart">Add to Cart</span>
-        <span v-else-if="showSelectOptions">Select Options</span>
-        <span v-else-if="variantInLineItems">Added!</span>
-        <span v-else-if="showOutOfStock">Out of Stock</span>
+        <span>{{buttonText}}</span>
       </slot>
     </button>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   props: {
-    productHandle: {
-      type: String,
-      default: ''
+    product: {
+      type: Object
     },
     metafields: {
       type: Array,
@@ -30,80 +26,19 @@ export default {
         return []
       }
     },
-
     quantity: { type: Number, default: 1 },
-    confirmedSelection: { type: Boolean, default: false }
+    variant: { type: Object }
+  },
+  data() {
+    return { buttonState: 'enabled' }
   },
 
   computed: {
     ...mapState('cart', ['lineItems']),
-    ...mapGetters('products', [
-      'getProduct',
-      'getSelectedVariant',
-      'onlyOneOption',
-      'allOptionsSelected'
-    ]),
-
-    product() {
-      return this.getProduct(this.productHandle)
-    },
-
-    variant() {
-      return this.getSelectedVariant(this.productHandle)
-    },
-
-    variantInLineItems() {
-      return (
-        !!this.variant &&
-        this.lineItems.map(l => l.variant.id).includes(this.variant.id)
-      )
-    },
-
-    isProductVariantSelectChild() {
-      return this.$parent.$options._componentTag === 'product-variant-select'
-    },
-
-    showSelectOptions() {
-      console.log()
-      return this.isProductVariantSelectChild
-        ? !this.variantInLineItems &&
-            !this.allOptionsSelected(this.productHandle) &&
-            this.product.availableForSale
-        : !this.onlyOneOption(this.productHandle) &&
-            this.product.availableForSale
-    },
-
-    disableAtcButton() {
-      return (
-        !this.allOptionsSelected(this.productHandle) ||
-        (this.allOptionsSelected(this.productHandle) &&
-          this.variant === undefined) ||
-        (!this.variantInLineItems &&
-          this.allOptionsSelected(this.productHandle) &&
-          !this.variant.availableForSale)
-      )
-    },
-
-    showOutOfStock() {
-      return (
-        (!this.variantInLineItems &&
-          this.allOptionsSelected &&
-          this.variant &&
-          !this.variant.availableForSale) ||
-        !this.product.availableForSale
-      )
-    },
-
-    showAddToCart() {
-      return (
-        (this.isProductVariantSelectChild
-          ? this.allOptionsSelected(this.productHandle)
-          : this.onlyOneOption(this.productHandle)) &&
-        !this.variantInLineItems &&
-        this.variant &&
-        this.variant.availableForSale
-      )
+    buttonText() {
+      return 'Add To Cart'
     }
+
   },
 
   watch: {
@@ -124,8 +59,7 @@ export default {
 
     addToCart() {
       if (
-        this.allOptionsSelected(this.productHandle) &&
-        this.product.availableForSale
+        this.variant.availableForSale
       ) {
         const lineItem = {
           image: this.product.featuredMedia,

@@ -14,19 +14,18 @@
         :category="product.productType"
       />
       <p class="price">
-        <product-price v-if="selectedVariant" :price="displayPrice" />
+        <product-price  :price="product.price" />
       </p>
       <product-description :description="product.description" />
       <product-variant-select
-        v-if="selectedVariant"
-        :productHandle="productHandle"
+
       />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import ProductCategory from '~/components/nacelle/ProductCategory'
 import ProductMediaSelectView from '~/components/nacelle/ProductMediaSelectView'
 import ProductTitle from '~/components/nacelle/ProductTitle'
@@ -47,34 +46,15 @@ export default {
     return {}
   },
   props: {
-    productHandle: {
-      type: String,
-      default: ''
+    product: {
+      type: Object
     }
   },
   computed: {
-    ...mapState('user', ['locale']),
-    ...mapGetters('products', [
-      'getProductData',
-      'getSelectedVariant',
-      'getPriceForCurrency'
-    ]),
-    product() {
-      return this.getProductData(this.productHandle).product
-    },
-    displayPrice() {
-      return this.getPriceForCurrency({
-        productHandle: this.productHandle,
-        fallbackPrice: this.selectedVariant.price
-      })
-    },
-    selectedVariant() {
-      return this.getSelectedVariant(this.productHandle)
-    }
+    ...mapState('user', ['locale'])
   },
   methods: {
-    ...mapMutations('cart', ['showCart']),
-    ...mapMutations('products', ['setSelectedVariant'])
+    ...mapMutations('cart', ['showCart'])
   }
 }
 </script>

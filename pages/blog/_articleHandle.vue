@@ -55,25 +55,12 @@
 </template>
 
 <script>
-import nmerge from 'nuxt-merge-asyncdata'
 import { mapGetters } from 'vuex'
-import getBlogArticle from '~/mixins/getBlogArticle'
-import getCollection from '~/mixins/getCollection'
 import viewEvent from '~/mixins/viewEvent'
 import jsonld from '~/mixins/jsonld'
-import InterfaceFeaturedMedia from '~/components/nacelle/InterfaceFeaturedMedia'
-import BlogArticleHeader from '~/components/nacelle/BlogArticleHeader'
-import BlogArticleContent from '~/components/nacelle/BlogArticleContent'
 
-export default nmerge({
-  components: {
-    InterfaceFeaturedMedia,
-    BlogArticleHeader,
-    BlogArticleContent
-  },
+export default {
   mixins: [
-    getCollection(),
-    getBlogArticle(),
     viewEvent('article'),
     jsonld('article')
   ],
@@ -134,7 +121,7 @@ export default nmerge({
       }
     }
   }
-})
+}
 </script>
 
 <style lang="scss" scoped>

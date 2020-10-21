@@ -7,7 +7,7 @@
       :class="columnClasses"
     >
       <product-card
-        :productHandle="product.handle"
+:product="product"
         :showQuantityUpdate="showQuantityUpdate"
         :showAddToCart="showAddToCart"
       />

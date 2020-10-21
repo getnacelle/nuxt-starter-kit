@@ -3,9 +3,7 @@ require('dotenv').config()
 export default {
   mode: process.env.BUILD_MODE,
   target: 'static',
-  /*
-   ** Headers of the page
-   */
+  components: true,
   head: {
     title: process.env.npm_package_name || '',
     meta: [
@@ -33,7 +31,8 @@ export default {
     nacelleSpaceID: process.env.NACELLE_SPACE_ID,
     nacelleToken: process.env.NACELLE_GRAPHQL_TOKEN,
     buildMode: process.env.BUILD_MODE,
-    contentAssetStorage: process.env.CONTENT_ASSET_STORAGE || ''
+    contentAssetStorage: process.env.CONTENT_ASSET_STORAGE || '',
+    API_PORT: process.env.API_PORT
   },
 
   plugins: [
@@ -47,7 +46,8 @@ export default {
     '@nuxtjs/sitemap',
     '@nuxtjs/axios',
     'nuxt-polyfill',
-    'vue-currency-filter/nuxt'
+    'vue-currency-filter/nuxt',
+    '~/modules/nacelle'
   ],
 
   router: {

@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /****
 /* For information about data privacy and cookie banners, please refer to:
 /*

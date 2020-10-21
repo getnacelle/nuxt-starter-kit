@@ -13,8 +13,8 @@ export default {
   },
   async fetch() {
     this.page = await this.$nacelle.data.page({
-      handle: this.$route.params.pageHandle,
-      locale: 'en-us'
+      handle: 'blog',
+      locale: 'en-US'
     })
   }
 }
