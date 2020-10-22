@@ -160,8 +160,5 @@ export default {
         useShortDoctype: true
       }
     }
-    // transpile: [
-    //   'fuse.js'
-    // ]
   }
 }

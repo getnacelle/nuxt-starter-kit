@@ -40,11 +40,10 @@
 
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
-import availableOptions from '~/mixins/availableOptions'
 import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
 export default {
-  mixins: [availableOptions, getDisplayPriceForCurrency],
+  mixins: [getDisplayPriceForCurrency],
   props: {
     pathFragment: {
       type: String,

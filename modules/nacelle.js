@@ -1,4 +1,4 @@
-import NacelleClient from '@nacelle/client-js-sdk'
+import NacelleClient from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
 const path = require('path')
 
 module.exports = async function (moduleOptions) {

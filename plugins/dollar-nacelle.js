@@ -1,4 +1,4 @@
-import NacelleClient, { NacelleStaticConnector } from '@nacelle/client-js-sdk'
+import NacelleClient, { NacelleStaticConnector } from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
 import { Localizer } from '@nacelle/segmentation-sdk'
 
 export default function (context, inject) {

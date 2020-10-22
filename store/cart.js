@@ -1,6 +1,5 @@
 import localforage from 'localforage'
 import { v4 as uuid } from 'uuid'
-import isEqual from 'lodash.isequal'
 
 export const state = () => ({
   lineItems: [],
@@ -64,12 +63,7 @@ export const mutations = {
   addLineItemMutation(state, payload) {
     const index = state.lineItems.findIndex(lineItem => {
       if (lineItem.variant.id === payload.variant.id) {
-        const areMetafieldsEqual = isEqual(
-          payload.metafields,
-          lineItem.metafields
-        )
-
-        return areMetafieldsEqual // match only if metafields are the same.
+        return JSON.stringify(payload.metafields) === JSON.stringify(lineItem.metafields) // match only if metafields are the same.
       }
     })
     if (index === -1) {
