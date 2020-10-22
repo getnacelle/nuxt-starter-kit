@@ -4,6 +4,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 
+import { decode } from 'js-base64'
 export default {
   computed: {
     ...mapState('events', ['log']),
@@ -53,18 +54,14 @@ export default {
   methods: {
     decodeBase64ProductId(encodedId) {
       const variantIdBase64 = encodedId.split('::')[0]
-      const variantIdString = Buffer.from(variantIdBase64, 'base64').toString(
-        'ascii'
-      )
+      const variantIdString = decode(variantIdBase64)
       const variantId = variantIdString.split('gid://shopify/Product/')[1]
 
       return variantId
     },
     decodeBase64VariantId(encodedId) {
       const variantIdBase64 = encodedId.split('::')[0]
-      const variantIdString = Buffer.from(variantIdBase64, 'base64').toString(
-        'ascii'
-      )
+      const variantIdString = decode(variantIdBase64)
       const variantId = variantIdString.split(
         'gid://shopify/ProductVariant/'
       )[1]

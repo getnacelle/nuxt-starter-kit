@@ -3,9 +3,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import VueCurrencyFilter from 'vue-currency-filter'
-Vue.use(VueCurrencyFilter)
 export default {
   props: {
     price: [String, Number],

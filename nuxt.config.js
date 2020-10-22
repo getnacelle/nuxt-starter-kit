@@ -46,7 +46,6 @@ export default {
     '@nuxtjs/sitemap',
     '@nuxtjs/axios',
     'nuxt-polyfill',
-    'vue-currency-filter/nuxt',
     '~/modules/nacelle'
   ],
 
@@ -136,6 +135,11 @@ export default {
   },
 
   build: {
+    extend(config, ctx) {
+      config.node = {
+        Buffer: false
+      }
+    },
     postcss: {
       preset: {
         features: {
@@ -155,10 +159,9 @@ export default {
         trimCustomFragments: true,
         useShortDoctype: true
       }
-    },
-    transpile: [
-      'fuse.js',
-      'uuidv4'
-    ]
+    }
+    // transpile: [
+    //   'fuse.js'
+    // ]
   }
 }

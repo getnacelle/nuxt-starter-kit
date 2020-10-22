@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Fuse from 'fuse.js'
+import Fuse from 'fuse.js/dist/fuse.basic.common'
 import { mapState, mapMutations } from 'vuex'
 export default {
   props: {

@@ -1,5 +1,5 @@
 import localforage from 'localforage'
-import { uuid } from 'uuidv4'
+import { v4 as uuid } from 'uuid'
 import isEqual from 'lodash.isequal'
 
 export const state = () => ({

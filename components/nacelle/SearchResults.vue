@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Fuse from 'fuse.js'
+import Fuse from 'fuse.js/dist/fuse.basic.common'
 
 export default {
   props: {

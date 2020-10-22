@@ -44,13 +44,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('products', ['getProduct', 'getSelectedVariant']),
     ...mapGetters('wishlist', ['getItemByVariantId']),
     product() {
-      return this.getProduct(this.productHandle)
+      return null
     },
     variant() {
-      return this.getSelectedVariant(this.productHandle)
+      return null
     },
     isSavedInWishlist() {
       return this.variant && !!this.getItemByVariantId(this.variant.id)

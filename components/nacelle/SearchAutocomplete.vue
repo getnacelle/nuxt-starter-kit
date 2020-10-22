@@ -35,7 +35,6 @@ import SearchResults from '~/components/nacelle/SearchResults'
 import SearchNoResults from '~/components/nacelle/SearchNoResults'
 import SearchAutocompleteItem from '~/components/nacelle/SearchAutocompleteItem'
 import { mapState, mapMutations, mapGetters } from 'vuex'
-import ClickOutside from 'vue-click-outside'
 
 export default {
   data() {
@@ -47,9 +46,6 @@ export default {
     SearchResults,
     SearchNoResults,
     SearchAutocompleteItem
-  },
-  directives: {
-    ClickOutside
   },
   watch: {
     $route() {
@@ -67,7 +63,6 @@ export default {
       ) {
         return true
       }
-      return
     }
   },
   methods: {
@@ -75,7 +70,7 @@ export default {
     ...mapMutations('search', ['setAutocompleteNotVisible']),
     ...mapMutations('search', ['setQuery']),
     setNotVisibleAndClearQuery() {
-      let vm = this
+      const vm = this
       vm.cursorInside = false
 
       setTimeout(() => {
