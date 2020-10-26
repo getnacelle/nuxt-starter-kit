@@ -1,7 +1,7 @@
 <template>
-  <router-link :to="`${pathFragment}${item.handle}`">
+  <router-link :to="`${pathFragment}${item.handle}`" @click.native="onSearchSelected">
     <div class="columns is-marginless is-mobile autocomplete-item nacelle is-vcentered">
-      <product-image 
+      <product-image
         v-if="productThumbnail && productThumbnail.length > 0"
         :source="item.featuredMedia.thumbnailSrc"
         :alt="item.title"
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import ProductImage from '~/components/nacelle/ProductImage'
 import ProductPrice from '~/components/nacelle/ProductPrice'
 
@@ -32,7 +33,7 @@ export default {
     }
   },
   computed: {
-    productThumbnail () {
+    productThumbnail() {
       if (
         this.item &&
         this.item.featuredMedia &&
@@ -43,7 +44,7 @@ export default {
 
       return ''
     },
-    productPrice () {
+    productPrice() {
       if (
         this.item &&
         this.item.variants &&
@@ -55,6 +56,14 @@ export default {
       }
 
       return 0
+    }
+  },
+  methods: {
+    ...mapActions('events', ['searchSelected']),
+    onSearchSelected() {
+      this.searchSelected({
+        selectedResult: this.item.handle
+      })
     }
   }
 }

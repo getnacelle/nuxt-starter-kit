@@ -47,7 +47,7 @@
             :searchQuery="query"
           >
             <template v-slot:result="{ result }">
-              <product-grid :products="result" :columns="4" />
+              <product-grid :products="result" :columns="4" is-search-result />
             </template>
             <template v-slot:no-results>
               <search-no-results />
