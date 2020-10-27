@@ -11,7 +11,6 @@
     </div>
     <product-options
       v-if="product.variants.length > 1"
-      :options="allOptions"
       :selectedVariant="selectedVariant"
       :variants="product.variants"
       :productId="product.pimSyncSourceProductId"

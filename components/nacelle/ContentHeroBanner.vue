@@ -8,19 +8,6 @@
     >
       <picture class="hero-background" ref="hero-img-card">
         <source
-          v-if="cloudinaryCanAutoFormat"
-          media="(max-width: 768px)"
-          :srcset="
-            optimizeSource({
-              url: mobileSrc,
-              format: 'auto',
-              width: 768,
-              crop: mobileCrop
-            })
-          "
-          @error="fallback"
-        />
-        <source
           v-if="reformat"
           media="(max-width: 768px)"
           :srcset="
@@ -46,19 +33,6 @@
             })
           "
           type="image/jpeg"
-          @error="fallback"
-        />
-        <source
-          v-if="cloudinaryCanAutoFormat"
-          media="(min-width: 769px) and (max-width: 1023px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'auto',
-              width: 1023,
-              crop: mobileCrop
-            })
-          "
           @error="fallback"
         />
         <source
@@ -88,18 +62,6 @@
           type="image/jpeg"
         />
         <source
-          v-if="cloudinaryCanAutoFormat"
-          media="(min-width: 1023px) and (max-width: 1215px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'auto',
-              width: 1215
-            })
-          "
-          @error="fallback"
-        />
-        <source
           v-if="reformat"
           media="(min-width: 1023px) and (max-width: 1215px)"
           :srcset="
@@ -124,18 +86,6 @@
           type="image/jpeg"
         />
         <source
-          v-if="cloudinaryCanAutoFormat"
-          media="(min-width: 1216px) and (max-width: 1407px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'auto',
-              width: 1407
-            })
-          "
-          @error="fallback"
-        />
-        <source
           v-if="reformat"
           media="(min-width: 1216px) and (max-width: 1407px)"
           :srcset="
@@ -158,18 +108,6 @@
             })
           "
           type="image/jpeg"
-        />
-        <source
-          v-if="cloudinaryCanAutoFormat"
-          media="(min-width: 1408px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'auto',
-              width: 1408
-            })
-          "
-          @error="fallback"
         />
         <source
           v-if="reformat"

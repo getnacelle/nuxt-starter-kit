@@ -45,15 +45,7 @@
             </div>
           </div>
         </div>
-        <h3 class="title is-4">Recommended Products</h3>
-        <product-recommendations
-          :productHandle="product.handle"
-          :limit="3"
-          :orientation="'horizontal'"
-          v-slot:default="{ product }"
-        >
-          <!-- <span>{{ product.title }}</span> -->
-        </product-recommendations>
+
       </div>
     </section>
   </div>

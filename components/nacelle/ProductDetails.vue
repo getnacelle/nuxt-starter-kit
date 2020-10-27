@@ -18,7 +18,6 @@
       </p>
       <product-description :description="product.description" />
       <product-variant-select
-
       />
     </div>
   </div>

@@ -15,14 +15,12 @@
 </template>
 
 <script>
+import { flattenDeep, uniq, uniqWith, isEqual } from 'lodash'
 import ProductOptionSwatch from '~/components/nacelle/ProductOptionSwatch'
 export default {
   props: {
     productId: {
       type: String
-    },
-    options: {
-      type: Array
     },
     selectedVariant: {
       type: Object
@@ -33,6 +31,62 @@ export default {
   },
   components: {
     ProductOptionSwatch
+  },
+  computed: {
+    options() {
+      if (this.variants) {
+        const nestedOptions = this.variants.map(variant => {
+          if (variant.selectedOptions) {
+            return variant.selectedOptions.map(option => {
+              if (option.name === 'Color') {
+                return {
+                  name: option.name,
+                  value: option.value,
+                  swatchSrc: variant.swatchSrc
+                }
+              }
+
+              return option
+            })
+          }
+
+          return []
+        })
+        const flattenedOptions = flattenDeep(nestedOptions)
+
+        const optionNames = uniq(
+          flattenedOptions.map(option => {
+            return option.name
+          })
+        )
+        const optionValuesByName = optionNames.map(name => {
+          const values = uniqWith(
+            flattenedOptions
+              .filter(option => {
+                if (option.name === name) {
+                  return option
+                }
+              })
+              .map(option => {
+                if (option.swatchSrc) {
+                  return { value: option.value, swatchSrc: option.swatchSrc }
+                } else {
+                  return { value: option.value }
+                }
+              }),
+            isEqual
+          )
+
+          return {
+            name,
+            values
+          }
+        })
+
+        return optionValuesByName
+      }
+      return null
+    }
   }
 }
 </script>
