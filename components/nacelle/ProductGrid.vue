@@ -10,6 +10,7 @@
         :productHandle="product.handle"
         :showQuantityUpdate="showQuantityUpdate"
         :showAddToCart="showAddToCart"
+        @click.native="onSearchSelected(product.handle)"
       />
     </div>
   </div>
@@ -17,6 +18,7 @@
 
 <script>
 import ProductCard from '~/components/nacelle/ProductCard'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -38,6 +40,10 @@ export default {
     showAddToCart: {
       type: Boolean,
       default: true
+    },
+    isSearchResult: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -59,6 +65,16 @@ export default {
       classes = `${classes} is-half-tablet`
 
       return classes
+    }
+  },
+  methods: {
+    ...mapActions('events', ['searchSelected']),
+    onSearchSelected(handle) {
+      if (this.isSearchResult) {
+        this.searchSelected({
+          selectedResult: handle
+        })
+      }
     }
   }
 }
