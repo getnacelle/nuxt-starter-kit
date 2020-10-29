@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const eventProperties = rootState => {
   const { user, space, cart } = rootState || {}
   const spaceId = space ? space.id : null
@@ -24,91 +26,109 @@ export const mutations = {
 }
 
 export const actions = {
-  pageView({ commit, rootState }, payload) {
-    commit('addEvent', {
-      eventType: 'pageView',
+  sendEvent({ commit, rootState }, payload) {
+    const event = {
       ...eventProperties(rootState),
+      ...payload
+    }
+    try {
+      Vue.prototype.$nuxt.$nacelle.events.log(event)
+    } catch (error) {
+      console.error(error)
+    }
+    commit('addEvent', event)
+  },
+
+  pageView({ dispatch }, payload) {
+    dispatch('sendEvent', {
+      eventType: 'pageView',
       ...payload
     })
   },
 
-  productView({ commit, rootState }, product) {
-    commit('addEvent', {
+  productView({ dispatch }, product) {
+    dispatch('sendEvent', {
       eventType: 'productView',
-      ...eventProperties(rootState),
       product
     })
   },
 
-  collectionView({ commit, rootState }, collection) {
-    commit('addEvent', {
+  collectionView({ dispatch }, collection) {
+    dispatch('sendEvent', {
       eventType: 'collectionView',
-      ...eventProperties(rootState),
       collection
     })
   },
 
-  blogView({ commit, rootState }, blog) {
-    commit('addEvent', {
+  blogView({ dispatch }, blog) {
+    dispatch('sendEvent', {
       eventType: 'blogView',
-      ...eventProperties(rootState),
       blog
     })
   },
 
-  articleView({ commit, rootState }, article) {
-    commit('addEvent', {
+  articleView({ dispatch }, article) {
+    dispatch('sendEvent', {
       eventType: 'articleView',
-      ...eventProperties(rootState),
       article
     })
   },
 
-  addToCart({ commit, rootState }, payload) {
-    commit('addEvent', {
+  addToCart({ dispatch }, payload) {
+    dispatch('sendEvent', {
       eventType: 'cartAdd',
-      ...eventProperties(rootState),
       ...payload
     })
   },
 
-  removeFromCart({ commit, rootState }, payload) {
-    commit('addEvent', {
+  removeFromCart({ dispatch }, payload) {
+    dispatch('sendEvent', {
       eventType: 'cartRemove',
-      ...eventProperties(rootState),
       ...payload
     })
   },
 
-  checkoutInit({ commit, rootState }, payload) {
-    commit('addEvent', {
+  checkoutInit({ dispatch }, payload) {
+    dispatch('sendEvent', {
       eventType: 'checkoutInit',
-      ...eventProperties(rootState),
       ...payload
     })
   },
 
-  checkoutComplete({ commit, rootState }, payload) {
-    commit('addEvent', {
+  checkoutComplete({ dispatch }, payload) {
+    dispatch('sendEvent', {
       eventType: 'checkoutComplete',
-      ...eventProperties(rootState),
       ...payload
     })
   },
 
-  search({ commit, rootState }, payload) {
-    commit('addEvent', {
+  emailSignup({ dispatch }, payload) {
+    dispatch('sendEvent', {
+      eventType: 'emailSignup',
+      ...payload
+    })
+  },
+
+  search({ dispatch, commit }, payload) {
+    commit('setSearchResults', payload)
+    dispatch('sendEvent', {
       eventType: 'search',
-      ...eventProperties(rootState),
       ...payload
     })
   },
 
-  productRecommendation({ commit, rootState }, payload) {
-    commit('addEvent', {
+  searchSelected({ dispatch, state }, payload) {
+    dispatch('sendEvent', {
+      eventType: 'searchSelected',
+      ...state.searchResults,
+      ...payload
+    })
+  },
+
+  productRecommendation({ dispatch }, payload) {
+    dispatch('sendEvent', {
       eventType: 'productRecommendation',
-      ...payload,
-      ...eventProperties(rootState)
+      ...payload
     })
   }
 }
