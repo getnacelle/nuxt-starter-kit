@@ -8,14 +8,15 @@
 export default {
   data() {
     return {
-      page: null
+      page: null,
+      catalog: null
     }
   },
   async fetch() {
     this.page = await this.$nacelle.data.page({
-      handle: 'homepage',
-      locale: 'en-US'
+      handle: 'homepage'
     })
+    this.catalog = await this.$nacelle.shopAllProducts()
   }
 }
 </script>

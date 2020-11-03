@@ -8,6 +8,7 @@
         :optionName="option.name"
         swatchStyle="tab"
         :productId="productId"
+        :variants="variants"
       />
       </div>
     </div>

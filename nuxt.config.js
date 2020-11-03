@@ -62,17 +62,10 @@ export default {
     ]
   },
 
-  // sitemap: {
-  //   gzip: true,
-  //   hostname: 'http://localhost:3000', // When deploying, change this to your production URL
-  //   routes: () => {
-  //     const staticDir = path.resolve(__dirname, './static/data')
-  //     const routes = fs.readJsonSync(`${staticDir}/routes.json`)
-  //     const routesOnly = routes.map(route => route.route)
-
-  //     return routesOnly
-  //   }
-  // },
+  sitemap: {
+    gzip: true,
+    hostname: 'http://localhost:3000' // When deploying, change this to your production URL
+  },
 
   /*
    ** Nacelle Configuration

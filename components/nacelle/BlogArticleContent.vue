@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     content() {
-      if (this.article && this.article.source === 'contentful') {
+      if (this.article && this.article.cmsSyncSource === 'contentful') {
         return this.contentHtml(this.article.fields.content)
       }
 

@@ -20,7 +20,7 @@
     "@contentful/rich-text-html-renderer": "^13.4.0",
     "@contentful/rich-text-plain-text-renderer": "^14.1.1",
     "@contentful/rich-text-types": "^14.1.0",
-    "@nacelle/client-js-sdk": "^3.0.2",
+    "@nacelle/client-js-sdk": "^3.1.0",
     "@nacelle/segmentation-sdk": "0.0.2",
     "@nuxtjs/axios": "^5.9.5",
     "@nuxtjs/bulma": "^1.2.7",

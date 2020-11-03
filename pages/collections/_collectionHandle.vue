@@ -8,9 +8,9 @@
 <template>
   <div class="page page-shop" v-if="collection">
     <content-hero-banner
-      v-if="collection && collection.title && featuredImage"
+      v-if="collection && collection.title && collection.featuredImage"
       :title="collection.title"
-      :imageUrl="featuredImage"
+      :imageUrl="collection.featuredImage"
     />
     <section class="section">
       <div class="container">

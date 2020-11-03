@@ -79,6 +79,7 @@ export default {
   methods: {
     ...mapMutations('cart', ['showCart'])
   },
+
   head() {
     if (this.product) {
       const properties = {}

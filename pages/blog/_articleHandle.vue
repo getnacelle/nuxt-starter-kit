@@ -42,7 +42,7 @@
               </blog-article-header>
             </div>
             <div class="column is-9 content">
-              <blog-article-content :article="article" :products="products">
+              <blog-article-content :article="article">
                 <!-- Extra HTML added after content -->
                 <nuxt-link :to="`/${$route.params.blogHandle}/`" class="breadcrumb">Back to Blog</nuxt-link>
               </blog-article-content>
@@ -60,6 +60,14 @@ import viewEvent from '~/mixins/viewEvent'
 import jsonld from '~/mixins/jsonld'
 
 export default {
+  data() {
+    return {
+      article: null
+    }
+  },
+  async fetch() {
+    this.article = await this.$nacelle.data.article({ handle: this.$route.params.articleHandle, locale: 'en-US' })
+  },
   mixins: [
     viewEvent('article'),
     jsonld('article')

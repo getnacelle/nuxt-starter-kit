@@ -9,11 +9,6 @@
   >
     <picture>
       <source
-        v-if="visibility && cloudinaryCanAutoFormat && validImage"
-        :srcset="optimizeSource({ url: source, format: 'auto' })"
-        v-on:loadend="onLoaded"
-      />
-      <source
         v-if="visibility && reformat && validImage"
         :srcset="optimizeSource({ url: source, format: 'webp' })"
         type="image/webp"

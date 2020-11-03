@@ -129,40 +129,44 @@ export default {
   },
   created() {
     const vm = this
-    this.$store.registerModule(this.product.pimSyncSourceProductId, {
-      state: () => {
-        return { selectedOptions: [] }
-      },
-      getters: {
-        selectedVariant: (state) => {
-          if (state.selectedOptions.length === 0) {
-            return vm.product.variants[0]
-          } else {
-            return vm.product.variants.find((variant) => {
-              return state.selectedOptions.every((option) => {
-                return variant.selectedOptions.some(variantOption => JSON.stringify(variantOption) === JSON.stringify(option))
-              })
-            })
+    if (!this.$store.hasModule(this.product.pimSyncSourceProductId)) {
+      this.$store.registerModule(this.product.pimSyncSourceProductId, {
+        state: () => {
+          return { selectedOptions: [] }
+        },
+        getters: {
+          selectedVariant: (state) => {
+            if (state) {
+              if (state.selectedOptions.length === 0) {
+                return vm.product.variants[0]
+              } else {
+                return vm.product.variants.find((variant) => {
+                  return state.selectedOptions.every((option) => {
+                    return variant.selectedOptions.some(variantOption => JSON.stringify(variantOption) === JSON.stringify(option))
+                  })
+                })
+              }
+            }
           }
-        }
-      },
-      mutations: {
-        setSelected: (state, selectedOption) => {
-          if (state.selectedOptions.length > 0) {
-            const index = state.selectedOptions.findIndex((item) => item.name === selectedOption.name)
-            if (index > -1) {
-              console.log(index)
-              state.selectedOptions[index].value = selectedOption.value
+        },
+        mutations: {
+          setSelected: (state, selectedOption) => {
+            if (state.selectedOptions.length > 0) {
+              const index = state.selectedOptions.findIndex((item) => item.name === selectedOption.name)
+              if (index > -1) {
+                console.log(index)
+                state.selectedOptions[index].value = selectedOption.value
+              } else {
+                state.selectedOptions.push(selectedOption)
+              }
             } else {
               state.selectedOptions.push(selectedOption)
             }
-          } else {
-            state.selectedOptions.push(selectedOption)
           }
-        }
-      },
-      namespaced: true
-    })
+        },
+        namespaced: true
+      }, { preserveState: false })
+    }
   },
 
   methods: {

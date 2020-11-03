@@ -38,12 +38,23 @@ export default {
   },
   methods: {
     setSelected() {
-      // if (this.optionAvailable) {
-      this.$store.commit(`${this.productId}/setSelected`, { name: this.optionName, value: this.value }, { root: true })
-      // }
+      if (this.optionAvailable) {
+        this.$store.commit(`${this.productId}/setSelected`, { name: this.optionName, value: this.value }, { root: true })
+      }
     }
   },
   computed: {
+    optionAvailable() {
+      const vm = this
+      if (this.variants) {
+        const variantsWithOption = this.variants.filter(variant => variant.selectedOptions.some(option => option.value === this.value))
+        const otherOptions = variantsWithOption.filter(variant => variant.selectedOptions.some(option => option.name === this.optionName))
+        console.log({ this: vm.value, other: otherOptions })
+        // const variantWithOptionAndOtherSelected = this.otherOptions.filter(variant => this.selectedVariant.selectedOptions.some(option => JSON.stringify(option) === variant.selectedOptions))
+        return variantsWithOption.some(variant => variant.availableForSale)
+      }
+      return null
+    },
     swatchClass() {
       if (this.value && this.optionName == 'Color') {
         const color = String(this.value)
@@ -70,7 +81,7 @@ export default {
     },
 
     swatchSelected() {
-      if (JSON.stringify(this.selectedVariant.selectedOptions).includes(this.value)) {
+      if (this.selectedVariant && (this.selectedVariant.selectedOptions).some((option) => option.value === this.value)) {
         return 'selected'
       } else {
         return 'not-selected'
@@ -84,12 +95,11 @@ export default {
       return null
     },
     availableClass() {
-      return 'available'
-      // if (swatchSelected) {
-      //   return 'available'
-      // } else {
-      //   return 'not-available'
-      // }
+      if (this.optionAvailable) {
+        return 'available'
+      } else {
+        return 'not-available'
+      }
     },
     swatchNameClass() {
       if (this.optionName) {
