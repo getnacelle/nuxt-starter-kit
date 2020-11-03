@@ -151,9 +151,7 @@
           >
             <h1
               class="title"
-              :style="
-                textColor && textColor.length > 0 ? `color: ${textColor}` : ''
-              "
+
             >
               {{ title }}
             </h1>
@@ -274,8 +272,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+h1{
+  color:white;
+  font-size: 48pt !important;
+  text-transform: uppercase;
+}
 .hero {
   position: relative;
+  margin-bottom: 2rem;
 
   &.is-mobile-fullheight {
     @media screen and (max-width: 768px) {
@@ -290,11 +294,12 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-
+  background-color: black;
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: .5;
   }
 }
 

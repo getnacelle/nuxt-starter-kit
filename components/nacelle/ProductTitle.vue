@@ -19,7 +19,7 @@ export default {
 
 <style lang="scss" scoped>
 .product-title {
-  font-size: 22pt;
+  font-size: 18pt;
   font-weight: 600;
   margin-bottom: 1rem;
 }
