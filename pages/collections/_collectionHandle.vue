@@ -17,13 +17,13 @@
         <div class="columns is-multiline">
           <product-grid
             v-if="collection.products && collection.products.length > 0"
-            :products="collection.products"
+            :products="visibleProducts"
             :showAddToCart="true"
             :showQuantityUpdate="true"
           />
         </div>
       </div>
-      <!-- <observe-emitter v-on:observe="fetchMore" /> -->
+      <observe-emitter v-on:observe="updateProductVisibilityCount" />
     </section>
   </div>
 </template>
@@ -33,7 +33,21 @@ import viewEvent from '~/mixins/viewEvent'
 export default {
   data() {
     return {
-      collection: null
+      collection: null,
+      productVisibilityCount: 16
+    }
+  },
+  computed: {
+    visibleProducts() {
+      if (this.collection.products) {
+        return this.collection.products.slice(0, this.productVisibilityCount)
+      }
+      return null
+    }
+  },
+  methods: {
+    updateProductVisibilityCount() {
+      this.productVisibilityCount = this.productVisibilityCount + 16
     }
   },
   async fetch() {
@@ -42,9 +56,11 @@ export default {
       handle: this.$route.params.collectionHandle
     })
     const products = collectionData.productLists[0].handles.map(handle => {
+      console.log(handle)
       return vm.$nacelle.data.product({ handle: handle })
     })
     const collectionProducts = await Promise.all(products)
+    collectionProducts.filter(product => product !== undefined)
     this.collection = { products: collectionProducts, ...collectionData }
   },
   mixins: [
