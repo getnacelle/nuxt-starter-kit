@@ -26,6 +26,7 @@
     "@nuxtjs/bulma": "^1.2.7",
     "@nuxtjs/dotenv": "^1.3.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
+    "axios": "^0.21.0",
     "contentful": "^7.14.0",
     "dayjs": "^1.8.23",
     "dotenv": "^8.0.0",

@@ -29,25 +29,27 @@ export default {
   },
   watch: {
     log(log) {
-      switch (this.logEntry.eventType) {
-        case 'PAGE_VIEW':
-          this.facebookPageView()
-          this.googleAnalyticsPageView()
-          break
-        case 'PRODUCT_VIEW':
-          this.facebookProductView()
-          this.googleAnalyticsProductView()
-          break
-        case 'ADD_TO_CART':
-          this.facebookAddToCart()
-          this.googleAnalyticsAddToCart()
-          break
-        case 'REMOVE_FROM_CART':
-          this.googleAnalyticsRemoveFromCart()
-          break
-        case 'CHECKOUT_INIT':
-          this.facebookCheckoutInitiate()
-          break
+      if (process.browser) {
+        switch (this.logEntry.eventType) {
+          case 'PAGE_VIEW':
+            this.facebookPageView()
+            this.googleAnalyticsPageView()
+            break
+          case 'PRODUCT_VIEW':
+            this.facebookProductView()
+            this.googleAnalyticsProductView()
+            break
+          case 'ADD_TO_CART':
+            this.facebookAddToCart()
+            this.googleAnalyticsAddToCart()
+            break
+          case 'REMOVE_FROM_CART':
+            this.googleAnalyticsRemoveFromCart()
+            break
+          case 'CHECKOUT_INIT':
+            this.facebookCheckoutInitiate()
+            break
+        }
       }
     }
   },

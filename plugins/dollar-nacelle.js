@@ -1,4 +1,4 @@
-import NacelleClient, { NacelleStaticConnector } from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
+import NacelleClient from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
 import { Localizer } from '@nacelle/segmentation-sdk'
 
 export default function (context, inject) {
@@ -30,111 +30,8 @@ export default function (context, inject) {
     navigator
   })
 
-  // Add fallback for attempting fetching locale data
-  if (isMultiLocale) {
-    const fallbackConnector = new NacelleStaticConnector({
-      locale: defaultLocale
-    })
-
-    const onDataError = ({ method, params, error }) => {
-      if (typeof fallbackConnector[method] !== 'undefined') {
-        return fallbackConnector[method]({
-          ...params,
-          locale: fallbackConnector.locale
-        })
-      }
-
-      throw error
-    }
-
-    client.data.connector.onError = onDataError
-  }
-
-  const products = ({ handles, handle, locale = defaultLocale }) => {
-    console.warn(
-      `"$nacelle.products" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
-Please update your project to use the @nacelle/client-js-sdk methods "$nacelle.data.product" or "$nacelle.data.products"\n
-Learn more about the Client SDK in our docs here: https://docs.getnacelle.com/api-reference/client-js-sdk.html`
-    )
-
-    let products = []
-
-    if (Array.isArray(handles)) {
-      products = handles
-    } else if (handle) {
-      products.push(handle)
-    }
-
-    return client.data.products({ handles: products, locale })
-  }
-
-  const content = ({ handle, type = 'page', locale = defaultLocale, blogHandle = 'blog' }) => {
-    console.warn(
-      `"$nacelle.content" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
-Please update your project to use the @nacelle/client-js-sdk methods "$nacelle.data.content"\n
-Learn more about the Client SDK in our docs here: https://docs.getnacelle.com/api-reference/client-js-sdk.html`
-    )
-
-    return client.data.content({
-      handle,
-      type,
-      blogHandle,
-      locale
-    })
-  }
-
-  const collection = ({ handle, locale = defaultLocale }) => {
-    console.warn(
-      `"$nacelle.collection" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
-Please update your project to use the @nacelle/client-js-sdk methods "$nacelle.data.collection"\n
-Learn more about the Client SDK in our docs here: https://docs.getnacelle.com/api-reference/client-js-sdk.html`
-    )
-
-    return client.data.collection({
-      handle,
-      locale
-    })
-  }
-
-  const shopAllProducts = () => {
-    console.warn(
-      `"$nacelle.shopAllProducts" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
-Please update your project to use the @nacelle/client-js-sdk methods "$nacelle.data.allProducts"\n
-Learn more about the Client SDK in our docs here: https://docs.getnacelle.com/api-reference/client-js-sdk.html`
-    )
-    return client.data.allProducts()
-  }
-
-  const blog = ({ handle, locale = defaultLocale }) => {
-    console.warn(
-      `"$nacelle.blog" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
-Please update your project to use the @nacelle/client-js-sdk methods "$nacelle.data.blog"\n
-Learn more about the Client SDK in our docs here: https://docs.getnacelle.com/api-reference/client-js-sdk.html`
-    )
-
-    return client.data.blog({ handle, locale })
-  }
-
-  const article = ({ articleHandle, blogHandle, locale = defaultLocale }) => {
-    console.warn(
-      `"$nacelle.article" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
-Please update your project to use the @nacelle/client-js-sdk methods "$nacelle.data.article"\n
-Learn more about the Client SDK in our docs here: https://docs.getnacelle.com/api-reference/client-js-sdk.html`
-    )
-
-    return client.data.article({
-      handle: articleHandle,
-      blogHandle,
-      locale
-    })
-  }
-
   const logEvent = (event) => {
-    console.warn(
-      `"$nacelle.logEvent" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
-Please update your project to use the @nacelle/client-js-sdk methods "$nacelle.events.log"\n
-Learn more about the Client SDK in our docs here: https://docs.getnacelle.com/api-reference/client-js-sdk.html`
-    )
+
     client.events.log(event)
   }
 
@@ -184,12 +81,6 @@ This will be handled automatically during the build process.`
   const plugin = {
     ...settings,
     defaultLocale: defaultLocale,
-    products,
-    content,
-    collection,
-    shopAllProducts,
-    blog,
-    article,
     nacelleNuxtServerInit,
     logEvent,
     onEvent,

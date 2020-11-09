@@ -56,7 +56,6 @@ export default {
       handle: this.$route.params.collectionHandle
     })
     const products = collectionData.productLists[0].handles.map(handle => {
-      console.log(handle)
       return vm.$nacelle.data.product({ handle: handle })
     })
     const collectionProducts = await Promise.all(products)

@@ -4,7 +4,10 @@
     ref="img-card"
     v-observe-visibility="{
       callback: visibilityChanged,
-      once: true
+      once: true,
+      intersection:{
+        rootMargin: '500px'
+      }
     }"
   >
     <picture>

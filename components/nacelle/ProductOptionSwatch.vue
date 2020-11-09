@@ -49,6 +49,9 @@ export default {
       if (this.variants) {
         const variantsWithOption = this.variants.filter(variant => variant.selectedOptions.some(option => option.value === this.value))
         const otherOptions = variantsWithOption.filter(variant => variant.selectedOptions.some(option => option.name === this.optionName))
+
+        // find variant that has current option and all other selected options (and in stock)
+
         // const variantWithOptionAndOtherSelected = this.otherOptions.filter(variant => this.selectedVariant.selectedOptions.some(option => JSON.stringify(option) === variant.selectedOptions))
         return variantsWithOption.some(variant => variant.availableForSale)
       }
