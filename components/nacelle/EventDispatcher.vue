@@ -29,7 +29,7 @@ export default {
   },
   watch: {
     log(log) {
-      if (process.browser) {
+      if (process.client) {
         switch (this.logEntry.eventType) {
           case 'PAGE_VIEW':
             this.facebookPageView()

@@ -1,13 +1,14 @@
 import axios from 'axios'
+import dotenv from 'dotenv'
 
 const spaceID = process.env.NACELLE_SPACE_ID
 const token = process.env.NACELLE_GRAPHQL_TOKEN
 const version = process.env.NACELLE_API_VERSION
 
-require('dotenv').config()
+dotenv.config()
 
 export default async query => {
-  const data = await axios({
+  const res = await axios({
     method: 'post',
     url: `https://hailfrequency.com/${version}/graphql`,
     headers: {
@@ -19,5 +20,5 @@ export default async query => {
       query: query
     }
   })
-  return data.data.data
+  return res.data.data
 }
