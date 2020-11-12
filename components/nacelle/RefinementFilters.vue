@@ -96,7 +96,6 @@ export default {
   },
   watch: {
     inputData() {
-      console.log(this.inputData)
       this.setupFilters()
       this.computeFilteredData()
     },
@@ -108,7 +107,6 @@ export default {
       this.computeFilteredData()
     },
     activeFilters() {
-      console.log('activeFiltersChanged')
       this.computeFilteredData()
     },
     activePriceRange() {
@@ -118,7 +116,6 @@ export default {
       this.computeOutputData()
     },
     filtersCleared(val) {
-      console.log(val)
       if (val === true) {
         this.activeFilters = []
         this.activePriceRange = null
