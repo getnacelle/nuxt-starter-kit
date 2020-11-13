@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[swatchStyle, availableClass, swatchNameClass, swatchSelected]"
+    :class="[swatchStyle, availableClass, swatchNameClass, swatchSelectedClass]"
     class="option-swatch nacelle no-select"
     @click="setSelected"
   >
@@ -10,7 +10,7 @@
       :style="swatchBg"
       class="inside-color"
     />
-    <span v-if="swatchStyle != 'bubble'">{{ value }}</span>
+    <span v-else>{{ value }}</span>
   </div>
 </template>
 
@@ -26,9 +26,6 @@ export default {
     swatchStyle: {
       type: String
     },
-    selected: {
-      type: Boolean
-    },
     variants: {
       type: Array
     },
@@ -39,16 +36,19 @@ export default {
   methods: {
     setSelected() {
       if (this.optionAvailable) {
-        this.$store.commit(`${this.productId}/setSelected`, { name: this.optionName, value: this.value }, { root: true })
+        this.$store.commit(
+          `product/${this.productId}/setSelected`,
+          { name: this.optionName, value: this.value },
+          { root: true }
+        )
       }
     }
   },
   computed: {
     optionAvailable() {
-      const vm = this
       if (this.variants) {
         const variantsWithOption = this.variants.filter(variant => variant.selectedOptions.some(option => option.value === this.value))
-        const otherOptions = variantsWithOption.filter(variant => variant.selectedOptions.some(option => option.name === this.optionName))
+        // const otherOptions = variantsWithOption.filter(variant => variant.selectedOptions.some(option => option.name === this.optionName))
 
         // find variant that has current option and all other selected options (and in stock)
 
@@ -58,7 +58,7 @@ export default {
       return null
     },
     swatchClass() {
-      if (this.value && this.optionName == 'Color') {
+      if (this.value && this.optionName === 'Color') {
         const color = String(this.value)
         return `swatch-color-${color.toLowerCase()}`
       }
@@ -82,7 +82,7 @@ export default {
       return null
     },
 
-    swatchSelected() {
+    swatchSelectedClass() {
       if (this.selectedVariant && (this.selectedVariant.selectedOptions).some((option) => option.value === this.value)) {
         return 'selected'
       } else {
@@ -91,10 +91,7 @@ export default {
     },
 
     selectedVariant() {
-      if (this.$store.getters[[`${this.productId}/selectedVariant`]]) {
-        return this.$store.getters[`${this.productId}/selectedVariant`]
-      }
-      return null
+      return this.$store.getters[`product/${this.productId}/selectedVariant`] || null
     },
     availableClass() {
       if (this.optionAvailable) {

@@ -23,9 +23,7 @@
 </template>
 
 <script>
-// import { mapGetters, mapMutations } from 'vuex'
-import { mapGetters, mapMutations } from 'vuex'
-
+import productModule from '~/store/product/productModule'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
@@ -59,56 +57,13 @@ export default {
     }
   },
   created() {
-    // createProductModule(this.product)
-
-    const { product } = this
     if (!this.$store.hasModule(['product', this.pimId])) {
-      this.$store.registerModule(['product', this.pimId], {
-        state: () => {
-          return { selectedOptions: [] }
-        },
-        getters: {
-          selectedVariant: (state) => {
-            if (state.selectedOptions.length === 0) {
-              return product.variants[0]
-            } else {
-              return product.variants.find(variant => {
-                return state.selectedOptions.every(option => {
-                  return variant.selectedOptions.some(variantOption => JSON.stringify(variantOption) === JSON.stringify(option))
-                })
-              })
-            }
-          }
-        },
-        mutations: {
-          setSelected: (state, selectedOption) => {
-            if (state.selectedOptions.length > 0) {
-              const index = state.selectedOptions.findIndex((item) => item.name === selectedOption.name)
-              if (index > -1) {
-                state.selectedOptions[index].value = selectedOption.value
-              } else {
-                state.selectedOptions.push(selectedOption)
-              }
-            } else {
-              state.selectedOptions.push(selectedOption)
-            }
-
-            // if `selectedOptions` does not match any variant
-            // then select remove options until matching variant based on `selectedOption`
-            const findSelectedVariant = () => product.variants.find(variant => {
-              return state.selectedOptions.every(option => {
-                return variant.selectedOptions.some(variantOption => JSON.stringify(variantOption) === JSON.stringify(option))
-              })
-            })
-            let selectedVariant = findSelectedVariant()
-            while (!selectedVariant && state.selectedOptions.length > 0) {
-              state.selectedOptions.shift()
-              selectedVariant = findSelectedVariant()
-            }
-          }
-        },
-        namespaced: true
-      })
+      this.$store.registerModule(['product', this.pimId], productModule)
+      this.$store.commit(
+        `product/${this.pimId}/setProduct`,
+        this.product,
+        { root: true }
+      )
     }
   }
 }
