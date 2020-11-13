@@ -6,7 +6,7 @@
       class="button is-primary"
     >
       <slot>
-        <span>{{buttonText}}</span>
+        <span>{{ buttonText }}</span>
       </slot>
     </button>
   </div>
@@ -36,9 +36,22 @@ export default {
   computed: {
     ...mapState('cart', ['lineItems']),
     buttonText() {
+      const variantInLineItems =
+        !!this.variant &&
+        this.lineItems.map(l => l.variant.id).includes(this.variant.id)
+      if (variantInLineItems) {
+        return 'Added!'
+      }
+      if (
+        (!this.variantInLineItems &&
+          this.variant &&
+          !this.variant.availableForSale) ||
+        !this.product.availableForSale
+      ) {
+        return 'Out of Stock'
+      }
       return 'Add To Cart'
     }
-
   },
 
   watch: {
@@ -58,9 +71,7 @@ export default {
     ...mapMutations('cart', ['showCart']),
 
     addToCart() {
-      if (
-        this.variant.availableForSale
-      ) {
+      if (this.variant.availableForSale) {
         const lineItem = {
           image: this.product.featuredMedia,
           title: this.product.title,
