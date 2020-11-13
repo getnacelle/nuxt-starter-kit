@@ -36,7 +36,7 @@ export default {
 
       // - - -
       // if `selectedOptions` does not match any variant
-      // then select remove options until matching variant based on `selectedOption`
+      // then shift from selectedOptions until matching variant is found
       const findSelectedVariant = () => state.product.variants.find(variant => {
         return state.selectedOptions.every(option => {
           return variant.selectedOptions.some(variantOption => JSON.stringify(variantOption) === JSON.stringify(option))
