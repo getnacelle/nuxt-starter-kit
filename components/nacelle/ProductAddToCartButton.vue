@@ -1,7 +1,7 @@
 <template>
   <div>
     <button
-      :disabled="buttonState === 'disabled'"
+      :disabled="isOutOfStock"
       @click="addToCart"
       class="button is-primary"
     >
@@ -30,24 +30,22 @@ export default {
     variant: { type: Object }
   },
   data() {
-    return { buttonState: 'enabled' }
+    return { productState: 'initial' }
   },
 
   computed: {
     ...mapState('cart', ['lineItems']),
+    isOutOfStock() {
+      return (
+        (this.variant && !this.variant.availableForSale) ||
+        !this.product.availableForSale
+      )
+    },
     buttonText() {
-      const variantInLineItems =
-        !!this.variant &&
-        this.lineItems.map(l => l.variant.id).includes(this.variant.id)
-      if (variantInLineItems) {
+      if (this.productState === 'added') {
         return 'Added!'
       }
-      if (
-        (!this.variantInLineItems &&
-          this.variant &&
-          !this.variant.availableForSale) ||
-        !this.product.availableForSale
-      ) {
+      if (this.isOutOfStock) {
         return 'Out of Stock'
       }
       return 'Add To Cart'
@@ -69,8 +67,14 @@ export default {
     ]),
 
     ...mapMutations('cart', ['showCart']),
-
+    updateProductState() {
+      this.productState = 'added'
+      setTimeout(() => {
+        this.productState = 'initial'
+      }, 2000)
+    },
     addToCart() {
+      this.updateProductState()
       if (this.variant.availableForSale) {
         const lineItem = {
           image: this.product.featuredMedia,
