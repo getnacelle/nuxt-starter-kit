@@ -17,6 +17,7 @@
     "storybook:serve": "serve .out -p 4444"
   },
   "dependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.12.1",
     "@contentful/rich-text-html-renderer": "^13.4.0",
     "@contentful/rich-text-plain-text-renderer": "^14.1.1",
     "@contentful/rich-text-types": "^14.1.0",
