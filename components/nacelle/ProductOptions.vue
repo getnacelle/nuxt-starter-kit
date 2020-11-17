@@ -6,9 +6,9 @@
       <product-option-swatch v-for="value in option.values" :key="value.value"
         :value="value.value"
         :optionName="option.name"
-        swatchStyle="tab"
         :productId="productId"
         :variants="variants"
+        swatchStyle="tab"
       />
       </div>
     </div>
