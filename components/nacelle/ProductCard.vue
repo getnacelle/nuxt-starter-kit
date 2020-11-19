@@ -13,7 +13,7 @@
       v-if="product.variants.length > 1"
       :selectedVariant="selectedVariant"
       :variants="product.variants"
-      :productId="product.pimSyncSourceProductId"
+      :productId="pimId"
     />
     <div v-if="product && product.id" class="product-card-actions">
       <quantity-selector
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import productModule from '~/store/product/productModule'
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
@@ -84,11 +85,12 @@ export default {
     ...mapState('cart', ['lineItems']),
     ...mapState('user', ['locale']),
     ...mapGetters('cart', ['quantityTotal']),
+
+    pimId() {
+      return this.product.pimSyncSourceProductId
+    },
     selectedVariant() {
-      if (this.$store.getters[[`${this.product.pimSyncSourceProductId}/selectedVariant`]]) {
-        return this.$store.getters[`${this.product.pimSyncSourceProductId}/selectedVariant`]
-      }
-      return null
+      return this.$store.getters[`product/${this.pimId}/selectedVariant`]
     },
     displayPrice() {
       if (this.selectedVariant) {
@@ -128,44 +130,13 @@ export default {
     }
   },
   created() {
-    const vm = this
-    if (!this.$store.hasModule(this.product.pimSyncSourceProductId)) {
-      this.$store.registerModule(this.product.pimSyncSourceProductId, {
-        state: () => {
-          return { selectedOptions: [] }
-        },
-        getters: {
-          selectedVariant: (state) => {
-            if (state) {
-              if (state.selectedOptions.length === 0) {
-                return vm.product.variants[0]
-              } else {
-                return vm.product.variants.find((variant) => {
-                  return state.selectedOptions.every((option) => {
-                    return variant.selectedOptions.some(variantOption => JSON.stringify(variantOption) === JSON.stringify(option))
-                  })
-                })
-              }
-            }
-          }
-        },
-        mutations: {
-          setSelected: (state, selectedOption) => {
-            if (state.selectedOptions.length > 0) {
-              const index = state.selectedOptions.findIndex((item) => item.name === selectedOption.name)
-              if (index > -1) {
-                console.log(index)
-                state.selectedOptions[index].value = selectedOption.value
-              } else {
-                state.selectedOptions.push(selectedOption)
-              }
-            } else {
-              state.selectedOptions.push(selectedOption)
-            }
-          }
-        },
-        namespaced: true
-      }, { preserveState: false })
+    if (!this.$store.hasModule(['product', this.pimId])) {
+      this.$store.registerModule(['product', this.pimId], productModule)
+      this.$store.commit(
+        `product/${this.pimId}/setProduct`,
+        this.product,
+        { root: true }
+      )
     }
   },
 

@@ -1,6 +1,12 @@
 <template>
   <div
-    :class="[swatchStyle, availableClass, swatchNameClass, swatchSelected]"
+    :class="[
+      availableClass,
+      stockClass,
+      swatchNameClass,
+      swatchSelectedClass,
+      swatchStyle
+    ]"
     class="option-swatch nacelle no-select"
     @click="setSelected"
   >
@@ -10,7 +16,7 @@
       :style="swatchBg"
       class="inside-color"
     />
-    <span v-if="swatchStyle != 'bubble'">{{ value }}</span>
+    <span v-else>{{ value }}</span>
   </div>
 </template>
 
@@ -26,9 +32,6 @@ export default {
     swatchStyle: {
       type: String
     },
-    selected: {
-      type: Boolean
-    },
     variants: {
       type: Array
     },
@@ -38,27 +41,48 @@ export default {
   },
   methods: {
     setSelected() {
-      if (this.optionAvailable) {
-        this.$store.commit(`${this.productId}/setSelected`, { name: this.optionName, value: this.value }, { root: true })
+      if (this.optionAvailableForSale) {
+        this.$store.commit(
+          `product/${this.productId}/setSelected`,
+          { name: this.optionName, value: this.value },
+          { root: true }
+        )
       }
     }
   },
   computed: {
-    optionAvailable() {
-      const vm = this
+    optionAvailableForSale() {
       if (this.variants) {
-        const variantsWithOption = this.variants.filter(variant => variant.selectedOptions.some(option => option.value === this.value))
-        const otherOptions = variantsWithOption.filter(variant => variant.selectedOptions.some(option => option.name === this.optionName))
-
-        // find variant that has current option and all other selected options (and in stock)
-
-        // const variantWithOptionAndOtherSelected = this.otherOptions.filter(variant => this.selectedVariant.selectedOptions.some(option => JSON.stringify(option) === variant.selectedOptions))
-        return variantsWithOption.some(variant => variant.availableForSale)
+        return this.variants
+          .filter(variant => variant.selectedOptions.some(option => option.value === this.value))
+          .some(variant => variant.availableForSale)
       }
       return null
     },
+    optionAvailable() {
+      // if this option were selected, test if there is a matching variant
+
+      const productStore = this.$store.state.product[this.productId]
+      const testSelectedOptions = productStore.selectedOptions.map(({ name, value }) => ({ name, value }))
+      const index = testSelectedOptions.findIndex((item) => item.name === this.optionName)
+      if (index > -1) {
+        testSelectedOptions[index].value = this.value
+      } else {
+        testSelectedOptions.push({ name: this.optionName, value: this.value })
+      }
+
+      const optionAvailable = productStore.product.variants.some(variant => {
+        return testSelectedOptions.every(option => {
+          return variant.selectedOptions.some(variantOption => JSON.stringify(variantOption) === JSON.stringify(option))
+        })
+      })
+      return optionAvailable
+    },
+    isSelected() {
+      return this.selectedVariant && (this.selectedVariant.selectedOptions).some((option) => option.value === this.value)
+    },
     swatchClass() {
-      if (this.value && this.optionName == 'Color') {
+      if (this.value && this.optionName === 'Color') {
         const color = String(this.value)
         return `swatch-color-${color.toLowerCase()}`
       }
@@ -82,32 +106,34 @@ export default {
       return null
     },
 
-    swatchSelected() {
-      if (this.selectedVariant && (this.selectedVariant.selectedOptions).some((option) => option.value === this.value)) {
-        return 'selected'
-      } else {
-        return 'not-selected'
-      }
+    swatchSelectedClass() {
+      return this.isSelected
+        ? 'selected'
+        : 'not-selected'
     },
-
     selectedVariant() {
-      if (this.$store.getters[[`${this.productId}/selectedVariant`]]) {
-        return this.$store.getters[`${this.productId}/selectedVariant`]
-      }
-      return null
+      return this.$store.getters[`product/${this.productId}/selectedVariant`] || null
+    },
+    stockClass() {
+      return this.optionAvailableForSale
+        ? 'in-stock'
+        : 'out-of-stock'
     },
     availableClass() {
-      if (this.optionAvailable) {
-        return 'available'
-      } else {
-        return 'not-available'
-      }
+      return this.optionAvailable
+        ? 'available'
+        : 'not-available'
     },
     swatchNameClass() {
       if (this.optionName) {
         return `swatch-${this.optionName}`
       }
       return ''
+    }
+  },
+  created() {
+    if (this.isSelected) {
+      this.setSelected()
     }
   }
 }
@@ -178,6 +204,10 @@ export default {
 }
 
 .not-available {
+  border: 1px solid #ccc;
+  color: #ccc;
+}
+.out-of-stock {
   text-decoration: line-through;
   border: 1px dashed rgb(219, 219, 219);
   color: rgb(219, 219, 219);
