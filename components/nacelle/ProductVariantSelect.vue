@@ -53,7 +53,9 @@ export default {
       return this.product.pimSyncSourceProductId
     },
     selectedVariant() {
-      return this.$store.getters[`product/${this.pimId}/selectedVariant`]
+      if (this.$store.getters[`product/${this.pimId}/selectedVariant`]) {
+        return this.$store.getters[`product/${this.pimId}/selectedVariant`]
+      } return null
     }
   },
   created() {
