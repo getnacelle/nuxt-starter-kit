@@ -17,15 +17,14 @@
         <product-price  :price="product.price" />
       </p>
       <product-description :description="product.description" />
-      <product-variant-select
-      :product="product"
-      />
+      <product-variant-select :product="product" />
     </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import productModule from '~/store/product/productModule'
 import ProductCategory from '~/components/nacelle/ProductCategory'
 import ProductMediaSelectView from '~/components/nacelle/ProductMediaSelectView'
 import ProductTitle from '~/components/nacelle/ProductTitle'
@@ -47,11 +46,18 @@ export default {
   },
   props: {
     product: {
-      type: Object
+      type: Object,
+      required: true
     }
   },
   computed: {
     ...mapState('user', ['locale'])
+  },
+  created() {
+    const { product } = this
+    if (!this.$store.hasModule(['product', product.globalHandle])) {
+      this.$store.registerModule(['product', product.globalHandle], productModule({ product }))
+    }
   },
   methods: {
     ...mapMutations('cart', ['showCart'])

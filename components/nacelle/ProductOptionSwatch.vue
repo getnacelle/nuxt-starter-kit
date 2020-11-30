@@ -35,19 +35,8 @@ export default {
     variants: {
       type: Array
     },
-    productId: {
-      type: String
-    }
-  },
-  methods: {
-    setSelected() {
-      if (this.optionAvailableForSale) {
-        this.$store.commit(
-          `product/${this.productId}/setSelected`,
-          { name: this.optionName, value: this.value },
-          { root: true }
-        )
-      }
+    selectedVariant: {
+      type: Object
     }
   },
   computed: {
@@ -61,8 +50,11 @@ export default {
     },
     optionAvailable() {
       // if this option were selected, test if there is a matching variant
+      const productStore = this.$store.state.product[this.globalHandle]
+      if (!productStore) {
+        return false
+      }
 
-      const productStore = this.$store.state.product[this.productId]
       const testSelectedOptions = productStore.selectedOptions.map(({ name, value }) => ({ name, value }))
       const index = testSelectedOptions.findIndex((item) => item.name === this.optionName)
       if (index > -1) {
@@ -79,7 +71,8 @@ export default {
       return optionAvailable
     },
     isSelected() {
-      return this.selectedVariant && (this.selectedVariant.selectedOptions).some((option) => option.value === this.value)
+      return this.selectedVariant &&
+        (this.selectedVariant.selectedOptions.some(option => option.value === this.value))
     },
     swatchClass() {
       if (this.value && this.optionName === 'Color') {
@@ -97,22 +90,15 @@ export default {
       return `${basePath}/swatches/${this.value}.png`
     },
     swatchBg() {
-      if (this.swatchSrc) {
-        return {
-          background: `url(${this.swatchSrc})`
-        }
-      }
-
-      return null
+      return this.swatchSrc
+        ? { background: `url(${this.swatchSrc})` }
+        : null
     },
 
     swatchSelectedClass() {
       return this.isSelected
         ? 'selected'
         : 'not-selected'
-    },
-    selectedVariant() {
-      return this.$store.getters[`product/${this.productId}/selectedVariant`] || null
     },
     stockClass() {
       return this.optionAvailableForSale
@@ -125,15 +111,24 @@ export default {
         : 'not-available'
     },
     swatchNameClass() {
-      if (this.optionName) {
-        return `swatch-${this.optionName}`
-      }
-      return ''
+      return this.optionName
+        ? `swatch-${this.optionName}`
+        : ''
     }
   },
   created() {
     if (this.isSelected) {
       this.setSelected()
+    }
+  },
+  methods: {
+    setSelected() {
+      if (this.optionAvailableForSale) {
+        this.$store.commit(
+          `product/${this.globalHandle}/setSelected`,
+          { name: this.optionName, value: this.value }
+        )
+      }
     }
   }
 }

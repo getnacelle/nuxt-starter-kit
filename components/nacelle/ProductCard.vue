@@ -1,7 +1,7 @@
 <template>
   <div class="product-card nacelle">
     <router-link :to="`${pathFragment}${product.handle}`">
-      <product-image :source="mediaSrc" />
+      <product-image :source="mediaSrc" :width="300" :height="300" />
     </router-link>
     <div class="product-card-details">
       <router-link :to="`${pathFragment}${product.handle}`">
@@ -10,12 +10,19 @@
       <product-price :price="displayPrice" />
     </div>
     <product-options
-      v-if="product.variants.length > 1"
-      :selectedVariant="selectedVariant"
-      :variants="product.variants"
-      :productId="pimId"
-    />
-    <div v-if="product && product.id" class="product-card-actions">
+      v-if="product.variants.length > 1 && options && options.length"
+      :options="options"
+    >
+      <template v-slot:swatch="{option}">
+        <product-option-swatch
+          v-for="{ value } in option.values"
+          :key="value"
+          v-bind="{ value, variants: product.variants, optionName: option.name, selectedVariant }"
+          swatch-style="tab"
+        />
+      </template>
+    </product-options>
+    <div v-if="product && product.id && productStoreRegistered" class="product-card-actions">
       <quantity-selector
         v-if="showQuantityUpdate === true"
         :quantity.sync="quantity"
@@ -86,11 +93,14 @@ export default {
     ...mapState('user', ['locale']),
     ...mapGetters('cart', ['quantityTotal']),
 
-    pimId() {
-      return this.product.pimSyncSourceProductId
+    productStoreRegistered() {
+      return this.$store.hasModule(['product', this.product.globalHandle])
     },
     selectedVariant() {
-      return this.$store.getters[`product/${this.pimId}/selectedVariant`]
+      return this.$store.getters[`product/${this.product.globalHandle}/selectedVariant`] || null
+    },
+    options() {
+      return this.$store.getters[`product/${this.product.globalHandle}/options`] || null
     },
     displayPrice() {
       if (this.selectedVariant) {
@@ -123,20 +133,15 @@ export default {
       }
     },
     productLineItems() {
-      const vm = this
       return this.lineItems.filter(item => {
-        return item.productId === vm.product.id
+        return item.productId === this.product.id
       })
     }
   },
   created() {
-    if (!this.$store.hasModule(['product', this.pimId])) {
-      this.$store.registerModule(['product', this.pimId], productModule)
-      this.$store.commit(
-        `product/${this.pimId}/setProduct`,
-        this.product,
-        { root: true }
-      )
+    const { product } = this
+    if (!this.productStoreRegistered) {
+      this.$store.registerModule(['product', product.globalHandle], productModule({ product }))
     }
   },
 
