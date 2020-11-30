@@ -17,7 +17,7 @@
         <product-option-swatch
           v-for="{ value } in option.values"
           :key="value"
-          v-bind="{ value, variants: product.variants, optionName: option.name, globalHandle: product.globalHandle }"
+          v-bind="{ value, variants: product.variants, optionName: option.name, selectedVariant }"
           swatch-style="tab"
         />
       </template>

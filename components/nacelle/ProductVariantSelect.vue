@@ -12,7 +12,7 @@
             value,
             optionName: option.name,
             variants: product.variants,
-            globalHandle: product.globalHandle
+            selectedVariant
           }"
           swatch-style="tab"
         />

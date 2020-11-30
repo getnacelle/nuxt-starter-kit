@@ -35,8 +35,8 @@ export default {
     variants: {
       type: Array
     },
-    globalHandle: {
-      type: String
+    selectedVariant: {
+      type: Object
     }
   },
   computed: {
@@ -102,9 +102,6 @@ export default {
       return this.isSelected
         ? 'selected'
         : 'not-selected'
-    },
-    selectedVariant() {
-      return this.$store.getters[`product/${this.globalHandle}/selectedVariant`] || null
     },
     stockClass() {
       return this.optionAvailableForSale
