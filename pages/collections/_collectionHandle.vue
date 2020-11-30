@@ -6,7 +6,7 @@
 /****
 -->
 <template>
-  <div class="page page-shop" v-if="collection">
+  <div class="page page-collection" v-if="collection">
     <content-hero-banner
       v-if="collection && collection.title && collection.featuredImage"
       :title="collection.title"
@@ -23,7 +23,10 @@
           />
         </div>
       </div>
-      <observe-emitter v-on:observe="updateProductVisibilityCount" />
+      <observe-emitter v-on:observe="showMore" />
+      <div v-if="isFetching" style="text-align: center">
+        Loading products...
+      </div>
     </section>
   </div>
 </template>
@@ -32,10 +35,15 @@
 import viewEvent from '~/mixins/viewEvent'
 
 export default {
+  mixins: [
+    viewEvent('collection')
+  ],
   data() {
     return {
       collection: null,
-      productVisibilityCount: 16
+      productVisibilityCount: 16,
+      fetchBuffer: 16,
+      isFetching: false
     }
   },
   computed: {
@@ -46,29 +54,39 @@ export default {
       return null
     }
   },
-  methods: {
-    updateProductVisibilityCount() {
-      this.productVisibilityCount = this.productVisibilityCount + 16
-    }
-  },
   async fetch() {
-    const vm = this
     const collectionData = await this.$nacelle.data.collection({
       handle: this.$route.params.collectionHandle
     })
-    const products = collectionData.productLists[0].handles
-      .slice(0, this.productVisibilityCount)
-      .map(handle => {
-        return vm.$nacelle.data.product({ handle: handle })
-      })
-    const collectionProducts = await Promise.all(products)
-    const filteredProducts = collectionProducts.filter(Boolean)
-
-    this.collection = { products: filteredProducts, ...collectionData }
+    this.collection = { products: [], ...collectionData }
+    this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
   },
-  mixins: [
-    viewEvent('collection')
-  ]
+  methods: {
+    showMore() {
+      if (!this.collection) {
+        return
+      }
+      const currentCount = this.productVisibilityCount
+      const fetchCursor = currentCount + this.fetchBuffer
+      this.productVisibilityCount = currentCount + 16
+      this.fetchProducts(fetchCursor, fetchCursor + 16)
+    },
+    async fetchProducts(start, end) {
+      this.isFetching = true
+
+      const products = this.collection.productLists[0].handles
+        .slice(start, end)
+        .map(handle => this.$nacelle.data.product({ handle }))
+      const collectionProducts = await Promise.all(products)
+      const filteredProducts = collectionProducts.filter(Boolean)
+
+      this.collection.products = [
+        ...this.collection.products,
+        ...filteredProducts
+      ]
+      this.isFetching = false
+    }
+  }
   // head() {
   //   if (this.collection) {
   //     const properties = {}
@@ -121,6 +139,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-collection {
+  min-height: 85vh;
+}
 .product {
   .title {
     font-weight: bold;
