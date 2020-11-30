@@ -10,15 +10,14 @@
       <product-price :price="displayPrice" />
     </div>
     <product-options
-      v-if="product.variants.length > 1"
-      :variants="product.variants"
-      :productId="product.pimSyncSourceProductId"
+      v-if="product.variants.length > 1 && options && options.length"
+      :options="options"
     >
-      <template v-slot:swatch="{option, variants}">
+      <template v-slot:swatch="{option}">
         <product-option-swatch
           v-for="{ value } in option.values"
           :key="value"
-          v-bind="{ value, variants, optionName: option.name, globalHandle: product.globalHandle }"
+          v-bind="{ value, variants: product.variants, optionName: option.name, globalHandle: product.globalHandle }"
           swatch-style="tab"
         />
       </template>
@@ -99,6 +98,9 @@ export default {
     },
     selectedVariant() {
       return this.$store.getters[`product/${this.product.globalHandle}/selectedVariant`] || null
+    },
+    options() {
+      return this.$store.getters[`product/${this.product.globalHandle}/options`] || null
     },
     displayPrice() {
       if (this.selectedVariant) {

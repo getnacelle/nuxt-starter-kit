@@ -1,15 +1,19 @@
 <template>
   <div class="variant-select nacelle">
     <product-options
-      v-if="product.variants.length > 1"
-      :variants="product.variants"
-      :productId="product.pimSyncSourceProductId"
+      v-if="product.variants.length > 1 && options && options.length"
+      :options="options"
     >
-      <template v-slot:swatch="{option, variants}">
+      <template v-slot:swatch="{option}">
         <product-option-swatch
           v-for="{ value } in option.values"
           :key="value"
-          v-bind="{ value, optionName: option.name, variants, globalHandle: product.globalHandle }"
+          v-bind="{
+            value,
+            optionName: option.name,
+            variants: product.variants,
+            globalHandle: product.globalHandle
+          }"
           swatch-style="tab"
         />
       </template>
@@ -59,6 +63,9 @@ export default {
   computed: {
     selectedVariant() {
       return this.$store.getters[`product/${this.product.globalHandle}/selectedVariant`] || null
+    },
+    options() {
+      return this.$store.getters[`product/${this.product.globalHandle}/options`] || null
     }
   }
 }

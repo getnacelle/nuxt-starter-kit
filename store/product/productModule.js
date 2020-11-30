@@ -1,3 +1,5 @@
+import { flattenDeep, uniq, uniqWith, isEqual } from 'lodash'
+
 const findSelectedVariant = (state, options) => {
   // -- race condition?
   if (!state || !state.product) {
@@ -24,7 +26,59 @@ export default ({ product }) => ({
     }
   },
   getters: {
-    selectedVariant: (state) => findSelectedVariant(state)
+    selectedVariant: (state) => findSelectedVariant(state),
+
+    options(state) {
+      if (!state || !state.product || !state.product.variants) {
+        return []
+      }
+
+      const nestedOptions = state.product.variants.map(variant => {
+        if (variant.selectedOptions) {
+          return variant.selectedOptions.map(option => {
+            if (option.name === 'Color') {
+              return {
+                name: option.name,
+                value: option.value,
+                swatchSrc: variant.swatchSrc
+              }
+            }
+
+            return option
+          })
+        }
+
+        return []
+      })
+      const flattenedOptions = flattenDeep(nestedOptions)
+
+      const optionNames = uniq(
+        flattenedOptions.map(option => {
+          return option.name
+        })
+      )
+      const optionValuesByName = optionNames.map(name => {
+        const values = uniqWith(
+          flattenedOptions
+            .filter(option => option.name === name)
+            .map(option => {
+              if (option.swatchSrc) {
+                return { value: option.value, swatchSrc: option.swatchSrc }
+              } else {
+                return { value: option.value }
+              }
+            }),
+          isEqual
+        )
+
+        return {
+          name,
+          values
+        }
+      })
+
+      return optionValuesByName
+    }
   },
   mutations: {
     setSelected: (state, selectedOption) => {
