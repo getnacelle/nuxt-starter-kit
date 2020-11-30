@@ -17,12 +17,18 @@
         <product-option-swatch
           v-for="{ value } in option.values"
           :key="value"
-          v-bind="{ value, variants: product.variants, optionName: option.name, selectedVariant }"
+          v-bind="{
+            value,
+            optionName: option.name,
+            variants: product.variants,
+            globalHandle: product.globalHandle,
+            selectedVariant
+          }"
           swatch-style="tab"
         />
       </template>
     </product-options>
-    <div v-if="product && product.id && productStoreRegistered" class="product-card-actions">
+    <div v-if="product && product.id" class="product-card-actions">
       <quantity-selector
         v-if="showQuantityUpdate === true"
         :quantity.sync="quantity"
@@ -93,9 +99,6 @@ export default {
     ...mapState('user', ['locale']),
     ...mapGetters('cart', ['quantityTotal']),
 
-    productStoreRegistered() {
-      return this.$store.hasModule(['product', this.product.globalHandle])
-    },
     selectedVariant() {
       return this.$store.getters[`product/${this.product.globalHandle}/selectedVariant`] || null
     },
@@ -140,7 +143,7 @@ export default {
   },
   created() {
     const { product } = this
-    if (!this.productStoreRegistered) {
+    if (!this.$store.hasModule(['product', product.globalHandle])) {
       this.$store.registerModule(['product', product.globalHandle], productModule({ product }))
     }
   },

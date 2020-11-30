@@ -35,6 +35,9 @@ export default {
     variants: {
       type: Array
     },
+    globalHandle: {
+      type: String
+    },
     selectedVariant: {
       type: Object
     }
