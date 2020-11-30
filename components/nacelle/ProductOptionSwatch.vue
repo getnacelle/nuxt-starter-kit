@@ -71,7 +71,8 @@ export default {
       return optionAvailable
     },
     isSelected() {
-      return this.selectedVariant && (this.selectedVariant.selectedOptions).some((option) => option.value === this.value)
+      return this.selectedVariant &&
+        (this.selectedVariant.selectedOptions.some(option => option.value === this.value))
     },
     swatchClass() {
       if (this.value && this.optionName === 'Color') {
@@ -89,13 +90,9 @@ export default {
       return `${basePath}/swatches/${this.value}.png`
     },
     swatchBg() {
-      if (this.swatchSrc) {
-        return {
-          background: `url(${this.swatchSrc})`
-        }
-      }
-
-      return null
+      return this.swatchSrc
+        ? { background: `url(${this.swatchSrc})` }
+        : null
     },
 
     swatchSelectedClass() {
@@ -114,10 +111,9 @@ export default {
         : 'not-available'
     },
     swatchNameClass() {
-      if (this.optionName) {
-        return `swatch-${this.optionName}`
-      }
-      return ''
+      return this.optionName
+        ? `swatch-${this.optionName}`
+        : ''
     }
   },
   created() {
