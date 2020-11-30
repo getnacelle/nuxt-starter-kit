@@ -35,19 +35,8 @@ export default {
     variants: {
       type: Array
     },
-    productId: {
+    globalHandle: {
       type: String
-    }
-  },
-  methods: {
-    setSelected() {
-      if (this.optionAvailableForSale) {
-        this.$store.commit(
-          `product/${this.productId}/setSelected`,
-          { name: this.optionName, value: this.value },
-          { root: true }
-        )
-      }
     }
   },
   computed: {
@@ -61,8 +50,11 @@ export default {
     },
     optionAvailable() {
       // if this option were selected, test if there is a matching variant
+      const productStore = this.$store.state.product[this.globalHandle]
+      if (!productStore) {
+        return false
+      }
 
-      const productStore = this.$store.state.product[this.productId]
       const testSelectedOptions = productStore.selectedOptions.map(({ name, value }) => ({ name, value }))
       const index = testSelectedOptions.findIndex((item) => item.name === this.optionName)
       if (index > -1) {
@@ -112,7 +104,7 @@ export default {
         : 'not-selected'
     },
     selectedVariant() {
-      return this.$store.getters[`product/${this.productId}/selectedVariant`] || null
+      return this.$store.getters[`product/${this.globalHandle}/selectedVariant`] || null
     },
     stockClass() {
       return this.optionAvailableForSale
@@ -134,6 +126,16 @@ export default {
   created() {
     if (this.isSelected) {
       this.setSelected()
+    }
+  },
+  methods: {
+    setSelected() {
+      if (this.optionAvailableForSale) {
+        this.$store.commit(
+          `product/${this.globalHandle}/setSelected`,
+          { name: this.optionName, value: this.value }
+        )
+      }
     }
   }
 }

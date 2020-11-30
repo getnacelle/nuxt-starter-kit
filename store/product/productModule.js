@@ -1,4 +1,9 @@
 const findSelectedVariant = (state, options) => {
+  // -- race condition?
+  if (!state || !state.product) {
+    return null
+  }
+
   options = options || state.selectedOptions
   if (options.length === 0) {
     return state.product.variants[0]
@@ -11,10 +16,10 @@ const findSelectedVariant = (state, options) => {
   }
 }
 
-export default {
+export default ({ product }) => ({
   state: () => {
     return {
-      product: {},
+      product,
       selectedOptions: []
     }
   },
@@ -22,9 +27,6 @@ export default {
     selectedVariant: (state) => findSelectedVariant(state)
   },
   mutations: {
-    setProduct: (state, product) => {
-      state.product = product
-    },
     setSelected: (state, selectedOption) => {
       if (state.selectedOptions.length === 0) {
         state.selectedOptions.push(selectedOption)
@@ -52,4 +54,4 @@ export default {
     }
   },
   namespaced: true
-}
+})

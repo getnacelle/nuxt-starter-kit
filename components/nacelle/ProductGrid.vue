@@ -7,7 +7,8 @@
       :class="columnClasses"
     >
       <product-card
-:product="product"
+        v-if="product"
+        :product="product"
         :showQuantityUpdate="showQuantityUpdate"
         :showAddToCart="showAddToCart"
       />

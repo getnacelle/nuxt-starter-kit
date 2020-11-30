@@ -30,6 +30,7 @@
 
 <script>
 import viewEvent from '~/mixins/viewEvent'
+
 export default {
   data() {
     return {
@@ -55,12 +56,15 @@ export default {
     const collectionData = await this.$nacelle.data.collection({
       handle: this.$route.params.collectionHandle
     })
-    const products = collectionData.productLists[0].handles.map(handle => {
-      return vm.$nacelle.data.product({ handle: handle })
-    })
+    const products = collectionData.productLists[0].handles
+      .slice(0, this.productVisibilityCount)
+      .map(handle => {
+        return vm.$nacelle.data.product({ handle: handle })
+      })
     const collectionProducts = await Promise.all(products)
-    collectionProducts.filter(product => product !== undefined)
-    this.collection = { products: collectionProducts, ...collectionData }
+    const filteredProducts = collectionProducts.filter(Boolean)
+
+    this.collection = { products: filteredProducts, ...collectionData }
   },
   mixins: [
     viewEvent('collection')

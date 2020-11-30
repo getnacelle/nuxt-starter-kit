@@ -2,28 +2,36 @@
   <div class="variant-select nacelle">
     <product-options
       v-if="product.variants.length > 1"
-      :selectedVariant="selectedVariant"
       :variants="product.variants"
-      :productId="pimId"
-    />
+      :productId="product.pimSyncSourceProductId"
+    >
+      <template v-slot:swatch="{option, variants}">
+        <product-option-swatch
+          v-for="{ value } in option.values"
+          :key="value"
+          v-bind="{ value, optionName: option.name, variants, globalHandle: product.globalHandle }"
+          swatch-style="tab"
+        />
+      </template>
+    </product-options>
+
     <slot name="above-button"></slot>
     <div class="columns is-mobile">
       <div v-if="showQuantitySelect" class="column auto">
         <quantity-selector :quantity.sync="quantity" />
       </div>
       <div class="column auto">
-      <product-add-to-cart-button
-        :product="product"
-        :variant="selectedVariant"
-        :quantity="quantity"
-      ></product-add-to-cart-button>
+        <product-add-to-cart-button
+          :product="product"
+          :variant="selectedVariant"
+          :quantity="quantity"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import productModule from '~/store/product/productModule'
 import ProductOptions from '~/components/nacelle/ProductOptions'
 import QuantitySelector from '~/components/nacelle/QuantitySelector'
 import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
@@ -49,23 +57,8 @@ export default {
     }
   },
   computed: {
-    pimId() {
-      return this.product.pimSyncSourceProductId
-    },
     selectedVariant() {
-      if (this.$store.getters[`product/${this.pimId}/selectedVariant`]) {
-        return this.$store.getters[`product/${this.pimId}/selectedVariant`]
-      } return null
-    }
-  },
-  created() {
-    if (!this.$store.hasModule(['product', this.pimId])) {
-      this.$store.registerModule(['product', this.pimId], productModule)
-      this.$store.commit(
-        `product/${this.pimId}/setProduct`,
-        this.product,
-        { root: true }
-      )
+      return this.$store.getters[`product/${this.product.globalHandle}/selectedVariant`] || null
     }
   }
 }
