@@ -53,7 +53,7 @@ export default {
     },
     optionAvailable() {
       // if this option were selected, test if there is a matching variant
-      const productStore = this.$store.state.product[this.globalHandle]
+      const productStore = this.$store.state[`product/${this.globalHandle}/setSelected`]
       if (!productStore) {
         return false
       }

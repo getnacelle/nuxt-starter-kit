@@ -55,8 +55,9 @@ export default {
   },
   created() {
     const { product } = this
-    if (!this.$store.hasModule(['product', product.globalHandle])) {
-      this.$store.registerModule(['product', product.globalHandle], productModule({ product }))
+    const namespace = `product/${product.globalHandle}`
+    if (!this.$store.hasModule(namespace)) {
+      this.$store.registerModule(namespace, productModule({ product }), { preserveState: false })
     }
   },
   methods: {
