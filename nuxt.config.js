@@ -4,7 +4,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export default {
-  mode: process.env.BUILD_MODE,
   target: 'static',
   components: true,
   head: {
