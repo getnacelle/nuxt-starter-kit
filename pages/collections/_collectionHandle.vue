@@ -59,7 +59,7 @@ export default {
       handle: this.$route.params.collectionHandle
     })
     this.collection = { products: [], ...collectionData }
-    this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
+    this.collection.products = await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
   },
   methods: {
     showMore() {
@@ -79,12 +79,12 @@ export default {
         .map(handle => this.$nacelle.data.product({ handle }))
       const collectionProducts = await Promise.all(products)
       const filteredProducts = collectionProducts.filter(Boolean)
+      this.isFetching = false
 
-      this.collection.products = [
+      return [
         ...this.collection.products,
         ...filteredProducts
       ]
-      this.isFetching = false
     }
   }
   // head() {
