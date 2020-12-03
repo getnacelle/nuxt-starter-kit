@@ -62,14 +62,14 @@ export default {
     this.collection.products = await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
   },
   methods: {
-    showMore() {
+    async showMore() {
       if (!this.collection) {
         return
       }
       const currentCount = this.productVisibilityCount
       const fetchCursor = currentCount + this.fetchBuffer
       this.productVisibilityCount = currentCount + 16
-      this.fetchProducts(fetchCursor, fetchCursor + 16)
+      this.collection.products = await this.fetchProducts(fetchCursor, fetchCursor + 16)
     },
     async fetchProducts(start, end) {
       this.isFetching = true
