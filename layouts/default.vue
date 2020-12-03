@@ -12,7 +12,7 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
-import localforage from 'localforage'
+import { clear } from 'idb-keyval'
 import GlobalHeader from '~/components/nacelle/GlobalHeader'
 import SiteFooter from '~/components/nacelle/SiteFooter'
 import EventDispatcher from '~/components/nacelle/EventDispatcher'
@@ -52,7 +52,7 @@ export default {
 
     if (process.env.DEV_MODE === 'true') {
       console.log('dev mode active!')
-      localforage.clear()
+      clear()
     }
     this.readSession()
   },

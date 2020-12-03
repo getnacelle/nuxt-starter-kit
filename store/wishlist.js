@@ -1,5 +1,5 @@
 import axios from 'axios'
-import localforage from 'localforage'
+import { get, set } from 'idb-keyval'
 
 export const state = () => ({
   id: null,
@@ -94,7 +94,7 @@ export const actions = {
         }
       }
     } else {
-      const wishlist = await localforage.getItem('wishlist')
+      const wishlist = await get('wishlist')
       if (wishlist) {
         commit('setId', wishlist.id)
         commit('setItems', wishlist.items)
@@ -186,7 +186,7 @@ export const actions = {
   },
 
   async saveWishlist(context) {
-    localforage.setItem('wishlist', context.state)
+    set('wishlist', context.state)
   }
 }
 

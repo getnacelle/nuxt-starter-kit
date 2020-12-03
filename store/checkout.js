@@ -1,4 +1,4 @@
-import localforage from 'localforage'
+import { get, set } from 'idb-keyval'
 const isFunc = (func) => (typeof func === 'function')
 
 export const state = () => ({
@@ -8,18 +8,18 @@ export const state = () => ({
 
 export const mutations = {
   setId(state, payload) {
-    localforage.setItem('checkout-id', payload)
+    set('checkout-id', payload)
     state.id = payload
   },
 
   setUrl(state, payload) {
-    localforage.setItem('checkout-url', payload)
+    set('checkout-url', payload)
     state.url = payload
   },
 
   setCheckout(state, { id, url }) {
-    localforage.setItem('checkout-id', id)
-    localforage.setItem('checkout-url', url)
+    set('checkout-id', id)
+    set('checkout-url', url)
     state.id = id
     state.url = url
   }
@@ -27,8 +27,8 @@ export const mutations = {
 
 export const actions = {
   async initializeCheckout({ commit, dispatch }) {
-    const id = await localforage.getItem('checkout-id')
-    const url = await localforage.getItem('checkout-url')
+    const id = await get('checkout-id')
+    const url = await get('checkout-url')
     if (id && url) {
       const { completed } = await this.$nacelle.checkout.get({ id, url })
       if (completed) {
@@ -99,7 +99,7 @@ export const actions = {
     })
   },
 
-  checkoutRedirect ({ state }) {
+  checkoutRedirect({ state }) {
     if (process.browser) {
       window.location = state.url
     }
