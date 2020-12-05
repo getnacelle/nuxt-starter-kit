@@ -1,7 +1,7 @@
 <template>
   <div class="product-card nacelle">
     <router-link :to="`${pathFragment}${product.handle}`">
-      <product-image :source="mediaSrc" :width="300" :height="300" />
+      <product-image :src="mediaSrc" :width="300" :height="300" />
     </router-link>
     <div class="product-card-details">
       <router-link :to="`${pathFragment}${product.handle}`">

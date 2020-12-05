@@ -5,7 +5,7 @@
       :to="`${pathFragment}${item.handle}`"
       @click.native="hideCart"
     >
-      <product-image :source="item.image.thumbnailSrc" :alt="item.title" />
+      <product-image :src="item.image.thumbnailSrc" :alt="item.title" />
     </router-link>
 
     <div class="column is-9">

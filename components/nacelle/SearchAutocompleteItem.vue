@@ -1,9 +1,9 @@
 <template>
   <router-link :to="`${pathFragment}${item.handle}`">
     <div class="columns is-marginless is-mobile autocomplete-item nacelle is-vcentered">
-      <product-image 
+      <product-image
         v-if="productThumbnail && productThumbnail.length > 0"
-        :source="item.featuredMedia.thumbnailSrc"
+        :src="item.featuredMedia.thumbnailSrc"
         :alt="item.title"
       />
       <h3 class="column is-5">{{item.title}}</h3>
@@ -32,7 +32,7 @@ export default {
     }
   },
   computed: {
-    productThumbnail () {
+    productThumbnail() {
       if (
         this.item &&
         this.item.featuredMedia &&
@@ -43,7 +43,7 @@ export default {
 
       return ''
     },
-    productPrice () {
+    productPrice() {
       if (
         this.item &&
         this.item.variants &&
