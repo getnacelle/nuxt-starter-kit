@@ -79,9 +79,6 @@ export default {
         height: this.height
       }
     }
-  },
-  mounted() {
-    console.log('mounted', this.src)
   }
 }
 </script>
