@@ -5,7 +5,7 @@
       visibility ? 'is-visible' : 'not-visible',
       validImage ? 'is-valid' : 'not-valid'
     ]"
-    class="product-image nacelle product-image-skeleton"
+    class="product-image nacelle"
     v-observe-visibility="{
       callback: visibilityChanged,
       once: true,
@@ -14,7 +14,7 @@
       }
     }"
   >
-    <picture style="visibility: hidden">
+    <picture>
       <template v-if="visibility && validImage">
         <source
           :srcset="optimizeSource({ ...optimizeOptions, format: 'webp' })"
@@ -25,7 +25,6 @@
           type="image/jpeg"
         />
         <img
-          ref="product-image"
           v-bind="{ src, alt, width, height }"
           @load="loading = false"
           @error="fallback"
@@ -33,9 +32,7 @@
       </template>
       <img
         v-else
-        :src="blankImage"
-        :width="width"
-        :height="height"
+        v-bind="{ src: blankImage, alt, width, height }"
         class="product-image-blank"
       />
     </picture>
@@ -98,7 +95,7 @@ img {
   font-size: 0;
 
   .loaded & {
-    animation: fadein 2s ease-in;
+    animation: fadein .5s ease-in;
   }
 }
 @keyframes fadein {
