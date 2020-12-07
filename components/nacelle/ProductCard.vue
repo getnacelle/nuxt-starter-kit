@@ -1,7 +1,7 @@
 <template>
-  <div class="product-card nacelle">
-    <router-link :to="`${pathFragment}${product.handle}`">
-      <product-image :src="mediaSrc" :width="300" :height="300" />
+  <div class="product-card nacelle" :style="minSize">
+    <router-link :to="`${pathFragment}${product.handle}`" class="product-image">
+      <nacelle-image :src="mediaSrc" :width="300" :height="300" @load="imgLoaded = true" />
     </router-link>
     <div class="product-card-details">
       <router-link :to="`${pathFragment}${product.handle}`">
@@ -87,11 +87,20 @@ export default {
     showAddToCart: {
       type: Boolean,
       default: true
+    },
+    minWidth: {
+      type: String,
+      default: '175px'
+    },
+    minHeight: {
+      type: String,
+      default: '500px'
     }
   },
   data() {
     return {
-      quantity: 1
+      quantity: 1,
+      imgLoaded: false
     }
   },
   computed: {
@@ -99,6 +108,11 @@ export default {
     ...mapState('user', ['locale']),
     ...mapGetters('cart', ['quantityTotal']),
 
+    minSize() {
+      return this.imgLoaded
+        ? null
+        : `min-width: ${this.minWidth}; min-height: ${this.minHeight};`
+    },
     selectedVariant() {
       return this.$store.getters[`product/${this.product.globalHandle}/selectedVariant`] || null
     },
@@ -157,6 +171,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.product-image {
+  position: relative;
+  width: 100%;
+  z-index: 0;
+  font-size: 0;
+}
+
 .product-card-details,
 .product-card-actions {
   display: flex;
@@ -169,11 +190,11 @@ export default {
   flex-basis: 80%;
 }
 
-.handler {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
+// .handler {
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+// }
 </style>
