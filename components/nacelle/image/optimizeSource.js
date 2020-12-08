@@ -196,7 +196,7 @@ const contentfulResize = ({
  */
 const contentfulReformat = ({ src = null, format = 'webp' } = {}) => {
   if (typeof src === 'string') {
-    const [base, args, extension] = this.contentfulSplitUrl({ src })
+    const [base, args, extension] = contentfulSplitUrl({ src })
     const imgFormat = format === 'jpeg' ? 'jpg' : format
     if (imgFormat !== extension) {
       const newArgs = args

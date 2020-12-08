@@ -4,7 +4,7 @@
       loading ? 'image-skeleton loading' : 'loaded',
       visibility ? 'is-visible' : 'not-visible',
       validImage ? 'is-valid' : 'not-valid',
-      fill ? 'fill' : 'intrinsic'
+      layout
     ]"
     class="nacelle-image"
     v-observe-visibility="{
@@ -15,14 +15,23 @@
   >
     <picture v-if="visibility">
       <template v-if="validImage">
-        <source
-          :srcset="optimizeSource({ ...optimizeOptions, format: 'webp' })"
-          type="image/webp"
-        />
-        <source
-          :srcset="optimizeSource({ ...optimizeOptions, format: 'jpg' })"
-          type="image/jpeg"
-        />
+        <template v-if="layout === 'responsive'">
+          <source
+            v-for="(responsiveSource, index) in responsiveSources"
+            :key="index"
+            v-bind="responsiveSource"
+          />
+        </template>
+        <template v-else>
+          <source
+            :srcset="optimizeSource({ ...optimizeOptions, format: 'webp' })"
+            type="image/webp"
+          />
+          <source
+            :srcset="optimizeSource({ ...optimizeOptions, format: 'jpg' })"
+            type="image/jpeg"
+          />
+        </template>
         <img
           v-bind="{ src, alt, width, height }"
           @load="onLoad"
@@ -52,6 +61,10 @@ export default {
       type: String,
       default: '//nacelle-assets.s3-us-west-2.amazonaws.com/default-product-image.svg'
     },
+    mobileSrc: {
+      type: String,
+      default: null
+    },
     width: {
       type: Number,
       default: null
@@ -68,13 +81,20 @@ export default {
       type: String,
       default: 'center'
     },
-    fill: {
-      type: Boolean,
-      default: true
+    layout: {
+      type: String,
+      default: 'fill',
+      validator(val) {
+        return ['fill', 'responsive', 'intrinsic'].includes(val)
+      }
     },
     lazy: {
       type: Boolean,
       default: true
+    },
+    mobileCrop: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -96,6 +116,58 @@ export default {
         width: this.width,
         height: this.height
       }
+    },
+    responsiveSources() {
+      if (!this.layout === 'responsive') {
+        return []
+      }
+      const formats = [
+        { format: 'webp', type: 'image/webp' },
+        { format: 'pjpg', type: 'image/jpeg' }
+      ]
+      const breakpoints = [
+        {
+          media: '(max-width: 768px)',
+          width: 768,
+          crop: this.mobileCrop,
+          src: this.mobileSrc || this.src
+        },
+        {
+          media: '(min-width: 769px) and (max-width: 1023px)',
+          width: 1023,
+          crop: this.mobileCrop
+        },
+        {
+          media: '(min-width: 1023px) and (max-width: 1215px)',
+          width: 1215
+        },
+        {
+          media: '(min-width: 1216px) and (max-width: 1407px)',
+          width: 1407
+        },
+        {
+          media: '(min-width: 1408px)',
+          width: 1408
+        }
+      ]
+
+      const sources = breakpoints.reduce((acc, { media, width, crop, src }) => {
+        const breakpointFormat = formats.map(({ format, type }) => {
+          return {
+            media,
+            type,
+            srcset: optimizeSource({
+              url: src || this.src,
+              width,
+              format,
+              crop
+            })
+          }
+        })
+        return [...acc, ...breakpointFormat]
+      }, [])
+
+      return sources
     }
   },
   async mounted() {
@@ -123,7 +195,8 @@ export default {
 
 <style lang="scss" scoped>
 .nacelle-image {
-  &.fill img {
+  &.fill img,
+  &.responsive img {
     width: 100%;
   }
 }
