@@ -1,7 +1,12 @@
 <template>
   <div class="product-card nacelle" :style="minSize">
     <router-link :to="`${pathFragment}${product.handle}`" class="product-image">
-      <nacelle-image :src="mediaSrc" :width="300" :height="300" @load="imgLoaded = true" />
+      <nacelle-image
+        :src="mediaSrc"
+        :width="300"
+        :height="300"
+        @load="imgLoaded = true"
+      />
     </router-link>
     <div class="product-card-details">
       <router-link :to="`${pathFragment}${product.handle}`">
@@ -129,15 +134,7 @@ export default {
       return null
     },
     mediaSrc() {
-      if (
-        this.product.featuredMedia &&
-        this.product.featuredMedia &&
-        this.product.featuredMedia.src
-      ) {
-        return this.product.featuredMedia.src
-      }
-
-      return undefined
+      return this.product.featuredMedia?.src
     },
     cartProduct() {
       return {
