@@ -4,8 +4,9 @@
       <nacelle-image
         :src="imageUrl"
         :alt="alt"
-        :width="300"
-        :height="300"
+        :width="800"
+        :height="800"
+        class="column is-half sbs-image"
       />
       <div
         class="column is-half sbs-copy"
@@ -123,7 +124,7 @@ export default {
   position: relative;
   padding: 0;
 
-  img {
+  & /deep/ img {
     display: block;
     width: 100%;
 
