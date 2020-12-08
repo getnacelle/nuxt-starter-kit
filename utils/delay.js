@@ -1,6 +1,6 @@
-export default () =>
+export default (time) =>
   new Promise(resolve => {
     setTimeout(() => {
       resolve(true)
-    }, 200)
+    }, time)
   })

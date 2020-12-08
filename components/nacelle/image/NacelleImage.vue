@@ -173,7 +173,7 @@ export default {
   async mounted() {
     // NOTE: use a delay before setting the desired rootMargin.
     // This prevent images from getting loaded while page elements are still rendering.
-    await delay(500)
+    await delay(250)
     this.rootMargin = '500px'
   },
   methods: {
