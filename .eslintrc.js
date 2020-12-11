@@ -5,7 +5,7 @@ module.exports = {
     node: true,
     'jest/globals': true
   },
-  extends: ['plugin:vue/essential', 'standard'],
+  extends: ['plugin:vue/strongly-recommended', 'standard'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
