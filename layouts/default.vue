@@ -3,7 +3,6 @@
     <global-header ref="header" />
     <nuxt :style="{ 'margin-top': `${headerHeight}px` }" />
     <site-footer />
-    <cookie-banner />
     <event-dispatcher />
     <error-modal />
     <cart-watch />
@@ -16,7 +15,6 @@ import localforage from 'localforage'
 import GlobalHeader from '~/components/nacelle/GlobalHeader'
 import SiteFooter from '~/components/nacelle/SiteFooter'
 import EventDispatcher from '~/components/nacelle/EventDispatcher'
-import CookieBanner from '~/components/nacelle/CookieBanner'
 import ErrorModal from '~/components/nacelle/ErrorModal'
 import CartWatch from '~/components/nacelle/CartWatch'
 
@@ -25,7 +23,6 @@ export default {
     GlobalHeader,
     SiteFooter,
     EventDispatcher,
-    CookieBanner,
     ErrorModal,
     CartWatch
   },
