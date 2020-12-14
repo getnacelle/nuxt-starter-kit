@@ -31,8 +31,8 @@ export const mutations = {
       state.url = location.href
     }
     const splitUrl = state.url.split('?')
-    state.url = `${splitUrl[0]}${splitUrl[1] ? `?${omit(splitUrl[1], 'discount_code').querystring}` : ''}`
-    if (payload.trim() || !state.discountCode) {
+    state.url = `${splitUrl[0]}${splitUrl[1] ? `?${omit(splitUrl[1], 'discount').querystring}` : ''}`
+    if (payload && payload.trim() || !state.discountCode) {
       state.discountCode = payload
     }
   }
@@ -96,7 +96,7 @@ export const actions = {
   async addCheckoutParams({ commit, dispatch, state, rootState }) {
     const queryOperator = state.url.includes('?') ? '&' : '?'
     const linkerParam = await dispatch('getLinkerParam')
-    await commit('setUrl', `${state.url}${queryOperator}c=${JSON.stringify(rootState.user.userData)}&${linkerParam}${state.discountCode ? `&discount_code=${state.discountCode}` : ''}`)
+    await commit('setUrl', `${state.url}${queryOperator}c=${JSON.stringify(rootState.user.userData)}&${linkerParam}${state.discountCode ? `&discount=${state.discountCode}` : ''}`)
   },
 
   async getLinkerParam() {

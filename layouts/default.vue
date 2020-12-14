@@ -57,7 +57,7 @@ export default {
       localforage.clear()
     }
 
-    this.setDiscountCode(queryString.parse(location.search).discount_code)
+    this.setDiscountCode(queryString.parse(location.search).discount)
     this.readSession()
   },
   head() {
