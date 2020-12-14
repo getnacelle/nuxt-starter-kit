@@ -1,9 +1,11 @@
 import localforage from 'localforage'
+import { omit } from 'search-params'
 const isFunc = (func) => (typeof func === 'function')
 
 export const state = () => ({
   id: null,
-  url: null
+  url: null,
+  discountCode: null
 })
 
 export const mutations = {
@@ -22,6 +24,17 @@ export const mutations = {
     localforage.setItem('checkout-url', url)
     state.id = id
     state.url = url
+  },
+
+  setDiscountCode(state, payload) {
+    if (!state.url) {
+      state.url = location.href
+    }
+    const splitUrl = state.url.split('?')
+    state.url = `${splitUrl[0]}${splitUrl[1] ? `?${omit(splitUrl[1], 'discount_code').querystring}` : ''}`
+    if (payload.trim() || !state.discountCode) {
+      state.discountCode = payload
+    }
   }
 }
 
@@ -83,7 +96,7 @@ export const actions = {
   async addCheckoutParams({ commit, dispatch, state, rootState }) {
     const queryOperator = state.url.includes('?') ? '&' : '?'
     const linkerParam = await dispatch('getLinkerParam')
-    await commit('setUrl', `${state.url}${queryOperator}c=${JSON.stringify(rootState.user.userData)}&${linkerParam}`)
+    await commit('setUrl', `${state.url}${queryOperator}c=${JSON.stringify(rootState.user.userData)}&${linkerParam}${state.discountCode ? `&discount_code=${state.discountCode}` : ''}`)
   },
 
   async getLinkerParam() {

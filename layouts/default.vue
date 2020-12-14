@@ -19,6 +19,7 @@ import EventDispatcher from '~/components/nacelle/EventDispatcher'
 import CookieBanner from '~/components/nacelle/CookieBanner'
 import ErrorModal from '~/components/nacelle/ErrorModal'
 import CartWatch from '~/components/nacelle/CartWatch'
+import queryString from 'query-string'
 
 export default {
   components: {
@@ -32,6 +33,7 @@ export default {
   methods: {
     ...mapActions('cart', ['initializeCart']),
     ...mapActions('checkout', ['initializeCheckout']),
+    ...mapMutations('checkout', ['setDiscountCode']),
     ...mapActions('user', ['readSession'])
   },
   data() {
@@ -54,6 +56,8 @@ export default {
       console.log('dev mode active!')
       localforage.clear()
     }
+
+    this.setDiscountCode(queryString.parse(location.search).discount_code)
     this.readSession()
   },
   head() {
