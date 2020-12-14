@@ -17,8 +17,7 @@ export const state = () => ({
     language: 'en',
     locale: 'en-US',
     symbol: '$'
-  },
-  acceptCookies: false
+  }
 })
 
 export const mutations = {
@@ -39,10 +38,6 @@ export const mutations = {
 
   setLocale(state, locale) {
     state.locale = locale
-  },
-
-  setAcceptCookies(state, payload) {
-    state.acceptCookies = payload
   }
 }
 
@@ -104,30 +99,8 @@ export const actions = {
         expires: new Date().setMinutes(30)
       })
     }
-  },
-
-  createCookieAccept({ commit }) {
-    if (process.browser) {
-      Cookies.set('nacelle-accept', true, {
-        expires: 7
-      })
-      commit('setAcceptCookies', true)
-    }
-  },
-
-  readCookieAccept({ commit }) {
-    if (process.browser) {
-      const accept = Cookies.get('nacelle-accept')
-
-      if (accept) {
-        commit('setAcceptCookies', accept)
-
-        return accept
-      }
-    }
-
-    return false
   }
+
 }
 
 export default {

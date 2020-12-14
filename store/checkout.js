@@ -99,7 +99,7 @@ export const actions = {
     })
   },
 
-  checkoutRedirect ({ state }) {
+  checkoutRedirect({ state }) {
     if (process.browser) {
       window.location = state.url
     }
