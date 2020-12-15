@@ -27,12 +27,7 @@ export const mutations = {
   },
 
   setDiscountCode(state, payload) {
-    if (!state.url) {
-      state.url = location.href
-    }
-    const splitUrl = state.url.split('?')
-    state.url = `${splitUrl[0]}${splitUrl[1] ? `?${omit(splitUrl[1], 'discount').querystring}` : ''}`
-    if (payload && payload.trim() || !state.discountCode) {
+    if (payload && payload.trim()) {
       state.discountCode = payload
     }
   }
