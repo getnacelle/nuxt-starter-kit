@@ -91,12 +91,13 @@ export default {
       outputData: null,
       activePriceRange: null,
       passedData: null,
-      sortBy: 'Sort By'
+      sortBy: 'Sort By',
+      filterWorker: null,
+      outputWorker: null
     }
   },
   watch: {
     inputData() {
-      console.log(this.inputData)
       this.setupFilters()
       this.computeFilteredData()
     },
@@ -108,7 +109,6 @@ export default {
       this.computeFilteredData()
     },
     activeFilters() {
-      console.log('activeFiltersChanged')
       this.computeFilteredData()
     },
     activePriceRange() {
@@ -118,7 +118,6 @@ export default {
       this.computeOutputData()
     },
     filtersCleared(val) {
-      console.log(val)
       if (val === true) {
         this.activeFilters = []
         this.activePriceRange = null
@@ -138,25 +137,25 @@ export default {
     ]),
     computeOutputData() {
       const vm = this
-      const outputWorker = new Worker('/outputWorker.js')
-      outputWorker.postMessage({
+      this.outputWorker = this.outputWorker || new Worker('/outputWorker.js')
+      this.outputWorker.postMessage({
         activeFilters: this.activeFilters,
         filteredData: this.filteredData,
         activePriceRange: this.activePriceRange,
         sortBy: this.sortBy
       })
-      outputWorker.onmessage = function(e) {
+      this.outputWorker.onmessage = function (e) {
         vm.outputData = e.data
       }
     },
     computeFilteredData() {
       const vm = this
-      const filterWorker = new Worker('/filterWorker.js')
-      filterWorker.postMessage({
+      this.filterWorker = this.filterWorker || new Worker('/filterWorker.js')
+      this.filterWorker.postMessage({
         activeFilters: this.activeFilters,
         inputData: this.inputData
       })
-      filterWorker.onmessage = function(e) {
+      this.filterWorker.onmessage = function (e) {
         vm.filteredData = e.data
         vm.computeOutputData()
       }
