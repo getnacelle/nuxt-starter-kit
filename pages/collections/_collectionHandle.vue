@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import productModule from '~/store/product/productModule'
 import viewEvent from '~/mixins/viewEvent'
 
 export default {
@@ -61,22 +62,40 @@ export default {
     this.collection = { products: [], ...collectionData }
     this.collection.products = await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
   },
+  mounted() {
+    // products loaded during SSR fetch need to be stored in localforage (indexedDB)
+    if (this.collection?.products) {
+      this.collection.products.map((product) => {
+        const namespace = `product/${product.handle}`
+        if (!this.$store.hasModule(namespace)) {
+          this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+        }
+        this.$store.dispatch(`${namespace}/storeProduct`, product)
+      })
+    }
+  },
   methods: {
-    showMore() {
+    async showMore() {
       if (!this.collection) {
         return
       }
       const currentCount = this.productVisibilityCount
       const fetchCursor = currentCount + this.fetchBuffer
       this.productVisibilityCount = currentCount + 16
-      this.fetchProducts(fetchCursor, fetchCursor + 16)
+      this.collection.products = await this.fetchProducts(fetchCursor, fetchCursor + 16)
     },
     async fetchProducts(start, end) {
       this.isFetching = true
 
       const products = this.collection.productLists[0].handles
         .slice(start, end)
-        .map(handle => this.$nacelle.data.product({ handle }))
+        .map(handle => {
+          const namespace = `product/${handle}`
+          if (!this.$store.hasModule(namespace)) {
+            this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+          }
+          return this.$store.dispatch(`${namespace}/fetchProduct`, handle)
+        })
       const collectionProducts = await Promise.all(products)
       const filteredProducts = collectionProducts.filter(Boolean)
       this.isFetching = false

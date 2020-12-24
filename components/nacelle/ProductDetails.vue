@@ -24,7 +24,6 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import productModule from '~/store/product/productModule'
 import ProductCategory from '~/components/nacelle/ProductCategory'
 import ProductMediaSelectView from '~/components/nacelle/ProductMediaSelectView'
 import ProductTitle from '~/components/nacelle/ProductTitle'
@@ -52,13 +51,6 @@ export default {
   },
   computed: {
     ...mapState('user', ['locale'])
-  },
-  created() {
-    const { product } = this
-    const namespace = `product/${product.globalHandle}`
-    if (!this.$store.hasModule(namespace)) {
-      this.$store.registerModule(namespace, productModule({ product }), { preserveState: false })
-    }
   },
   methods: {
     ...mapMutations('cart', ['showCart'])

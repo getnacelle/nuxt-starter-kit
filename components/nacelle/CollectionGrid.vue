@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import productModule from '~/store/product/productModule'
+
 export default {
   props: {
     collectionHandle: { type: String },
@@ -15,14 +17,29 @@ export default {
     }
   },
   async fetch() {
-    const vm = this
     const collectionData = await this.$nacelle.data.collection({
       handle: this.collectionHandle
     })
     const products = collectionData.productLists[0].handles.map(handle => {
-      return vm.$nacelle.data.product({ handle: handle })
+      const namespace = `product/${handle}`
+      if (!this.$store.hasModule(namespace)) {
+        this.$store.registerModule(namespace, productModule(), { preserveState: false })
+      }
+      return this.$store.dispatch(`${namespace}/fetchProduct`, handle)
     })
     this.products = await Promise.all(products)
+  },
+  mounted() {
+    // store products loaded during SSR fetch into localforage (indexedDB)
+    if (this.products) {
+      this.products.forEach((product) => {
+        const namespace = `product/${product.handle}`
+        // if (!this.$store.hasModule(namespace)) {
+        //   this.$store.registerModule(namespace, productModule(), { preserveState: true })
+        // }
+        this.$store.dispatch(`${namespace}/storeProduct`, product)
+      })
+    }
   }
 }
 </script>

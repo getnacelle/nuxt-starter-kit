@@ -12,7 +12,7 @@
             value,
             optionName: option.name,
             variants: product.variants,
-            globalHandle: product.globalHandle,
+            handle: product.handle,
             selectedVariant
           }"
           swatch-style="tab"
@@ -63,10 +63,10 @@ export default {
   },
   computed: {
     selectedVariant() {
-      return this.$store.getters[`product/${this.product.globalHandle}/selectedVariant`] || null
+      return this.$store.state[`product/${this.product.handle}`].selectedVariant
     },
     options() {
-      return this.$store.getters[`product/${this.product.globalHandle}/options`] || null
+      return this.$store.state[`product/${this.product.handle}`].options
     }
   }
 }

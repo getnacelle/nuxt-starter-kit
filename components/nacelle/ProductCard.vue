@@ -10,7 +10,7 @@
       <product-price :price="displayPrice" />
     </div>
     <product-options
-      v-if="product.variants.length > 1 && options && options.length"
+      v-if="product.variants.length > 1 && options.length"
       :options="options"
     >
       <template v-slot:swatch="{option}">
@@ -21,7 +21,7 @@
             value,
             optionName: option.name,
             variants: product.variants,
-            globalHandle: product.globalHandle,
+            handle: product.handle,
             selectedVariant
           }"
           swatch-style="tab"
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import productModule from '~/store/product/productModule'
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
 
@@ -100,10 +99,10 @@ export default {
     ...mapGetters('cart', ['quantityTotal']),
 
     selectedVariant() {
-      return this.$store.getters[`product/${this.product.globalHandle}/selectedVariant`] || null
+      return this.$store.state[`product/${this.product.handle}`].selectedVariant
     },
     options() {
-      return this.$store.getters[`product/${this.product.globalHandle}/options`] || null
+      return this.$store.state[`product/${this.product.handle}`].options
     },
     displayPrice() {
       if (this.selectedVariant) {
@@ -139,13 +138,6 @@ export default {
       return this.lineItems.filter(item => {
         return item.productId === this.product.id
       })
-    }
-  },
-  created() {
-    const { product } = this
-    const namespace = `product/${product.globalHandle}`
-    if (!this.$store.hasModule(namespace)) {
-      this.$store.registerModule(namespace, productModule({ product }), { preserveState: false })
     }
   },
 

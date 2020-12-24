@@ -35,7 +35,7 @@ export default {
     variants: {
       type: Array
     },
-    globalHandle: {
+    handle: {
       type: String
     },
     selectedVariant: {
@@ -53,7 +53,7 @@ export default {
     },
     optionAvailable() {
       // if this option were selected, test if there is a matching variant
-      const productStore = this.$store.state[`product/${this.globalHandle}/setSelected`]
+      const productStore = this.$store.state[`product/${this.handle}/`]
       if (!productStore) {
         return false
       }
@@ -119,16 +119,11 @@ export default {
         : ''
     }
   },
-  created() {
-    if (this.isSelected) {
-      this.setSelected()
-    }
-  },
   methods: {
     setSelected() {
       if (this.optionAvailableForSale) {
-        this.$store.commit(
-          `product/${this.globalHandle}/setSelected`,
+        this.$store.dispatch(
+          `product/${this.handle}/setSelected`,
           { name: this.optionName, value: this.value }
         )
       }
