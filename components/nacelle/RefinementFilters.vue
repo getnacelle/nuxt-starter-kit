@@ -91,7 +91,9 @@ export default {
       outputData: null,
       activePriceRange: null,
       passedData: null,
-      sortBy: 'Sort By'
+      sortBy: 'Sort By',
+      filterWorker: null,
+      outputWorker: null
     }
   },
   watch: {
@@ -130,6 +132,14 @@ export default {
   computed: {
     ...mapState('search', ['filtersCleared'])
   },
+  beforeDestroy() {
+    if (this.filterWorker) {
+      this.filterWorker.terminate()
+    }
+    if (this.outputWorker) {
+      this.outputWorker.terminate()
+    }
+  },
   methods: {
     ...mapMutations('search', [
       'setFiltersCleared',
@@ -138,25 +148,25 @@ export default {
     ]),
     computeOutputData() {
       const vm = this
-      const outputWorker = new Worker('/outputWorker.js')
-      outputWorker.postMessage({
+      this.outputWorker = this.outputWorker || new Worker('/outputWorker.js')
+      this.outputWorker.postMessage({
         activeFilters: this.activeFilters,
         filteredData: this.filteredData,
         activePriceRange: this.activePriceRange,
         sortBy: this.sortBy
       })
-      outputWorker.onmessage = function(e) {
+      this.outputWorker.onmessage = function (e) {
         vm.outputData = e.data
       }
     },
     computeFilteredData() {
       const vm = this
-      const filterWorker = new Worker('/filterWorker.js')
-      filterWorker.postMessage({
+      this.filterWorker = this.filterWorker || new Worker('/filterWorker.js')
+      this.filterWorker.postMessage({
         activeFilters: this.activeFilters,
         inputData: this.inputData
       })
-      filterWorker.onmessage = function(e) {
+      this.filterWorker.onmessage = function (e) {
         vm.filteredData = e.data
         vm.computeOutputData()
       }
