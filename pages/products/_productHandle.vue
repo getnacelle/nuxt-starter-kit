@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import productModule from '~/store/product/productModule'
 import productMetafields from '~/mixins/productMetafields'
 import viewEvent from '~/mixins/viewEvent'
 // import jsonld from '~/mixins/jsonld'
@@ -64,9 +65,24 @@ export default {
     }
   },
   async fetch() {
-    this.product = await this.$nacelle.data.product({
-      handle: this.$route.params.productHandle
-    })
+    const handle = this.$route.params.productHandle
+    const namespace = `product/${handle}`
+    if (!this.$store.hasModule(namespace)) {
+      this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+    }
+    const product = await this.$store.dispatch(`${namespace}/fetchProduct`, handle)
+    this.product = product
+  },
+  mounted() {
+    // product loaded during SSR fetch needs to be stored in localforage (indexedDB)
+    const handle = this.$route.params.productHandle
+    const namespace = `product/${handle}`
+    if (!this.$store.hasModule(namespace)) {
+      this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+    }
+    if (this.product) {
+      this.$store.dispatch(`${namespace}/storeProduct`, this.product)
+    }
   },
   mixins: [
     productMetafields,

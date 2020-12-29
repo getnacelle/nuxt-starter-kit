@@ -34,9 +34,6 @@ export default {
     if (this.products) {
       this.products.forEach((product) => {
         const namespace = `product/${product.handle}`
-        // if (!this.$store.hasModule(namespace)) {
-        //   this.$store.registerModule(namespace, productModule(), { preserveState: true })
-        // }
         this.$store.dispatch(`${namespace}/storeProduct`, product)
       })
     }
