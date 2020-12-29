@@ -91,17 +91,10 @@ export default {
       }
     }
   },
-  created() {
-    if (process.browser) {
-      if (!this.filteredData) {
-        this.getProductData()
-      }
-    }
-  },
   methods: {
     ...mapMutations('search', ['setFilteredData']),
     ...mapMutations('search', ['setQuery']),
-    ...mapActions('search', ['getProductData']),
+
     updateFilteredData(data) {
       this.setFilteredData(data)
     }

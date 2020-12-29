@@ -11,29 +11,10 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import localforage from 'localforage'
-import GlobalHeader from '~/components/nacelle/GlobalHeader'
-import SiteFooter from '~/components/nacelle/SiteFooter'
-import EventDispatcher from '~/components/nacelle/EventDispatcher'
-import CookieBanner from '~/components/nacelle/CookieBanner'
-import ErrorModal from '~/components/nacelle/ErrorModal'
-import CartWatch from '~/components/nacelle/CartWatch'
 
 export default {
-  components: {
-    GlobalHeader,
-    SiteFooter,
-    EventDispatcher,
-    CookieBanner,
-    ErrorModal,
-    CartWatch
-  },
-  methods: {
-    ...mapActions('cart', ['initializeCart']),
-    ...mapActions('checkout', ['initializeCheckout']),
-    ...mapActions('user', ['readSession'])
-  },
   data() {
     return {
       headerHeight: null
@@ -52,9 +33,19 @@ export default {
 
     if (process.env.DEV_MODE === 'true') {
       console.log('dev mode active!')
-      localforage.clear()
+      // localforage.clear()
+    }
+
+    if (process.client) {
+      this.getProductData()
     }
     this.readSession()
+  },
+  methods: {
+    ...mapActions('cart', ['initializeCart']),
+    ...mapActions('checkout', ['initializeCheckout']),
+    ...mapActions('user', ['readSession']),
+    ...mapActions('search', ['getProductData'])
   },
   head() {
     const properties = {}

@@ -3,7 +3,6 @@
     <search-input
       :placeholderText="placeholderText"
       :position="position"
-      @focus.native="getData"
       @keydown.enter.native="navigateToSearchResults"
     />
     <button
@@ -20,7 +19,7 @@
 <script>
 import SearchInput from '~/components/nacelle/SearchInput'
 import SearchAutocomplete from '~/components/nacelle/SearchAutocomplete'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   components: {
@@ -46,21 +45,15 @@ export default {
   },
   methods: {
     ...mapMutations('menu', ['disableMenu']),
-    ...mapActions('search', ['getProductData']),
-    getData() {
-      if (this.searchCategory === 'product') {
-        this.getProductData()
-      }
-    },
     navigateToSearchResults() {
       const queryVal = this.query && this.query.value ? this.query.value : ''
 
       this.disableMenu()
 
-      if (this.position == 'global') {
+      if (this.position === 'global') {
         this.$router.push({ path: '/search', query: { q: queryVal } })
       } else {
-        this.$router.push({query: { q: queryVal } })
+        this.$router.push({ query: { q: queryVal } })
       }
     }
   }

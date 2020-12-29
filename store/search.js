@@ -19,75 +19,13 @@ export const getters = {
   },
 
   hasProductData(state) {
-    return (
-      state.searchData &&
-      state.searchData.products &&
-      state.searchData.products.length > 0
-    )
+    return state.searchData?.products?.length > 0
   },
 
-  productData(state) {
-    if (
-      state.searchData &&
-      state.searchData.products &&
-      state.searchData.products.length > 0
-    ) {
-      return state.searchData.products.map(product => {
-        const { tags, variants, ...rest } = product
-
-        /// //////////////////////////
-        /// //////////////////////////
-        // Get product filter facets from variant data
-        const variantOptions = variants.map(variant => {
-          return variant.selectedOptions
-        })
-
-        const variantFacets = variantOptions
-          .reduce((acc, item) => {
-            return acc.concat(item)
-          }, [])
-          .map(option => JSON.stringify(option))
-
-        const facets = Array.from(new Set(variantFacets))
-          .map(option => JSON.parse(option))
-          .map(option => {
-            return { name: option.name.toLowerCase(), value: option.value }
-          })
-
-        /// //////////////////////////
-        /// //////////////////////////
-        // Get product filter facets from tags. Tags should be formatted "filter_property-name_value"
-        const rootFacets = tags.filter(tag => tag.includes('filter'))
-
-        rootFacets.forEach(facet => {
-          const facetFragments = facet.split('_')
-          const facetName = facetFragments[1]
-          const facetValue = () => {
-            const fragments = facetFragments[2].split('-')
-            return fragments
-              .map(fragment => {
-                return `${fragment.charAt(0).toUpperCase()}${fragment.substring(
-                  1
-                )}`
-              })
-              .join(' ')
-          }
-
-          rest[facetName] = facetValue()
-          facets.push({ name: facetName, value: facetValue() })
-        })
-
-        if (product.productType) {
-          facets.push({ name: 'productType', value: product.productType })
-        }
-
-        rest.minPrice = rest.priceRange.min
-
-        return { ...rest, tags, variantOptions, variants, facets }
-      })
-    }
-
-    return []
+  productData(state, getters) {
+    return getters.hasProductData
+      ? state.searchData.products
+      : []
   }
 }
 
@@ -150,26 +88,25 @@ export const mutations = {
 
 export const actions = {
   getProductData({ commit, getters }) {
-    if (!getters.hasProductData) {
-      commit('dataNotLoaded')
-      commit('isSearching')
+    if (getters.hasProductData) {
+      return
+    }
+    commit('dataNotLoaded')
+    commit('isSearching')
 
-      this.$nacelle.data.connector
-        .request('data/search.json')
-        .then(res => {
-          if (res && res.data) {
-            commit('dataHasLoaded')
-            commit('isNotSearching')
-
-            const products = res.data.product
-
-            commit('setSearchData', { products })
-          }
-        })
-        .catch(err => {
-          console.log(err)
-          return err
-        })
+    const worker = new Worker('/catalogWorker.js')
+    worker.postMessage({
+      spaceID: process.env.NACELLE_SPACE_ID,
+      token: process.env.NACELLE_GRAPHQL_TOKEN,
+      version: process.env.NACELLE_API_VERSION
+    })
+    worker.onmessage = (e) => {
+      console.log(e)
+      const products = e.data
+      commit('setSearchData', { products })
+      commit('dataHasLoaded')
+      commit('isNotSearching')
+      worker.terminate()
     }
   }
 }
