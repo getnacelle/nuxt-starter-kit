@@ -58,14 +58,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import queryString from 'query-string'
-import RefinementFilterSelect from '~/components/nacelle/RefinementFilterSelect'
-import RefinementPriceFilterSelect from '~/components/nacelle/RefinementPriceFilterSelect'
 import { omit } from 'search-params'
 export default {
-  components: {
-    RefinementFilterSelect,
-    RefinementPriceFilterSelect
-  },
   props: {
     inputData: {
       type: Array,
@@ -98,13 +92,11 @@ export default {
   },
   watch: {
     inputData() {
-      console.log(this.inputData)
       this.setupFilters()
       this.computeFilteredData()
     },
     outputData() {
-      const vm = this
-      vm.$emit('updated', vm.outputData)
+      this.$emit('updated', this.outputData)
     },
     filters() {
       this.computeFilteredData()
@@ -120,7 +112,6 @@ export default {
       this.computeOutputData()
     },
     filtersCleared(val) {
-      console.log(val)
       if (val === true) {
         this.activeFilters = []
         this.activePriceRange = null
@@ -132,6 +123,17 @@ export default {
   computed: {
     ...mapState('search', ['filtersCleared'])
   },
+
+  created() {
+    if (process.browser) {
+      this.passedData = this.getPassedData()
+      this.setupFilters()
+      this.activeFilters = this.readFiltersFromQueryParams()
+      if (this.filteredData && this.outputData.length > 0) {
+        this.$emit('updated', this.outputData)
+      }
+    }
+  },
   beforeDestroy() {
     if (this.filterWorker) {
       this.filterWorker.terminate()
@@ -140,6 +142,7 @@ export default {
       this.outputWorker.terminate()
     }
   },
+
   methods: {
     ...mapMutations('search', [
       'setFiltersCleared',
@@ -396,16 +399,6 @@ export default {
         })
       } else {
         return vm.inputData
-      }
-    }
-  },
-  created() {
-    if (process.browser) {
-      this.passedData = this.getPassedData()
-      this.setupFilters()
-      this.activeFilters = this.readFiltersFromQueryParams()
-      if (this.filteredData && this.outputData.length > 0) {
-        this.$emit('updated', this.outputData)
       }
     }
   }
