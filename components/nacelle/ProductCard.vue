@@ -3,8 +3,8 @@
     <router-link :to="`${pathFragment}${product.handle}`" class="product-image">
       <nacelle-image
         :src="mediaSrc"
-        :width="300"
-        :height="300"
+        :width="imageSize"
+        :height="imageSize"
         @load="imgLoaded = true"
       />
     </router-link>
@@ -100,6 +100,9 @@ export default {
     minHeight: {
       type: String,
       default: '500px'
+    },
+    imageSize: {
+      type: Number
     }
   },
   data() {
