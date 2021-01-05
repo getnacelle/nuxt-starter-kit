@@ -11,6 +11,7 @@
         :product="product"
         :showQuantityUpdate="showQuantityUpdate"
         :showAddToCart="showAddToCart"
+        :imageSize="imageSize"
       />
     </div>
   </div>
@@ -31,6 +32,10 @@ export default {
     columns: {
       type: Number,
       default: 4
+    },
+    imageSize: {
+      type: Number,
+      default: 400
     },
     showQuantityUpdate: {
       type: Boolean,

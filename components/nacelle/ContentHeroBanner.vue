@@ -2,173 +2,36 @@
   <section :class="bannerClasses">
     <slot
       name="background"
-      :mobileBackgroundImgUrl="mobileBackgroundImgUrl"
-      :imageUrl="imageUrl"
-      :backgroundAltTag="backgroundAltTag"
+      v-bind="{mobileBackgroundImgUrl, imageUrl, backgroundAltTag}"
     >
-      <picture class="hero-background" ref="hero-img-card">
-        <source
-          v-if="reformat"
-          media="(max-width: 768px)"
-          :srcset="
-            optimizeSource({
-              url: mobileSrc,
-              format: 'webp',
-              width: 768,
-              crop: mobileCrop
-            })
-          "
-          type="image/webp"
-          @error="fallback"
-        />
-        <source
-          v-if="reformat"
-          media="(max-width: 768px)"
-          :srcset="
-            optimizeSource({
-              url: mobileSrc,
-              format: 'pjpg',
-              width: 768,
-              crop: mobileCrop
-            })
-          "
-          type="image/jpeg"
-          @error="fallback"
-        />
-        <source
-          v-if="reformat"
-          media="(min-width: 769px) and (max-width: 1023px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'webp',
-              width: 1023,
-              crop: mobileCrop
-            })
-          "
-          type="image/webp"
-        />
-        <source
-          v-if="reformat"
-          media="(min-width: 769px) and (max-width: 1023px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'pjpg',
-              width: 1023,
-              crop: mobileCrop
-            })
-          "
-          type="image/jpeg"
-        />
-        <source
-          v-if="reformat"
-          media="(min-width: 1023px) and (max-width: 1215px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'webp',
-              width: 1215
-            })
-          "
-          type="image/webp"
-        />
-        <source
-          v-if="reformat"
-          media="(min-width: 1023px) and (max-width: 1215px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'pjpg',
-              width: 1215
-            })
-          "
-          type="image/jpeg"
-        />
-        <source
-          v-if="reformat"
-          media="(min-width: 1216px) and (max-width: 1407px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'webp',
-              width: 1407
-            })
-          "
-          type="image/webp"
-        />
-        <source
-          v-if="reformat"
-          media="(min-width: 1216px) and (max-width: 1407px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'pjpg',
-              width: 1407
-            })
-          "
-          type="image/jpeg"
-        />
-        <source
-          v-if="reformat"
-          media="(min-width: 1408px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'webp',
-              width: 1408
-            })
-          "
-          type="image/webp"
-        />
-        <source
-          v-if="reformat"
-          media="(min-width: 1408px)"
-          :srcset="
-            optimizeSource({
-              url: imageUrl,
-              format: 'pjpg',
-              width: 1408
-            })
-          "
-          type="image/jpeg"
-        />
-        <img
-          :src="imageUrl"
-          :alt="backgroundAltTag"
-          @error="fallback"
-        />
-      </picture>
+      <nacelle-image
+        :src="imageUrl"
+        :mobileSrc="mobileSrc"
+        :alt="backgroundAltTag"
+        layout="responsive"
+        class="hero-background"
+      />
     </slot>
     <div class="hero-body">
       <div class="container">
         <div class="hero-body-inner">
           <slot
             name="body"
-            :textColor="textColor"
-            :title="title"
-            :subtitle="subtitle"
+            v-bind="{textColor, title, subtitle}"
           >
-            <h1
-              class="title"
-
-            >
+            <h1 class="title">
               {{ title }}
             </h1>
             <h3
+              :style="textColor ? `color: ${textColor}` : ''"
               class="subtitle"
-              :style="
-                textColor && textColor.length > 0 ? `color: ${textColor}` : ''
-              "
             >
               {{ subtitle }}
             </h3>
           </slot>
           <slot
             name="cta"
-            :ctaUrl="ctaUrl"
-            :ctaText="ctaText"
-            :ctaHandler="ctaHandler"
+            v-bind="{ctaUrl, ctaText, ctaHandler}"
           >
             <p v-if="ctaText.length > 0">
               <cta-button :to="ctaUrl" @clicked="ctaHandler">{{
@@ -183,13 +46,7 @@
 </template>
 
 <script>
-import CtaButton from '~/components/nacelle/CtaButton'
-import imageOptimize from '~/mixins/imageOptimize'
-
 export default {
-  components: {
-    CtaButton
-  },
   props: {
     alignment: {
       type: String,
@@ -244,14 +101,6 @@ export default {
       default: ''
     }
   },
-  data() {
-    return {
-      imageOptions: {
-        url: this.imageUrl,
-        containerRef: 'hero-img-card'
-      }
-    }
-  },
   computed: {
     bannerClasses() {
       const mobileHeightClass = this.mobileFullHeight
@@ -262,12 +111,8 @@ export default {
     },
     mobileSrc() {
       return this.mobileBackgroundImgUrl || this.imageUrl
-    },
-    fallbackImage() {
-      return this.imageUrl
     }
-  },
-  mixins: [imageOptimize]
+  }
 }
 </script>
 
@@ -295,7 +140,8 @@ h1{
   right: 0;
   bottom: 0;
   background-color: black;
-  img {
+
+  & /deep/ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
