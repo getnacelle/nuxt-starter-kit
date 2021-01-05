@@ -1,5 +1,5 @@
-async function getNacelleData({ query, variables }) {
-  const { version, spaceID, token } = variables
+async function getNacelleData({ env, query, variables }) {
+  const { version, spaceID, token } = env
   const response = await fetch(`https://hailfrequency.com/${version}/graphql`, {
     method: 'post',
     mode: 'cors',
@@ -9,7 +9,7 @@ async function getNacelleData({ query, variables }) {
       'x-nacelle-space-id': spaceID,
       'x-nacelle-space-token': token
     },
-    body: JSON.stringify({ query: query })
+    body: JSON.stringify({ query, variables })
   })
   if (!response.ok) {
     throw new Error('Network response was not ok')
@@ -18,8 +18,8 @@ async function getNacelleData({ query, variables }) {
   return data
 }
 
-const allProductsQuery = `query {
-  getProducts {
+const allProductsQuery = `query getProducts($first: Int, $after: String) {
+  getProducts(first: $first, after: $after) {
     items {
       id
       handle
@@ -78,6 +78,7 @@ const allProductsQuery = `query {
         }
       }
     }
+    nextToken
   }
 }`
 
@@ -127,13 +128,33 @@ const transformProductData = product => {
 }
 
 onmessage = async function (e) {
-  const resp = await getNacelleData({
-    variables: e.data,
-    query: allProductsQuery
-  })
+  let after = null
+  let iters = 0
+  let products = []
 
-  const transformedData = resp.data.getProducts.items
-    .map(transformProductData)
+  console.time('search data')
+  while (after !== '' && iters < 50) {
+    iters++
+    const resp = await getNacelleData({
+      env: e.data,
+      variables: {
+        after
+      },
+      query: allProductsQuery
+    })
+    const { getProducts } = resp.data
 
+    if (getProducts) {
+      products = products.concat(getProducts.items)
+      after = getProducts.nextToken
+    } else {
+      after = ''
+      throw new Error('Could not fetch product catalog')
+    }
+  }
+  console.timeLog('search data')
+
+  const transformedData = products.map(transformProductData)
+  console.timeEnd('search data')
   postMessage(transformedData)
 }

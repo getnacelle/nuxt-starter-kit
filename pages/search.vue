@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import SearchBox from '~/components/nacelle/SearchBox'
 import RefinementFilters from '~/components/nacelle/RefinementFilters'
 import RefinementResults from '~/components/nacelle/RefinementResults'
@@ -76,11 +76,11 @@ export default {
     SearchNoResults
   },
   computed: {
-    ...mapState('search', ['query', 'loadedData', 'filteredData']),
+    ...mapState('search', ['query', 'hasLoaded', 'filteredData']),
     ...mapGetters('search', ['productData'])
   },
   watch: {
-    loadedData(newVal) {
+    hasLoaded(newVal) {
       if (newVal) {
         if (this.$route.query && this.$route.query.q) {
           this.setQuery({

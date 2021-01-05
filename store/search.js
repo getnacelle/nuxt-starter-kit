@@ -4,8 +4,7 @@ export const state = () => ({
   filtersCleared: false,
   searchData: {},
   filteredData: null,
-  loadedData: false,
-  searchLoading: false,
+  hasLoaded: false,
   resultsToDisplay: 12
 })
 
@@ -69,20 +68,8 @@ export const mutations = {
     }
   },
 
-  dataHasLoaded(state) {
-    state.loadedData = true
-  },
-
-  dataNotLoaded(state) {
-    state.loadedData = false
-  },
-
-  isSearching(state) {
-    state.searchLoading = true
-  },
-
-  isNotSearching(state) {
-    state.searchLoading = false
+  setLoading(state, isLoading) {
+    state.hasLoaded = isLoading
   }
 }
 
@@ -91,21 +78,18 @@ export const actions = {
     if (getters.hasProductData) {
       return
     }
-    commit('dataNotLoaded')
-    commit('isSearching')
+    commit('setLoading', true)
 
-    const worker = new Worker('/catalogWorker.js')
+    const worker = new Worker('/searchCatalogWorker.js')
     worker.postMessage({
       spaceID: process.env.NACELLE_SPACE_ID,
       token: process.env.NACELLE_GRAPHQL_TOKEN,
       version: process.env.NACELLE_API_VERSION
     })
     worker.onmessage = (e) => {
-      console.log(e)
       const products = e.data
       commit('setSearchData', { products })
-      commit('dataHasLoaded')
-      commit('isNotSearching')
+      commit('setLoading', false)
       worker.terminate()
     }
   }
