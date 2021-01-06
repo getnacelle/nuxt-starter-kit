@@ -5,10 +5,12 @@
       class="column is-3"
       @click.native="hideCart"
     >
-      <product-image
+      <nacelle-image
         v-if="productThumbnail && productThumbnail.length > 0"
-        :source="productThumbnail"
+        :src="productThumbnail"
         :alt="item.title"
+        :width="100"
+        :height="100"
       />
     </router-link>
 
@@ -18,9 +20,9 @@
         @click.native="hideCart"
       >
         <product-title
+          :title="item.title"
           class="flyout-item-title"
           element="h4"
-          :title="item.title"
         />
       </router-link>
       <product-variant-title
@@ -38,21 +40,8 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import ProductImage from '~/components/nacelle/ProductImage'
-import ProductTitle from '~/components/nacelle/ProductTitle'
-import ProductPrice from '~/components/nacelle/ProductPrice'
-import ProductVariantTitle from '~/components/nacelle/ProductVariantTitle'
-import QuantitySelector from '~/components/nacelle/QuantitySelector'
-import CartFlyoutItemRemoveButton from '~/components/nacelle/CartFlyoutItemRemoveButton'
+
 export default {
-  components: {
-    ProductImage,
-    ProductTitle,
-    ProductPrice,
-    ProductVariantTitle,
-    QuantitySelector,
-    CartFlyoutItemRemoveButton
-  },
   props: {
     item: {
       type: Object,
@@ -65,11 +54,7 @@ export default {
   },
   computed: {
     productThumbnail() {
-      if (this.item && this.item.image && this.item.image.thumbnailSrc) {
-        return this.item.image.thumbnailSrc
-      }
-
-      return ''
+      return this.item?.image?.thumbnailSrc
     },
     variant() {
       const defaultVariant = {
