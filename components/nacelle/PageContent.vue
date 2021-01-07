@@ -1,22 +1,34 @@
 <template>
   <div class="page-content nacelle">
     <slot :page="page">
-      <div v-for="section in mappedSections" :key="section.id">
-        <slot name="section" :section="section">
+      <div
+        v-for="section in mappedSections"
+        :key="section.id"
+      >
+        <slot
+          name="section"
+          :section="section"
+        >
           <component
-            v-if="section.contentType"
             :is="section.contentType"
+            v-if="section.contentType"
             :id="section.handle"
             v-bind="section.data"
           />
         </slot>
       </div>
     </slot>
-    <slot name="body" :body="body">
+    <slot
+      name="body"
+      :body="body"
+    >
       <div class="page-content-body section">
         <div class="container">
           <div class="columns is-centered">
-            <div class="column is-8 content" v-html="body" />
+            <div
+              class="column is-8 content"
+              v-html="body"
+            />
           </div>
         </div>
       </div>
@@ -29,8 +41,6 @@ import { BLOCKS } from '@contentful/rich-text-types'
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 import HeroBanner from '~/components/nacelle/ContentHeroBanner'
 import SideBySide from '~/components/nacelle/ContentSideBySide'
-import Testimonials from '~/components/nacelle/ContentTestimonials'
-import Testimonial from '~/components/nacelle/ContentTestimonial'
 import ProductGrid from '~/components/nacelle/ContentProductGrid'
 import CollectionGrid from '~/components/nacelle/CollectionGrid'
 
@@ -38,8 +48,6 @@ export default {
   components: {
     HeroBanner,
     SideBySide,
-    Testimonials,
-    Testimonial,
     ProductGrid,
     CollectionGrid
   },
