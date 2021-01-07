@@ -28,7 +28,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['@/assets/global.scss', 'vue-glide-js/dist/vue-glide.css'],
+  css: ['@/assets/global.scss'],
 
   env: {
     nacelleSpaceID: process.env.NACELLE_SPACE_ID,
