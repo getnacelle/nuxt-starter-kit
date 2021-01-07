@@ -1,74 +1,58 @@
 <template>
   <div>
     <transition name="fade" mode="out-in">
-      <div
-        v-if="searchResults && searchResults.length == 0"
-        key="no-results"
-        class="no-results"
-      >
-        <slot name="no-results"></slot>
+      <div v-if="isLoading" key="loading">
+        <slot name="loading" />
       </div>
-      <div key="results" class="search-results" v-else>
-        <slot name="result" :result="searchResults"></slot>
+      <div v-else-if="results.length" key="results" class="search-results">
+        <slot name="result" :result="results"/>
+      </div>
+      <div v-else key="no-results" class="no-results">
+        <slot name="no-results"/>
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import Fuse from 'fuse.js/dist/fuse.basic.common'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   props: {
-    searchKeys: {
-      type: Array,
-      default: () => {
-        return ['title']
-      }
-    },
     searchData: {
       type: Array
     },
     searchQuery: {
       type: Object
-    },
-    relevanceThreshold: {
-      type: Number,
-      default: 0.5
-    }
-  },
-  data() {
-    return {
-      searchRes: null
     }
   },
   computed: {
+    ...mapState('search', ['isLoading', 'results']),
     searchResults() {
       if (
-        this.searchData &&
-        this.searchQuery &&
-        this.searchQuery.value &&
+        this.searchQuery?.value &&
         String(this.searchQuery.value) !== ''
       ) {
-        const options = {
-          keys: this.searchKeys,
-          threshold: this.relevanceThreshold
-        }
-        const results = new Fuse(this.searchData, options).search(
-          String(this.searchQuery.value)
-        )
-
-        this.$emit('results')
-
-        return results
-          .filter(result => typeof result.item !== 'undefined')
-          .map(result => result.item)
+        this.searchCatalog(this.searchQuery.value)
       }
-
-      this.$emit('no-query')
 
       return this.searchData
     }
+  },
+  watch: {
+    searchQuery(newVal) {
+      if (newVal?.value && String(newVal.value) !== '') {
+        this.searchCatalog(this.searchQuery.value)
+      }
+    },
+    results(newVal) {
+      newVal?.length
+        ? this.$emit('results')
+        : this.$emit('no-query')
+    }
+  },
+  methods: {
+    ...mapActions('search', ['searchCatalog'])
   }
 }
 </script>

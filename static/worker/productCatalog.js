@@ -5,6 +5,7 @@ async function getNacelleData({ env, query, variables }) {
     mode: 'cors',
     headers: {
       accept: 'application/json, text/plain, */*',
+      'accept-encoding': 'gzip, deflate, br',
       'content-type': 'application/json',
       'x-nacelle-space-id': spaceID,
       'x-nacelle-space-token': token

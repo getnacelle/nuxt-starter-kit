@@ -3,9 +3,15 @@ export const state = () => ({
   autocompleteVisible: false,
   filtersCleared: false,
   searchData: {},
+  results: [],
+  searchOptions: {
+    relevanceThreshold: 0.5,
+    keys: ['title']
+  },
   filteredData: null,
-  hasLoaded: false,
-  resultsToDisplay: 12
+  isLoading: false,
+  resultsToDisplay: 12,
+  searchWorker: null
 })
 
 export const getters = {
@@ -45,12 +51,8 @@ export const mutations = {
     state.resultsToDisplay = 12
   },
 
-  setAutocompleteVisible(state) {
-    state.autocompleteVisible = true
-  },
-
-  setAutocompleteNotVisible(state) {
-    state.autocompleteVisible = false
+  setAutocompleteVisible(state, isVisible) {
+    state.autocompleteVisible = isVisible
   },
 
   setFiltersCleared(state) {
@@ -69,7 +71,13 @@ export const mutations = {
   },
 
   setLoading(state, isLoading) {
-    state.hasLoaded = isLoading
+    state.isLoading = isLoading
+  },
+  setResults(state, results) {
+    state.results = results
+  },
+  startSearchWorker(state) {
+    state.searchWorker = state.searchWorker || new Worker('/worker/search.js')
   }
 }
 
@@ -80,7 +88,7 @@ export const actions = {
     }
     commit('setLoading', true)
 
-    const worker = new Worker('/searchCatalogWorker.js')
+    const worker = new Worker('/worker/productCatalog.js')
     worker.postMessage({
       spaceID: process.env.NACELLE_SPACE_ID,
       token: process.env.NACELLE_GRAPHQL_TOKEN,
@@ -91,6 +99,18 @@ export const actions = {
       commit('setSearchData', { products })
       commit('setLoading', false)
       worker.terminate()
+    }
+  },
+  searchCatalog({ state, getters, commit }, value) {
+    commit('startSearchWorker')
+
+    state.searchWorker.postMessage({
+      searchData: getters.productData,
+      options: state.searchOptions,
+      value
+    })
+    state.searchWorker.onmessage = (e) => {
+      commit('setResults', e.data)
     }
   }
 }

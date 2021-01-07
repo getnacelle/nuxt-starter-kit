@@ -76,18 +76,16 @@ export default {
     SearchNoResults
   },
   computed: {
-    ...mapState('search', ['query', 'hasLoaded', 'filteredData']),
+    ...mapState('search', ['query', 'isLoading', 'filteredData']),
     ...mapGetters('search', ['productData'])
   },
   watch: {
-    hasLoaded(newVal) {
-      if (newVal) {
-        if (this.$route.query && this.$route.query.q) {
-          this.setQuery({
-            origin: 'in-page',
-            value: this.$route.query.q
-          })
-        }
+    isLoading(newVal) {
+      if (!newVal && this.$route.query?.q) {
+        this.setQuery({
+          origin: 'in-page',
+          value: this.$route.query.q
+        })
       }
     }
   },

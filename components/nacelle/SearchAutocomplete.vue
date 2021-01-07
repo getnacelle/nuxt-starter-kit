@@ -10,10 +10,8 @@
       <search-results
         :searchData="productData"
         :searchQuery="query"
-        slotMode="multiple"
-        v-if="productData"
-        v-on:results="setAutocompleteVisible"
-        v-on:no-query="setAutocompleteNotVisible"
+        @results="setAutocompleteVisible(true)"
+        @no-query="setAutocompleteVisible(false)"
       >
         <template v-slot:result="{ result }">
           <search-autocomplete-item
@@ -21,6 +19,9 @@
             :item="item"
             :key="item.id"
           />
+        </template>
+        <template v-slot:loading>
+          <span>Loading product catalog...</span>
         </template>
         <template v-slot:no-results>
           <search-no-results />
@@ -49,25 +50,18 @@ export default {
   },
   watch: {
     $route() {
-      this.setAutocompleteNotVisible()
+      this.setAutocompleteVisible(false)
     }
   },
   computed: {
     ...mapState('search', ['query', 'autocompleteVisible']),
     ...mapGetters('search', ['queryOrigin', 'productData']),
     shouldShowAutocomplete() {
-      if (
-        this.autocompleteVisible &&
-        this.queryOrigin &&
-        this.queryOrigin == 'global'
-      ) {
-        return true
-      }
+      return (this.autocompleteVisible && this.queryOrigin === 'global')
     }
   },
   methods: {
     ...mapMutations('search', ['setAutocompleteVisible']),
-    ...mapMutations('search', ['setAutocompleteNotVisible']),
     ...mapMutations('search', ['setQuery']),
     setNotVisibleAndClearQuery() {
       const vm = this
@@ -75,7 +69,7 @@ export default {
 
       setTimeout(() => {
         if (!vm.cursorInside) {
-          this.setAutocompleteNotVisible()
+          this.setAutocompleteVisible(false)
         }
       }, 600)
 

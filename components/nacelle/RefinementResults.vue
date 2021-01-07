@@ -21,25 +21,14 @@
 </template>
 
 <script>
-import Fuse from 'fuse.js/dist/fuse.basic.common'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
   props: {
-    searchKeys: {
-      type: Array,
-      default: () => {
-        return ['title']
-      }
-    },
     searchData: {
       type: Array
     },
     searchQuery: {
       type: Object
-    },
-    relevanceThreshold: {
-      type: Number,
-      default: 0.5
     }
   },
   watch: {
@@ -66,35 +55,24 @@ export default {
         return 'items'
       }
     },
-    searchResults() {
-      if (
-        this.searchData &&
-        this.searchQuery &&
-        this.searchQuery.value &&
-        String(this.searchQuery.value) !== ''
-      ) {
-        const options = {
-          keys: this.searchKeys,
-          threshold: this.relevanceThreshold
-        }
-        const results = new Fuse(this.searchData, options)
-          .search(String(this.searchQuery.value))
-          .map(result => result.item)
-
-        this.$emit('results')
-
-        return results
-      }
-
-      this.$emit('no-query')
-
-      return this.searchData
-    },
     searchResultsSlice() {
       return this.searchResults.slice(0, this.resultsToDisplay)
     }
   },
+  watch: {
+    searchQuery(newVal) {
+      if (newVal.value && String(newVal.value) !== '') {
+        this.searchCatalog(this.searchQuery.value)
+      }
+    },
+    results(newVal) {
+      newVal.length
+        ? this.$emit('results')
+        : this.$emit('no-query')
+    }
+  },
   methods: {
+    ...mapActions('search', ['searchCatalog']),
     ...mapMutations('search', ['showMoreResults', 'resetResults'])
   },
   mounted() {
