@@ -1,9 +1,12 @@
 <template>
   <div class="app nacelle">
     <global-header ref="header" />
-    <nuxt :style="{ 'margin-top': `${headerHeight}px` }" keep-alive :keep-alive-props="{max:2}"/>
+    <nuxt
+      :style="{ 'margin-top': `${headerHeight}px` }"
+      keep-alive
+      :keep-alive-props="{ max: 2 }"
+    />
     <site-footer />
-    <cookie-banner />
     <event-dispatcher />
     <error-modal />
     <cart-watch />
@@ -11,36 +14,22 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { clear } from 'idb-keyval'
-import GlobalHeader from '~/components/nacelle/GlobalHeader'
-import SiteFooter from '~/components/nacelle/SiteFooter'
-import EventDispatcher from '~/components/nacelle/EventDispatcher'
-import CookieBanner from '~/components/nacelle/CookieBanner'
-import ErrorModal from '~/components/nacelle/ErrorModal'
-import CartWatch from '~/components/nacelle/CartWatch'
 
 export default {
-  components: {
-    GlobalHeader,
-    SiteFooter,
-    EventDispatcher,
-    CookieBanner,
-    ErrorModal,
-    CartWatch
-  },
   methods: {
     ...mapActions('cart', ['initializeCart']),
     ...mapActions('checkout', ['initializeCheckout']),
-    ...mapActions('user', ['readSession'])
+    ...mapActions('user', ['readSession']),
   },
   data() {
     return {
-      headerHeight: null
+      headerHeight: null,
     }
   },
   computed: {
-    ...mapGetters('space', ['getMetatag'])
+    ...mapGetters('space', ['getMetatag']),
   },
   async mounted() {
     if (this.$refs.header) {
@@ -68,12 +57,12 @@ export default {
       meta.push({
         hid: 'og:title',
         property: 'og:title',
-        content: title.value
+        content: title.value,
       })
       meta.push({
         hid: 'og:site_name',
         property: 'og:site_name',
-        content: title.value
+        content: title.value,
       })
     }
 
@@ -81,12 +70,12 @@ export default {
       meta.push({
         hid: 'description',
         name: 'description',
-        content: description.value
+        content: description.value,
       })
       meta.push({
         hid: 'og:description',
         property: 'og:description',
-        content: description.value
+        content: description.value,
       })
     }
 
@@ -94,21 +83,21 @@ export default {
       meta.push({
         hid: 'og:image',
         property: 'og:image',
-        content: image.value
+        content: image.value,
       })
     }
 
     meta.push({
       hid: 'og:type',
       property: 'og:type',
-      content: 'website'
+      content: 'website',
     })
 
     return {
       ...properties,
-      meta
+      meta,
     }
-  }
+  },
 }
 </script>
 
