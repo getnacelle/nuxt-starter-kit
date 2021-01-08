@@ -6,11 +6,14 @@
 /****
 -->
 <template>
-  <div class="page page-collection" v-if="collection">
+  <div
+    v-if="collection"
+    class="page page-collection"
+  >
     <content-hero-banner
       v-if="collection && collection.title && collection.featuredImage"
       :title="collection.title"
-      :imageUrl="collection.featuredImage"
+      :image-url="collection.featuredImage"
     />
     <section class="section">
       <div class="container">
@@ -18,13 +21,16 @@
           <product-grid
             v-if="collection.products && collection.products.length > 0"
             :products="visibleProducts"
-            :showAddToCart="true"
-            :showQuantityUpdate="true"
+            :show-add-to-cart="true"
+            :show-quantity-update="true"
           />
         </div>
       </div>
-      <observe-emitter v-on:observe="showMore" />
-      <div v-if="isFetching" style="text-align: center">
+      <observe-emitter @observe="showMore" />
+      <div
+        v-if="isFetching"
+        style="text-align: center"
+      >
         Loading products...
       </div>
     </section>
@@ -47,6 +53,13 @@ export default {
       isFetching: false
     }
   },
+  async fetch() {
+    const collectionData = await this.$nacelle.data.collection({
+      handle: this.$route.params.collectionHandle
+    })
+    this.collection = { products: [], ...collectionData }
+    this.collection.products = await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
+  },
   computed: {
     visibleProducts() {
       if (this.collection.products) {
@@ -55,15 +68,8 @@ export default {
       return null
     }
   },
-  async fetch() {
-    const collectionData = await this.$nacelle.data.collection({
-      handle: this.$route.params.collectionHandle
-    })
-    this.collection = { products: [], ...collectionData }
-    this.collection.products = await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
-  },
   mounted() {
-    // products loaded during SSR fetch need to be stored in localforage (indexedDB)
+    // products loaded during SSR fetch need to be stored in indexedDB
     if (this.collection?.products) {
       this.collection.products.map((product) => {
         const namespace = `product/${product.handle}`

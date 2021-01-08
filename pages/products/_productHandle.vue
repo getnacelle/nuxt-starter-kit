@@ -16,11 +16,16 @@
         />
       </div>
     </section>
-    <section class="section product-meta" v-if="product">
+    <section
+      v-if="product"
+      class="section product-meta"
+    >
       <div class="container">
         <div class="columns">
           <div class="column is-7">
-            <h4 class="title is-4">What You're Getting</h4>
+            <h4 class="title is-4">
+              What You're Getting
+            </h4>
             <div class="content">
               <p>
                 Run a manual sweep of anomalous airborne or electromagnetic
@@ -34,7 +39,9 @@
             </div>
           </div>
           <div class="column is-4 is-offset-1 highlight">
-            <h4 class="title is-4">Our Products</h4>
+            <h4 class="title is-4">
+              Our Products
+            </h4>
             <div class="content">
               <p>
                 It indicates a synchronic distortion in the areas emanating
@@ -45,7 +52,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </section>
   </div>
@@ -59,6 +65,11 @@ import viewEvent from '~/mixins/viewEvent'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
+  mixins: [
+    productMetafields,
+    viewEvent('product')
+    // jsonld('product')
+  ],
   data() {
     return {
       product: null
@@ -73,29 +84,6 @@ export default {
     const product = await this.$store.dispatch(`${namespace}/fetchProduct`, handle)
     this.product = product
   },
-  mounted() {
-    // product loaded during SSR fetch needs to be stored in localforage (indexedDB)
-    const handle = this.$route.params.productHandle
-    const namespace = `product/${handle}`
-    if (!this.$store.hasModule(namespace)) {
-      this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
-    }
-    if (this.product) {
-      this.$store.dispatch(`${namespace}/storeProduct`, this.product)
-    }
-  },
-  mixins: [
-    productMetafields,
-    viewEvent('product')
-    // jsonld('product')
-  ],
-  computed: {
-    ...mapGetters('space', ['getMetatag'])
-  },
-  methods: {
-    ...mapMutations('cart', ['showCart'])
-  },
-
   head() {
     if (this.product) {
       const properties = {}
@@ -143,6 +131,25 @@ export default {
         meta
       }
     }
+  },
+  computed: {
+    ...mapGetters('space', ['getMetatag'])
+  },
+
+  mounted() {
+    // product loaded during SSR fetch needs to be stored in indexedDB
+    const handle = this.$route.params.productHandle
+    const namespace = `product/${handle}`
+    if (!this.$store.hasModule(namespace)) {
+      this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+    }
+    if (this.product) {
+      this.$store.dispatch(`${namespace}/storeProduct`, this.product)
+    }
+  },
+
+  methods: {
+    ...mapMutations('cart', ['showCart'])
   }
 }
 </script>

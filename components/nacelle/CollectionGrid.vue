@@ -1,5 +1,5 @@
 <template>
-  <product-grid :products="products"/>
+  <product-grid :products="products" />
 </template>
 
 <script>
@@ -30,7 +30,7 @@ export default {
     this.products = await Promise.all(products)
   },
   mounted() {
-    // store products loaded during SSR fetch into localforage (indexedDB)
+    // store products loaded during SSR fetch into indexedDB
     if (this.products) {
       this.products.forEach((product) => {
         const namespace = `product/${product.handle}`

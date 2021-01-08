@@ -1,4 +1,4 @@
-import localforage from 'localforage'
+import { get, set } from 'idb-keyval'
 import flattenDeep from 'lodash/flattenDeep'
 // import uniq from 'lodash/uniq'
 import uniqWith from 'lodash/uniqWith'
@@ -34,10 +34,10 @@ export default () => {
         let product
 
         if (process.client) {
-          product = await localforage.getItem(namespace)
+          product = await get(namespace)
           if (!product) {
             product = await this.$nacelle.data.product({ handle })
-            localforage.setItem(namespace, product)
+            set(namespace, product)
           }
         } else {
           product = await this.$nacelle.data.product({ handle })
@@ -52,11 +52,11 @@ export default () => {
       },
       async storeProduct({ state }, product, doOverwrite = true) {
         const namespace = `product/${product.handle}`
-        const storedProduct = await localforage.getItem(namespace)
+        const storedProduct = await get(namespace)
 
         // TODO: time limit to force overwrite?
         if (!storedProduct || doOverwrite) {
-          localforage.setItem(namespace, product)
+          set(namespace, product)
         }
       },
       setSelected({ state, commit }, selectedOption) {
