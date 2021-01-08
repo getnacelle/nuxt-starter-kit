@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 
 const spaceID = process.env.NACELLE_SPACE_ID
 const token = process.env.NACELLE_GRAPHQL_TOKEN
-const version = process.env.NACELLE_API_VERSION
+const version = process.env.NACELLE_API_VERSION || 'v2'
 
 dotenv.config()
 

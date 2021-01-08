@@ -4,7 +4,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export default {
-  mode: process.env.BUILD_MODE,
   target: 'static',
   components: true,
   head: {
@@ -28,7 +27,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['@/assets/global.scss', 'vue-glide-js/dist/vue-glide.css'],
+  css: ['@/assets/global.scss'],
 
   env: {
     nacelleSpaceID: process.env.NACELLE_SPACE_ID,

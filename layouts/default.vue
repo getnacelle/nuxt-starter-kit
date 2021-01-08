@@ -1,7 +1,11 @@
 <template>
   <div class="app nacelle">
     <global-header ref="header" />
-    <nuxt :style="{ 'margin-top': `${headerHeight}px` }" keep-alive :keep-alive-props="{max:2}"/>
+    <nuxt
+      :style="{ 'margin-top': `${headerHeight}px` }"
+      keep-alive
+      :keep-alive-props="{max:2}"
+    />
     <site-footer />
     <cookie-banner />
     <event-dispatcher />
@@ -12,40 +16,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import localforage from 'localforage'
+import { clear } from 'idb-keyval'
 
 export default {
   data() {
     return {
       headerHeight: null
     }
-  },
-  computed: {
-    ...mapGetters('space', ['getMetatag'])
-  },
-  async mounted() {
-    if (this.$refs.header) {
-      this.headerHeight = this.$refs.header.$el.clientHeight
-    }
-
-    await this.initializeCheckout()
-    await this.initializeCart()
-
-    if (process.env.DEV_MODE === 'true') {
-      console.log('dev mode active!')
-      // localforage.clear()
-    }
-
-    if (process.client) {
-      this.getProductData()
-    }
-    this.readSession()
-  },
-  methods: {
-    ...mapActions('cart', ['initializeCart']),
-    ...mapActions('checkout', ['initializeCheckout']),
-    ...mapActions('user', ['readSession']),
-    ...mapActions('search', ['getProductData'])
   },
   head() {
     const properties = {}
@@ -99,6 +76,33 @@ export default {
       ...properties,
       meta
     }
+  },
+  computed: {
+    ...mapGetters('space', ['getMetatag'])
+  },
+  async mounted() {
+    if (this.$refs.header) {
+      this.headerHeight = this.$refs.header.$el.clientHeight
+    }
+
+    await this.initializeCheckout()
+    await this.initializeCart()
+
+    if (process.env.DEV_MODE === 'true') {
+      console.log('dev mode active!')
+      clear()
+    }
+
+    if (process.client) {
+      this.getProductData()
+    }
+    this.readSession()
+  },
+  methods: {
+    ...mapActions('cart', ['initializeCart']),
+    ...mapActions('checkout', ['initializeCheckout']),
+    ...mapActions('user', ['readSession']),
+    ...mapActions('search', ['getProductData'])
   }
 }
 </script>

@@ -1,5 +1,8 @@
-import { flattenDeep, uniqWith, isEqual } from 'lodash'
 import localforage from 'localforage'
+import flattenDeep from 'lodash/flattenDeep'
+// import uniq from 'lodash/uniq'
+import uniqWith from 'lodash/uniqWith'
+import isEqual from 'lodash/isEqual'
 
 const findSelectedVariant = (state, options) => {
   options = options || state.selectedOptions

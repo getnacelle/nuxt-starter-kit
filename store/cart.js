@@ -1,4 +1,4 @@
-import localforage from 'localforage'
+import { get, set, del } from 'idb-keyval'
 import { v4 as uuid } from 'uuid'
 
 export const state = () => ({
@@ -170,16 +170,16 @@ export const actions = {
   },
 
   async saveLineItems({ state }) {
-    localforage.setItem('line-items', state.lineItems)
+    set('line-items', state.lineItems)
   },
 
   async resetLineItems({ commit }) {
-    await localforage.removeItem('line-items')
+    await del('line-items')
     commit('setLineItems', [])
   },
 
   async initializeCart({ commit }) {
-    const lineItems = await localforage.getItem('line-items')
+    const lineItems = await get('line-items')
     commit('setLineItems', lineItems || [])
     commit('setFreeShippingThreshold', 100)
     commit('hideCart')
