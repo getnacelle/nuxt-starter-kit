@@ -1,14 +1,31 @@
 <template>
   <div>
-    <transition name="fade" mode="out-in">
-      <div v-if="isLoading" key="loading">
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <div
+        v-if="isLoading"
+        key="loading"
+      >
         <slot name="loading" />
       </div>
-      <div v-else-if="results.length" key="results" class="search-results">
-        <slot name="result" :result="results"/>
+      <div
+        v-else-if="results.length"
+        key="results"
+        class="search-results"
+      >
+        <slot
+          name="result"
+          :result="results"
+        />
       </div>
-      <div v-else key="no-results" class="no-results">
-        <slot name="no-results"/>
+      <div
+        v-else
+        key="no-results"
+        class="no-results"
+      >
+        <slot name="no-results" />
       </div>
     </transition>
   </div>
@@ -27,22 +44,12 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['isLoading', 'results']),
-    searchResults() {
-      if (
-        this.searchQuery?.value &&
-        String(this.searchQuery.value) !== ''
-      ) {
-        this.searchCatalog(this.searchQuery.value)
-      }
-
-      return this.searchData
-    }
+    ...mapState('search', ['isLoading', 'results'])
   },
   watch: {
     searchQuery(newVal) {
       if (newVal?.value && String(newVal.value) !== '') {
-        this.searchCatalog(this.searchQuery.value)
+        this.searchCatalog(newVal.value)
       }
     },
     results(newVal) {

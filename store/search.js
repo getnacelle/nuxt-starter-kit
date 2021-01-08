@@ -1,8 +1,13 @@
+// import oboe from 'oboe'
+// import { set } from 'idb-keyval'
+
 export const state = () => ({
   query: null,
   autocompleteVisible: false,
   filtersCleared: false,
-  searchData: {},
+  searchData: {
+    products: []
+  },
   results: [],
   searchOptions: {
     relevanceThreshold: 0.5,
@@ -24,7 +29,7 @@ export const getters = {
   },
 
   hasProductData(state) {
-    return state.searchData?.products?.length > 0
+    return state.searchData.products.length > 0
   },
 
   productData(state, getters) {
@@ -68,7 +73,11 @@ export const mutations = {
       ...state.searchData,
       ...data
     }
+    console.log(state.searchData)
   },
+  // setSearchProduct(state, product) {
+  //   state.searchData.products.push(product)
+  // },
 
   setLoading(state, isLoading) {
     state.isLoading = isLoading
@@ -82,25 +91,64 @@ export const mutations = {
 }
 
 export const actions = {
-  getProductData({ commit, getters }) {
-    if (getters.hasProductData) {
+  // getProductData_HF({ commit, getters }) {
+  //   if (getters.hasProductData) {
+  //     return
+  //   }
+  //   commit('setLoading', true)
+
+  //   const worker = new Worker('/worker/productCatalog.js')
+  //   worker.postMessage({
+  //     spaceID: process.env.NACELLE_SPACE_ID,
+  //     token: process.env.NACELLE_GRAPHQL_TOKEN,
+  //     version: process.env.NACELLE_API_VERSION
+  //   })
+  //   worker.onmessage = (e) => {
+  //     const products = e.data
+  //     commit('setSearchData', { products })
+  //     commit('setLoading', false)
+  //     worker.terminate()
+  //   }
+  // },
+  async getProductData({commit, getters, state}) {
+    if (getters.hasProductData && !state.isLoading) {
       return
     }
+    console.time('timing')
     commit('setLoading', true)
 
+    // oboe('/data/search.json')
+    //   .node('product.*', product => {
+    //     // commit('setSearchProduct', product)
+    //     // console.log( 'Go get some', product.handle)
+    //   })
+    //   // TODO: handle all searchDataTypes
+    //   .done(items => {
+    //     commit('setSearchData', { products: items.product })
+    //     commit('setLoading', false)
+    //     // console.log('loaded', items.product.length, 'products')
+    //     console.timeEnd('timing')
+    //   })
+
+    // fetch('/data/search.json')
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     console.log(data)
+    //     commit('setSearchData', { products: data.product })
+    //     commit('setLoading', false)
+    //     console.timeEnd('timing')
+    //   })
+
     const worker = new Worker('/worker/productCatalog.js')
-    worker.postMessage({
-      spaceID: process.env.NACELLE_SPACE_ID,
-      token: process.env.NACELLE_GRAPHQL_TOKEN,
-      version: process.env.NACELLE_API_VERSION
-    })
+    worker.postMessage(null)
     worker.onmessage = (e) => {
-      const products = e.data
+      const products = e.data.product
       commit('setSearchData', { products })
       commit('setLoading', false)
       worker.terminate()
     }
   },
+
   searchCatalog({ state, getters, commit }, value) {
     commit('startSearchWorker')
 

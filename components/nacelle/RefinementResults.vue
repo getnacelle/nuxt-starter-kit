@@ -1,20 +1,30 @@
 <template>
   <div>
-    <transition name="fade" mode="out-in">
+    <transition
+      name="fade"
+      mode="out-in"
+    >
       <div
-        v-if="searchResults && searchResults.length == 0"
+        v-if="results && results.length"
         key="no-results"
         class="no-results"
       >
-        <slot name="no-results"></slot>
+        <slot name="no-results" />
       </div>
-      <div key="results" class="search-results" v-else>
+      <div
+        v-else
+        key="results"
+        class="search-results"
+      >
         <h2>
-          Showing {{ searchResults.length }} {{ itemSinglularPlural }} based on
+          Showing {{ results.length }} {{ itemSinglularPlural }} based on
           selected filters
         </h2>
-        <slot name="result" :result="searchResultsSlice"></slot>
-        <div ref="load-more"></div>
+        <slot
+          name="result"
+          :result="searchResultsSlice"
+        />
+        <div ref="load-more" />
       </div>
     </transition>
   </div>
@@ -31,38 +41,28 @@ export default {
       type: Object
     }
   },
-  watch: {
-    filteredData(newData, oldData) {
-      if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
-        this.resetResults()
-      }
-    }
-  },
-  data() {
-    return {
-      searchRes: null,
-      pageHeight: null
-    }
-  },
   computed: {
-    ...mapState('search', ['resultsToDisplay', 'filteredData']),
+    ...mapState('search', ['results', 'resultsToDisplay', 'filteredData']),
     itemSinglularPlural() {
-      if (this.searchResults && this.searchResults.length === 1) {
+      if (this.results && this.results.length === 1) {
         return 'item'
-      } else if (this.searchResults && this.searchResults.length > 1) {
-        return 'items'
       } else {
         return 'items'
       }
     },
     searchResultsSlice() {
-      return this.searchResults.slice(0, this.resultsToDisplay)
+      return this.results.slice(0, this.resultsToDisplay)
     }
   },
   watch: {
+    filteredData(newData, oldData) {
+      if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+        this.resetResults()
+      }
+    },
     searchQuery(newVal) {
-      if (newVal.value && String(newVal.value) !== '') {
-        this.searchCatalog(this.searchQuery.value)
+      if (newVal?.value && String(newVal.value) !== '') {
+        this.searchCatalog(newVal.value)
       }
     },
     results(newVal) {
@@ -71,10 +71,7 @@ export default {
         : this.$emit('no-query')
     }
   },
-  methods: {
-    ...mapActions('search', ['searchCatalog']),
-    ...mapMutations('search', ['showMoreResults', 'resetResults'])
-  },
+
   mounted() {
     setTimeout(() => {
       if (this.$refs['load-more']) {
@@ -90,6 +87,10 @@ export default {
         this.isObserverInitialized = true
       }
     }, 5000)
+  },
+  methods: {
+    ...mapActions('search', ['searchCatalog']),
+    ...mapMutations('search', ['showMoreResults', 'resetResults'])
   }
 }
 </script>

@@ -1,4 +1,6 @@
-self.importScripts('fuse.min.js')
+// https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js
+// https://cdn.jsdelivr.net/npm/idb-keyval
+self.importScripts('https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js')
 
 onmessage = function receiver(e) {
   const {searchData, options, value} = e.data
