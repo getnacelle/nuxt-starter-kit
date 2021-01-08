@@ -3,18 +3,18 @@ module.exports = {
     browser: true,
     es6: true,
     node: true,
-    'jest/globals': true
+    jest: true
   },
-  extends: ['plugin:vue/essential', 'standard'],
+  extends: ['eslint:recommended', 'plugin:vue/recommended'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
   },
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: 'module'
   },
-  plugins: ['vue', 'jest'],
+  plugins: ['vue'],
   rules: {
     'space-before-function-paren': [
       'error',

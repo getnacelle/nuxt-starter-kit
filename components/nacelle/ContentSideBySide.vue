@@ -1,28 +1,13 @@
 <template>
   <section class="sbs nacelle">
     <div class="columns" :class="columnClasses">
-      <div
+      <nacelle-image
+        :src="imageUrl"
+        :alt="alt"
+        :width="800"
+        :height="800"
         class="column is-half sbs-image"
-        ref="img-card"
-        v-observe-visibility="{
-          callback: visibilityChanged,
-          once: true
-        }"
-      >
-        <picture>
-          <source
-            v-if="visibility && reformat"
-            :srcset="optimizeSource({ url: imageUrl, format: 'webp' })"
-            type="image/webp"
-          />
-          <source
-            v-if="visibility && reformat"
-            :srcset="optimizeSource({ url: imageUrl, format: 'jpg' })"
-            type="image/jpeg"
-          />
-          <img v-if="visibility" :src="imageUrl" :alt="alt" @error="fallback" />
-        </picture>
-      </div>
+      />
       <div
         class="column is-half sbs-copy"
         :style="backgroundColor ? `background-color: ${backgroundColor}` : null"
@@ -36,9 +21,7 @@
         <slot name="cta" :ctaUrl="ctaUrl" :ctaText="ctaText" :ctaHandler="ctaHandler">
           <p v-if="ctaText.length > 0" class="has-text-centered">
             <cta-button :to="ctaUrl" @clicked="ctaHandler">
-              {{
-              ctaText
-              }}
+              {{ ctaText }}
             </cta-button>
           </p>
         </slot>
@@ -48,14 +31,8 @@
 </template>
 
 <script>
-import CtaButton from '~/components/nacelle/CtaButton'
-import imageOptimize from '~/mixins/imageOptimize'
-import imageVisibility from '~/mixins/imageVisibility'
 
 export default {
-  components: {
-    CtaButton
-  },
   props: {
     backgroundColor: {
       type: String,
@@ -75,10 +52,6 @@ export default {
     contentHtml: {
       type: String,
       default: ''
-    },
-    containerRef: {
-      type: String,
-      default: 'img-card'
     },
     ctaText: {
       type: String,
@@ -111,12 +84,8 @@ export default {
       const mobileReverse = this.reverseMobile ? 'is-mobile-column-reverse' : ''
 
       return `${desktopReverse} ${mobileReverse}`
-    },
-    fallbackImage() {
-      return this.imageUrl
     }
-  },
-  mixins: [imageOptimize, imageVisibility]
+  }
 }
 </script>
 
@@ -155,7 +124,7 @@ export default {
   position: relative;
   padding: 0;
 
-  img {
+  & /deep/ img {
     display: block;
     width: 100%;
 
