@@ -36,6 +36,9 @@ export default {
     contentAssetStorage: process.env.CONTENT_ASSET_STORAGE || '',
     API_PORT: process.env.API_PORT
   },
+  buildModules: [
+    'nuxt-purgecss',
+  ],
 
   plugins: [
     { src: '~/plugins/nuxt-client-init.js', ssr: false },
