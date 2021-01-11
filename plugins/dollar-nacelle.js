@@ -78,6 +78,7 @@ This will be handled automatically during the build process.`
     setSpace()
   }
 
+
   const plugin = {
     ...settings,
     defaultLocale: defaultLocale,

@@ -1,7 +1,8 @@
 <template>
-  <div class="page">
-    <page-content :page="page" />
-  </div>
+  <page-content
+    class="page"
+    :page="page"
+  />
 </template>
 
 <script>
@@ -12,9 +13,9 @@ export default {
     }
   },
   async fetch() {
-    this.page = await this.$nacelle.data.page({
-      handle: 'homepage'
-    })
+    // this.page = await this.$nacelle.data.page({
+    //   handle: 'homepage'
+    // })
   }
 }
 </script>

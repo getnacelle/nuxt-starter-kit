@@ -1,38 +1,17 @@
 <template>
   <div class="page-content nacelle">
-    <slot :page="page">
-      <div
-        v-for="section in mappedSections"
-        :key="section.id"
-      >
-        <slot
-          name="section"
-          :section="section"
-        >
-          <component
-            :is="section.contentType"
-            v-if="section.contentType"
-            :id="section.handle"
-            v-bind="section.data"
-          />
-        </slot>
-      </div>
-    </slot>
-    <slot
-      name="body"
-      :body="body"
+    <nacelle-page-placeholder v-if="!page" />
+    <div
+      v-for="section in mappedSections"
+      :key="section.id"
     >
-      <div class="page-content-body section">
-        <div class="container">
-          <div class="columns is-centered">
-            <div
-              class="column is-8 content"
-              v-html="body"
-            />
-          </div>
-        </div>
-      </div>
-    </slot>
+      <component
+        :is="section.contentType"
+        v-if="section.contentType"
+        :id="section.handle"
+        v-bind="section.data"
+      />
+    </div>
   </div>
 </template>
 
