@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
 h1{
     font-size: 48pt;
     font-weight: bold;
