@@ -1,7 +1,8 @@
 <template>
-  <div class="page">
-    <page-content :page="page" />
-  </div>
+  <page-content
+    class="page"
+    :page="page"
+  />
 </template>
 
 <script>

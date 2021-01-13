@@ -4,10 +4,9 @@
     <nuxt
       :style="{ 'margin-top': `${headerHeight}px` }"
       keep-alive
-      :keep-alive-props="{max:2}"
+      :keep-alive-props="{ max: 2 }"
     />
     <site-footer />
-    <cookie-banner />
     <event-dispatcher />
     <error-modal />
     <cart-watch />
@@ -19,66 +18,18 @@ import { mapGetters, mapActions } from 'vuex'
 import { clear } from 'idb-keyval'
 
 export default {
+  methods: {
+    ...mapActions('cart', ['initializeCart']),
+    ...mapActions('checkout', ['initializeCheckout']),
+    ...mapActions('user', ['readSession']),
+  },
   data() {
     return {
-      headerHeight: null
-    }
-  },
-  head() {
-    const properties = {}
-    const meta = []
-    const title = this.getMetatag('title')
-    const description = this.getMetatag('description')
-    const image = this.getMetatag('og:image')
-
-    if (title) {
-      properties.title = title.value
-      meta.push({
-        hid: 'og:title',
-        property: 'og:title',
-        content: title.value
-      })
-      meta.push({
-        hid: 'og:site_name',
-        property: 'og:site_name',
-        content: title.value
-      })
-    }
-
-    if (description) {
-      meta.push({
-        hid: 'description',
-        name: 'description',
-        content: description.value
-      })
-      meta.push({
-        hid: 'og:description',
-        property: 'og:description',
-        content: description.value
-      })
-    }
-
-    if (image) {
-      meta.push({
-        hid: 'og:image',
-        property: 'og:image',
-        content: image.value
-      })
-    }
-
-    meta.push({
-      hid: 'og:type',
-      property: 'og:type',
-      content: 'website'
-    })
-
-    return {
-      ...properties,
-      meta
+      headerHeight: null,
     }
   },
   computed: {
-    ...mapGetters('space', ['getMetatag'])
+    ...mapGetters('space', ['getMetatag']),
   },
   async mounted() {
     if (this.$refs.header) {
@@ -92,18 +43,61 @@ export default {
       console.log('dev mode active!')
       clear()
     }
-
-    if (process.client) {
-      this.getProductData()
-    }
     this.readSession()
   },
-  methods: {
-    ...mapActions('cart', ['initializeCart']),
-    ...mapActions('checkout', ['initializeCheckout']),
-    ...mapActions('user', ['readSession']),
-    ...mapActions('search', ['getProductData'])
-  }
+  head() {
+    const properties = {}
+    const meta = []
+    const title = this.getMetatag('title')
+    const description = this.getMetatag('description')
+    const image = this.getMetatag('og:image')
+
+    if (title) {
+      properties.title = title.value
+      meta.push({
+        hid: 'og:title',
+        property: 'og:title',
+        content: title.value,
+      })
+      meta.push({
+        hid: 'og:site_name',
+        property: 'og:site_name',
+        content: title.value,
+      })
+    }
+
+    if (description) {
+      meta.push({
+        hid: 'description',
+        name: 'description',
+        content: description.value,
+      })
+      meta.push({
+        hid: 'og:description',
+        property: 'og:description',
+        content: description.value,
+      })
+    }
+
+    if (image) {
+      meta.push({
+        hid: 'og:image',
+        property: 'og:image',
+        content: image.value,
+      })
+    }
+
+    meta.push({
+      hid: 'og:type',
+      property: 'og:type',
+      content: 'website',
+    })
+
+    return {
+      ...properties,
+      meta,
+    }
+  },
 }
 </script>
 
