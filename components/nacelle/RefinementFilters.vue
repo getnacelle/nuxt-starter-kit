@@ -2,10 +2,7 @@
   <div>
     <h3>Refine Your Search</h3>
     <select v-model="sortBy">
-      <option
-        selected
-        disabled
-      >
+      <option selected disabled>
         Sort By
       </option>
       <option value="hi-low">
@@ -111,13 +108,12 @@ export default {
       this.computeFilteredData()
     },
     outputData() {
-      this.$emit('updated', this.outputData)
+      this.$emit('filtered', this.outputData)
     },
     filters() {
       this.computeFilteredData()
     },
     activeFilters() {
-      console.log('activeFiltersChanged')
       this.computeFilteredData()
     },
     activePriceRange() {
@@ -142,7 +138,7 @@ export default {
       this.setupFilters()
       this.activeFilters = this.readFiltersFromQueryParams()
       if (this.filteredData && this.outputData.length > 0) {
-        this.$emit('updated', this.outputData)
+        this.$emit('filtered', this.outputData)
       }
     }
   },

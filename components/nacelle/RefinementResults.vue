@@ -5,14 +5,13 @@
       mode="out-in"
     >
       <div
-        v-if="results && results.length"
-        key="no-results"
-        class="no-results"
+        v-if="isLoading"
+        key="loading"
       >
-        <slot name="no-results" />
+        <slot name="loading" />
       </div>
       <div
-        v-else
+        v-else-if="results.length"
         key="results"
         class="search-results"
       >
@@ -22,9 +21,22 @@
         </h2>
         <slot
           name="result"
-          :result="searchResultsSlice"
+          :result="visibleResults"
         />
-        <div ref="load-more" />
+        <observe-emitter @observe="showMoreResults" />
+        <div
+          v-if="isFetching"
+          style="text-align: center"
+        >
+          Loading products...
+        </div>
+      </div>
+      <div
+        v-else
+        key="no-results"
+        class="no-results"
+      >
+        <slot name="no-results" />
       </div>
     </transition>
   </div>
@@ -32,6 +44,8 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
+import productModule from '~/store/product/productModule'
+
 export default {
   props: {
     searchData: {
@@ -41,16 +55,20 @@ export default {
       type: Object
     }
   },
+  data() {
+    return {
+      fetchBuffer: 12,
+      isFetching: 0
+    }
+  },
   computed: {
-    ...mapState('search', ['results', 'resultsToDisplay', 'filteredData']),
+    ...mapState('search', ['isLoading', 'results', 'resultsToDisplay', 'filteredData']),
     itemSinglularPlural() {
-      if (this.results && this.results.length === 1) {
-        return 'item'
-      } else {
-        return 'items'
-      }
+      return this.results?.length === 1
+        ? 'item'
+        : 'items'
     },
-    searchResultsSlice() {
+    visibleResults() {
       return this.results.slice(0, this.resultsToDisplay)
     }
   },
@@ -69,25 +87,21 @@ export default {
       newVal.length
         ? this.$emit('results')
         : this.$emit('no-query')
+    },
+    visibleResults(newVal) {
+      this.isFetching = this.fetchBuffer
+
+      newVal.forEach(async product => {
+        const namespace = `product/${product.handle}`
+        if (!this.$store.hasModule(namespace)) {
+          this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+          await this.$store.dispatch(`${namespace}/fetchProduct`, product.handle)
+        }
+        this.isFetching--
+      })
     }
   },
 
-  mounted() {
-    setTimeout(() => {
-      if (this.$refs['load-more']) {
-        const options = {
-          root: null,
-          rootMargin: '250px',
-          threshold: 1
-        }
-        const observer = new IntersectionObserver(this.showMoreResults, options)
-        const observee = this.$refs['load-more']
-
-        observer.observe(observee)
-        this.isObserverInitialized = true
-      }
-    }, 5000)
-  },
   methods: {
     ...mapActions('search', ['searchCatalog']),
     ...mapMutations('search', ['showMoreResults', 'resetResults'])

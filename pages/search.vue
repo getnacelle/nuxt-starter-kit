@@ -20,21 +20,21 @@
       <div class="column is-12">
         <refinement-filters
           v-if="productData"
-          :propertyFilters="[
+          :property-filters="[
             { field: 'productType', label: 'Product Type' },
             { field: 'color', label: 'Color' },
             { field: 'material', label: 'Material' },
             { field: 'size', label: 'Size' }
           ]"
-          :priceRangeFilters="[
+          :price-range-filters="[
             { range: [0, 50], label: '< $50' },
             { range: [50, 100], label: '$50 - 100' },
             { range: [100, 200], label: '$100 - 200' },
             { range: [200, 500], label: '$200 - 500' },
             { range: [500, 0], label: '> $500' }
           ]"
-          :inputData="productData"
-          v-on:updated="updateFilteredData"
+          :input-data="productData"
+          @filtered="setFilteredData"
         />
       </div>
     </section>
@@ -43,13 +43,13 @@
         <div class="column is-12">
           <refinement-results
             v-if="filteredData"
-            :searchData="filteredData"
-            :searchQuery="query"
+            :search-data="filteredData"
+            :search-query="query"
           >
-            <template v-slot:result="{ result }">
+            <template #result="{ result }">
               <product-grid :products="result" :columns="4" />
             </template>
-            <template v-slot:no-results>
+            <template #no-results>
               <search-no-results />
             </template>
           </refinement-results>
@@ -91,11 +91,7 @@ export default {
   },
   methods: {
     ...mapMutations('search', ['setFilteredData']),
-    ...mapMutations('search', ['setQuery']),
-
-    updateFilteredData(data) {
-      this.setFilteredData(data)
-    }
+    ...mapMutations('search', ['setQuery'])
   }
 }
 </script>

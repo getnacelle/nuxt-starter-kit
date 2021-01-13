@@ -73,7 +73,6 @@ export const mutations = {
       ...state.searchData,
       ...data
     }
-    console.log(state.searchData)
   },
   // setSearchProduct(state, product) {
   //   state.searchData.products.push(product)
