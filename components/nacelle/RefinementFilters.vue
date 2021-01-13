@@ -2,33 +2,45 @@
   <div>
     <h3>Refine Your Search</h3>
     <select v-model="sortBy">
-      <option selected disabled>Sort By</option>
-      <option value="hi-low">High to Low</option>
-      <option value="low-hi">Low To High</option>
+      <option
+        selected
+        disabled
+      >
+        Sort By
+      </option>
+      <option value="hi-low">
+        High to Low
+      </option>
+      <option value="low-hi">
+        Low To High
+      </option>
     </select>
-    <button class="button is-text" @click="setFiltersCleared">
+    <button
+      class="button is-text"
+      @click="setFiltersCleared"
+    >
       Clear Filters
     </button>
     <div class="filters">
       <div
-        class="filter"
         v-for="filter in filters"
         :key="filter.property.field"
+        class="filter"
       >
         <h4>{{ filter.property.label }}</h4>
 
         <div class="facet-values">
           <div
-            class="value"
             v-for="value in filter.values"
             :key="value"
+            class="value"
             @click="
               toggleFilterActive({ property: filter.property.field, value })
             "
           >
             <refinement-filter-select
               :value="value"
-              :activeFilters="activeFilters"
+              :active-filters="activeFilters"
               :property="filter.property.field"
             />
           </div>
@@ -39,14 +51,14 @@
 
         <div>
           <div
-            class="value"
             v-for="priceRange in priceRangeFilters"
             :key="priceRange.label"
+            class="value"
             @click="togglePriceRangeActive(priceRange)"
           >
             <refinement-price-filter-select
-              :priceRange="priceRange"
-              :activePriceRange="activePriceRange || {}"
+              :price-range="priceRange"
+              :active-price-range="activePriceRange || {}"
             />
           </div>
         </div>
@@ -90,13 +102,11 @@ export default {
       activeFilters: [],
       outputData: null,
       activePriceRange: null,
-      passedData: null,
       sortBy: 'Sort By'
     }
   },
   watch: {
     inputData() {
-      console.log(this.inputData)
       this.setupFilters()
       this.computeFilteredData()
     },
@@ -118,7 +128,6 @@ export default {
       this.computeOutputData()
     },
     filtersCleared(val) {
-      console.log(val)
       if (val === true) {
         this.activeFilters = []
         this.activePriceRange = null
@@ -145,7 +154,7 @@ export default {
         activePriceRange: this.activePriceRange,
         sortBy: this.sortBy
       })
-      outputWorker.onmessage = function(e) {
+      outputWorker.onmessage = function (e) {
         vm.outputData = e.data
       }
     },
@@ -156,7 +165,7 @@ export default {
         activeFilters: this.activeFilters,
         inputData: this.inputData
       })
-      filterWorker.onmessage = function(e) {
+      filterWorker.onmessage = function (e) {
         vm.filteredData = e.data
         vm.computeOutputData()
       }
@@ -365,33 +374,10 @@ export default {
       } else {
         return []
       }
-    },
-    getPassedData() {
-      const vm = this
-      if (vm.passingConditions) {
-        return vm.inputData.filter(item => {
-          const conditions = vm.passingConditions.map(passingCondition => {
-            const passing = new Function(
-              `return "${passingCondition.value}" ${
-                passingCondition.conditional
-              } "${item[passingCondition.property]}"`
-            )
-
-            return passing()
-          })
-          const passedConditions = conditions.every(condition => {
-            return condition === true
-          })
-          return passedConditions === true
-        })
-      } else {
-        return vm.inputData
-      }
     }
   },
   created() {
     if (process.browser) {
-      this.passedData = this.getPassedData()
       this.setupFilters()
       this.activeFilters = this.readFiltersFromQueryParams()
       if (this.filteredData && this.outputData.length > 0) {
