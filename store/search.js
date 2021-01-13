@@ -167,7 +167,6 @@ export const actions = {
           }
         })
         .catch(err => {
-          console.log(err)
           return err
         })
     }
