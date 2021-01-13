@@ -1,29 +1,29 @@
 <template>
   <transition name="fade-up">
     <div
-      class="autocomplete is-hidden-mobile"
       v-show="shouldShowAutocomplete"
+      class="autocomplete is-hidden-mobile"
       @mouseenter="cursorInside = true"
-      @mouseleave="setNotVisibleAndClearQuery"
+      @mouseleave="mouseLeave"
     >
       <h2>Search Results</h2>
       <search-results
-        :searchData="productData"
-        :searchQuery="query"
+        :search-data="productData"
+        :search-query="query"
         @results="setAutocompleteVisible(true)"
         @no-query="setAutocompleteVisible(false)"
       >
-        <template v-slot:result="{ result }">
+        <template #result="{ result }">
           <search-autocomplete-item
             v-for="item in result"
-            :item="item"
             :key="item.id"
+            :item="item"
           />
         </template>
-        <template v-slot:loading>
+        <template #loading>
           <span>Loading product catalog...</span>
         </template>
-        <template v-slot:no-results>
+        <template #no-results>
           <search-no-results />
         </template>
       </search-results>
@@ -32,25 +32,12 @@
 </template>
 
 <script>
-import SearchResults from '~/components/nacelle/SearchResults'
-import SearchNoResults from '~/components/nacelle/SearchNoResults'
-import SearchAutocompleteItem from '~/components/nacelle/SearchAutocompleteItem'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
       cursorInside: false
-    }
-  },
-  components: {
-    SearchResults,
-    SearchNoResults,
-    SearchAutocompleteItem
-  },
-  watch: {
-    $route() {
-      this.setAutocompleteVisible(false)
     }
   },
   computed: {
@@ -60,20 +47,24 @@ export default {
       return (this.autocompleteVisible && this.queryOrigin === 'global')
     }
   },
+  watch: {
+    $route() {
+      this.cursorInside = false
+      this.setAutocompleteVisible(false)
+    }
+  },
+
   methods: {
     ...mapMutations('search', ['setAutocompleteVisible']),
-    ...mapMutations('search', ['setQuery']),
-    setNotVisibleAndClearQuery() {
-      const vm = this
-      vm.cursorInside = false
+
+    mouseLeave() {
+      this.cursorInside = false
 
       setTimeout(() => {
-        if (!vm.cursorInside) {
+        if (!this.cursorInside) {
           this.setAutocompleteVisible(false)
         }
       }, 600)
-
-      this.setQuery(null)
     }
   }
 }
