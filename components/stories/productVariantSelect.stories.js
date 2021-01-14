@@ -34,7 +34,6 @@ export const VariantSelect = () => ({
   },
   methods: {
     onVariantSelect({ selectedVariant }) {
-      console.log(selectedVariant)
       this.variant = selectedVariant
     }
   },
