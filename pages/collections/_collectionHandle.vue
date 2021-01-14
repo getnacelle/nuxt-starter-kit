@@ -19,7 +19,7 @@
       <div class="container">
         <div class="columns is-multiline">
           <product-grid
-            v-if="collection.products && collection.products.length > 0"
+            v-if="collection.products && collection.products.length"
             :products="visibleProducts"
             :show-add-to-cart="true"
             :show-quantity-update="true"

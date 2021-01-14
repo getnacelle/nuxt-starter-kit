@@ -3,27 +3,21 @@
     <div
       v-for="product in products"
       :key="product.id"
-      class="card-wrapper"
       :class="columnClasses"
     >
       <product-card
         v-if="product"
         :product="product"
-        :showQuantityUpdate="showQuantityUpdate"
-        :showAddToCart="showAddToCart"
-        :imageSize="imageSize"
+        :show-quantity-update="showQuantityUpdate"
+        :show-add-to-cart="showAddToCart"
+        :image-size="imageSize"
       />
     </div>
   </div>
 </template>
 
 <script>
-import ProductCard from '~/components/nacelle/ProductCard'
-
 export default {
-  components: {
-    ProductCard
-  },
   props: {
     products: {
       type: Array,
