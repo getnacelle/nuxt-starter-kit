@@ -18,11 +18,6 @@ import { mapGetters, mapActions } from 'vuex'
 import { clear } from 'idb-keyval'
 
 export default {
-  methods: {
-    ...mapActions('cart', ['initializeCart']),
-    ...mapActions('checkout', ['initializeCheckout']),
-    ...mapActions('user', ['readSession']),
-  },
   data() {
     return {
       headerHeight: null,
@@ -42,6 +37,9 @@ export default {
     if (process.env.DEV_MODE === 'true') {
       console.log('dev mode active!')
       clear()
+    }
+    if (process.client) {
+      this.getProductData()
     }
     this.readSession()
   },
@@ -97,6 +95,12 @@ export default {
       ...properties,
       meta,
     }
+  },
+  methods: {
+    ...mapActions('cart', ['initializeCart']),
+    ...mapActions('checkout', ['initializeCheckout']),
+    ...mapActions('user', ['readSession']),
+    ...mapActions('search', ['getProductData'])
   },
 }
 </script>
