@@ -15,7 +15,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { clear } from 'idb-keyval'
+import { clear, set, get } from 'idb-keyval'
 
 export default {
   data() {
@@ -37,6 +37,11 @@ export default {
     if (process.env.DEV_MODE === 'true') {
       console.log('dev mode active!')
       clear()
+    } else {
+      // clear idb of all product data, retain 'anonymousID'
+      const anonymousID = await get('anonymousID')
+      clear()
+      await set('anonymousID', anonymousID)
     }
     if (process.client) {
       this.getProductData()
