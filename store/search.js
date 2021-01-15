@@ -86,7 +86,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async getProductData({commit, getters, state}) {
+  async getSearchData({commit, getters, state}) {
     if (getters.hasProductData && !state.isLoading) {
       return
     }

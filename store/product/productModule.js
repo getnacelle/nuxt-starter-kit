@@ -54,7 +54,6 @@ export default () => {
         const namespace = `product/${product.handle}`
         const storedProduct = await get(namespace)
 
-        // TODO: time limit to force overwrite?
         if (!storedProduct || doOverwrite) {
           set(namespace, product)
         }

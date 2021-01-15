@@ -15,7 +15,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { clear, set, get } from 'idb-keyval'
 
 export default {
   data() {
@@ -34,17 +33,9 @@ export default {
     await this.initializeCheckout()
     await this.initializeCart()
 
-    if (process.env.DEV_MODE === 'true') {
-      console.log('dev mode active!')
-      clear()
-    } else {
-      // clear idb of all product data, retain 'anonymousID'
-      const anonymousID = await get('anonymousID')
-      clear()
-      await set('anonymousID', anonymousID)
-    }
     if (process.client) {
-      this.getProductData()
+      await this.clearProductIdb()
+      this.getSearchData()
     }
     this.readSession()
   },
@@ -102,10 +93,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['clearProductIdb']),
     ...mapActions('cart', ['initializeCart']),
     ...mapActions('checkout', ['initializeCheckout']),
     ...mapActions('user', ['readSession']),
-    ...mapActions('search', ['getProductData'])
+    ...mapActions('search', ['getSearchData'])
   },
 }
 </script>
