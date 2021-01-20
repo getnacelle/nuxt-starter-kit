@@ -68,18 +68,6 @@ export default {
       return null
     }
   },
-  mounted() {
-    // products loaded during SSR fetch need to be stored in indexedDB
-    if (this.collection?.products) {
-      this.collection.products.map((product) => {
-        const namespace = `product/${product.handle}`
-        if (!this.$store.hasModule(namespace)) {
-          this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
-        }
-        this.$store.dispatch(`${namespace}/storeProduct`, product)
-      })
-    }
-  },
   methods: {
     async showMore() {
       if (!this.collection) {

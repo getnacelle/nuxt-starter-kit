@@ -135,19 +135,6 @@ export default {
   computed: {
     ...mapGetters('space', ['getMetatag'])
   },
-
-  mounted() {
-    // product loaded during SSR fetch needs to be stored in indexedDB
-    const handle = this.$route.params.productHandle
-    const namespace = `product/${handle}`
-    if (!this.$store.hasModule(namespace)) {
-      this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
-    }
-    if (this.product) {
-      this.$store.dispatch(`${namespace}/storeProduct`, this.product)
-    }
-  },
-
   methods: {
     ...mapMutations('cart', ['showCart'])
   }

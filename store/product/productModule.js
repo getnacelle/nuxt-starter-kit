@@ -1,6 +1,4 @@
-import { get, set } from 'idb-keyval'
 import flattenDeep from 'lodash/flattenDeep'
-// import uniq from 'lodash/uniq'
 import uniqWith from 'lodash/uniqWith'
 import isEqual from 'lodash/isEqual'
 
@@ -29,34 +27,18 @@ export default () => {
       }
     },
     actions: {
-      async fetchProduct({ state, commit }, handle) {
-        const namespace = `product/${handle}`
-        let product
-
-        if (process.client) {
-          product = await get(namespace)
-          if (!product) {
-            product = await this.$nacelle.data.product({ handle })
-            set(namespace, product)
-          }
-        } else {
-          product = await this.$nacelle.data.product({ handle })
-        }
-        commit('setProduct', product)
-        commit('setOptions')
-
-        // set a preselected variant
-        commit('setSelectedVariant', findSelectedVariant(state))
+      async fetchProduct({ state, dispatch }, handle) {
+        const product = await this.$nacelle.data.product({ handle })
+        dispatch('storeProduct', product)
 
         return product
       },
-      async storeProduct({ state }, product, doOverwrite = true) {
-        const namespace = `product/${product.handle}`
-        const storedProduct = await get(namespace)
+      storeProduct({ state, commit }, product) {
+        commit('setProduct', product)
+        commit('setOptions', product)
 
-        if (!storedProduct || doOverwrite) {
-          set(namespace, product)
-        }
+        // set a preselected variant
+        commit('setSelectedVariant', findSelectedVariant(state))
       },
       setSelected({ state, commit }, selectedOption) {
         commit('setSelected', selectedOption)
