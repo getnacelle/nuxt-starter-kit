@@ -1,8 +1,10 @@
 <template>
   <div class="search" :class="`${position}-searchbox`">
     <search-input
-      :placeholderText="placeholderText"
+      :placeholder-text="placeholderText"
       :position="position"
+      :search-query="searchQuery"
+      @updated="updateQuery"
       @keydown.enter.native="navigateToSearchResults"
     />
     <button
@@ -12,14 +14,14 @@
     >
       Search
     </button>
-    <search-autocomplete v-if="position == 'global'"/>
+    <search-autocomplete v-if="position === 'global'" />
   </div>
 </template>
 
 <script>
 import SearchInput from '~/components/nacelle/SearchInput'
 import SearchAutocomplete from '~/components/nacelle/SearchAutocomplete'
-import { mapState, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
 
 export default {
   components: {
@@ -35,18 +37,22 @@ export default {
       type: String,
       default: 'product'
     },
+    searchQuery: {
+      type: String,
+      default: null
+    },
     placeholderText: {
       type: String,
-      default: 'Search products..'
+      default: 'Search products...'
     }
-  },
-  computed: {
-    ...mapState('search', ['query'])
   },
   methods: {
     ...mapMutations('menu', ['disableMenu']),
+    updateQuery(query) {
+      this.setQuery({ query, position: this.position })
+    },
     navigateToSearchResults() {
-      const queryVal = this.query && this.query.value ? this.query.value : ''
+      const queryVal = this.searchQuery || ''
 
       this.disableMenu()
 

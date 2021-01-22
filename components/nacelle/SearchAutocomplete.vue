@@ -1,15 +1,14 @@
 <template>
   <transition name="fade-up">
     <div
-      v-show="shouldShowAutocomplete"
+      v-show="autocompleteVisible"
       class="autocomplete is-hidden-mobile"
       @mouseenter="cursorInside = true"
       @mouseleave="mouseLeave"
     >
       <h2>Search Results</h2>
       <search-results
-        :search-data="productData"
-        :search-query="query"
+        :search-query="globalQuery"
         @results="setAutocompleteVisible(true)"
         @no-query="setAutocompleteVisible(false)"
       >
@@ -41,11 +40,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['query', 'autocompleteVisible']),
-    ...mapGetters('search', ['queryOrigin', 'productData']),
-    shouldShowAutocomplete() {
-      return (this.autocompleteVisible && this.queryOrigin === 'global')
-    }
+    ...mapState('search', ['globalQuery', 'autocompleteVisible'])
   },
   watch: {
     $route() {

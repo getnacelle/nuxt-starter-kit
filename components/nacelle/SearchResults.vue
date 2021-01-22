@@ -11,13 +11,13 @@
         <slot name="loading" />
       </div>
       <div
-        v-else-if="results.length"
+        v-else-if="globalResults.length"
         key="results"
         class="search-results"
       >
         <slot
           name="result"
-          :result="results"
+          :result="globalResults"
         />
       </div>
       <div
@@ -36,20 +36,18 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   props: {
-    searchData: {
-      type: Array
-    },
     searchQuery: {
-      type: Object
+      type: String,
+      default: null
     }
   },
   computed: {
-    ...mapState('search', ['isLoading', 'results'])
+    ...mapState('search', ['isLoading', 'globalResults'])
   },
   watch: {
     searchQuery(newVal) {
-      if (newVal?.value && String(newVal.value) !== '') {
-        this.searchCatalog(newVal.value)
+      if (newVal && String(newVal) !== '') {
+        this.searchCatalog({value: newVal, position: 'global'})
       }
     },
     results(newVal) {

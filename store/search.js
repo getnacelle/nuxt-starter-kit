@@ -1,31 +1,29 @@
 
 export const state = () => ({
-  query: null,
   autocompleteVisible: false,
   filtersCleared: false,
   searchData: {
     products: []
   },
-  results: [],
   searchOptions: {
     relevanceThreshold: 0.5,
     keys: ['title']
   },
+  searchWorker: null,
+
+  // global search state
+  globalQuery: null,
+  globalResults: [],
+
+  // in-page search state
+  pageQuery: null,
+  pageResults: [],
   filteredData: null,
   isLoading: false,
   resultsToDisplay: 12,
-  searchWorker: null
 })
 
 export const getters = {
-  queryOrigin(state) {
-    if (state.query && state.query.origin) {
-      return state.query.origin
-    }
-
-    return undefined
-  },
-
   hasProductData(state) {
     return state.searchData.products.length > 0
   },
@@ -38,8 +36,10 @@ export const getters = {
 }
 
 export const mutations = {
-  setQuery(state, query) {
-    state.query = query
+  setQuery(state, {query, position}) {
+    position === 'global'
+      ? state.globalQuery = query
+      : state.pageQuery = query
   },
 
   setFilteredData(state, data) {
@@ -76,8 +76,10 @@ export const mutations = {
   setLoading(state, isLoading) {
     state.isLoading = isLoading
   },
-  setResults(state, results) {
-    state.results = results
+  setResults(state, {results, position}) {
+    position === 'global'
+      ? state.globalResults = results
+      : state.pageResults = results
   },
   startSearchWorker(state, searchData) {
     state.searchWorker = state.searchWorker || new Worker('/worker/search.js')
@@ -102,7 +104,7 @@ export const actions = {
     }
   },
 
-  searchCatalog({ state, getters, commit }, value) {
+  searchCatalog({ state, getters, commit }, {value, position}) {
     commit('startSearchWorker', getters.productData)
 
     state.searchWorker.postMessage({
@@ -110,7 +112,7 @@ export const actions = {
       value
     })
     state.searchWorker.onmessage = (e) => {
-      commit('setResults', e.data)
+      commit('setResults', { results: e.data, position })
     }
   }
 }

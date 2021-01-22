@@ -1,7 +1,11 @@
 <template>
   <div class="global-header" :class="{ 'is-sticky': isSticky }">
     <!-- Main Nav -->
-    <div class="main-nav" role="navigation" aria-label="main navigation">
+    <div
+      class="main-nav"
+      role="navigation"
+      aria-label="main navigation"
+    >
       <div class="main-nav-left">
         <main-nav-burger />
       </div>
@@ -21,12 +25,16 @@
             exact-active-class="is-active"
             class="main-nav-item"
             @click.native="disableMenu"
-            >{{ link.title }}</nuxt-link
           >
+            {{ link.title }}
+          </nuxt-link>
         </div>
-        <search-box class="is-hidden-mobile" />
+        <search-box
+          v-bind="{ searchQuery: globalQuery }"
+          class="is-hidden-mobile"
+        />
         <main-nav-wishlist path="/wishlist">
-          <template v-slot:icon>
+          <template #icon>
             <svg
               class="icon"
               width="100%"
@@ -52,7 +60,7 @@
 
     <!-- Mobile Nav -->
     <transition name="slide">
-      <div class="nav-flyout" v-if="menuVisible">
+      <div v-if="menuVisible" class="nav-flyout">
         <div class="nav-flyout-header">
           <router-link class="navbar-item" to="/">
             <strong>{{ name }}</strong>
@@ -76,7 +84,10 @@
         </div>
         <div class="nav-flyout-body">
           <slot name="flyout-menu">
-            <search-box class="is-hidden-tablet" />
+            <search-box
+              v-bind="{ searchQuery: globalQuery }"
+              class="is-hidden-tablet"
+            />
             <nuxt-link
               v-for="(link, index) in mobileMenu"
               :key="index"
@@ -84,8 +95,9 @@
               active-class="is-active"
               class="main-nav-item"
               @click.native="disableMenu"
-              >{{ link.title }}</nuxt-link
             >
+              {{ link.title }}
+            </nuxt-link>
           </slot>
         </div>
       </div>
@@ -120,6 +132,7 @@ export default {
   computed: {
     ...mapState('space', ['id', 'name', 'linklists']),
     ...mapState('menu', ['menuVisible']),
+    ...mapState('search', ['globalQuery']),
     ...mapGetters('space', ['getLocalizedLinks']),
     mainMenu() {
       return this.getLocalizedLinks('main-menu')

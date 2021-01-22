@@ -1,8 +1,7 @@
-onmessage = function(e) {
+onmessage = function (e) {
   const vm = e.data
-  let output = JSON.parse(JSON.stringify(vm.filteredData))
 
-  output = output.filter(item => {
+  const output = vm.filteredData.filter(item => {
     if (vm.activePriceRange) {
       if (vm.activePriceRange.range[0] === 0) {
         if (parseFloat(item.minPrice) < vm.activePriceRange.range[1]) {

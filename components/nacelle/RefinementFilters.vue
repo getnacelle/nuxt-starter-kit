@@ -91,12 +91,12 @@ export default {
       filters: null,
       filteredData: null,
       activeFilters: [],
-      outputData: null,
+      refinedData: null,
       activePriceRange: null,
       passedData: null,
       sortBy: 'Sort By',
       filterWorker: null,
-      outputWorker: null
+      sortWorker: null
     }
   },
   computed: {
@@ -107,8 +107,8 @@ export default {
       this.setupFilters()
       this.computeFilteredData()
     },
-    outputData() {
-      this.$emit('filtered', this.outputData)
+    refinedData(newVal) {
+      this.$emit('refined', newVal)
     },
     filters() {
       this.computeFilteredData()
@@ -117,10 +117,10 @@ export default {
       this.computeFilteredData()
     },
     activePriceRange() {
-      this.computeOutputData()
+      this.computeSortedData()
     },
     sortBy() {
-      this.computeOutputData()
+      this.computeSortedData()
     },
     filtersCleared(val) {
       if (val === true) {
@@ -137,8 +137,8 @@ export default {
       this.passedData = this.getPassedData()
       this.setupFilters()
       this.activeFilters = this.readFiltersFromQueryParams()
-      if (this.filteredData && this.outputData.length > 0) {
-        this.$emit('filtered', this.outputData)
+      if (this.filteredData && this.refinedData.length) {
+        this.$emit('refined', this.refinedData)
       }
     }
   },
@@ -146,8 +146,8 @@ export default {
     if (this.filterWorker) {
       this.filterWorker.terminate()
     }
-    if (this.outputWorker) {
-      this.outputWorker.terminate()
+    if (this.sortWorker) {
+      this.sortWorker.terminate()
     }
   },
 
@@ -157,17 +157,17 @@ export default {
       'setFiltersNotCleared',
       'setFilteredData'
     ]),
-    computeOutputData() {
+    computeSortedData() {
       const vm = this
-      this.outputWorker = this.outputWorker || new Worker('/worker/output.js')
-      this.outputWorker.postMessage({
+      this.sortWorker = this.sortWorker || new Worker('/worker/sort.js')
+      this.sortWorker.postMessage({
         activeFilters: this.activeFilters,
         filteredData: this.filteredData,
         activePriceRange: this.activePriceRange,
         sortBy: this.sortBy
       })
-      this.outputWorker.onmessage = function (e) {
-        vm.outputData = e.data
+      this.sortWorker.onmessage = function (e) {
+        vm.refinedData = e.data
       }
     },
     computeFilteredData() {
@@ -179,7 +179,7 @@ export default {
       })
       this.filterWorker.onmessage = function (e) {
         vm.filteredData = e.data
-        vm.computeOutputData()
+        vm.computeSortedData()
       }
     },
     setupFilters() {

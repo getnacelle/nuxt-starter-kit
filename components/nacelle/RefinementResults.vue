@@ -11,12 +11,12 @@
         <slot name="loading" />
       </div>
       <div
-        v-else-if="results.length"
+        v-else-if="searchData.length"
         key="results"
         class="search-results"
       >
         <h2>
-          Showing {{ results.length }} {{ itemSinglularPlural }} based on
+          Showing {{ searchData.length }} {{ itemSinglularPlural }} based on
           selected filters
         </h2>
         <slot
@@ -43,16 +43,14 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import productModule from '~/store/product/productModule'
 
 export default {
   props: {
     searchData: {
-      type: Array
-    },
-    searchQuery: {
-      type: Object
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -62,25 +60,21 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['isLoading', 'results', 'resultsToDisplay', 'filteredData']),
+    ...mapState('search', ['isLoading', 'resultsToDisplay']),
+
     itemSinglularPlural() {
-      return this.results?.length === 1
+      return this.searchData?.length === 1
         ? 'item'
         : 'items'
     },
     visibleResults() {
-      return this.results.slice(0, this.resultsToDisplay)
+      return this.searchData.slice(0, this.resultsToDisplay)
     }
   },
   watch: {
-    filteredData(newData, oldData) {
+    searchData(newData, oldData) {
       if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
         this.resetResults()
-      }
-    },
-    searchQuery(newVal) {
-      if (newVal?.value && String(newVal.value) !== '') {
-        this.searchCatalog(newVal.value)
       }
     },
     results(newVal) {
@@ -103,7 +97,6 @@ export default {
   },
 
   methods: {
-    ...mapActions('search', ['searchCatalog']),
     ...mapMutations('search', ['showMoreResults', 'resetResults'])
   }
 }

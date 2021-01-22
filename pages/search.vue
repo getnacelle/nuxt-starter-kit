@@ -11,7 +11,7 @@
       <div class="container">
         <div class="columns">
           <div class="column is-4 is-offset-4">
-            <search-box position="in-page" />
+            <search-box v-bind="{ position, searchQuery: pageQuery }" />
           </div>
         </div>
       </div>
@@ -19,7 +19,7 @@
     <section class="section filtering">
       <div class="column is-12">
         <refinement-filters
-          v-if="productData"
+          v-if="pageResults && pageResults.length"
           :property-filters="[
             { field: 'productType', label: 'Product Type' },
             { field: 'color', label: 'Color' },
@@ -33,8 +33,8 @@
             { range: [200, 500], label: '$200 - 500' },
             { range: [500, 0], label: '> $500' }
           ]"
-          :input-data="productData"
-          @filtered="setFilteredData"
+          :input-data="pageResults"
+          @refined="setFilteredData"
         />
       </div>
     </section>
@@ -44,7 +44,6 @@
           <refinement-results
             v-if="filteredData"
             :search-data="filteredData"
-            :search-query="query"
           >
             <template #result="{ result }">
               <product-grid :products="result" :columns="4" />
@@ -60,7 +59,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import SearchBox from '~/components/nacelle/SearchBox'
 import RefinementFilters from '~/components/nacelle/RefinementFilters'
 import RefinementResults from '~/components/nacelle/RefinementResults'
@@ -75,23 +74,32 @@ export default {
     ProductGrid,
     SearchNoResults
   },
+  data() {
+    return {
+      position: 'page'
+    }
+  },
   computed: {
-    ...mapState('search', ['query', 'isLoading', 'filteredData']),
-    ...mapGetters('search', ['productData'])
+    ...mapState('search', ['pageQuery', 'pageResults', 'isLoading', 'filteredData']),
   },
   watch: {
     isLoading(newVal) {
       if (!newVal && this.$route.query?.q) {
         this.setQuery({
-          origin: 'in-page',
-          value: this.$route.query.q
+          query: this.$route.query.q,
+          position: this.position,
         })
       }
-    }
+    },
+    pageQuery(newVal) {
+      if (newVal && String(newVal) !== '') {
+        this.searchCatalog({value: newVal, position: 'page'})
+      }
+    },
   },
   methods: {
-    ...mapMutations('search', ['setFilteredData']),
-    ...mapMutations('search', ['setQuery'])
+    ...mapMutations('search', ['setFilteredData', 'setQuery']),
+    ...mapActions('search', ['searchCatalog'])
   }
 }
 </script>
