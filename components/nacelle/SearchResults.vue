@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   props: {
@@ -48,16 +48,18 @@ export default {
     searchQuery(newVal) {
       if (newVal && String(newVal) !== '') {
         this.searchCatalog({value: newVal, position: 'global'})
+        this.setAutocompleteVisible(true)
       }
     },
-    results(newVal) {
-      newVal?.length
-        ? this.$emit('results')
-        : this.$emit('no-query')
+    globalResults(newVal) {
+      if (newVal?.length === 0) {
+        this.setAutocompleteVisible(false)
+      }
     }
   },
   methods: {
-    ...mapActions('search', ['searchCatalog'])
+    ...mapActions('search', ['searchCatalog']),
+    ...mapMutations('search', ['setAutocompleteVisible'])
   }
 }
 </script>

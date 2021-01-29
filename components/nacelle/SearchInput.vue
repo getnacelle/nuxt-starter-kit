@@ -59,8 +59,10 @@ export default {
       const query = this.localQuery
 
       if (e.key !== 'Enter') {
-        const emitUpdated = this.debounce(this.$emit, 500)
-        emitUpdated('updated', query)
+        const emitUpdated = this.debounce(() => {
+          this.$emit('updated', query)
+        }, 500)
+        emitUpdated()
       }
 
       // Check that the key press is a letter or number and that

@@ -7,11 +7,7 @@
       @mouseleave="mouseLeave"
     >
       <h2>Search Results</h2>
-      <search-results
-        :search-query="globalQuery"
-        @results="setAutocompleteVisible(true)"
-        @no-query="setAutocompleteVisible(false)"
-      >
+      <search-results :search-query="globalQuery">
         <template #result="{ result }">
           <search-autocomplete-item
             v-for="item in result"
@@ -31,7 +27,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   data() {

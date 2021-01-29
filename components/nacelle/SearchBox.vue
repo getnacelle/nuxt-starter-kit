@@ -48,6 +48,7 @@ export default {
   },
   methods: {
     ...mapMutations('menu', ['disableMenu']),
+    ...mapMutations('search', ['setQuery']),
     updateQuery(query) {
       this.setQuery({ query, position: this.position })
     },

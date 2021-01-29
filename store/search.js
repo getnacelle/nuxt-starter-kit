@@ -14,6 +14,7 @@ export const state = () => ({
   // global search state
   globalQuery: null,
   globalResults: [],
+  isSearchingGlobal: false,
 
   // in-page search state
   pageQuery: null,
@@ -76,6 +77,9 @@ export const mutations = {
   setLoading(state, isLoading) {
     state.isLoading = isLoading
   },
+  setSearchingGlobal(state, isSearching) {
+    state.isSearchingGlobal = isSearching
+  },
   setResults(state, {results, position}) {
     position === 'global'
       ? state.globalResults = results
@@ -106,6 +110,8 @@ export const actions = {
 
   searchCatalog({ state, getters, commit }, {value, position}) {
     commit('startSearchWorker', getters.productData)
+    commit('setSearchingGlobal', true)
+    console.time('searchCatalog')
 
     state.searchWorker.postMessage({
       options: state.searchOptions,
@@ -113,6 +119,8 @@ export const actions = {
     })
     state.searchWorker.onmessage = (e) => {
       commit('setResults', { results: e.data, position })
+      commit('setSearchingGlobal', false)
+      console.timeEnd('searchCatalog')
     }
   }
 }
