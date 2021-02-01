@@ -19,7 +19,7 @@
       <div class="container">
         <div class="columns is-multiline">
           <product-grid
-            v-if="collection.products && collection.products.length"
+            v-if="visibleProducts.length"
             :products="visibleProducts"
             :show-add-to-cart="true"
             :show-quantity-update="true"
@@ -48,6 +48,7 @@ export default {
   data() {
     return {
       collection: null,
+      collectionProducts: [],
       productVisibilityCount: 16,
       fetchBuffer: 16,
       isFetching: false
@@ -57,16 +58,33 @@ export default {
     const collectionData = await this.$nacelle.data.collection({
       handle: this.$route.params.collectionHandle
     })
-    this.collection = { products: [], ...collectionData }
-    this.collection.products = await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
+    this.collection = collectionData
+    await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
   },
   computed: {
     visibleProducts() {
-      if (this.collection.products) {
-        return this.collection.products.slice(0, this.productVisibilityCount)
+      if (this.collectionProducts.length) {
+        return this.collectionProducts.slice(0, this.productVisibilityCount)
       }
-      return null
+      return []
     }
+  },
+  mounted() {
+    if (process.client && this.collection) {
+      this.collectionProducts.forEach(product => {
+        const namespace = `product/${product.handle}`
+        if (!this.$store.hasModule(namespace)) {
+          this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+        }
+        return this.$store.dispatch(`${namespace}/storeProduct`, product)
+      })
+    }
+  },
+  beforeDestroy() {
+    this.collectionProducts.forEach(product => {
+      const namespace = `product/${product.handle}`
+      this.$store.commit(`${namespace}/unloadProduct`)
+    })
   },
   methods: {
     async showMore() {
@@ -76,28 +94,34 @@ export default {
       const currentCount = this.productVisibilityCount
       const fetchCursor = currentCount + this.fetchBuffer
       this.productVisibilityCount = currentCount + 16
-      this.collection.products = await this.fetchProducts(fetchCursor, fetchCursor + 16)
+      this.fetchProducts(fetchCursor, fetchCursor + 16)
     },
     async fetchProducts(start, end) {
       this.isFetching = true
+      // console.time('fetchProducts')
 
       const products = this.collection.productLists[0].handles
         .slice(start, end)
-        .map(handle => {
+        .map((handle, index) => {
+          this.$set(
+            this.collectionProducts,
+            index + start,
+            { handle, isLoading: true }
+          )
+          return handle
+        })
+        .map(async (handle, index) => {
           const namespace = `product/${handle}`
           if (!this.$store.hasModule(namespace)) {
             this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
           }
-          return this.$store.dispatch(`${namespace}/fetchProduct`, handle)
+          const product = await this.$store.dispatch(`${namespace}/fetchProduct`, handle)
+          this.$set(this.collectionProducts, index + start, product)
         })
-      const collectionProducts = await Promise.all(products)
-      const filteredProducts = collectionProducts.filter(Boolean)
-      this.isFetching = false
 
-      return [
-        ...this.collection.products,
-        ...filteredProducts
-      ]
+      await Promise.all(products)
+      this.isFetching = false
+      // console.timeEnd('fetchProducts')
     }
   }
   // head() {

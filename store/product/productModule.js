@@ -1,3 +1,4 @@
+import { get } from 'idb-keyval'
 import flattenDeep from 'lodash/flattenDeep'
 import uniqWith from 'lodash/uniqWith'
 import isEqual from 'lodash/isEqual'
@@ -21,24 +22,66 @@ export default () => {
     state: () => {
       return {
         product: null,
+        productWorker: null,
+        options: [],
         selectedOptions: [],
         selectedVariant: null,
-        options: []
       }
     },
     actions: {
       async fetchProduct({ state, dispatch }, handle) {
-        const product = await this.$nacelle.data.product({ handle })
-        dispatch('storeProduct', product)
+        const namespace = `product/${handle}`
+        let product = state.product
 
+        // scenarios & product states:
+        // 1 - landing page (statically generated) -> product already loaded in vuex; later need to set in idb
+        // 2 - non-landing / not preloaded...
+        //   a. if product is in vuex (loaded) -> do nothing, continue
+        //   b. else if product not in vuex BUT in idb -> get from idb, load in vuex
+        //   c. else if product not in vuex NOR in idb -> get from $nacelle, set in idb,
+
+        if (!product) {
+          if (process.client) {
+            product = await get(namespace)
+            if (product) {
+              // product was found in indexedDB
+              dispatch('setupProduct', product)
+            } else {
+              // load product with $nacelle client-side
+              product = await this.$nacelle.data.product({ handle })
+              dispatch('setupProduct', product)
+              dispatch('storeProduct', product)
+            }
+          } else {
+            // load product with $nacelle server-side
+            product = await this.$nacelle.data.product({ handle })
+            dispatch('setupProduct', product)
+          }
+        } else {
+          // product still in vuex
+        }
         return product
       },
-      storeProduct({ state, commit }, product) {
+      setupProduct({state, commit}, product) {
         commit('setProduct', product)
-        commit('setOptions', product)
+        commit('setOptions')
 
         // set a preselected variant
         commit('setSelectedVariant', findSelectedVariant(state))
+      },
+      async storeProduct({ state }, product) {
+        const namespace = `product/${product.handle}`
+        const isStored = await get(namespace)
+        if (isStored) {
+          // already stored in indexedDB
+          return
+        }
+        // TODO: use shared worker
+        const productWorker = new Worker('/worker/indexedDb.js')
+        productWorker.postMessage({ action: 'set', key: namespace, value: product, debug: true })
+        productWorker.onmessage = () => {
+          productWorker.terminate()
+        }
       },
       setSelected({ state, commit }, selectedOption) {
         commit('setSelected', selectedOption)
@@ -48,6 +91,13 @@ export default () => {
     mutations: {
       setProduct: (state, product) => {
         state.product = product
+      },
+      startProductWorker: (state) => {
+        state.productWorker = state.productWorker || new Worker('/worker/indexedDb.js')
+      },
+      unloadProduct: (state) => {
+        console.debug('unloadProduct', state.product.handle)
+        state.product = null
       },
       setOptions: (state) => {
         const nestedOptions = state.product.variants.map(variant => {

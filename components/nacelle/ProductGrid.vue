@@ -1,18 +1,19 @@
 <template>
   <div class="product-grid columns is-multiline is-paddingless nacelle">
-    <div
-      v-for="({product, isReady}) in readyProducts"
-      :key="product.id"
-      :class="columnClasses"
-    >
-      <product-card
-        v-if="product && isReady"
-        :product="product"
-        :show-quantity-update="showQuantityUpdate"
-        :show-add-to-cart="showAddToCart"
-        :image-size="imageSize"
-      />
-    </div>
+    <template v-for="product in products">
+      <div
+        :key="product.handle"
+        :class="columnClasses"
+      >
+        <product-card
+          v-if="!product.isLoading"
+          :product="product"
+          :show-quantity-update="showQuantityUpdate"
+          :show-add-to-cart="showAddToCart"
+          :image-size="imageSize"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -41,12 +42,6 @@ export default {
     }
   },
   computed: {
-    readyProducts() {
-      return this.products.map(product => ({
-        product,
-        isReady: !!this.$store.state[`product/${product.handle}`]
-      }))
-    },
     columnClasses() {
       let classes = 'column'
 
