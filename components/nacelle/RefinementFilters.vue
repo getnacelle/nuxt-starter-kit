@@ -102,7 +102,6 @@ export default {
       activeFilters: [],
       outputData: null,
       activePriceRange: null,
-      passedData: null,
       sortBy: 'Sort By'
     }
   },
@@ -374,33 +373,10 @@ export default {
       } else {
         return []
       }
-    },
-    getPassedData() {
-      const vm = this
-      if (vm.passingConditions) {
-        return vm.inputData.filter(item => {
-          const conditions = vm.passingConditions.map(passingCondition => {
-            const passing = new Function(
-              `return "${passingCondition.value}" ${
-                passingCondition.conditional
-              } "${item[passingCondition.property]}"`
-            )
-
-            return passing()
-          })
-          const passedConditions = conditions.every(condition => {
-            return condition === true
-          })
-          return passedConditions === true
-        })
-      } else {
-        return vm.inputData
-      }
     }
   },
   created() {
     if (process.browser) {
-      this.passedData = this.getPassedData()
       this.setupFilters()
       this.activeFilters = this.readFiltersFromQueryParams()
       if (this.filteredData && this.outputData.length > 0) {
