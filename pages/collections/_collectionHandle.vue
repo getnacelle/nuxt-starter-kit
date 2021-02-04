@@ -49,8 +49,8 @@ export default {
     return {
       collection: null,
       collectionProducts: [],
-      productVisibilityCount: 16,
-      fetchBuffer: 16,
+      productVisibilityCount: 12,
+      fetchBuffer: 12,
       isFetching: false
     }
   },
@@ -93,8 +93,8 @@ export default {
       }
       const currentCount = this.productVisibilityCount
       const fetchCursor = currentCount + this.fetchBuffer
-      this.productVisibilityCount = currentCount + 16
-      this.fetchProducts(fetchCursor, fetchCursor + 16)
+      this.productVisibilityCount = currentCount + 12
+      this.fetchProducts(fetchCursor, fetchCursor + 12)
     },
     async fetchProducts(start, end) {
       this.isFetching = true
@@ -110,7 +110,7 @@ export default {
           )
           return handle
         })
-        .map(async (handle, index) => {
+        .forEach(async (handle, index) => {
           const namespace = `product/${handle}`
           if (!this.$store.hasModule(namespace)) {
             this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
