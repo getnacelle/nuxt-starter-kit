@@ -97,6 +97,9 @@ export default {
       this.fetchProducts(fetchCursor, fetchCursor + 12)
     },
     async fetchProducts(start, end) {
+      if (!this.collection?.productLists[0]?.handles) {
+        return
+      }
       this.isFetching = true
       // console.time('fetchProducts')
 
@@ -110,7 +113,7 @@ export default {
           )
           return handle
         })
-        .forEach(async (handle, index) => {
+        .map(async (handle, index) => {
           const namespace = `product/${handle}`
           if (!this.$store.hasModule(namespace)) {
             this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })

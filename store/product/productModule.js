@@ -22,7 +22,6 @@ export default () => {
     state: () => {
       return {
         product: null,
-        productWorker: null,
         options: [],
         selectedOptions: [],
         selectedVariant: null,
@@ -69,19 +68,26 @@ export default () => {
         // set a preselected variant
         commit('setSelectedVariant', findSelectedVariant(state))
       },
-      async storeProduct({ state }, product) {
+      async storeProduct({ dispatch }, product) {
         const namespace = `product/${product.handle}`
         const isStored = await get(namespace)
         if (isStored) {
           // already stored in indexedDB
           return
         }
-        // TODO: use shared worker
-        const productWorker = new Worker('/worker/indexedDb.js')
+        // >> single worker <<
+        const productWorker = await dispatch('getIndexedDbWorker', null, { root: true })
         productWorker.postMessage({ action: 'set', key: namespace, value: product, debug: true })
         productWorker.onmessage = () => {
           productWorker.terminate()
         }
+
+        // >> individual workers <<
+        // const productWorker = new Worker('/worker/indexedDb.js')
+        // productWorker.postMessage({ action: 'set', key: namespace, value: product, debug: true })
+        // productWorker.onmessage = () => {
+        //   productWorker.terminate()
+        // }
       },
       setSelected({ state, commit }, selectedOption) {
         commit('setSelected', selectedOption)
@@ -91,9 +97,6 @@ export default () => {
     mutations: {
       setProduct: (state, product) => {
         state.product = product
-      },
-      startProductWorker: (state) => {
-        state.productWorker = state.productWorker || new Worker('/worker/indexedDb.js')
       },
       unloadProduct: (state) => {
         state.product = null

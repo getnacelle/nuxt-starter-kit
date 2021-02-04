@@ -2,12 +2,16 @@ import { clear, set, get, keys} from 'idb-keyval'
 
 export const state = () => ({
   collectionLimit: 12,
-  productDataCleared: false
+  productDataCleared: false,
+  indexedDbWorker: null
 })
 
 export const mutations = {
   setProductsCleared(state, isCleared) {
     state.productDataCleared = isCleared
+  },
+  startIndexedDbWorker: (state) => {
+    state.indexedDbWorker = state.indexedDbWorker || new Worker('/worker/indexedDb.js')
   }
 }
 
@@ -28,5 +32,11 @@ export const actions = {
       return set('anonymousID', anonymousID)
     }
     return
+  },
+  getIndexedDbWorker({state, commit}) {
+    if (!state.indexedDbWorker) {
+      commit('startIndexedDbWorker')
+    }
+    return state.indexedDbWorker
   }
 }
