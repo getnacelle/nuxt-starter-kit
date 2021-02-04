@@ -80,10 +80,6 @@ export default {
     },
     priceRangeFilters: {
       type: Array
-    },
-    passingConditions: {
-      type: Array,
-      required: false
     }
   },
   data() {
