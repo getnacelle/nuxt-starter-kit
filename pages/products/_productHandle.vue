@@ -135,6 +135,11 @@ export default {
   computed: {
     ...mapGetters('space', ['getMetatag'])
   },
+
+  beforeDestroy() {
+    const namespace = `product/${this.product.handle}`
+    this.$store.commit(`${namespace}/unloadProduct`)
+  },
   methods: {
     ...mapMutations('cart', ['showCart'])
   }
