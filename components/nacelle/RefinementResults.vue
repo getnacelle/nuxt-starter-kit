@@ -20,10 +20,10 @@
           selected filters
         </h2>
         <slot
-          name="result"
-          :result="visibleResults"
+          name="results"
+          :results="visibleResults"
         />
-        <observe-emitter @observe="showMoreResults" />
+        <observe-emitter @observe="showMore" />
         <div
           v-if="isFetching"
           style="text-align: center"
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import productModule from '~/store/product/productModule'
 
 export default {
@@ -56,11 +56,13 @@ export default {
   data() {
     return {
       fetchBuffer: 12,
-      isFetching: 0
+      isFetching: 0,
+      resultsToDisplay: 12,
+      loadedResults: [],
     }
   },
   computed: {
-    ...mapState('search', ['isLoading', 'resultsToDisplay']),
+    ...mapState('search', ['isLoading']),
 
     itemSinglularPlural() {
       return this.searchData?.length === 1
@@ -68,36 +70,59 @@ export default {
         : 'items'
     },
     visibleResults() {
-      return this.searchData.slice(0, this.resultsToDisplay)
+      return this.loadedResults.slice(0, this.resultsToDisplay)
     }
   },
   watch: {
     searchData(newData, oldData) {
+      // TODO: test this stringify comparison versus handle array comparison
       if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
-        this.resetResults()
+        this.resultsToDisplay = 12
       }
-    },
-    results(newVal) {
-      newVal.length
-        ? this.$emit('results')
-        : this.$emit('no-query')
-    },
-    visibleResults(newVal) {
-      this.isFetching = this.fetchBuffer
-
-      newVal.forEach(async product => {
-        const namespace = `product/${product.handle}`
-        if (!this.$store.hasModule(namespace)) {
-          this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
-          await this.$store.dispatch(`${namespace}/fetchProduct`, product.handle)
-        }
-        this.isFetching--
-      })
+      this.fetchProducts(0, this.resultsToDisplay + this.fetchBuffer)
     }
   },
 
+  beforeDestroy() {
+    this.loadedResults.forEach(product => {
+      const namespace = `product/${product.handle}`
+      this.$store.commit(`${namespace}/unloadProduct`)
+    })
+  },
   methods: {
-    ...mapMutations('search', ['showMoreResults', 'resetResults'])
+    async showMore() {
+      if (this.loadedResults.length > 12) {
+        const currentCount = this.resultsToDisplay
+        const fetchCursor = currentCount + this.fetchBuffer
+        this.resultsToDisplay = currentCount + 12
+        this.fetchProducts(fetchCursor, fetchCursor + 12)
+      }
+    },
+    async fetchProducts(start, end) {
+      this.isFetching = true
+
+      const products = this.searchData
+        .slice(start, end)
+        .map(({handle}, index) => {
+          this.$set(
+            this.loadedResults,
+            index + start,
+            { handle, isLoading: true }
+          )
+          return handle
+        })
+        .map(async (handle, index) => {
+          const namespace = `product/${handle}`
+          if (!this.$store.hasModule(namespace)) {
+            this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+          }
+          const product = await this.$store.dispatch(`${namespace}/fetchProduct`, handle)
+          this.$set(this.loadedResults, index + start, product)
+        })
+
+      await Promise.all(products)
+      this.isFetching = false
+    }
   }
 }
 </script>

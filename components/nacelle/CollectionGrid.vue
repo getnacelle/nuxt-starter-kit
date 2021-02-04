@@ -28,7 +28,13 @@ export default {
       return this.$store.dispatch(`${namespace}/fetchProduct`, handle)
     })
     this.products = await Promise.all(products)
-  }
+  },
+  beforeDestroy() {
+    this.products.forEach(product => {
+      const namespace = `product/${product.handle}`
+      this.$store.commit(`${namespace}/unloadProduct`)
+    })
+  },
 }
 </script>
 

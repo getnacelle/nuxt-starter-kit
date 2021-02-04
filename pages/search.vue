@@ -45,8 +45,8 @@
             v-if="filteredData"
             :search-data="filteredData"
           >
-            <template #result="{ result }">
-              <product-grid :products="result" :columns="4" />
+            <template #results="{ results }">
+              <product-grid :products="results" :columns="4" />
             </template>
             <template #no-results>
               <search-no-results />

@@ -148,8 +148,7 @@ export default {
   methods: {
     ...mapMutations('search', [
       'setFiltersCleared',
-      'setFiltersNotCleared',
-      'setFilteredData'
+      'setFiltersNotCleared'
     ]),
     computeSortedData() {
       const vm = this

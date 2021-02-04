@@ -96,7 +96,6 @@ export default () => {
         state.productWorker = state.productWorker || new Worker('/worker/indexedDb.js')
       },
       unloadProduct: (state) => {
-        console.debug('unloadProduct', state.product.handle)
         state.product = null
       },
       setOptions: (state) => {
