@@ -18,7 +18,7 @@
       v-if="product.variants.length > 1 && options.length"
       :options="options"
     >
-      <template v-slot:swatch="{option}">
+      <template #swatch="{option}">
         <product-option-swatch
           v-for="{ value } in option.values"
           :key="value"
@@ -43,13 +43,13 @@
         :product="product"
         :variant="selectedVariant"
         :quantity="quantity"
-      ></product-add-to-cart-button>
+      />
       <product-add-to-wishlist-button
         class="circle-button is-primary"
         :variant="selectedVariant"
         :product="product"
       >
-        <template v-slot:icon></template>
+        <template #icon />
       </product-add-to-wishlist-button>
     </div>
   </div>
@@ -57,10 +57,9 @@
 
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
-import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
+import getPriceForCurrency from '~/utils/getPriceForCurrency'
 
 export default {
-  mixins: [getDisplayPriceForCurrency],
   props: {
     pathFragment: {
       type: String,
@@ -128,9 +127,10 @@ export default {
     },
     displayPrice() {
       if (this.selectedVariant) {
-        return this.getPriceForCurrency({
+        return getPriceForCurrency({
           product: this.product,
-          fallbackPrice: this.selectedVariant.price
+          fallbackPrice: this.selectedVariant.price,
+          locale: this.locale
         })
       }
       return null
