@@ -93,7 +93,6 @@ export default {
       activeFilters: [],
       refinedData: null,
       activePriceRange: null,
-      passedData: null,
       sortBy: 'Sort By',
       filterWorker: null,
       sortWorker: null
@@ -134,7 +133,6 @@ export default {
 
   created() {
     if (process.browser) {
-      this.passedData = this.getPassedData()
       this.setupFilters()
       this.activeFilters = this.readFiltersFromQueryParams()
       if (this.filteredData && this.refinedData.length) {
@@ -386,28 +384,6 @@ export default {
         return filtersFromUrl
       } else {
         return []
-      }
-    },
-    getPassedData() {
-      const vm = this
-      if (vm.passingConditions) {
-        return vm.inputData.filter(item => {
-          const conditions = vm.passingConditions.map(passingCondition => {
-            const passing = new Function(
-              `return "${passingCondition.value}" ${
-                passingCondition.conditional
-              } "${item[passingCondition.property]}"`
-            )
-
-            return passing()
-          })
-          const passedConditions = conditions.every(condition => {
-            return condition === true
-          })
-          return passedConditions === true
-        })
-      } else {
-        return vm.inputData
       }
     }
   }
