@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import storeConfig from '../storeConfig'
-import localforage from 'localforage'
+import {get,clear} from 'idb-keyval'
 Vue.use(Vuex)
 
 const checkoutIdA = 'Z2lkOi8vc2hvcGlmeS9DaGVja291dC85NGZhY2M1Y2U5ZGE3MTQ5NmNiN2MzMmRiNTJkYjE3MT9rZXk9MGNkYzAzZTI4OGNlZjQ5NTY3MDhhNGJjMmQ5YjM1NmI='
@@ -11,30 +11,30 @@ const checkoutUrlB = 'https://test.myshopify.com/21347498321/checkouts/8626a2fff
 
 describe('Checkout Store', () => {
   describe('Checkout Mutations', () => {
-    it('sets a checkoutId', async() => {
+    it('sets a checkoutId', async () => {
       const store = new Vuex.Store(storeConfig())
-      await localforage.clear()
+      await clear()
       await store.commit('checkout/setId', checkoutIdA)
-      const id = await localforage.getItem('checkout-id')
+      const id = await get('checkout-id')
       expect(store.state.checkout.id).toEqual(checkoutIdA)
       expect(id).toEqual(checkoutIdA)
     })
   
-    it('sets a checkoutUrl', async() => {
+    it('sets a checkoutUrl', async () => {
       const store = new Vuex.Store(storeConfig())
-      await localforage.clear()
+      await clear()
       await store.commit('checkout/setUrl', checkoutUrlA)
-      const url = await localforage.getItem('checkout-url')
+      const url = await get('checkout-url')
       expect(store.state.checkout.url).toEqual(checkoutUrlA)
       expect(url).toEqual(checkoutUrlA)
     })
   
-    it('sets a checkout', async() => {
+    it('sets a checkout', async () => {
       const store = new Vuex.Store(storeConfig())
-      await localforage.clear()
+      await clear()
       await store.commit('checkout/setCheckout', { id: checkoutIdB, url: checkoutUrlB})
-      const url = await localforage.getItem('checkout-url')
-      const id = await localforage.getItem('checkout-id')
+      const url = await get('checkout-url')
+      const id = await get('checkout-id')
       expect(store.state.checkout.id).toEqual(checkoutIdB)
       expect(store.state.checkout.url).toEqual(checkoutUrlB)
       expect(id).toEqual(checkoutIdB)
@@ -45,7 +45,7 @@ describe('Checkout Store', () => {
   describe('Checkout Actions', () => {
     it('should NOT initialize checkout if NOT stored locally', async () => {
       const store = new Vuex.Store(storeConfig())
-      await localforage.clear()
+      await clear()
       await store.dispatch('checkout/initializeCheckout')
       expect(store.state.checkout.id).toEqual(null)
       expect(store.state.checkout.url).toEqual(null)
@@ -53,11 +53,11 @@ describe('Checkout Store', () => {
 
     it('resets current checkout', async () => {
       const store = new Vuex.Store(storeConfig())
-      await localforage.clear()
+      await clear()
       await store.commit('checkout/setCheckout', { id: checkoutIdB, url: checkoutUrlB})
       store.dispatch('checkout/resetCheckout')
-      const url = await localforage.getItem('checkout-url')
-      const id = await localforage.getItem('checkout-id')
+      const url = await get('checkout-url')
+      const id = await get('checkout-id')
       expect(store.state.checkout.id).toEqual(null)
       expect(store.state.checkout.url).toEqual(null)
       expect(id).toEqual(null)
