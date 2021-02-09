@@ -105,7 +105,6 @@ export default {
   },
   methods: {
     getComponentDefinition(def){
-      console.log(def)
       if(this.$options.components[pascalCase(def)]){
         return def
       } else {
