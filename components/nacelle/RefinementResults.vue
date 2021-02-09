@@ -78,6 +78,7 @@ export default {
       // TODO: test this stringify comparison versus handle array comparison
       if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
         this.resultsToDisplay = 12
+        this.loadedResults = []
       }
       this.fetchProducts(0, this.resultsToDisplay + this.fetchBuffer)
     }
