@@ -46,15 +46,15 @@ export default {
     updateQuery(query) {
       this.setQuery({ query, position: this.position })
     },
-    navigateToSearchResults() {
-      const queryVal = this.searchQuery || ''
+    navigateToSearchResults(query) {
+      const q = query || this.searchQuery || ''
 
       this.disableMenu()
 
       if (this.position === 'global') {
-        this.$router.push({ path: '/search', query: { q: queryVal } })
+        this.$router.push({ path: '/search', query: { q } })
       } else {
-        this.$router.replace({ query: { q: queryVal } })
+        this.$router.replace({ query: { q } })
       }
     }
   }

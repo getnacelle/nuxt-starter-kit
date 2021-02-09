@@ -80,7 +80,7 @@ export default {
         this.timeout[label] = setTimeout(() => fn(...args), debounceTime)
       }
     },
-    submitQuery(){
+    submitQuery() {
       this.$emit('submit', this.localQuery)
     }
   },
