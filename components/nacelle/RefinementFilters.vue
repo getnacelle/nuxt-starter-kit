@@ -126,6 +126,7 @@ export default {
     }
   },
   activated() {
+    this.setupFilters()
     this.activeFilters = this.readFiltersFromQueryParams()
     this.activePriceRange = {}
   },
