@@ -97,6 +97,7 @@ export default {
   watch: {
     inputData() {
       this.setupFilters()
+      this.clearFilters()
       this.computeFilteredData()
     },
     refinedData(newVal) {
