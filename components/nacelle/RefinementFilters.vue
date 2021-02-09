@@ -128,6 +128,9 @@ export default {
   activated() {
     this.setupFilters()
     this.clearFilters()
+    if (this.filteredData && this.refinedData.length) {
+      this.$emit('refined', this.refinedData)
+    }
   },
   beforeDestroy() {
     if (this.filterWorker) {
