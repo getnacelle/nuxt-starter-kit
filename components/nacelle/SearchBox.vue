@@ -51,10 +51,11 @@ export default {
 
       this.disableMenu()
 
-      if (this.position === 'global') {
-        this.$router.push({ path: '/search', query: { q } })
+      if (this.position === 'page' || this.$route.path === '/search') {
+        const routeQuery = this.$route.query
+        this.$router.replace({ query: { ...routeQuery, q } })
       } else {
-        this.$router.replace({ query: { q } })
+        this.$router.push({ path: '/search', query: { q } })
       }
     }
   }
