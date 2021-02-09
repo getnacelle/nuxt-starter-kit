@@ -6,6 +6,7 @@
     type="text"
     class="input nacelle"
     @keyup="trackSearchEvent"
+    @keydown.enter="submitQuery"
   >
 </template>
 
@@ -41,7 +42,7 @@ export default {
     },
     localQuery(newVal) {
       const emitUpdated = this.debounce(() => {
-        this.$emit('updated', newVal)
+        this.$emit('update', newVal)
       }, 250)
       emitUpdated()
     },
@@ -78,6 +79,9 @@ export default {
 
         this.timeout[label] = setTimeout(() => fn(...args), debounceTime)
       }
+    },
+    submitQuery(){
+      this.$emit('submit', this.localQuery)
     }
   },
 }

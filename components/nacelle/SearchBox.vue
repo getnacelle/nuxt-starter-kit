@@ -4,8 +4,8 @@
       :placeholder-text="placeholderText"
       :position="position"
       :search-query="searchQuery"
-      @updated="updateQuery"
-      @keydown.enter.native="navigateToSearchResults"
+      @update="updateQuery"
+      @submit="navigateToSearchResults"
     />
     <button
       v-if="position == 'global'"
@@ -54,7 +54,7 @@ export default {
       if (this.position === 'global') {
         this.$router.push({ path: '/search', query: { q: queryVal } })
       } else {
-        this.$router.push({ query: { q: queryVal } })
+        this.$router.replace({ query: { q: queryVal } })
       }
     }
   }
