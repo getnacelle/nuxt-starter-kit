@@ -49,7 +49,6 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/dotenv',
     '@nuxtjs/sitemap',
-    '@nuxtjs/axios',
     'nuxt-polyfill',
     '~/modules/nacelle'
   ],

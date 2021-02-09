@@ -34,7 +34,6 @@ export const VariantDropdown = () => ({
   },
   methods: {
     onVariantSelect({ selectedVariant }) {
-      console.log(selectedVariant);
       this.variant = selectedVariant;
     },
   },
