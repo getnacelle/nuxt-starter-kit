@@ -127,8 +127,7 @@ export default {
   },
   activated() {
     this.setupFilters()
-    this.activeFilters = this.readFiltersFromQueryParams()
-    this.activePriceRange = {}
+    this.clearFilters()
   },
   beforeDestroy() {
     if (this.filterWorker) {
