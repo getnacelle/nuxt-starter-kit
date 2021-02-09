@@ -1,5 +1,8 @@
 <template>
-  <product-grid :products="products"/>
+  <div>
+    <h3>{{ title }}</h3>
+    <product-grid :products="products" />
+  </div>
 </template>
 
 <script>
@@ -19,7 +22,7 @@ export default {
     const collectionData = await this.$nacelle.data.collection({
       handle: this.collectionHandle
     })
-    const products = collectionData.productLists[0].handles.map(handle => {
+    const products = collectionData.productLists[0].handles.slice(0, this.itemsToShow).map(handle => {
       return vm.$nacelle.data.product({ handle: handle })
     })
     this.products = await Promise.all(products)

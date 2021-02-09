@@ -6,10 +6,11 @@
       :key="section.id"
     >
       <component
-        :is="section.contentType"
+        :is="getComponentDefinition(section.contentType)"
         v-if="section.contentType"
         :id="section.handle"
         v-bind="section.data"
+        :type="section.contentType"
       />
     </div>
   </div>
@@ -22,13 +23,16 @@ import HeroBanner from '~/components/nacelle/ContentHeroBanner'
 import SideBySide from '~/components/nacelle/ContentSideBySide'
 import ProductGrid from '~/components/nacelle/ContentProductGrid'
 import CollectionGrid from '~/components/nacelle/CollectionGrid'
+import NacelleComponentPlaceholder from '~/components/nacelle/NacelleComponentPlaceholder'
+import { pascalCase } from "pascal-case";
 
 export default {
   components: {
     HeroBanner,
     SideBySide,
     ProductGrid,
-    CollectionGrid
+    CollectionGrid,
+    NacelleComponentPlaceholder
   },
   props: {
     page: {
@@ -100,6 +104,14 @@ export default {
     }
   },
   methods: {
+    getComponentDefinition(def){
+      console.log(def)
+      if(this.$options.components[pascalCase(def)]){
+        return def
+      } else {
+        return 'NacelleComponentPlaceholder'
+      }
+    },
     getImgSrc(img) {
       // extract url from Contentful or Shopify image object
       if (!img) {
