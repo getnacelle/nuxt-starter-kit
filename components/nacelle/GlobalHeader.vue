@@ -109,20 +109,8 @@
 </template>
 
 <script>
-import MainNavCart from '~/components/nacelle/MainNavCart'
-import MainNavBurger from '~/components/nacelle/MainNavBurger'
-import MainNavWishlist from '~/components/nacelle/MainNavWishlist'
-import SearchBox from '~/components/nacelle/SearchBox'
-import Cart from '~/components/nacelle/Cart'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 export default {
-  components: {
-    Cart,
-    MainNavCart,
-    MainNavBurger,
-    MainNavWishlist,
-    SearchBox
-  },
   props: {
     isSticky: {
       type: Boolean,

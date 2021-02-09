@@ -97,9 +97,24 @@ export default {
       }
     },
   },
+  mounted() {
+    this.refreshQuery()
+  },
+  activated() {
+    this.refreshQuery()
+  },
   methods: {
     ...mapMutations('search', ['setFilteredData', 'setQuery']),
-    ...mapActions('search', ['searchCatalog'])
+    ...mapActions('search', ['searchCatalog']),
+
+    refreshQuery() {
+      if(!this.isLoading && this.$route.query?.q) {
+        this.setQuery({
+          query: this.$route.query.q,
+          position: this.position,
+        })
+      }
+    }
   }
 }
 </script>

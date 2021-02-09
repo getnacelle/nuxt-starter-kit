@@ -14,7 +14,7 @@
     </select>
     <button
       class="button is-text"
-      @click="setFiltersCleared"
+      @click="clearFilters"
     >
       Clear Filters
     </button>
@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
 import queryString from 'query-string'
 
 export default {
@@ -79,7 +78,8 @@ export default {
       required: true
     },
     priceRangeFilters: {
-      type: Array
+      type: Array,
+      required: true
     }
   },
   data() {
@@ -93,9 +93,6 @@ export default {
       filterWorker: null,
       sortWorker: null
     }
-  },
-  computed: {
-    ...mapState('search', ['filtersCleared'])
   },
   watch: {
     inputData() {
@@ -116,14 +113,6 @@ export default {
     },
     sortBy() {
       this.computeSortedData()
-    },
-    filtersCleared(val) {
-      if (val === true) {
-        this.activeFilters = []
-        this.activePriceRange = null
-        this.sortBy = 'Sort By'
-        this.removeFiltersInQueryParams()
-      }
     }
   },
 
@@ -136,6 +125,11 @@ export default {
       }
     }
   },
+  activated() {
+    console.log('refinementFilters: activated', this.readFiltersFromQueryParams())
+    this.activeFilters = this.readFiltersFromQueryParams()
+    this.activePriceRange = {}
+  },
   beforeDestroy() {
     if (this.filterWorker) {
       this.filterWorker.terminate()
@@ -146,15 +140,10 @@ export default {
   },
 
   methods: {
-    ...mapMutations('search', [
-      'setFiltersCleared',
-      'setFiltersNotCleared'
-    ]),
     computeSortedData() {
       const vm = this
       this.sortWorker = this.sortWorker || new Worker('/worker/sort.js')
       this.sortWorker.postMessage({
-        activeFilters: this.activeFilters,
         filteredData: this.filteredData,
         activePriceRange: this.activePriceRange,
         sortBy: this.sortBy
@@ -174,6 +163,12 @@ export default {
         vm.filteredData = e.data
         vm.computeSortedData()
       }
+    },
+    clearFilters() {
+      this.activeFilters = []
+      this.activePriceRange = null
+      this.sortBy = 'Sort By'
+      this.removeFiltersInQueryParams()
     },
     setupFilters() {
       const vm = this
@@ -263,7 +258,6 @@ export default {
           })
         }
         this.setFilterInQueryParams(filter)
-        this.setFiltersNotCleared()
         this.computeFilteredData()
       })
     },
@@ -364,18 +358,16 @@ export default {
       )
 
       const filtersFromUrl = this.propertyFilters
-        .map(filter => {
-          return { property: filter.field, values: parsed[filter.field] }
-        })
-        .filter(filter => {
+        .map(({field}) => ({ property: field, values: parsed[field] }))
+        .filter(({values}) => {
           return (
-            filter.values !== null &&
-            filter.values !== undefined &&
-            filter.values.length > 0
+            values !== null &&
+            values !== undefined &&
+            values.length > 0
           )
         })
 
-      if (filtersFromUrl.length > 0) {
+      if (filtersFromUrl.length) {
         return filtersFromUrl
       } else {
         return []

@@ -1,7 +1,5 @@
 
 export const state = () => ({
-  autocompleteVisible: false,
-  filtersCleared: false,
   searchData: {
     products: []
   },
@@ -15,13 +13,14 @@ export const state = () => ({
   globalQuery: null,
   globalResults: [],
   isSearchingGlobal: false,
+  autocompleteVisible: false,
 
   // in-page search state
   pageQuery: null,
   pageResults: [],
   filteredData: null,
   isLoading: false,
-  resultsToDisplay: 12,
+  resultsToDisplay: 12
 })
 
 export const getters = {
@@ -57,14 +56,6 @@ export const mutations = {
 
   setAutocompleteVisible(state, isVisible) {
     state.autocompleteVisible = isVisible
-  },
-
-  setFiltersCleared(state) {
-    state.filtersCleared = true
-  },
-
-  setFiltersNotCleared(state) {
-    state.filtersCleared = false
   },
 
   setSearchData(state, data) {
