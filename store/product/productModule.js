@@ -77,14 +77,14 @@ export default () => {
         }
         // >> single worker <<
         const productWorker = await dispatch('getIndexedDbWorker', null, { root: true })
-        productWorker.postMessage({ action: 'set', key: namespace, value: product, debug: true })
+        productWorker.postMessage({ action: 'set', key: namespace, value: product })
         productWorker.onmessage = () => {
           productWorker.terminate()
         }
 
         // >> individual workers <<
         // const productWorker = new Worker('/worker/indexedDb.js')
-        // productWorker.postMessage({ action: 'set', key: namespace, value: product, debug: true })
+        // productWorker.postMessage({ action: 'set', key: namespace, value: product })
         // productWorker.onmessage = () => {
         //   productWorker.terminate()
         // }
