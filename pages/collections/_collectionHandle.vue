@@ -101,7 +101,6 @@ export default {
         return
       }
       this.isFetching = true
-      // console.time('fetchProducts')
 
       const products = this.collection.productLists[0].handles
         .slice(start, end)
@@ -124,7 +123,6 @@ export default {
 
       await Promise.all(products)
       this.isFetching = false
-      // console.timeEnd('fetchProducts')
     }
   }
   // head() {
