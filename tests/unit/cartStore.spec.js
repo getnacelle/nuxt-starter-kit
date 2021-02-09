@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import storeConfig from '../storeConfig'
-import localforage from 'localforage'
 import { v4 as uuid, validate } from 'uuid'
 Vue.use(Vuex)
 
@@ -229,39 +228,4 @@ describe('Cart Store', () => {
     ])
   })
 
-  it('saves an array of line items', async () => {
-    const store = new Vuex.Store(storeConfig())
-    const lineUuid = uuid()
-    store.state.cart.lineItems = [
-      {
-        id: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::${lineUuid}`,
-        image: {
-          source: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/shirt.jpg'
-        },
-        title: 'Gray T-Shirt',
-        productId: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzM1OTkyMDE4NjE3Mzc=',
-        handle: 'gray-t-shirt',
-        quantity: 2,
-        variant: {
-          id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
-        }
-      }
-    ]
-    await store.dispatch('cart/saveLineItems')
-    expect(await localforage.getItem('line-items')).toEqual([
-      {
-        id: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::${lineUuid}`,
-        image: {
-          source: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/shirt.jpg'
-        },
-        title: 'Gray T-Shirt',
-        productId: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzM1OTkyMDE4NjE3Mzc=',
-        handle: 'gray-t-shirt',
-        quantity: 2,
-        variant: {
-          id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
-        }
-      }
-    ])
-  })
 })
