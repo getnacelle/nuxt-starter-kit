@@ -5,7 +5,7 @@
     :placeholder="placeholderText"
     type="text"
     class="input nacelle"
-    @change="setQueryInStore"
+    @keyup="trackSearchEvent"
   >
 </template>
 
@@ -39,6 +39,12 @@ export default {
         this.$refs['global-search-input'].blur()
       }
     },
+    localQuery(newVal) {
+      const emitUpdated = this.debounce(() => {
+        this.$emit('updated', newVal)
+      }, 250)
+      emitUpdated()
+    },
     searchQuery(newVal) {
       if (newVal == null) {
         this.localQuery = null
@@ -55,21 +61,13 @@ export default {
   },
   methods: {
     ...mapActions('events', ['searchProducts']),
-    setQueryInStore(e) {
+    trackSearchEvent(e) {
       const query = this.localQuery
-
-      if (e.key !== 'Enter') {
-        const emitUpdated = this.debounce(() => {
-          this.$emit('updated', query)
-        }, 500)
-        emitUpdated()
-      }
-
       // Check that the key press is a letter or number and that
       // local query has a value before tracking an event
       if (/^[a-z0-9]$/i.test(e.key) && query) {
-        const trackSearchEvent = this.debounce(this.searchProducts, 500, 'event')
-        trackSearchEvent({ query })
+        const triggerSearchEvent = this.debounce(this.searchProducts, 500, 'event')
+        triggerSearchEvent({ query })
       }
     },
     debounce(fn, debounceTime, label='query') {
@@ -84,4 +82,3 @@ export default {
   },
 }
 </script>
-<style lang="scss" scoped></style>

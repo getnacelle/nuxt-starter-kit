@@ -19,15 +19,9 @@
 </template>
 
 <script>
-import SearchInput from '~/components/nacelle/SearchInput'
-import SearchAutocomplete from '~/components/nacelle/SearchAutocomplete'
 import { mapMutations } from 'vuex'
 
 export default {
-  components: {
-    SearchInput,
-    SearchAutocomplete
-  },
   props: {
     position: {
       type: String,

@@ -47,13 +47,8 @@ export default {
   watch: {
     searchQuery(newVal) {
       if (newVal && String(newVal) !== '') {
-        this.searchCatalog({value: newVal, position: 'global'})
         this.setAutocompleteVisible(true)
-      }
-    },
-    globalResults(newVal) {
-      if (newVal?.length === 0) {
-        this.setAutocompleteVisible(false)
+        this.searchCatalog({value: newVal, position: 'global'})
       }
     }
   },
