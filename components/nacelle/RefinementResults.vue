@@ -75,8 +75,7 @@ export default {
   },
   watch: {
     searchData(newData, oldData) {
-      // TODO: test this stringify comparison versus handle array comparison
-      if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+      if (newData.map(p => p.handle).join('') !== oldData.map(p => p.handle).join('')) {
         this.resultsToDisplay = 12
         this.loadedResults = []
       }
