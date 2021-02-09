@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import queryString from 'query-string'
 
 export default {
@@ -93,6 +94,9 @@ export default {
       filterWorker: null,
       sortWorker: null
     }
+  },
+  computed: {
+    ...mapState('search', ['pageQuery'])
   },
   watch: {
     inputData() {
@@ -127,10 +131,12 @@ export default {
     }
   },
   activated() {
-    this.setupFilters()
-    this.clearFilters()
-    if (this.filteredData && this.refinedData.length) {
-      this.$emit('refined', this.refinedData)
+    if (this.pageQuery !== this.$route.query?.q) {
+      this.setupFilters()
+      this.clearFilters()
+      if (this.filteredData && this.refinedData.length) {
+        this.$emit('refined', this.refinedData)
+      }
     }
   },
   beforeDestroy() {
@@ -328,7 +334,7 @@ export default {
 
           parsed = { ...parsed, ...transformedParams }
 
-          this.$router.push({ query: parsed })
+          this.$router.replace({ query: parsed })
         }
       })
     },
@@ -343,7 +349,7 @@ export default {
 
         const retainQueryObj = Object.fromEntries(retainQueryEntries)
 
-        this.$router.push({ query: retainQueryObj })
+        this.$router.replace({ query: retainQueryObj })
       }
     },
     readFiltersFromQueryParams() {
