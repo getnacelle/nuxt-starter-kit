@@ -126,7 +126,6 @@ export default {
     }
   },
   activated() {
-    console.log('refinementFilters: activated', this.readFiltersFromQueryParams())
     this.activeFilters = this.readFiltersFromQueryParams()
     this.activePriceRange = {}
   },

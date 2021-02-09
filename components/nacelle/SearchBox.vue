@@ -10,7 +10,7 @@
     <button
       v-if="position == 'global'"
       class="button"
-      @click="navigateToSearchResults"
+      @click="navigateToSearchResults()"
     >
       Search
     </button>
