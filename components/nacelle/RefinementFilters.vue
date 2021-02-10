@@ -66,7 +66,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import queryString from 'query-string'
 
 export default {
   props: {
@@ -282,12 +281,7 @@ export default {
     setFilterInQueryParams(filter) {
       return requestAnimationFrame(() => {
         if (process.browser) {
-          let parsed = queryString.parse(location.search, {
-            arrayFormat: 'comma'
-          })
-
           let currentParams = this.readFiltersFromQueryParams()
-
           let transformedParams
 
           if (currentParams.length > 0) {
@@ -332,9 +326,7 @@ export default {
             }
           }
 
-          parsed = { ...parsed, ...transformedParams }
-
-          this.$router.replace({ query: parsed })
+          this.$router.replace({ query: transformedParams })
         }
       })
     },
@@ -353,31 +345,15 @@ export default {
       }
     },
     readFiltersFromQueryParams() {
-      let parsed = Object.entries(
-        queryString.parse(location.search, { arrayFormat: 'comma' })
-      )
+      const filtersFromRoute = this.propertyFilters
+        .filter(({field}) => !!this.$route.query[field])
+        .map(({field}) => ({
+          property: field,
+          values: this.$route.query[field].split(',')
+        }))
 
-      parsed = Object.fromEntries(
-        parsed.map(filter => {
-          if (typeof filter[1] === 'string') {
-            filter[1] = [filter[1]]
-          }
-          return filter
-        })
-      )
-
-      const filtersFromUrl = this.propertyFilters
-        .map(({field}) => ({ property: field, values: parsed[field] }))
-        .filter(({values}) => {
-          return (
-            values !== null &&
-            values !== undefined &&
-            values.length > 0
-          )
-        })
-
-      if (filtersFromUrl.length) {
-        return filtersFromUrl
+      if (filtersFromRoute.length) {
+        return filtersFromRoute
       } else {
         return []
       }
