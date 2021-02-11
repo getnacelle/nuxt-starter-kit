@@ -326,7 +326,7 @@ export default {
             }
           }
 
-          this.$router.replace({ query: transformedParams })
+          this.safelyUpdateSearchQueryParam(transformedParams)
         }
       })
     },
@@ -341,7 +341,15 @@ export default {
 
         const retainQueryObj = Object.fromEntries(retainQueryEntries)
 
-        this.$router.replace({ query: retainQueryObj })
+        this.safelyUpdateSearchQueryParam(retainQueryObj)
+      }
+    },
+    safelyUpdateSearchQueryParam(query) {
+      const routeQuery = this.$route.query
+      const newRouteQuery = { ...routeQuery, q: query }
+
+      if (JSON.stringify(routeQuery) !== JSON.stringify(newRouteQuery)) {
+        this.$router.replace({ query: newRouteQuery})
       }
     },
     readFiltersFromQueryParams() {

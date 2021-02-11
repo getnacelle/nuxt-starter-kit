@@ -10,7 +10,7 @@
     <button
       v-if="position == 'global'"
       class="button"
-      @click="navigateToSearchResults()"
+      @click="navigateToSearchResults(searchQuery)"
     >
       Search
     </button>
@@ -45,16 +45,21 @@ export default {
     ...mapMutations('search', ['setQuery']),
     updateQuery(query) {
       this.setQuery({ query, position: this.position })
+
+      if (this.position === 'page') {
+        const routeQuery = this.$route.query
+        const newRouteQuery = { ...routeQuery, q: query }
+
+        if (JSON.stringify(routeQuery) !== JSON.stringify(newRouteQuery)) {
+          this.$router.replace({ query: newRouteQuery})
+        }
+      }
     },
     navigateToSearchResults(query) {
-      const q = query || this.searchQuery || ''
+      const q = query || ''
 
-      this.disableMenu()
-
-      if (this.position === 'page' || this.$route.path === '/search') {
-        const routeQuery = this.$route.query
-        this.$router.replace({ query: { ...routeQuery, q } })
-      } else {
+      if (this.position === 'global') {
+        this.disableMenu()
         this.$router.push({ path: '/search', query: { q } })
       }
     }
