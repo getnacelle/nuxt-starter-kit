@@ -18,32 +18,10 @@ import { mapGetters, mapActions } from 'vuex'
 import { clear } from 'idb-keyval'
 
 export default {
-  methods: {
-    ...mapActions('cart', ['initializeCart']),
-    ...mapActions('checkout', ['initializeCheckout']),
-    ...mapActions('user', ['readSession']),
-  },
   data() {
     return {
       headerHeight: null,
     }
-  },
-  computed: {
-    ...mapGetters('space', ['getMetatag']),
-  },
-  async mounted() {
-    if (this.$refs.header) {
-      this.headerHeight = this.$refs.header.$el.clientHeight
-    }
-
-    await this.initializeCheckout()
-    await this.initializeCart()
-
-    if (process.env.DEV_MODE === 'true') {
-      console.log('dev mode active!')
-      clear()
-    }
-    this.readSession()
   },
   head() {
     const properties = {}
@@ -97,6 +75,35 @@ export default {
       ...properties,
       meta,
     }
+  },
+  computed: {
+    ...mapGetters('space', ['getMetatag']),
+  },
+  async mounted() {
+    if (this.$refs.header) {
+      this.headerHeight = this.$refs.header.$el.clientHeight
+    }
+
+    await this.initializeCheckout()
+    await this.initializeCart()
+
+    if (process.env.DEV_MODE === 'true') {
+      console.log('dev mode active!')
+      await clear()
+    }
+
+    if (process.client) {
+      await this.clearProductIdb()
+      this.getSearchData()
+    }
+    this.readSession()
+  },
+  methods: {
+    ...mapActions(['clearProductIdb']),
+    ...mapActions('cart', ['initializeCart']),
+    ...mapActions('checkout', ['initializeCheckout']),
+    ...mapActions('user', ['readSession']),
+    ...mapActions('search', ['getSearchData'])
   },
 }
 </script>

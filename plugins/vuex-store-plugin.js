@@ -7,8 +7,13 @@ export default async (context) => {
     context.store = new Vuex.Store()
   }
 
-  context.app.router.afterEach((to) => {
+  context.app.router.afterEach((to, from) => {
     if (process.browser || process.client) {
+      if (to.path === '/search' && from.path === '/search') {
+        // don't track page view events for search page filtering
+        return
+      }
+
       setTimeout(() => {
         // Check if we have set up the user and if not init
         if (

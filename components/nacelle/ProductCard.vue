@@ -15,10 +15,10 @@
       <product-price :price="displayPrice" />
     </div>
     <product-options
-      v-if="product.variants.length > 1 && options && options.length"
+      v-if="product.variants.length > 1 && options.length"
       :options="options"
     >
-      <template v-slot:swatch="{option}">
+      <template #swatch="{option}">
         <product-option-swatch
           v-for="{ value } in option.values"
           :key="value"
@@ -26,7 +26,7 @@
             value,
             optionName: option.name,
             variants: product.variants,
-            globalHandle: product.globalHandle,
+            handle: product.handle,
             selectedVariant
           }"
           swatch-style="tab"
@@ -43,25 +43,23 @@
         :product="product"
         :variant="selectedVariant"
         :quantity="quantity"
-      ></product-add-to-cart-button>
+      />
       <product-add-to-wishlist-button
         class="circle-button is-primary"
         :variant="selectedVariant"
         :product="product"
       >
-        <template v-slot:icon></template>
+        <template #icon />
       </product-add-to-wishlist-button>
     </div>
   </div>
 </template>
 
 <script>
-import productModule from '~/store/product/productModule'
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
-import getDisplayPriceForCurrency from '~/mixins/getDisplayPriceForCurrency'
+import getPriceForCurrency from '~/utils/getPriceForCurrency'
 
 export default {
-  mixins: [getDisplayPriceForCurrency],
   props: {
     pathFragment: {
       type: String,
@@ -122,16 +120,17 @@ export default {
         : `min-width: ${this.minWidth}; min-height: ${this.minHeight};`
     },
     selectedVariant() {
-      return this.$store.getters[`product/${this.product.globalHandle}/selectedVariant`] || null
+      return this.$store.state[`product/${this.product.handle}`].selectedVariant
     },
     options() {
-      return this.$store.getters[`product/${this.product.globalHandle}/options`] || null
+      return this.$store.state[`product/${this.product.handle}`].options
     },
     displayPrice() {
       if (this.selectedVariant) {
-        return this.getPriceForCurrency({
+        return getPriceForCurrency({
           product: this.product,
-          fallbackPrice: this.selectedVariant.price
+          fallbackPrice: this.selectedVariant.price,
+          locale: this.locale
         })
       }
       return null
@@ -153,13 +152,6 @@ export default {
       return this.lineItems.filter(item => {
         return item.productId === this.product.id
       })
-    }
-  },
-  created() {
-    const { product } = this
-    const namespace = `product/${product.globalHandle}`
-    if (!this.$store.hasModule(namespace)) {
-      this.$store.registerModule(namespace, productModule({ product }), { preserveState: false })
     }
   },
 

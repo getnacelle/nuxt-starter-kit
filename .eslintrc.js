@@ -23,6 +23,13 @@ module.exports = {
         named: 'never',
         asyncArrow: 'always'
       }
-    ]
+    ],
+    'vue/max-attributes-per-line': ['error', {
+      singleline: 2,
+      multiline: {
+        max: 1,
+        allowFirstLine: false
+      }
+    }]
   }
 }

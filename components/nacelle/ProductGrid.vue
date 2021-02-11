@@ -1,29 +1,24 @@
 <template>
   <div class="product-grid columns is-multiline is-paddingless nacelle">
-    <div
-      v-for="product in products"
-      :key="product.id"
-      class="card-wrapper"
-      :class="columnClasses"
-    >
-      <product-card
-        v-if="product"
-        :product="product"
-        :showQuantityUpdate="showQuantityUpdate"
-        :showAddToCart="showAddToCart"
-        :imageSize="imageSize"
-      />
-    </div>
+    <template v-for="product in products">
+      <div
+        :key="product.handle"
+        :class="columnClasses"
+      >
+        <product-card
+          v-if="!product.isLoading"
+          :product="product"
+          :show-quantity-update="showQuantityUpdate"
+          :show-add-to-cart="showAddToCart"
+          :image-size="imageSize"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-import ProductCard from '~/components/nacelle/ProductCard'
-
 export default {
-  components: {
-    ProductCard
-  },
   props: {
     products: {
       type: Array,

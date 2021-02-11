@@ -16,11 +16,16 @@
         />
       </div>
     </section>
-    <section class="section product-meta" v-if="product">
+    <section
+      v-if="product"
+      class="section product-meta"
+    >
       <div class="container">
         <div class="columns">
           <div class="column is-7">
-            <h4 class="title is-4">What You're Getting</h4>
+            <h4 class="title is-4">
+              What You're Getting
+            </h4>
             <div class="content">
               <p>
                 Run a manual sweep of anomalous airborne or electromagnetic
@@ -34,7 +39,9 @@
             </div>
           </div>
           <div class="column is-4 is-offset-1 highlight">
-            <h4 class="title is-4">Our Products</h4>
+            <h4 class="title is-4">
+              Our Products
+            </h4>
             <div class="content">
               <p>
                 It indicates a synchronic distortion in the areas emanating
@@ -45,41 +52,38 @@
             </div>
           </div>
         </div>
-
       </div>
     </section>
   </div>
 </template>
 
 <script>
+import productModule from '~/store/product/productModule'
 import productMetafields from '~/mixins/productMetafields'
 import viewEvent from '~/mixins/viewEvent'
 // import jsonld from '~/mixins/jsonld'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
+  mixins: [
+    productMetafields,
+    viewEvent('product')
+    // jsonld('product')
+  ],
   data() {
     return {
       product: null
     }
   },
   async fetch() {
-    this.product = await this.$nacelle.data.product({
-      handle: this.$route.params.productHandle
-    })
+    const handle = this.$route.params.productHandle
+    const namespace = `product/${handle}`
+    if (!this.$store.hasModule(namespace)) {
+      this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+    }
+    const product = await this.$store.dispatch(`${namespace}/fetchProduct`, handle)
+    this.product = product
   },
-  mixins: [
-    productMetafields,
-    viewEvent('product')
-    // jsonld('product')
-  ],
-  computed: {
-    ...mapGetters('space', ['getMetatag'])
-  },
-  methods: {
-    ...mapMutations('cart', ['showCart'])
-  },
-
   head() {
     if (this.product) {
       const properties = {}
@@ -127,6 +131,17 @@ export default {
         meta
       }
     }
+  },
+  computed: {
+    ...mapGetters('space', ['getMetatag'])
+  },
+
+  beforeDestroy() {
+    const namespace = `product/${this.product.handle}`
+    this.$store.commit(`${namespace}/unloadProduct`)
+  },
+  methods: {
+    ...mapMutations('cart', ['showCart'])
   }
 }
 </script>

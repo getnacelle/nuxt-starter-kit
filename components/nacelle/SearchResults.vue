@@ -1,74 +1,60 @@
 <template>
   <div>
-    <transition name="fade" mode="out-in">
+    <transition
+      name="fade"
+      mode="out-in"
+    >
       <div
-        v-if="searchResults && searchResults.length == 0"
+        v-if="isLoading"
+        key="loading"
+      >
+        <slot name="loading" />
+      </div>
+      <div
+        v-else-if="globalResults.length"
+        key="results"
+        class="search-results"
+      >
+        <slot
+          name="result"
+          :result="globalResults"
+        />
+      </div>
+      <div
+        v-else
         key="no-results"
         class="no-results"
       >
-        <slot name="no-results"></slot>
-      </div>
-      <div key="results" class="search-results" v-else>
-        <slot name="result" :result="searchResults"></slot>
+        <slot name="no-results" />
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import Fuse from 'fuse.js/dist/fuse.basic.common'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   props: {
-    searchKeys: {
-      type: Array,
-      default: () => {
-        return ['title']
-      }
-    },
-    searchData: {
-      type: Array
-    },
     searchQuery: {
-      type: Object
-    },
-    relevanceThreshold: {
-      type: Number,
-      default: 0.5
-    }
-  },
-  data() {
-    return {
-      searchRes: null
+      type: String,
+      default: null
     }
   },
   computed: {
-    searchResults() {
-      if (
-        this.searchData &&
-        this.searchQuery &&
-        this.searchQuery.value &&
-        String(this.searchQuery.value) !== ''
-      ) {
-        const options = {
-          keys: this.searchKeys,
-          threshold: this.relevanceThreshold
-        }
-        const results = new Fuse(this.searchData, options).search(
-          String(this.searchQuery.value)
-        )
-
-        this.$emit('results')
-
-        return results
-          .filter(result => typeof result.item !== 'undefined')
-          .map(result => result.item)
+    ...mapState('search', ['isLoading', 'globalResults'])
+  },
+  watch: {
+    searchQuery(newVal) {
+      if (newVal && String(newVal) !== '') {
+        this.setAutocompleteVisible(true)
+        this.searchCatalog({value: newVal, position: 'global'})
       }
-
-      this.$emit('no-query')
-
-      return this.searchData
     }
+  },
+  methods: {
+    ...mapActions('search', ['searchCatalog']),
+    ...mapMutations('search', ['setAutocompleteVisible'])
   }
 }
 </script>

@@ -2,10 +2,7 @@
   <div>
     <h3>Refine Your Search</h3>
     <select v-model="sortBy">
-      <option
-        selected
-        disabled
-      >
+      <option selected disabled>
         Sort By
       </option>
       <option value="hi-low">
@@ -17,7 +14,7 @@
     </select>
     <button
       class="button is-text"
-      @click="setFiltersCleared"
+      @click="clearFilters"
     >
       Clear Filters
     </button>
@@ -68,16 +65,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-import queryString from 'query-string'
-import RefinementFilterSelect from '~/components/nacelle/RefinementFilterSelect'
-import RefinementPriceFilterSelect from '~/components/nacelle/RefinementPriceFilterSelect'
-import { omit } from 'search-params'
+import { mapState } from 'vuex'
+
 export default {
-  components: {
-    RefinementFilterSelect,
-    RefinementPriceFilterSelect
-  },
   props: {
     inputData: {
       type: Array,
@@ -88,11 +78,8 @@ export default {
       required: true
     },
     priceRangeFilters: {
-      type: Array
-    },
-    passingConditions: {
       type: Array,
-      required: false
+      required: true
     }
   },
   data() {
@@ -100,19 +87,24 @@ export default {
       filters: null,
       filteredData: null,
       activeFilters: [],
-      outputData: null,
+      refinedData: null,
       activePriceRange: null,
-      sortBy: 'Sort By'
+      sortBy: 'Sort By',
+      filterWorker: null,
+      sortWorker: null
     }
+  },
+  computed: {
+    ...mapState('search', ['pageQuery'])
   },
   watch: {
     inputData() {
       this.setupFilters()
+      this.clearFilters()
       this.computeFilteredData()
     },
-    outputData() {
-      const vm = this
-      vm.$emit('updated', vm.outputData)
+    refinedData(newVal) {
+      this.$emit('refined', newVal)
     },
     filters() {
       this.computeFilteredData()
@@ -121,53 +113,70 @@ export default {
       this.computeFilteredData()
     },
     activePriceRange() {
-      this.computeOutputData()
+      this.computeSortedData()
     },
     sortBy() {
-      this.computeOutputData()
-    },
-    filtersCleared(val) {
-      if (val === true) {
-        this.activeFilters = []
-        this.activePriceRange = null
-        this.sortBy = 'Sort By'
-        this.removeFiltersInQueryParams()
+      this.computeSortedData()
+    }
+  },
+
+  created() {
+    if (process.browser) {
+      this.setupFilters()
+      this.activeFilters = this.readFiltersFromQueryParams()
+      if (this.filteredData && this.refinedData.length) {
+        this.$emit('refined', this.refinedData)
       }
     }
   },
-  computed: {
-    ...mapState('search', ['filtersCleared'])
+  activated() {
+    if (this.pageQuery !== this.$route.query?.q) {
+      this.setupFilters()
+      this.clearFilters()
+      if (this.filteredData && this.refinedData.length) {
+        this.$emit('refined', this.refinedData)
+      }
+    }
   },
+  beforeDestroy() {
+    if (this.filterWorker) {
+      this.filterWorker.terminate()
+    }
+    if (this.sortWorker) {
+      this.sortWorker.terminate()
+    }
+  },
+
   methods: {
-    ...mapMutations('search', [
-      'setFiltersCleared',
-      'setFiltersNotCleared',
-      'setFilteredData'
-    ]),
-    computeOutputData() {
+    computeSortedData() {
       const vm = this
-      const outputWorker = new Worker('/outputWorker.js')
-      outputWorker.postMessage({
-        activeFilters: this.activeFilters,
+      this.sortWorker = this.sortWorker || new Worker('/worker/sort.js')
+      this.sortWorker.postMessage({
         filteredData: this.filteredData,
         activePriceRange: this.activePriceRange,
         sortBy: this.sortBy
       })
-      outputWorker.onmessage = function (e) {
-        vm.outputData = e.data
+      this.sortWorker.onmessage = function (e) {
+        vm.refinedData = e.data
       }
     },
     computeFilteredData() {
       const vm = this
-      const filterWorker = new Worker('/filterWorker.js')
-      filterWorker.postMessage({
+      this.filterWorker = this.filterWorker || new Worker('/worker/filter.js')
+      this.filterWorker.postMessage({
         activeFilters: this.activeFilters,
         inputData: this.inputData
       })
-      filterWorker.onmessage = function (e) {
+      this.filterWorker.onmessage = function (e) {
         vm.filteredData = e.data
-        vm.computeOutputData()
+        vm.computeSortedData()
       }
+    },
+    clearFilters() {
+      this.activeFilters = []
+      this.activePriceRange = null
+      this.sortBy = 'Sort By'
+      this.removeFiltersInQueryParams()
     },
     setupFilters() {
       const vm = this
@@ -257,7 +266,6 @@ export default {
           })
         }
         this.setFilterInQueryParams(filter)
-        this.setFiltersNotCleared()
         this.computeFilteredData()
       })
     },
@@ -273,12 +281,7 @@ export default {
     setFilterInQueryParams(filter) {
       return requestAnimationFrame(() => {
         if (process.browser) {
-          let parsed = queryString.parse(location.search, {
-            arrayFormat: 'comma'
-          })
-
           let currentParams = this.readFiltersFromQueryParams()
-
           let transformedParams
 
           if (currentParams.length > 0) {
@@ -323,64 +326,45 @@ export default {
             }
           }
 
-          parsed = { ...parsed, ...transformedParams }
-
-          this.$router.push({ query: parsed })
+          const routeQuery = this.$route.query
+          const newRouteQuery = { ...routeQuery, ...transformedParams }
+          this.safelyUpdateSearchQueryParam(newRouteQuery)
         }
       })
     },
     removeFiltersInQueryParams() {
-      if (process.browser) {
-        const filtersFromUrl = this.propertyFilters.map(filter => {
+      if (process.client && this.$route.query) {
+        const omitKeysFromUrl = this.propertyFilters.map(filter => {
           return filter.field
         })
-        const queryParamsString = queryString.stringify(
-          queryString.parse(location.search)
-        )
-        const queryWithoutFilters = omit(queryParamsString, filtersFromUrl)
-          .querystring
-        this.$router.push({ query: queryString.parse(queryWithoutFilters) })
+
+        const retainQueryEntries = Object.entries(this.$route.query)
+          .filter(([key])=> !omitKeysFromUrl.includes(key))
+
+        const retainQueryObj = Object.fromEntries(retainQueryEntries)
+
+        this.safelyUpdateSearchQueryParam(retainQueryObj)
+      }
+    },
+    safelyUpdateSearchQueryParam(query) {
+      const routeQuery = this.$route.query
+
+      if (JSON.stringify(routeQuery) !== JSON.stringify(query)) {
+        this.$router.replace({ query})
       }
     },
     readFiltersFromQueryParams() {
-      let parsed = Object.entries(
-        queryString.parse(location.search, { arrayFormat: 'comma' })
-      )
+      const filtersFromRoute = this.propertyFilters
+        .filter(({field}) => !!this.$route.query[field])
+        .map(({field}) => ({
+          property: field,
+          values: this.$route.query[field].split(',')
+        }))
 
-      parsed = Object.fromEntries(
-        parsed.map(filter => {
-          if (typeof filter[1] === 'string') {
-            filter[1] = [filter[1]]
-          }
-          return filter
-        })
-      )
-
-      const filtersFromUrl = this.propertyFilters
-        .map(filter => {
-          return { property: filter.field, values: parsed[filter.field] }
-        })
-        .filter(filter => {
-          return (
-            filter.values !== null &&
-            filter.values !== undefined &&
-            filter.values.length > 0
-          )
-        })
-
-      if (filtersFromUrl.length > 0) {
-        return filtersFromUrl
+      if (filtersFromRoute.length) {
+        return filtersFromRoute
       } else {
         return []
-      }
-    }
-  },
-  created() {
-    if (process.browser) {
-      this.setupFilters()
-      this.activeFilters = this.readFiltersFromQueryParams()
-      if (this.filteredData && this.outputData.length > 0) {
-        this.$emit('updated', this.outputData)
       }
     }
   }
