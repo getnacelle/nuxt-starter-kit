@@ -1,5 +1,8 @@
 <template>
-  <product-grid :products="products" />
+  <div>
+    <h3>{{ title }}</h3>
+    <product-grid :products="products" />
+  </div>
 </template>
 
 <script>

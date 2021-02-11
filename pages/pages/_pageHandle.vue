@@ -1,6 +1,9 @@
 <template>
   <div class="page">
-    <page-content :page="page" />
+    <page-content
+      v-if="!$fetchState.pending"
+      :page="page"
+    />
   </div>
 </template>
 
@@ -13,8 +16,7 @@ export default {
   },
   async fetch() {
     this.page = await this.$nacelle.data.page({
-      handle: this.$route.params.pageHandle,
-      locale: 'en-us'
+      handle: this.$route.params.pageHandle
     })
   }
 
