@@ -326,7 +326,9 @@ export default {
             }
           }
 
-          this.safelyUpdateSearchQueryParam(transformedParams)
+          const routeQuery = this.$route.query
+          const newRouteQuery = { ...routeQuery, ...transformedParams }
+          this.safelyUpdateSearchQueryParam(newRouteQuery)
         }
       })
     },
@@ -346,10 +348,9 @@ export default {
     },
     safelyUpdateSearchQueryParam(query) {
       const routeQuery = this.$route.query
-      const newRouteQuery = { ...routeQuery, q: query }
 
-      if (JSON.stringify(routeQuery) !== JSON.stringify(newRouteQuery)) {
-        this.$router.replace({ query: newRouteQuery})
+      if (JSON.stringify(routeQuery) !== JSON.stringify(query)) {
+        this.$router.replace({ query})
       }
     },
     readFiltersFromQueryParams() {
