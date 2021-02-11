@@ -102,7 +102,6 @@ export const actions = {
   searchCatalog({ state, getters, commit }, {value, position}) {
     commit('startSearchWorker', getters.productData)
     commit('setSearchingGlobal', true)
-    console.time('searchCatalog')
 
     state.searchWorker.postMessage({
       options: state.searchOptions,
@@ -111,7 +110,6 @@ export const actions = {
     state.searchWorker.onmessage = (e) => {
       commit('setResults', { results: e.data, position })
       commit('setSearchingGlobal', false)
-      console.timeEnd('searchCatalog')
     }
   }
 }
