@@ -3,12 +3,11 @@ import flattenDeep from 'lodash/flattenDeep'
 import uniqWith from 'lodash/uniqWith'
 import isEqual from 'lodash/isEqual'
 
-const findSelectedVariant = (state, options) => {
-  options = options || state.selectedOptions
+const findSelectedVariant = (product, options) => {
   if (options.length === 0) {
-    return state.product.variants[0]
+    return product.variants[0]
   } else {
-    return state.product.variants.find((variant) => {
+    return product.variants.find((variant) => {
       return options.every((option) => {
         return variant.selectedOptions
           .some(variantOption => JSON.stringify(variantOption) === JSON.stringify(option))
@@ -34,10 +33,10 @@ export default () => {
 
         // scenarios & product states:
         // 1 - landing page (statically generated) -> product already loaded in vuex; later need to set in idb
-        // 2 - non-landing / not preloaded...
+        // 2 - non-landing (client-side rendered)
         //   a. if product is in vuex (loaded) -> do nothing, continue
         //   b. else if product not in vuex BUT in idb -> get from idb, load in vuex
-        //   c. else if product not in vuex NOR in idb -> get from $nacelle, set in idb,
+        //   c. else if product not in vuex NOR in idb -> get from $nacelle, then set in idb
 
         if (!product) {
           if (process.client) {
@@ -46,7 +45,7 @@ export default () => {
               // product was found in indexedDB
               dispatch('setupProduct', product)
             } else {
-              // load product with $nacelle client-side
+              // not in indexedDB, load product with $nacelle client-side
               product = await this.$nacelle.data.product({ handle })
               dispatch('setupProduct', product)
               dispatch('storeProduct', product)
@@ -61,12 +60,12 @@ export default () => {
         }
         return product
       },
-      setupProduct({state, commit}, product) {
+      setupProduct({ commit }, product) {
         commit('setProduct', product)
         commit('setOptions')
 
-        // set a preselected variant
-        commit('setSelectedVariant', findSelectedVariant(state))
+        // set default selected variant
+        commit('setDefaultSelectedVariant')
       },
       async storeProduct({ dispatch }, product) {
         const namespace = `product/${product.handle}`
@@ -91,7 +90,7 @@ export default () => {
       },
       setSelected({ state, commit }, selectedOption) {
         commit('setSelected', selectedOption)
-        commit('setSelectedVariant', findSelectedVariant(state))
+        commit('setSelectedVariant', findSelectedVariant(state.product, state.selectedOptions))
       }
     },
     mutations: {
@@ -146,6 +145,9 @@ export default () => {
 
         state.options = optionValuesByName
       },
+      setDefaultSelectedVariant: (state) => {
+        state.selectedVariant = state.product.variants[0]
+      },
       setSelectedVariant: (state, selectedVariant) => {
         state.selectedVariant = selectedVariant
       },
@@ -163,12 +165,12 @@ export default () => {
 
           // - - -
           // after updating `selectedOptions` test if a variant matches
-          const selectedVariant = findSelectedVariant(state)
+          const selectedVariant = findSelectedVariant(state.product, state.selectedOptions)
 
           // if matching variant is not found
           // then set `selectedOptions` to the first variant found with `selectedOption`
           if (!selectedVariant) {
-            const matchingVariant = findSelectedVariant(state, [selectedOption])
+            const matchingVariant = findSelectedVariant(state.product, [selectedOption])
             state.selectedOptions = matchingVariant.selectedOptions
               .map(({ name, value }) => ({ name, value }))
           }
