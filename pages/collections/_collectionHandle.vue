@@ -74,7 +74,7 @@ export default {
       this.collectionProducts.forEach(product => {
         const namespace = `product/${product.handle}`
         if (!this.$store.hasModule(namespace)) {
-          this.$store.registerModule(namespace, productModule())
+          this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
           this.$store.dispatch(`${namespace}/setupProduct`, product)
         }
         this.$store.dispatch(`${namespace}/storeProduct`, product)
