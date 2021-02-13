@@ -100,7 +100,8 @@ export default {
       default: '500px'
     },
     imageSize: {
-      type: Number
+      type: Number,
+      default: 200
     }
   },
   data() {

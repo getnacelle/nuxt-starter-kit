@@ -75,8 +75,9 @@ export default {
         const namespace = `product/${product.handle}`
         if (!this.$store.hasModule(namespace)) {
           this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+          this.$store.dispatch(`${namespace}/setupProduct`, product)
         }
-        return this.$store.dispatch(`${namespace}/storeProduct`, product)
+        this.$store.dispatch(`${namespace}/storeProduct`, product)
       })
     }
   },
