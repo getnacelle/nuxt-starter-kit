@@ -48,10 +48,10 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
 import productModule from '~/store/product/productModule'
 import productMetafields from '~/mixins/productMetafields'
 import viewEvent from '~/mixins/viewEvent'
-import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   mixins: [productMetafields, viewEvent('product')],

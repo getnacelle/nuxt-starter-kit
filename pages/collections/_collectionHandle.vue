@@ -62,7 +62,7 @@ export default {
     }
   },
   mounted() {
-    if (process.client && this.collection) {
+    if (this.collection) {
       this.collectionProducts.forEach((product) => {
         const namespace = `product/${product.handle}`
         if (!this.$store.hasModule(namespace)) {
@@ -82,7 +82,7 @@ export default {
     })
   },
   methods: {
-    async showMore() {
+    showMore() {
       if (!this.collection) {
         return
       }

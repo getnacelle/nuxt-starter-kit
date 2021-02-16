@@ -17,9 +17,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
 import ProductGrid from '~/components/nacelle/ProductGrid'
-import { mapState } from 'vuex'
 
 export default {
   components: {

@@ -10,8 +10,9 @@
 </template>
 
 <script>
-import ProductPrice from '~/components/nacelle/ProductPrice'
 import { mapGetters } from 'vuex'
+import ProductPrice from '~/components/nacelle/ProductPrice'
+
 export default {
   components: {
     ProductPrice

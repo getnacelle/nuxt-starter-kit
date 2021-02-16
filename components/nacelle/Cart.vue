@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import CartFlyoutHeader from '~/components/nacelle/CartFlyoutHeader'
 import CartFlyoutMessaging from '~/components/nacelle/CartFlyoutMessaging'
 import CartFlyoutSubtotal from '~/components/nacelle/CartFlyoutSubtotal'
@@ -50,7 +50,7 @@ export default {
   },
   watch: {
     lineItems(newValue) {
-      if (newValue.length == 0) {
+      if (newValue.length === 0) {
         this.hideCart()
       }
     }

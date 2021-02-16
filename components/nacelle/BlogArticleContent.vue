@@ -143,7 +143,7 @@ export default {
           this.shopImages.push({
             node: image,
             src: image.src,
-            products: products
+            products
           })
         }
       })

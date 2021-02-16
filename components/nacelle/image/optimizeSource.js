@@ -1,8 +1,6 @@
 const sanitizeUrl = ({ url }) => {
   const src = url.split('&')[0]
-  return src.split('//')[0] !== 'https:'
-    ? `https://${src.split('//')[1]}`
-    : src
+  return src.split('//')[0] !== 'https:' ? `https://${src.split('//')[1]}` : src
 }
 
 const getCDN = ({ url }) => {
@@ -44,18 +42,13 @@ const reformatSrc = ({ originCDN, src, format }) => {
   try {
     if (originCDN === 'shopify') {
       return shopifyReformat({ src, format })
-      // return format === 'auto'
-      //   ? shopifyReformat({ src })
-      //   : shopifyReformat({ src, format })
     } else if (originCDN === 'contentful') {
       return contentfulReformat({ src, format })
-      // return format === 'auto'
-      //   ? contentfulReformat({ src })
-      //   : contentfulReformat({ src, format })
     } else if (originCDN === 'unknown') {
       return src
     }
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(
       'Invalid image transformation.\n' +
         `Cannot transform ${src} to format: "${format}"`
@@ -173,10 +166,10 @@ const contentfulResize = ({
     const cropString = crop ? `&fit=crop&f=${crop}` : ''
     const newArgs = args
       ? args
-        .split('&')
-        .filter((el) => el.includes('width=') === false)
-        .join('&')
-        .concat(`&${sizeString}`)
+          .split('&')
+          .filter((el) => el.includes('width=') === false)
+          .join('&')
+          .concat(`&${sizeString}`)
       : sizeString + cropString
     const newSrc = newArgs
       ? base.concat(`.${extension}?${newArgs}`)
@@ -201,16 +194,12 @@ const contentfulReformat = ({ src = null, format = 'webp' } = {}) => {
     if (imgFormat !== extension) {
       const newArgs = args
         ? args
-          .split('&')
-          .filter((el) => el.includes('fl=') === false)
-          .filter((el) => el.includes('fm=') === false)
-          .join('&')
+            .split('&')
+            .filter((el) => el.includes('fl=') === false)
+            .filter((el) => el.includes('fm=') === false)
+            .join('&')
         : ''
-      if (
-        imgFormat === 'png' ||
-        imgFormat === 'jpg' ||
-        imgFormat === 'webp'
-      ) {
+      if (imgFormat === 'png' || imgFormat === 'jpg' || imgFormat === 'webp') {
         return `${base}.${extension}?${newArgs}&fm=${imgFormat}`
       } else if (imgFormat === 'pjpg') {
         return `${base}.${extension}?${newArgs}&fm=jpg&fl=progressive`
@@ -233,7 +222,7 @@ export default ({
   cropDirection
 } = {}) => {
   if (typeof url !== 'string') {
-    throw new Error(
+    throw new TypeError(
       `Image src must be a string; Received type: ${typeof url}\nReceived: ${JSON.stringify(
         url
       )}`
