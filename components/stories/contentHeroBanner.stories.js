@@ -1,11 +1,11 @@
 import { action } from '@storybook/addon-actions'
 import { withInfo } from 'storybook-addon-vue-info'
-import store from '../../.storybook/store';
 
 import ContentHeroBanner from '../nacelle/ContentHeroBanner'
 
 const defaults = {
-  imageUrl: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-banner-img.png',
+  imageUrl:
+    'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-banner-img.png',
   title: 'Hero Title',
   subtitle: 'Subtitle copy text',
   ctaText: 'CTA BUTTON'
@@ -13,11 +13,10 @@ const defaults = {
 
 export default {
   title: 'Components | Content / Hero Banner',
-  decorators: [withInfo],
-};
+  decorators: [withInfo]
+}
 
 export const Default = () => ({
-  store,
   components: { ContentHeroBanner },
   data() {
     return {
@@ -32,15 +31,15 @@ export const Default = () => ({
       :ctaText="ctaText"
     />
   `
-});
+})
 
 Default.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 // export default {
 //   title: 'Components | Content / Hero Banner',
@@ -48,7 +47,6 @@ Default.story = {
 // };
 
 export const FullHeight = () => ({
-  store,
   components: { ContentHeroBanner },
   data() {
     return {
@@ -65,7 +63,7 @@ export const FullHeight = () => ({
       :ctaText="ctaText"
     />
   `
-});
+})
 
 FullHeight.story = {
   name: 'Full height',
@@ -73,8 +71,8 @@ FullHeight.story = {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 // export default {
 //   title: 'Components | Content / Hero Banner',
@@ -82,7 +80,6 @@ FullHeight.story = {
 // };
 
 export const TextColor = () => ({
-  store,
   components: { ContentHeroBanner },
   data() {
     return {
@@ -99,15 +96,15 @@ export const TextColor = () => ({
       :textColor="textColor"
     />
   `
-});
+})
 
 TextColor.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 // export default {
 //   title: 'Components | Content / Hero Banner',
@@ -115,7 +112,6 @@ TextColor.story = {
 // };
 
 export const CustomCtaEvent = () => ({
-  store,
   components: { ContentHeroBanner },
   data() {
     return {
@@ -132,7 +128,7 @@ export const CustomCtaEvent = () => ({
       :ctaHandler="ctaHandler"
     />
   `
-});
+})
 
 CustomCtaEvent.story = {
   name: 'Custom CTA event',
@@ -141,8 +137,8 @@ CustomCtaEvent.story = {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 // export default {
 //   title: 'Components | Content / Hero Banner',
@@ -150,7 +146,6 @@ CustomCtaEvent.story = {
 // };
 
 export const MobileImage = () => ({
-  store,
   components: { ContentHeroBanner },
   data() {
     return {
@@ -170,7 +165,7 @@ export const MobileImage = () => ({
       :ctaText="ctaText"
     />
   `
-});
+})
 
 MobileImage.story = {
   name: 'Mobile image',
@@ -179,8 +174,8 @@ MobileImage.story = {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 // export default {
 //   title: 'Components | Content / Hero Banner',
@@ -188,7 +183,6 @@ MobileImage.story = {
 // };
 
 export const CustomSlots = () => ({
-  store,
   components: { ContentHeroBanner },
   data() {
     return {
@@ -218,12 +212,12 @@ export const CustomSlots = () => ({
       </template>
     </content-hero-banner>
   `
-});
+})
 
 CustomSlots.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}

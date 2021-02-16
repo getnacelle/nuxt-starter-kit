@@ -1,7 +1,5 @@
-import { withInfo } from 'storybook-addon-vue-info';
-import store from '../../.storybook/store';
-
-import MainNavBurger from '../nacelle/MainNavBurger';
+import { withInfo } from 'storybook-addon-vue-info'
+import MainNavBurger from '../nacelle/MainNavBurger'
 
 export default {
   title: 'Components | Main Nav',
@@ -10,24 +8,23 @@ export default {
     withInfo,
     () => {
       return {
-        template: '<div style="padding: 3rem;"><story/></div>',
-      };
-    },
-  ],
-};
+        template: '<div style="padding: 3rem;"><story/></div>'
+      }
+    }
+  ]
+}
 
 export const Burger = () => ({
-  store,
   components: { MainNavBurger },
   template: `
     <main-nav-burger />
-  `,
-});
+  `
+})
 
 Burger.story = {
   parameters: {
     info: {
       // summary: "Hello"
-    },
-  },
-};
+    }
+  }
+}
