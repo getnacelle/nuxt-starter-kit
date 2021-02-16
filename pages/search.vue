@@ -41,10 +41,7 @@
     <section class="section">
       <div class="columns is-multiline">
         <div class="column is-12">
-          <refinement-results
-            v-if="filteredData"
-            :search-data="filteredData"
-          >
+          <refinement-results v-if="filteredData" :search-data="filteredData">
             <template #results="{ results }">
               <product-grid :products="results" :columns="4" />
             </template>
@@ -80,19 +77,24 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['pageQuery', 'pageResults', 'isLoading', 'filteredData']),
+    ...mapState('search', [
+      'pageQuery',
+      'pageResults',
+      'isLoading',
+      'filteredData'
+    ])
   },
   watch: {
     isLoading(newVal) {
       if (!newVal && this.$route.query?.q) {
-        this.searchCatalog({value: this.$route.query.q, position: 'page'})
+        this.searchCatalog({ value: this.$route.query.q, position: 'page' })
       }
     },
     pageQuery(newVal) {
       if (newVal && String(newVal) !== '') {
-        this.searchCatalog({value: newVal, position: 'page'})
+        this.searchCatalog({ value: newVal, position: 'page' })
       }
-    },
+    }
   },
   mounted() {
     this.refreshQuery()
@@ -105,10 +107,10 @@ export default {
     ...mapActions('search', ['searchCatalog']),
 
     refreshQuery() {
-      if(!this.isLoading && this.$route.query?.q) {
+      if (!this.isLoading && this.$route.query?.q) {
         this.setQuery({
           query: this.$route.query.q,
-          position: this.position,
+          position: this.position
         })
       }
     }

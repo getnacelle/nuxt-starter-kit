@@ -2,22 +2,11 @@
   <div>
     <h3>Refine Your Search</h3>
     <select v-model="sortBy">
-      <option selected disabled>
-        Sort By
-      </option>
-      <option value="hi-low">
-        High to Low
-      </option>
-      <option value="low-hi">
-        Low To High
-      </option>
+      <option selected disabled>Sort By</option>
+      <option value="hi-low">High to Low</option>
+      <option value="low-hi">Low To High</option>
     </select>
-    <button
-      class="button is-text"
-      @click="clearFilters"
-    >
-      Clear Filters
-    </button>
+    <button class="button is-text" @click="clearFilters">Clear Filters</button>
     <div class="filters">
       <div
         v-for="filter in filters"
@@ -184,9 +173,9 @@ export default {
         vm.filters = vm.inputData
           .reduce((output, item) => {
             item.facets
-              .filter(facet => facet.name !== 'Title')
-              .forEach(facet => {
-                const index = output.findIndex(arrayItem => {
+              .filter((facet) => facet.name !== 'Title')
+              .forEach((facet) => {
+                const index = output.findIndex((arrayItem) => {
                   return facet.name === arrayItem.property
                 })
                 if (index === -1) {
@@ -197,17 +186,17 @@ export default {
               })
             return output
           }, [])
-          .map(facet => {
+          .map((facet) => {
             const values = Array.from(new Set(facet.values))
-            return { property: facet.property, values: values }
+            return { property: facet.property, values }
           })
-          .filter(facet => {
-            return vm.propertyFilters.find(filter => {
+          .filter((facet) => {
+            return vm.propertyFilters.find((filter) => {
               return filter.field === facet.property
             })
           })
-          .map(facet => {
-            const index = vm.propertyFilters.findIndex(filter => {
+          .map((facet) => {
+            const index = vm.propertyFilters.findIndex((filter) => {
               return filter.field === facet.property
             })
             return {
@@ -223,7 +212,7 @@ export default {
     filterActive(value) {
       return requestAnimationFrame(() => {
         if (this.activeFilters) {
-          const filterArray = this.activeFilters.filter(filter => {
+          const filterArray = this.activeFilters.filter((filter) => {
             return filter.value === value
           })
           if (filterArray.length > 0) {
@@ -236,7 +225,7 @@ export default {
     },
     toggleFilterActive(filter) {
       return requestAnimationFrame(() => {
-        const filterInFilters = this.activeFilters.filter(filtersItem => {
+        const filterInFilters = this.activeFilters.filter((filtersItem) => {
           return filtersItem.property === filter.property
         })
         if (filterInFilters.length === 0) {
@@ -248,21 +237,24 @@ export default {
           this.activeFilters.map((filtersItem, index) => {
             if (
               filtersItem.property === filter.property &&
-              !filtersItem.values.some(value => value === filter.value)
+              !filtersItem.values.some((value) => value === filter.value)
             ) {
               filtersItem.values.push(filter.value)
             } else if (
               filtersItem.property === filter.property &&
-              filtersItem.values.some(value => value === filter.value)
+              filtersItem.values.some((value) => value === filter.value)
             ) {
               const filterIndex = filtersItem.values.indexOf(filter.value)
               filtersItem.values.splice(filterIndex, 1)
             } else {
               return filtersItem
             }
+
             if (filtersItem.values.length === 0) {
               this.activeFilters.splice(index, 1)
             }
+
+            return null
           })
         }
         this.setFilterInQueryParams(filter)
@@ -286,11 +278,11 @@ export default {
 
           if (currentParams.length > 0) {
             if (
-              currentParams.some(param => {
+              currentParams.some((param) => {
                 return param.property === filter.property
               })
             ) {
-              currentParams = currentParams.map(param => {
+              currentParams = currentParams.map((param) => {
                 if (
                   param.property === filter.property &&
                   !param.values.includes(filter.value)
@@ -313,7 +305,7 @@ export default {
             }
             transformedParams = {}
 
-            currentParams.forEach(param => {
+            currentParams.forEach((param) => {
               if (param.values && param.values.length > 0) {
                 transformedParams[param.property] = param.values.join(',')
               } else {
@@ -334,12 +326,13 @@ export default {
     },
     removeFiltersInQueryParams() {
       if (process.client && this.$route.query) {
-        const omitKeysFromUrl = this.propertyFilters.map(filter => {
+        const omitKeysFromUrl = this.propertyFilters.map((filter) => {
           return filter.field
         })
 
-        const retainQueryEntries = Object.entries(this.$route.query)
-          .filter(([key])=> !omitKeysFromUrl.includes(key))
+        const retainQueryEntries = Object.entries(this.$route.query).filter(
+          ([key]) => !omitKeysFromUrl.includes(key)
+        )
 
         const retainQueryObj = Object.fromEntries(retainQueryEntries)
 
@@ -350,13 +343,13 @@ export default {
       const routeQuery = this.$route.query
 
       if (JSON.stringify(routeQuery) !== JSON.stringify(query)) {
-        this.$router.replace({ query})
+        this.$router.replace({ query })
       }
     },
     readFiltersFromQueryParams() {
       const filtersFromRoute = this.propertyFilters
-        .filter(({field}) => !!this.$route.query[field])
-        .map(({field}) => ({
+        .filter(({ field }) => !!this.$route.query[field])
+        .map(({ field }) => ({
           property: field,
           values: this.$route.query[field].split(',')
         }))

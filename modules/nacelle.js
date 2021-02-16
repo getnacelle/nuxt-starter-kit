@@ -50,8 +50,6 @@ module.exports = async function (moduleOptions) {
   const staticDir = path.resolve(buildDir, './static/data')
   const searchDataTypes = this.options.nacelle.searchDataTypes || []
 
-
-
   this.nuxt.hook('build:before', async () => {
     try {
       const items = await generateSiteData({
@@ -63,41 +61,17 @@ module.exports = async function (moduleOptions) {
         searchDataTypes
       })
       if (searchDataObject.product) {
-        searchDataObject.product = transformProductData(searchDataObject.product)
+        searchDataObject.product = transformProductData(
+          searchDataObject.product
+        )
       }
 
       writeData(`${staticDir}/search.json`, searchDataObject)
     } catch (error) {
-      console.log('Error generating static data files. Aborting build')
-      console.log(error)
+      // eslint-disable-next-line no-console
+      console.error(
+        `Error generating static data files. Aborting build.\n\n${error}`
+      )
     }
-
-    // await nacelleBuild.init({
-    //   buildDir: this.options.srcDir,
-    //   routeConfig: this.options.nacelle.routeConfig || {},
-    //   searchDataTypes: this.options.nacelle.searchDataTypes || [],
-    //   client,
-    //   space
-    // })
   })
-
-  // // install google analytics
-  // if (options.gaID && options.gaID !== 'undefined') {
-  //   this.addPlugin({
-  //     src: path.resolve(__dirname, './plugins/google-analytics.client.js'),
-  //     options: {
-  //       id: options.gaID
-  //     }
-  //   })
-  // }
-
-  // // install facebook pixel tracking
-  // if (options.fbID && options.fbID !== 'undefined') {
-  //   this.addPlugin({
-  //     src: path.resolve(__dirname, './plugins/facebook-pixel.client.js'),
-  //     options: {
-  //       id: options.fbID
-  //     }
-  //   })
-  // }
 }

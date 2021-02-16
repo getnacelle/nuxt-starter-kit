@@ -13,7 +13,7 @@
         :imageSrc="shopImage.src"
         :products="shopImage.products"
         :buttonText="shopLookButtonText"
-        @ready="node => moveImage(shopImage.node, node)"
+        @ready="(node) => moveImage(shopImage.node, node)"
       >
         <template v-slot:product-card="{ product }">
           <slot name="product-card" :product="product" />
@@ -111,7 +111,7 @@ export default {
     defaultContentToHtml(content) {
       const options = {
         renderNode: {
-          [BLOCKS.EMBEDDED_ASSET]: node => {
+          [BLOCKS.EMBEDDED_ASSET]: (node) => {
             if (node.data.target.fields && node.data.target.fields.file) {
               return `
                 <img
@@ -133,7 +133,7 @@ export default {
       this.shopImages = []
       const images = [...this.$el.querySelectorAll('.article-body img')]
 
-      images.forEach(image => {
+      images.forEach((image) => {
         const handles = image.alt.split(',')
         const products = this.products.filter(({ handle }) =>
           handles.includes(handle)

@@ -9,8 +9,10 @@ const findSelectedVariant = (product, options) => {
   } else {
     return product.variants.find((variant) => {
       return options.every((option) => {
-        return variant.selectedOptions
-          .some(variantOption => JSON.stringify(variantOption) === JSON.stringify(option))
+        return variant.selectedOptions.some(
+          (variantOption) =>
+            JSON.stringify(variantOption) === JSON.stringify(option)
+        )
       })
     })
   }
@@ -23,7 +25,7 @@ export default () => {
         product: null,
         options: [],
         selectedOptions: [],
-        selectedVariant: null,
+        selectedVariant: null
       }
     },
     actions: {
@@ -75,8 +77,14 @@ export default () => {
           return
         }
         // >> single worker <<
-        const productWorker = await dispatch('getIndexedDbWorker', null, { root: true })
-        productWorker.postMessage({ action: 'set', key: namespace, value: product })
+        const productWorker = await dispatch('getIndexedDbWorker', null, {
+          root: true
+        })
+        productWorker.postMessage({
+          action: 'set',
+          key: namespace,
+          value: product
+        })
         productWorker.onmessage = () => {
           productWorker.terminate()
         }
@@ -90,7 +98,10 @@ export default () => {
       },
       setSelected({ state, commit }, selectedOption) {
         commit('setSelected', selectedOption)
-        commit('setSelectedVariant', findSelectedVariant(state.product, state.selectedOptions))
+        commit(
+          'setSelectedVariant',
+          findSelectedVariant(state.product, state.selectedOptions)
+        )
       }
     },
     mutations: {
@@ -101,9 +112,9 @@ export default () => {
         state.product = null
       },
       setOptions: (state) => {
-        const nestedOptions = state.product.variants.map(variant => {
+        const nestedOptions = state.product.variants.map((variant) => {
           if (variant.selectedOptions) {
-            return variant.selectedOptions.map(option => {
+            return variant.selectedOptions.map((option) => {
               if (option.name === 'Color') {
                 return {
                   name: option.name,
@@ -120,14 +131,14 @@ export default () => {
         })
         const flattenedOptions = flattenDeep(nestedOptions)
 
-        const optionNames = [...new Set(
-          flattenedOptions.map(option => option.name)
-        )]
-        const optionValuesByName = optionNames.map(name => {
+        const optionNames = [
+          ...new Set(flattenedOptions.map((option) => option.name))
+        ]
+        const optionValuesByName = optionNames.map((name) => {
           const values = uniqWith(
             flattenedOptions
-              .filter(option => option.name === name)
-              .map(option => {
+              .filter((option) => option.name === name)
+              .map((option) => {
                 if (option.swatchSrc) {
                   return { value: option.value, swatchSrc: option.swatchSrc }
                 } else {
@@ -155,7 +166,9 @@ export default () => {
         if (state.selectedOptions.length === 0) {
           state.selectedOptions.push(selectedOption)
         } else {
-          const index = state.selectedOptions.findIndex((item) => item.name === selectedOption.name)
+          const index = state.selectedOptions.findIndex(
+            (item) => item.name === selectedOption.name
+          )
           if (index === -1) {
             state.selectedOptions.push(selectedOption)
             return
@@ -165,14 +178,20 @@ export default () => {
 
           // - - -
           // after updating `selectedOptions` test if a variant matches
-          const selectedVariant = findSelectedVariant(state.product, state.selectedOptions)
+          const selectedVariant = findSelectedVariant(
+            state.product,
+            state.selectedOptions
+          )
 
           // if matching variant is not found
           // then set `selectedOptions` to the first variant found with `selectedOption`
           if (!selectedVariant) {
-            const matchingVariant = findSelectedVariant(state.product, [selectedOption])
-            state.selectedOptions = matchingVariant.selectedOptions
-              .map(({ name, value }) => ({ name, value }))
+            const matchingVariant = findSelectedVariant(state.product, [
+              selectedOption
+            ])
+            state.selectedOptions = matchingVariant.selectedOptions.map(
+              ({ name, value }) => ({ name, value })
+            )
           }
         }
       }

@@ -1,6 +1,6 @@
 <template>
   <transition name="slide">
-    <div class="nav-flyout nacelle" v-if="menuVisible">
+    <div v-if="menuVisible" class="nav-flyout nacelle">
       <div class="nav-flyout-header">
         <slot name="brand">
           <router-link class="navbar-item" to="/">
@@ -23,9 +23,7 @@
               />
             </svg>
           </slot>
-          <span class="is-sr-only">
-            Close
-          </span>
+          <span class="is-sr-only"> Close </span>
         </button>
       </div>
       <div class="nav-flyout-body">
@@ -52,7 +50,8 @@ export default {
       default: 112
     },
     menu: {
-      type: Array
+      type: Array,
+      default: () => []
     }
   },
   computed: {

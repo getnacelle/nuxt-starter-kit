@@ -9,10 +9,12 @@
 export default {
   props: {
     priceRange: {
-      type: Object
+      type: Object,
+      default: () => ({})
     },
     activePriceRange: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {

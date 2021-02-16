@@ -19,8 +19,8 @@ export const mutations = {
   },
   mergeItems(state, dbItems) {
     // Filter out duplicate variant matches
-    const localItems = state.items.filter(localItem => {
-      return !dbItems.find(dbItem => {
+    const localItems = state.items.filter((localItem) => {
+      return !dbItems.find((dbItem) => {
         return localItem.variant.id === dbItem.variant.id
       })
     })
@@ -30,7 +30,7 @@ export const mutations = {
     state.items.push(item)
   },
   removeItem(state, variantId) {
-    state.items = state.items.filter(item => item.variant.id !== variantId)
+    state.items = state.items.filter((item) => item.variant.id !== variantId)
   }
 }
 
@@ -41,7 +41,7 @@ export const actions = {
       // The old version of nacelle-nuxt-module uses 'products', new version uses 'product'
       const key = res.data.products ? 'products' : 'product'
       return res.data[key].filter(
-        product => product && product.title && product.variants
+        (product) => product && product.title && product.variants
       )
     }
   },
@@ -61,7 +61,9 @@ export const actions = {
       }
       const { items } = data.getWishlistsByCustomerSourceId
       if (items) {
-        const shoppingList = items.find(item => item.title === state.title) || {
+        const shoppingList = items.find(
+          (item) => item.title === state.title
+        ) || {
           id: null,
           items: []
         }
@@ -70,11 +72,11 @@ export const actions = {
         // Need to map handle and variant id to shop product data
         const wishlistItems = shoppingList.items.reduce((mappedItems, item) => {
           const product = products.find(
-            product => product.handle === item.handle
+            (product) => product.handle === item.handle
           )
           if (product) {
             const variant = product.variants.find(
-              variant => variant.id === item.variantId
+              (variant) => variant.id === item.variantId
             )
             if (variant) {
               mappedItems.push({
@@ -111,7 +113,7 @@ export const actions = {
           id: state.id,
           title: state.title,
           customerId: rootState.account.customer.id,
-          items: state.items.map(item => ({
+          items: state.items.map((item) => ({
             handle: item.product.handle,
             variantId: item.variant.id
           }))
@@ -121,11 +123,12 @@ export const actions = {
         if (errors && errors.length) {
           throw new Error(JSON.stringify(errors))
         }
-        const { id, customerSourceId, items } = data.putWishlist
+        const { id } = data.putWishlist
         commit('setId', id)
       }
       dispatch('saveWishlist')
     } else {
+      // eslint-disable-next-line no-console
       console.error('must pass item with valid variant and product')
     }
   },
@@ -141,20 +144,17 @@ export const actions = {
           id: state.id,
           title: state.title,
           customerId: rootState.account.customer.id,
-          items: state.items.map(item => ({
+          items: state.items.map((item) => ({
             handle: item.product.handle,
             variantId: item.variant.id
           }))
         }
-        const response = await this.$nacelle.wishlist.put(variables)
-        const { data, errors } = response.data
-        if (errors && errors.length) {
-          throw new Error(JSON.stringify(errors))
-        }
-        const { customerSourceId, items } = data.putWishlist
+
+        await this.$nacelle.wishlist.put(variables)
       }
       dispatch('saveWishlist')
     } else {
+      // eslint-disable-next-line no-console
       console.error('must pass item with valid variantId')
     }
   },
@@ -165,17 +165,13 @@ export const actions = {
         id: state.id,
         title: state.title,
         customerId: rootState.account.customer.id,
-        items: state.items.map(item => ({
+        items: state.items.map((item) => ({
           handle: item.product.handle,
           variantId: item.variant.id
         }))
       }
-      const response = await this.$nacelle.wishlist.put(variables)
-      const { data, errors } = response.data
-      if (errors && errors.length) {
-        throw new Error(JSON.stringify(errors))
-      }
-      const { customerSourceId, items } = data.putWishlist
+
+      await this.$nacelle.wishlist.put(variables)
     }
     dispatch('saveWishlist')
   },
@@ -185,14 +181,14 @@ export const actions = {
     commit('setItems', [])
   },
 
-  async saveWishlist(context) {
+  saveWishlist(context) {
     set('wishlist', context.state)
   }
 }
 
 export const getters = {
-  getItemByVariantId: state => variantId => {
-    return state.items.find(item => item.variant.id === variantId)
+  getItemByVariantId: (state) => (variantId) => {
+    return state.items.find((item) => item.variant.id === variantId)
   },
   quantityTotal(state) {
     return state.items.length

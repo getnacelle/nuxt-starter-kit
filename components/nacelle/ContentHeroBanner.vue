@@ -2,7 +2,7 @@
   <section :class="bannerClasses">
     <slot
       name="background"
-      v-bind="{mobileBackgroundImgUrl, imageUrl, backgroundAltTag}"
+      v-bind="{ mobileBackgroundImgUrl, imageUrl, backgroundAltTag }"
     >
       <nacelle-image
         :src="imageUrl"
@@ -15,10 +15,7 @@
     <div class="hero-body">
       <div class="container">
         <div class="hero-body-inner">
-          <slot
-            name="body"
-            v-bind="{textColor, title, subtitle}"
-          >
+          <slot name="body" v-bind="{ textColor, title, subtitle }">
             <h1 class="title">
               {{ title }}
             </h1>
@@ -29,10 +26,7 @@
               {{ subtitle }}
             </h3>
           </slot>
-          <slot
-            name="cta"
-            v-bind="{ctaUrl, ctaText, ctaHandler}"
-          >
+          <slot name="cta" v-bind="{ ctaUrl, ctaText, ctaHandler }">
             <p v-if="ctaText.length > 0">
               <cta-button :to="ctaUrl" @clicked="ctaHandler">{{
                 ctaText
@@ -117,8 +111,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1{
-  color:white;
+h1 {
+  color: white;
   font-size: 48pt !important;
   text-transform: uppercase;
 }
@@ -141,11 +135,11 @@ h1{
   bottom: 0;
   background-color: black;
 
-  & /deep/ img {
+  & ::v-deep img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: .5;
+    opacity: 0.5;
   }
 }
 

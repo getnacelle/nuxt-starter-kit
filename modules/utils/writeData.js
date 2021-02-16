@@ -8,7 +8,6 @@ export default async (path, data) => {
     return true
   } catch (e) {
     const message = `${path} Write Failed. ${e}`
-    console.error(message)
 
     throw new Error(message)
   }

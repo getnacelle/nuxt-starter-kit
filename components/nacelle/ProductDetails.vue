@@ -3,7 +3,7 @@
     <div class="column is-6">
       <product-media-select-view
         v-if="product && product.featuredMedia && product.media"
-        :featuredMedia="product.featuredMedia"
+        :featured-media="product.featuredMedia"
         :media="product.media"
       />
     </div>
@@ -14,7 +14,7 @@
         :category="product.productType"
       />
       <p class="price">
-        <product-price  :price="product.price" />
+        <product-price :price="product.price" />
       </p>
       <product-description :description="product.description" />
       <product-variant-select :product="product" />
@@ -40,14 +40,14 @@ export default {
     ProductDescription,
     ProductVariantSelect
   },
-  data() {
-    return {}
-  },
   props: {
     product: {
       type: Object,
       required: true
     }
+  },
+  data() {
+    return {}
   },
   computed: {
     ...mapState('user', ['locale'])

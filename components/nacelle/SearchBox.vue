@@ -51,7 +51,7 @@ export default {
         const newRouteQuery = { ...routeQuery, q: query }
 
         if (JSON.stringify(routeQuery) !== JSON.stringify(newRouteQuery)) {
-          this.$router.replace({ query: newRouteQuery})
+          this.$router.replace({ query: newRouteQuery })
         }
       }
     },

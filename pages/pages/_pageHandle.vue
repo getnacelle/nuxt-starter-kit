@@ -1,9 +1,6 @@
 <template>
   <div class="page">
-    <page-content
-      v-if="!$fetchState.pending"
-      :page="page"
-    />
+    <page-content v-if="!$fetchState.pending" :page="page" />
   </div>
 </template>
 
@@ -19,6 +16,5 @@ export default {
       handle: this.$route.params.pageHandle
     })
   }
-
 }
 </script>

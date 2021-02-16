@@ -10,22 +10,14 @@
   <div class="product">
     <section class="section">
       <div class="container">
-        <product-details
-          v-if="product"
-          :product="product"
-        />
+        <product-details v-if="product" :product="product" />
       </div>
     </section>
-    <section
-      v-if="product"
-      class="section product-meta"
-    >
+    <section v-if="product" class="section product-meta">
       <div class="container">
         <div class="columns">
           <div class="column is-7">
-            <h4 class="title is-4">
-              What You're Getting
-            </h4>
+            <h4 class="title is-4">What You're Getting</h4>
             <div class="content">
               <p>
                 Run a manual sweep of anomalous airborne or electromagnetic
@@ -39,9 +31,7 @@
             </div>
           </div>
           <div class="column is-4 is-offset-1 highlight">
-            <h4 class="title is-4">
-              Our Products
-            </h4>
+            <h4 class="title is-4">Our Products</h4>
             <div class="content">
               <p>
                 It indicates a synchronic distortion in the areas emanating
@@ -61,15 +51,10 @@
 import productModule from '~/store/product/productModule'
 import productMetafields from '~/mixins/productMetafields'
 import viewEvent from '~/mixins/viewEvent'
-// import jsonld from '~/mixins/jsonld'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  mixins: [
-    productMetafields,
-    viewEvent('product')
-    // jsonld('product')
-  ],
+  mixins: [productMetafields, viewEvent('product')],
   data() {
     return {
       product: null
@@ -79,9 +64,14 @@ export default {
     const handle = this.$route.params.productHandle
     const namespace = `product/${handle}`
     if (!this.$store.hasModule(namespace)) {
-      this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+      this.$store.registerModule(namespace, productModule(), {
+        preserveState: !!this.$store.state[namespace]
+      })
     }
-    const product = await this.$store.dispatch(`${namespace}/fetchProduct`, handle)
+    const product = await this.$store.dispatch(
+      `${namespace}/fetchProduct`,
+      handle
+    )
     this.product = product
   },
   head() {

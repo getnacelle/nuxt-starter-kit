@@ -4,7 +4,7 @@
       v-if="product.variants.length > 1 && options && options.length"
       :options="options"
     >
-      <template v-slot:swatch="{option}">
+      <template #swatch="{ option }">
         <product-option-swatch
           v-for="{ value } in option.values"
           :key="value"
@@ -53,7 +53,8 @@ export default {
       default: true
     },
     product: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
   data() {

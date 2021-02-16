@@ -18,7 +18,7 @@
       v-if="product.variants.length > 1 && options.length"
       :options="options"
     >
-      <template #swatch="{option}">
+      <template #swatch="{ option }">
         <product-option-swatch
           v-for="{ value } in option.values"
           :key="value"
@@ -150,7 +150,7 @@ export default {
       }
     },
     productLineItems() {
-      return this.lineItems.filter(item => {
+      return this.lineItems.filter((item) => {
         return item.productId === this.product.id
       })
     }
@@ -179,7 +179,7 @@ export default {
   min-width: 300px;
 }
 
-.product-card-details /deep/ a {
+.product-card-details ::v-deep a {
   flex-basis: 80%;
 }
 

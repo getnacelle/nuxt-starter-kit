@@ -24,30 +24,48 @@
 export default {
   props: {
     value: {
-      type: String
+      type: String,
+      default: ''
     },
     optionName: {
-      type: String
+      type: String,
+      default: ''
     },
     swatchStyle: {
-      type: String
+      type: String,
+      default: ''
     },
     variants: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     handle: {
-      type: String
+      type: String,
+      default: ''
     },
     selectedVariant: {
-      type: Object
+      type: Object,
+      default: () => ({})
+    }
+  },
+  asyncData({ $config: { contentAssetStorage } }) {
+    return contentAssetStorage
+  },
+  data() {
+    return {
+      contentAssetStorage: ''
     }
   },
   computed: {
     optionAvailableForSale() {
       if (this.variants) {
         return this.variants
-          .filter(variant => variant.selectedOptions.some(option => option.value === this.value))
-          .some(variant => variant.availableForSale)
+          .filter((variant) =>
+            variant.selectedOptions.some(
+              (option) => option.value === this.value
+            )
+          )
+          .some((variant) => variant.availableForSale)
       }
       return null
     },
@@ -58,24 +76,32 @@ export default {
         return false
       }
 
-      const testSelectedOptions = productStore.selectedOptions.map(({ name, value }) => ({ name, value }))
-      const index = testSelectedOptions.findIndex((item) => item.name === this.optionName)
+      const testSelectedOptions = productStore.selectedOptions.map(
+        ({ name, value }) => ({ name, value })
+      )
+      const index = testSelectedOptions.findIndex(
+        (item) => item.name === this.optionName
+      )
       if (index > -1) {
         testSelectedOptions[index].value = this.value
       } else {
         testSelectedOptions.push({ name: this.optionName, value: this.value })
       }
 
-      const optionAvailable = productStore.product.variants.some(variant => {
-        return testSelectedOptions.every(option => {
-          return variant.selectedOptions.some(variantOption => JSON.stringify(variantOption) === JSON.stringify(option))
+      const optionAvailable = productStore.product.variants.some((variant) => {
+        return testSelectedOptions.every((option) => {
+          return variant.selectedOptions.some(
+            (variantOption) =>
+              JSON.stringify(variantOption) === JSON.stringify(option)
+          )
         })
       })
       return optionAvailable
     },
     isSelected() {
-      return this.selectedVariant &&
-        (this.selectedVariant.selectedOptions.some(option => option.value === this.value))
+      return this.selectedVariant?.selectedOptions?.some(
+        (option) => option.value === this.value
+      )
     },
     swatchClass() {
       if (this.value && this.optionName === 'Color') {
@@ -93,39 +119,29 @@ export default {
       return `${basePath}/swatches/${this.value}.png`
     },
     swatchBg() {
-      return this.swatchSrc
-        ? { background: `url(${this.swatchSrc})` }
-        : null
+      return this.swatchSrc ? { background: `url(${this.swatchSrc})` } : null
     },
 
     swatchSelectedClass() {
-      return this.isSelected
-        ? 'selected'
-        : 'not-selected'
+      return this.isSelected ? 'selected' : 'not-selected'
     },
     stockClass() {
-      return this.optionAvailableForSale
-        ? 'in-stock'
-        : 'out-of-stock'
+      return this.optionAvailableForSale ? 'in-stock' : 'out-of-stock'
     },
     availableClass() {
-      return this.optionAvailable
-        ? 'available'
-        : 'not-available'
+      return this.optionAvailable ? 'available' : 'not-available'
     },
     swatchNameClass() {
-      return this.optionName
-        ? `swatch-${this.optionName}`
-        : ''
+      return this.optionName ? `swatch-${this.optionName}` : ''
     }
   },
   methods: {
     setSelected() {
       if (this.optionAvailableForSale) {
-        this.$store.dispatch(
-          `product/${this.handle}/setSelected`,
-          { name: this.optionName, value: this.value }
-        )
+        this.$store.dispatch(`product/${this.handle}/setSelected`, {
+          name: this.optionName,
+          value: this.value
+        })
       }
     }
   }

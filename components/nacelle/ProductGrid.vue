@@ -1,10 +1,7 @@
 <template>
   <div class="product-grid columns is-multiline is-paddingless nacelle">
     <template v-for="product in products">
-      <div
-        :key="product.handle"
-        :class="columnClasses"
-      >
+      <div :key="product.handle" :class="columnClasses">
         <product-card
           v-if="!product.isLoading && $store.state[`product/${product.handle}`]"
           :product="product"

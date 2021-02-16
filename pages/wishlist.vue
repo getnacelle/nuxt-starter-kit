@@ -1,8 +1,6 @@
 <template>
   <div class="page page-shop">
-    <content-hero-banner
-      title="Wishlist"
-    />
+    <content-hero-banner title="Wishlist" />
     <section class="section">
       <div class="container">
         <div class="columns is-multiline">
@@ -31,7 +29,7 @@ export default {
   computed: {
     ...mapState('wishlist', ['items']),
     products() {
-      return this.items.map(item => item.product)
+      return this.items.map((item) => item.product)
     }
   }
 }

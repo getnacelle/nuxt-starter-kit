@@ -10,10 +10,7 @@
       <h3 class="column is-5">
         {{ item.title }}
       </h3>
-      <product-price
-        class="column is-3 is-marginless"
-        :price="productPrice"
-      />
+      <product-price class="column is-3 is-marginless" :price="productPrice" />
     </div>
   </router-link>
 </template>

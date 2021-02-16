@@ -1,4 +1,4 @@
-const eventProperties = rootState => {
+const eventProperties = (rootState) => {
   const { user, space, cart } = rootState || {}
   const timestamp = Date.now()
   const spaceID = space ? space.id : null

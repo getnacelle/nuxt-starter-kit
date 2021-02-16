@@ -44,7 +44,11 @@
             <div class="column is-9 content">
               <blog-article-content :article="article">
                 <!-- Extra HTML added after content -->
-                <nuxt-link :to="`/${$route.params.blogHandle}/`" class="breadcrumb">Back to Blog</nuxt-link>
+                <nuxt-link
+                  :to="`/${$route.params.blogHandle}/`"
+                  class="breadcrumb"
+                  >Back to Blog</nuxt-link
+                >
               </blog-article-content>
             </div>
           </div>
@@ -66,12 +70,12 @@ export default {
     }
   },
   async fetch() {
-    this.article = await this.$nacelle.data.article({ handle: this.$route.params.articleHandle, locale: 'en-US' })
+    this.article = await this.$nacelle.data.article({
+      handle: this.$route.params.articleHandle,
+      locale: 'en-US'
+    })
   },
-  mixins: [
-    viewEvent('article'),
-    jsonld('article')
-  ],
+  mixins: [viewEvent('article'), jsonld('article')],
   computed: {
     ...mapGetters('space', ['getMetatag'])
   },
@@ -141,7 +145,7 @@ export default {
     height: 400px;
   }
 
-  /deep/ .featured-media {
+  ::v-deep .featured-media {
     width: 100%;
     height: 100%;
 

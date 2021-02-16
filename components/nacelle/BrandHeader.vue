@@ -1,11 +1,16 @@
 <template>
   <div class="brand-header nacelle">
-    <div v-if="logoAlign == 'left'" class="columns is-marginless is-paddingless">
+    <div
+      v-if="logoAlign == 'left'"
+      class="columns is-marginless is-paddingless"
+    >
       <div class="column" :class="logoColumnWidth">
         <interface-logo :src="logoSrc" />
       </div>
       <div class="column is-offset-1 auto links">
-        <router-link v-for="link in links" :key="link.path" :to="link.path">{{link.title}}</router-link>
+        <router-link v-for="link in links" :key="link.path" :to="link.path">{{
+          link.title
+        }}</router-link>
       </div>
       <div class="column auto icons">
         <interface-icon
@@ -19,9 +24,14 @@
       </div>
     </div>
 
-    <div v-if="logoAlign == 'center'" class="columns is-marginless is-paddingless">
+    <div
+      v-if="logoAlign == 'center'"
+      class="columns is-marginless is-paddingless"
+    >
       <div class="column is-5 links">
-        <router-link v-for="link in links" :key="link" :to="link.path">{{link.title}}</router-link>
+        <router-link v-for="link in links" :key="link" :to="link.path">{{
+          link.title
+        }}</router-link>
       </div>
       <div class="column is-2">
         <interface-logo :src="logoSrc" />

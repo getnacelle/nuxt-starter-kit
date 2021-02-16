@@ -15,12 +15,11 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { clear } from 'idb-keyval'
 
 export default {
   data() {
     return {
-      headerHeight: null,
+      headerHeight: null
     }
   },
   head() {
@@ -35,12 +34,12 @@ export default {
       meta.push({
         hid: 'og:title',
         property: 'og:title',
-        content: title.value,
+        content: title.value
       })
       meta.push({
         hid: 'og:site_name',
         property: 'og:site_name',
-        content: title.value,
+        content: title.value
       })
     }
 
@@ -48,12 +47,12 @@ export default {
       meta.push({
         hid: 'description',
         name: 'description',
-        content: description.value,
+        content: description.value
       })
       meta.push({
         hid: 'og:description',
         property: 'og:description',
-        content: description.value,
+        content: description.value
       })
     }
 
@@ -61,23 +60,23 @@ export default {
       meta.push({
         hid: 'og:image',
         property: 'og:image',
-        content: image.value,
+        content: image.value
       })
     }
 
     meta.push({
       hid: 'og:type',
       property: 'og:type',
-      content: 'website',
+      content: 'website'
     })
 
     return {
       ...properties,
-      meta,
+      meta
     }
   },
   computed: {
-    ...mapGetters('space', ['getMetatag']),
+    ...mapGetters('space', ['getMetatag'])
   },
   async mounted() {
     if (this.$refs.header) {
@@ -86,16 +85,8 @@ export default {
 
     await this.initializeCheckout()
     await this.initializeCart()
-
-    if (process.env.DEV_MODE === 'true') {
-      console.log('dev mode active!')
-      await clear()
-    }
-
-    if (process.client) {
-      await this.clearProductIdb()
-      this.getSearchData()
-    }
+    await this.clearProductIdb()
+    this.getSearchData()
     this.readSession()
   },
   methods: {
@@ -104,7 +95,7 @@ export default {
     ...mapActions('checkout', ['initializeCheckout']),
     ...mapActions('user', ['readSession']),
     ...mapActions('search', ['getSearchData'])
-  },
+  }
 }
 </script>
 

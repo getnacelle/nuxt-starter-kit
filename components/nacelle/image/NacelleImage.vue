@@ -59,7 +59,8 @@ export default {
   props: {
     src: {
       type: String,
-      default: '//nacelle-assets.s3-us-west-2.amazonaws.com/default-product-image.svg'
+      default:
+        '//nacelle-assets.s3-us-west-2.amazonaws.com/default-product-image.svg'
     },
     mobileSrc: {
       type: String,
@@ -103,7 +104,8 @@ export default {
       loading: true,
       validImage: true,
       rootMargin: '0px',
-      blankImage: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 5'%3E%3C/svg%3E"
+      blankImage:
+        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 5'%3E%3C/svg%3E"
     }
   },
   computed: {
@@ -201,7 +203,7 @@ export default {
   }
 }
 .loaded img {
-  animation: fadein .25s ease-in;
+  animation: fadein 0.25s ease-in;
 }
 @keyframes fadein {
   from {
@@ -216,10 +218,10 @@ $color-gray: #aaa;
 $color-gray-light: #fff;
 .image-skeleton {
   position: relative;
-  background-color: rgba($color-gray, .25);
+  background-color: rgba($color-gray, 0.25);
 
   &::after {
-    content:'';
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -228,14 +230,12 @@ $color-gray-light: #fff;
     height: 100%;
     z-index: 0;
 
-    background-image:
-      linear-gradient(
-        100deg,
-        rgba($color-gray-light, 0) 9%,
-        rgba($color-gray-light, .25) 50%,
-        rgba($color-gray-light, 0) 91%
-      )
-    ;
+    background-image: linear-gradient(
+      100deg,
+      rgba($color-gray-light, 0) 9%,
+      rgba($color-gray-light, 0.25) 50%,
+      rgba($color-gray-light, 0) 91%
+    );
 
     background-size: 67% 100%;
     background-position: -200% 0;
@@ -249,6 +249,6 @@ $color-gray-light: #fff;
   }
 }
 .blank-image {
-  background-color: rgba($color-gray, .25);
+  background-color: rgba($color-gray, 0.25);
 }
 </style>

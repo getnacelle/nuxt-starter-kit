@@ -18,7 +18,12 @@
             <div class="content" v-html="contentHtml" />
           </div>
         </slot>
-        <slot name="cta" :ctaUrl="ctaUrl" :ctaText="ctaText" :ctaHandler="ctaHandler">
+        <slot
+          name="cta"
+          :ctaUrl="ctaUrl"
+          :ctaText="ctaText"
+          :ctaHandler="ctaHandler"
+        >
           <p v-if="ctaText.length > 0" class="has-text-centered">
             <cta-button :to="ctaUrl" @clicked="ctaHandler">
               {{ ctaText }}
@@ -31,7 +36,6 @@
 </template>
 
 <script>
-
 export default {
   props: {
     backgroundColor: {
@@ -124,7 +128,7 @@ export default {
   position: relative;
   padding: 0;
 
-  & /deep/ img {
+  & ::v-deep img {
     display: block;
     width: 100%;
 

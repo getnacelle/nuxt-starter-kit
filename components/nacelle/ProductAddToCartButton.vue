@@ -1,9 +1,9 @@
 <template>
   <div>
     <button
+      class="button is-primary"
       :disabled="isOutOfStock"
       @click="addToCart"
-      class="button is-primary"
     >
       <slot>
         <span>{{ buttonText }}</span>
@@ -18,7 +18,8 @@ import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
   props: {
     product: {
-      type: Object
+      type: Object,
+      default: () => ({})
     },
     metafields: {
       type: Array,
@@ -26,8 +27,14 @@ export default {
         return []
       }
     },
-    quantity: { type: Number, default: 1 },
-    variant: { type: Object }
+    quantity: {
+      type: Number,
+      default: 1
+    },
+    variant: {
+      type: Object,
+      default: () => ({})
+    }
   },
   data() {
     return { productState: 'initial' }

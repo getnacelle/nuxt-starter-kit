@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
+import { format } from 'date-fns'
 
 export default {
   props: {
@@ -44,10 +44,6 @@ export default {
     publishDate: {
       type: Number,
       default: -1
-    },
-    dateFormatString: {
-      type: String,
-      default: 'MMMM D, YYYY'
     }
   },
   computed: {
@@ -56,7 +52,8 @@ export default {
     },
     absoluteDate() {
       if (this.publishDate > -1) {
-        return dayjs(this.publishDate * 1000).format(this.dateFormatString)
+        // see docs for `format` function: https://date-fns.org/v2.17.0/docs/format
+        return format(new Date(this.publishDate * 1000), 'PPP')
       }
 
       return ''

@@ -5,11 +5,13 @@ export default async (productRoutePath) => {
   const productResults = []
   do {
     const resultsPage = await getProductResults(nextToken)
-    productResults.push(resultsPage.items.map(item => item.handle))
+    productResults.push(resultsPage.items.map((item) => item.handle))
     nextToken = resultsPage.nextToken
   } while (nextToken !== '')
 
-  return productResults.reduce((acc, curr) => {
-    return acc.concat(curr)
-  }, []).map(item => `${productRoutePath}${item}`)
+  return productResults
+    .reduce((acc, curr) => {
+      return acc.concat(curr)
+    }, [])
+    .map((item) => `${productRoutePath}${item}`)
 }

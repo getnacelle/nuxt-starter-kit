@@ -1,5 +1,4 @@
-
-const trimProduct = product => {
+const trimProduct = (product) => {
   const {
     id,
     handle,
@@ -10,10 +9,7 @@ const trimProduct = product => {
     priceRange, // { min, max, currencyCode }
     availableForSale,
     tags,
-    media, // { thumbnailSrc, src, type, altText }
     featuredMedia, // { thumbnailSrc, src, type, altText }
-    metafields, // { namespace, value, key }
-    productType,
     indexedAt,
     variants
   } = product
@@ -28,26 +24,19 @@ const trimProduct = product => {
     priceRange, // { min, max, currencyCode }
     availableForSale,
     tags,
-    // media, // { thumbnailSrc, src, type, altText }
     featuredMedia, // { thumbnailSrc, src, type, altText }
-    // metafields, // { namespace, value, key }
-    // productType,
     indexedAt,
     variants: variants.map(trimVariant)
   }
 }
-const trimVariant = variant => {
+const trimVariant = (variant) => {
   const {
     id,
     price,
     priceCurrency,
     compareAtPrice,
-    compareAtPriceCurrency,
-    swatchSrc,
     selectedOptions, // { name, value }
-    featuredMedia, // { thumbnailSrc, src, type, altText }
-    availableForSale,
-    metafields // { namespace, value, key }
+    availableForSale
   } = variant
 
   return {
@@ -55,22 +44,17 @@ const trimVariant = variant => {
     price,
     priceCurrency,
     compareAtPrice,
-    // compareAtPriceCurrency,
-    // swatchSrc,
     selectedOptions, // { name, value }
-    // featuredMedia, // { thumbnailSrc, src, type, altText }
-    availableForSale,
-    // metafields // { namespace, value, key }
+    availableForSale
   }
 }
 
-const transformProductData = product => {
+const transformProductData = (product) => {
   product = trimProduct(product)
   const { tags, variants, productType, ...rest } = product
 
-  /// //////////////////////////
   // Get product filter facets from variant data
-  const variantOptions = variants.map(variant => {
+  const variantOptions = variants.map((variant) => {
     return variant.selectedOptions
   })
 
@@ -78,19 +62,18 @@ const transformProductData = product => {
     .reduce((acc, item) => {
       return acc.concat(item)
     }, [])
-    .map(option => JSON.stringify(option))
+    .map((option) => JSON.stringify(option))
 
   const facets = Array.from(new Set(variantFacets))
-    .map(option => JSON.parse(option))
-    .map(option => {
+    .map((option) => JSON.parse(option))
+    .map((option) => {
       return { name: option.name.toLowerCase(), value: option.value }
     })
 
-  /// //////////////////////////
   // Get product filter facets from tags. Tags should be formatted "filter_property-name_value"
-  const rootFacets = tags.filter(tag => tag.includes('filter'))
+  const rootFacets = tags.filter((tag) => tag.includes('filter'))
 
-  rootFacets.forEach(facet => {
+  rootFacets.forEach((facet) => {
     const facetFragments = facet.split('_')
     const facetName = facetFragments[1]
     const facetValue = facetFragments[2] || true
@@ -105,7 +88,6 @@ const transformProductData = product => {
 
   rest.minPrice = rest.priceRange.min
 
-  // return { ...rest, tags, variantOptions, variants, facets }
   return { ...rest, productType, tags, variants, facets }
 }
 

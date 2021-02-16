@@ -1,13 +1,7 @@
 <template>
   <div>
-    <transition
-      name="fade"
-      mode="out-in"
-    >
-      <div
-        v-if="isLoading"
-        key="loading"
-      >
+    <transition name="fade" mode="out-in">
+      <div v-if="isLoading" key="loading">
         <slot name="loading" />
       </div>
       <div
@@ -15,16 +9,9 @@
         key="results"
         class="search-results"
       >
-        <slot
-          name="result"
-          :result="globalResults"
-        />
+        <slot name="result" :result="globalResults" />
       </div>
-      <div
-        v-else
-        key="no-results"
-        class="no-results"
-      >
+      <div v-else key="no-results" class="no-results">
         <slot name="no-results" />
       </div>
     </transition>
@@ -48,7 +35,7 @@ export default {
     searchQuery(newVal) {
       if (newVal && String(newVal) !== '') {
         this.setAutocompleteVisible(true)
-        this.searchCatalog({value: newVal, position: 'global'})
+        this.searchCatalog({ value: newVal, position: 'global' })
       }
     }
   },

@@ -1,17 +1,17 @@
 <template>
   <label :for="id">
     <input
-      v-on:change="$emit('change', value)"
       :id="id"
+      :checked="preChecked"
       :name="name"
       :value="value"
-      :checked="preChecked"
       :aria-checked="currentlyChecked || preChecked"
       role="switch"
       type="radio"
       tabindex="0"
+      @change="$emit('change', value)"
     />
-    {{label}}
+    {{ label }}
   </label>
 </template>
 
@@ -21,30 +21,34 @@ export default {
     prop: 'inputValue',
     event: 'change'
   },
+  props: {
+    id: {
+      type: String,
+      default: ''
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    value: {
+      type: String,
+      default: ''
+    },
+    label: {
+      type: String,
+      default: ''
+    },
+    checked: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     currentlyChecked() {
       return this.$attrs.inputValue === this.value
     },
     preChecked() {
       return this.$attrs.inputValue === null && this.checked
-    }
-  },
-  props: {
-    id: {
-      type: String
-    },
-    name: {
-      type: String
-    },
-    value: {
-      type: String
-    },
-    label: {
-      type: String
-    },
-    checked: {
-      type: Boolean,
-      default: false
     }
   }
 }

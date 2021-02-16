@@ -5,7 +5,10 @@
 <script>
 export default {
   props: {
-    price: [String, Number],
+    price: {
+      type: [String, Number],
+      default: ''
+    },
     currencyCode: {
       type: String,
       default: 'USD'

@@ -6,10 +6,7 @@
 /****
 -->
 <template>
-  <div
-    v-if="collection"
-    class="page page-collection"
-  >
+  <div v-if="collection" class="page page-collection">
     <content-hero-banner
       v-if="collection && collection.title && collection.featuredImage"
       :title="collection.title"
@@ -27,10 +24,7 @@
         </div>
       </div>
       <observe-emitter @observe="showMore" />
-      <div
-        v-if="isFetching"
-        style="text-align: center"
-      >
+      <div v-if="isFetching" style="text-align: center">
         Loading products...
       </div>
     </section>
@@ -42,9 +36,7 @@ import productModule from '~/store/product/productModule'
 import viewEvent from '~/mixins/viewEvent'
 
 export default {
-  mixins: [
-    viewEvent('collection')
-  ],
+  mixins: [viewEvent('collection')],
   data() {
     return {
       collection: null,
@@ -71,10 +63,12 @@ export default {
   },
   mounted() {
     if (process.client && this.collection) {
-      this.collectionProducts.forEach(product => {
+      this.collectionProducts.forEach((product) => {
         const namespace = `product/${product.handle}`
         if (!this.$store.hasModule(namespace)) {
-          this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+          this.$store.registerModule(namespace, productModule(), {
+            preserveState: !!this.$store.state[namespace]
+          })
           this.$store.dispatch(`${namespace}/setupProduct`, product)
         }
         this.$store.dispatch(`${namespace}/storeProduct`, product)
@@ -82,7 +76,7 @@ export default {
     }
   },
   beforeDestroy() {
-    this.collectionProducts.forEach(product => {
+    this.collectionProducts.forEach((product) => {
       const namespace = `product/${product.handle}`
       this.$store.commit(`${namespace}/unloadProduct`)
     })
@@ -106,19 +100,23 @@ export default {
       const products = this.collection.productLists[0].handles
         .slice(start, end)
         .map((handle, index) => {
-          this.$set(
-            this.collectionProducts,
-            index + start,
-            { handle, isLoading: true }
-          )
+          this.$set(this.collectionProducts, index + start, {
+            handle,
+            isLoading: true
+          })
           return handle
         })
         .map(async (handle, index) => {
           const namespace = `product/${handle}`
           if (!this.$store.hasModule(namespace)) {
-            this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+            this.$store.registerModule(namespace, productModule(), {
+              preserveState: !!this.$store.state[namespace]
+            })
           }
-          const product = await this.$store.dispatch(`${namespace}/fetchProduct`, handle)
+          const product = await this.$store.dispatch(
+            `${namespace}/fetchProduct`,
+            handle
+          )
           this.$set(this.collectionProducts, index + start, product)
         })
 

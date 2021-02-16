@@ -55,7 +55,7 @@ export const actions = {
     }
   },
 
-  // ANONYMOUS ID ACTIONS //////////////////////////////////////////
+  // ANONYMOUS ID ACTIONS //
   async createAnonymousID(context) {
     const anonymousID = uuid()
     await set('anonymousID', anonymousID)
@@ -70,8 +70,8 @@ export const actions = {
     }
   },
 
-  // SESSION ACTIONS //////////////////////////////////////////
-  async createSession(context) {
+  // SESSION ACTIONS //
+  createSession(context) {
     const sessionID = uuid()
     context.commit('setSessionID', sessionID)
     if (process.browser) {
