@@ -5,16 +5,17 @@ module.exports = {
     node: true,
     jest: true
   },
-  extends: ['eslint:recommended', 'plugin:vue/recommended'],
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly'
-  },
   parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: 'module'
+    parser: 'babel-eslint'
   },
-  plugins: ['vue'],
+  extends: [
+    '@nuxtjs',
+    'prettier',
+    'prettier/vue',
+    'plugin:prettier/recommended',
+    'plugin:nuxt/recommended'
+  ],
+  plugins: ['prettier'],
   rules: {
     'space-before-function-paren': [
       'error',
@@ -24,12 +25,6 @@ module.exports = {
         asyncArrow: 'always'
       }
     ],
-    'vue/max-attributes-per-line': ['error', {
-      singleline: 2,
-      multiline: {
-        max: 1,
-        allowFirstLine: false
-      }
-    }]
+    'vue/no-v-html': false
   }
 }
