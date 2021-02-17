@@ -1,11 +1,7 @@
 <template>
   <div class="app nacelle">
     <global-header ref="header" />
-    <nuxt
-      :style="{ 'margin-top': `${headerHeight}px` }"
-      keep-alive
-      :keep-alive-props="{ max: 2 }"
-    />
+    <nuxt keep-alive :keep-alive-props="{ max: 2 }" />
     <site-footer />
     <event-dispatcher />
     <error-modal />
@@ -79,10 +75,6 @@ export default {
     ...mapGetters('space', ['getMetatag'])
   },
   async mounted() {
-    if (this.$refs.header) {
-      this.headerHeight = this.$refs.header.$el.clientHeight
-    }
-
     await this.initializeCheckout()
     await this.initializeCart()
     await this.clearProductIdb()
