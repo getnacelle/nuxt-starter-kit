@@ -16,10 +16,10 @@
         <interface-icon
           v-for="icon in icons"
           :key="icon.iconName"
-          :iconName="icon.iconName"
-          :iconMethod="icon.iconMethod"
+          :icon-name="icon.iconName"
+          :icon-method="icon.iconMethod"
           :path="icon.path"
-          :iconMethodType="icon.iconMethodType"
+          :icon-method-type="icon.iconMethodType"
         />
       </div>
     </div>

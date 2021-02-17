@@ -1,7 +1,7 @@
 <template>
   <div class="article-body">
     <slot name="content" :content="content">
-      <div class="content" v-html="content" ref="content" />
+      <div ref="content" class="content" v-html="content" />
     </slot>
 
     <slot></slot>
@@ -10,12 +10,12 @@
       <product-shop-look
         v-for="(shopImage, index) in shopImages"
         :key="index"
-        :imageSrc="shopImage.src"
+        :image-src="shopImage.src"
         :products="shopImage.products"
-        :buttonText="shopLookButtonText"
+        :button-text="shopLookButtonText"
         @ready="(node) => moveImage(shopImage.node, node)"
       >
-        <template v-slot:product-card="{ product }">
+        <template #product-card="{ product }">
           <slot name="product-card" :product="product" />
         </template>
       </product-shop-look>

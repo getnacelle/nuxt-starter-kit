@@ -1,7 +1,7 @@
 <template>
   <transition name="slide">
-    <div class="flyout" v-if="cartVisible">
-      <cart-flyout-header v-on:close="handleClose" />
+    <div v-if="cartVisible" class="flyout">
+      <cart-flyout-header @close="handleClose" />
       <cart-flyout-messaging>
         <messaging-free-shipping-counter />
       </cart-flyout-messaging>

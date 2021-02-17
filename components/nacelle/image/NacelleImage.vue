@@ -1,5 +1,10 @@
 <template>
   <div
+    v-observe-visibility="{
+      callback: visibilityChanged,
+      once: true,
+      intersection: { rootMargin }
+    }"
     :class="[
       loading ? 'image-skeleton loading' : 'loaded',
       visibility ? 'is-visible' : 'not-visible',
@@ -7,11 +12,6 @@
       layout
     ]"
     class="nacelle-image"
-    v-observe-visibility="{
-      callback: visibilityChanged,
-      once: true,
-      intersection: { rootMargin }
-    }"
   >
     <picture v-if="visibility">
       <template v-if="validImage">

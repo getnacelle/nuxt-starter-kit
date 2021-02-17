@@ -1,5 +1,5 @@
 <template>
-  <div class="subtotal nacelle" v-if="cartSubtotal">
+  <div v-if="cartSubtotal" class="subtotal nacelle">
     <slot :subtotal="cartSubtotal">
       <component :is="titleTag" class="subtotal-title">
         <span>Subtotal:</span>
