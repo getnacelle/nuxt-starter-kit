@@ -51,7 +51,7 @@ export default {
       .catch(() => console.warn(`No collection with handle: '${handle}' found`))
 
     this.page = await this.$nacelle.data
-      .page({ handle, locale: 'en-US' })
+      .page({ handle })
       .catch(() => console.warn(`No page with handle: '${handle}' found`))
 
     await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)

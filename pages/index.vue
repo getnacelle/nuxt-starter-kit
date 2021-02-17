@@ -12,8 +12,7 @@ export default {
   async fetch() {
     this.page = await this.$nacelle.data
       .page({
-        handle: 'homepage',
-        locale: 'en-US'
+        handle: 'homepage'
       })
       .catch(() => {
         console.warn(

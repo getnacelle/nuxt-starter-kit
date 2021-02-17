@@ -14,7 +14,7 @@ export default {
   async fetch() {
     const { pageHandle: handle } = this.$route.params
     this.page = await this.$nacelle.data
-      .page({ handle, locale: 'en-US' })
+      .page({ handle })
       .catch(() => console.warn(`No page with handle: '${handle}' found`))
   }
 }

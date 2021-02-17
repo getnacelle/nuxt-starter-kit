@@ -72,8 +72,7 @@ export default {
   },
   async fetch() {
     this.article = await this.$nacelle.data.article({
-      handle: this.$route.params.articleHandle,
-      locale: 'en-US'
+      handle: this.$route.params.articleHandle
     })
   },
   head() {
