@@ -3,7 +3,7 @@
     <div class="placeholder">
       <div class="text">
         <p>The component</p>
-        <h3>typeString</h3>
+        <h3>{{ typeString }}</h3>
         <p>has not been created or registered yet.</p>
       </div>
     </div>
@@ -20,7 +20,7 @@ export default {
   },
   computed: {
     typeString() {
-      return `< ${this.type}/>`
+      return `<${this.type} />`
     }
   }
 }

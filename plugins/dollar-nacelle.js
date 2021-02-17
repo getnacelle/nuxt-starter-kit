@@ -2,14 +2,14 @@ import NacelleClient from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
 import { Localizer } from '@nacelle/segmentation-sdk'
 
 export default function (context, inject) {
-  const { settings, space } = <%= JSON.stringify(options) %>  // eslint-disable-line
-  const { spaceID, token, endpoint, tem, wishlistEndpoint, isMultiLocale } = settings
+  const { settings, space } = <%= JSON.stringify(options) %>
+  const { spaceID, token, endpoint, tem, wishlistEndpoint } = settings
   const defaultLocale = settings.locale || 'en-us'
 
   // Set up Nacelle SDK Client
-  let client = new NacelleClient({
+  const client = new NacelleClient({
     id: spaceID,
-    token: token,
+    token,
     nacelleEndpoint: endpoint,
     locale: defaultLocale,
     eventsEndpoint: tem,
@@ -25,13 +25,12 @@ export default function (context, inject) {
     navigator = {}
   }
 
-  let localizer = new Localizer({
+  const localizer = new Localizer({
     defaultLocale,
     navigator
   })
 
   const logEvent = (event) => {
-
     client.events.log(event)
   }
 
@@ -44,7 +43,7 @@ Learn more about the Client SDK in our docs here: https://docs.getnacelle.com/ap
     client.events.onEvent(eventType, fn)
   }
 
-  const isVariantAvailable = async options => {
+  const isVariantAvailable = async (options) => {
     console.warn(
       `"$nacelle.isVariantAvailable" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
 Please update your project to use the @nacelle/client-js-sdk methods "$nacelle.status.isVariantAvailable"\n
@@ -78,10 +77,9 @@ This will be handled automatically during the build process.`
     setSpace()
   }
 
-
   const plugin = {
     ...settings,
-    defaultLocale: defaultLocale,
+    defaultLocale,
     nacelleNuxtServerInit,
     logEvent,
     onEvent,

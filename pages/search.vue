@@ -57,20 +57,8 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
-import SearchBox from '~/components/nacelle/SearchBox'
-import RefinementFilters from '~/components/nacelle/RefinementFilters'
-import RefinementResults from '~/components/nacelle/RefinementResults'
-import ProductGrid from '~/components/nacelle/ProductGrid'
-import SearchNoResults from '~/components/nacelle/SearchNoResults'
 
 export default {
-  components: {
-    SearchBox,
-    RefinementFilters,
-    RefinementResults,
-    ProductGrid,
-    SearchNoResults
-  },
   data() {
     return {
       position: 'page'

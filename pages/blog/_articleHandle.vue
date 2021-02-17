@@ -36,7 +36,7 @@
                 :title="article.title"
                 :author="article.author"
                 :tags="article.tags"
-                :publishDate="article.publishDate"
+                :publish-date="article.publishDate"
               >
                 <!-- Extra HTML markup can also be added below the default header content -->
               </blog-article-header>
@@ -64,6 +64,7 @@ import viewEvent from '~/mixins/viewEvent'
 import jsonld from '~/mixins/jsonld'
 
 export default {
+  mixins: [viewEvent('article'), jsonld('article')],
   data() {
     return {
       article: null
@@ -74,10 +75,6 @@ export default {
       handle: this.$route.params.articleHandle,
       locale: 'en-US'
     })
-  },
-  mixins: [viewEvent('article'), jsonld('article')],
-  computed: {
-    ...mapGetters('space', ['getMetatag'])
   },
   head() {
     if (this.article) {
@@ -132,6 +129,9 @@ export default {
         meta
       }
     }
+  },
+  computed: {
+    ...mapGetters('space', ['getMetatag'])
   }
 }
 </script>

@@ -7,8 +7,8 @@
           <product-grid
             v-if="products && products.length > 0"
             :products="products"
-            :showAddToCart="true"
-            :showQuantityUpdate="true"
+            :show-add-to-cart="true"
+            :show-quantity-update="true"
           />
         </div>
       </div>
@@ -18,14 +18,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
-import ProductGrid from '~/components/nacelle/ProductGrid'
 
 export default {
-  components: {
-    ContentHeroBanner,
-    ProductGrid
-  },
   computed: {
     ...mapState('wishlist', ['items']),
     products() {

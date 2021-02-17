@@ -7,11 +7,7 @@
 -->
 <template>
   <div v-if="collection" class="page page-collection">
-    <content-hero-banner
-      v-if="collection && collection.title && collection.featuredImage"
-      :title="collection.title"
-      :image-url="collection.featuredImage"
-    />
+    <page-content class="page" :page="page" />
     <section class="section">
       <div class="container">
         <div class="columns is-multiline">
@@ -43,14 +39,21 @@ export default {
       collectionProducts: [],
       productVisibilityCount: 12,
       fetchBuffer: 12,
-      isFetching: false
+      isFetching: false,
+      page: null
     }
   },
   async fetch() {
-    const collectionData = await this.$nacelle.data.collection({
-      handle: this.$route.params.collectionHandle
-    })
-    this.collection = collectionData
+    const { collectionHandle: handle } = this.$route.params
+
+    this.collection = await this.$nacelle.data
+      .collection({ handle })
+      .catch(() => console.warn(`No collection with handle: '${handle}' found`))
+
+    this.page = await this.$nacelle.data
+      .page({ handle, locale: 'en-US' })
+      .catch(() => console.warn(`No page with handle: '${handle}' found`))
+
     await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
   },
   computed: {
