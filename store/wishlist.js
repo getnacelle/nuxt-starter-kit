@@ -1,4 +1,4 @@
-import axios from 'axios'
+import fetch from 'isomorphic-unfetch'
 import { get, set } from 'idb-keyval'
 
 export const state = () => ({
@@ -36,11 +36,13 @@ export const mutations = {
 
 export const actions = {
   async getProductData() {
-    const res = await axios.get('/data/search.json')
-    if (res && res.data) {
+    const searchJson = await fetch('/data/search.json').then((res) =>
+      res.json()
+    )
+    if (searchJson) {
       // The old version of nacelle-nuxt-module uses 'products', new version uses 'product'
-      const key = res.data.products ? 'products' : 'product'
-      return res.data[key].filter(
+      const key = searchJson.products ? 'products' : 'product'
+      return searchJson[key].filter(
         (product) => product && product.title && product.variants
       )
     }
