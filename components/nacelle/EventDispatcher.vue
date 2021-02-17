@@ -22,10 +22,10 @@ export default {
       return [...this.log].pop()
     },
     fbq() {
-      return process.browser ? window.fbq : undefined
+      return process.client ? window.fbq : undefined
     },
     ga() {
-      return process.browser ? window.ga : undefined
+      return process.client ? window.ga : undefined
     }
   },
   watch: {

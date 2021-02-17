@@ -103,7 +103,7 @@ export const actions = {
 
   getLinkerParam() {
     return new Promise((resolve, reject) => {
-      const gaClient = process.browser ? window.ga : undefined
+      const gaClient = process.client ? window.ga : undefined
 
       if (typeof gaClient !== 'undefined') {
         gaClient((tracker) => resolve(tracker.get('linkerParam')))
@@ -115,7 +115,7 @@ export const actions = {
   },
 
   checkoutRedirect({ state }) {
-    if (process.browser) {
+    if (process.client) {
       window.location = state.url
     }
   }

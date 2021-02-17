@@ -8,7 +8,7 @@ export default (context) => {
   }
 
   context.app.router.afterEach((to, from) => {
-    if (process.browser || process.client) {
+    if (process.client) {
       if (to.path === '/search' && from.path === '/search') {
         // don't track page view events for search page filtering
         return

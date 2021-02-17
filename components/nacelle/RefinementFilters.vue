@@ -110,7 +110,7 @@ export default {
   },
 
   created() {
-    if (process.browser) {
+    if (process.client) {
       this.setupFilters()
       this.activeFilters = this.readFiltersFromQueryParams()
       if (this.filteredData && this.refinedData.length) {
@@ -272,7 +272,7 @@ export default {
     },
     setFilterInQueryParams(filter) {
       return requestAnimationFrame(() => {
-        if (process.browser) {
+        if (process.client) {
           let currentParams = this.readFiltersFromQueryParams()
           let transformedParams
 
