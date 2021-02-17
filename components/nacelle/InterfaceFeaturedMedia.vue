@@ -19,6 +19,10 @@ export default {
     width: {
       type: Number,
       required: true
+    },
+    alt: {
+      type: String,
+      default: ''
     }
   },
   computed: {
