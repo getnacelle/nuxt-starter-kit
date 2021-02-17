@@ -50,19 +50,24 @@ export default {
   },
   props: {
     links: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     logoSrc: {
-      type: String
+      type: String,
+      default: ''
     },
     logoAlign: {
-      type: String
+      type: String,
+      default: ''
     },
     logoColumnWidth: {
-      type: String
+      type: String,
+      default: ''
     },
     icons: {
-      type: Array
+      type: Array,
+      default: () => []
     }
   }
 }

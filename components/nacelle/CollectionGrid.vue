@@ -10,9 +10,18 @@ import productModule from '~/store/product/productModule'
 
 export default {
   props: {
-    collectionHandle: { type: String },
-    itemsToShow: { type: Number },
-    title: { type: String }
+    collectionHandle: {
+      type: String,
+      default: ''
+    },
+    itemsToShow: {
+      type: Number,
+      required: true
+    },
+    title: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {

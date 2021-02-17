@@ -38,6 +38,13 @@ export default {
   computed: {
     ...mapState('cart', ['lineItems', 'cartVisible'])
   },
+  watch: {
+    lineItems(newValue) {
+      if (newValue.length === 0) {
+        this.hideCart()
+      }
+    }
+  },
   methods: {
     ...mapMutations('cart', [
       'showCart',
@@ -46,13 +53,6 @@ export default {
     ]),
     handleClose() {
       this.hideCart()
-    }
-  },
-  watch: {
-    lineItems(newValue) {
-      if (newValue.length === 0) {
-        this.hideCart()
-      }
     }
   }
 }
