@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div aria-hidden="true"></div>
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
