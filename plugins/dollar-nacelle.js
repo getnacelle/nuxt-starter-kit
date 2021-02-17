@@ -1,5 +1,4 @@
 import NacelleClient from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
-import { Localizer } from '@nacelle/segmentation-sdk'
 
 export default function (context, inject) {
   const options = JSON.parse(`<%= JSON.stringify(options) %>`)
@@ -34,19 +33,6 @@ export default function (context, inject) {
   client.data.collectionPage = (params) => pimClient.data.collectionPage(params)
   client.data.allCollections = (params) => pimClient.data.allCollections(params)
 
-  // Set up Nacelle Localizer
-  let navigator
-  if (process.browser) {
-    navigator = window.navigator
-  } else {
-    navigator = {}
-  }
-
-  const localizer = new Localizer({
-    defaultLocale,
-    navigator
-  })
-
   const setSpace = () => {
     const { commit } = context.store
 
@@ -74,8 +60,7 @@ export default function (context, inject) {
     checkout: client.checkout,
     events: client.events,
     status: client.status,
-    wishlist: client.wishlist,
-    localizer
+    wishlist: client.wishlist
   }
 
   inject('nacelle', plugin)
