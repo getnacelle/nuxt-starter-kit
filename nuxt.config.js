@@ -66,8 +66,11 @@ export default {
     token: process.env.NACELLE_GRAPHQL_TOKEN,
 
     /* Optional */
-    // Set the default internationalization locale string for Nacelle to use
-    // locale: 'en-us',
+    // Set the default internationalization locales string for Nacelle to use
+    // locale: {
+    //   pim: 'en-us'
+    //   cms: 'en-US'
+    // }
 
     // Optional array of data type strings to direct Nacelle to include other data types
     // besides products in search data.

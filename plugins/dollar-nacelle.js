@@ -2,20 +2,37 @@ import NacelleClient from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
 import { Localizer } from '@nacelle/segmentation-sdk'
 
 export default function (context, inject) {
-  const { settings, space } = <%= JSON.stringify(options) %>
+  const options = JSON.parse(`<%= JSON.stringify(options) %>`)
+  const { settings, space } = options
   const { spaceID, token, endpoint, tem, wishlistEndpoint } = settings
-  const defaultLocale = settings.locale || 'en-us'
+  const defaultLocale = settings.locale?.cms || 'en-US'
 
-  // Set up Nacelle SDK Client
-  const client = new NacelleClient({
+  const pimClient = new NacelleClient({
     id: spaceID,
     token,
     nacelleEndpoint: endpoint,
-    locale: defaultLocale,
+    locale: settings.locale?.pim || 'en-us',
     eventsEndpoint: tem,
     wishlistEndpoint,
     useStatic: false
   })
+
+  const cmsClient = new NacelleClient({
+    id: spaceID,
+    token,
+    nacelleEndpoint: endpoint,
+    locale: settings.locale?.cms || 'en-US',
+    eventsEndpoint: tem,
+    useStatic: false
+  })
+
+  const client = cmsClient
+  client.data.product = (params) => pimClient.data.product(params)
+  client.data.products = (params) => pimClient.data.products(params)
+  client.data.allProducts = (params) => pimClient.data.allProducts(params)
+  client.data.collection = (params) => pimClient.data.collection(params)
+  client.data.collectionPage = (params) => pimClient.data.collectionPage(params)
+  client.data.allCollections = (params) => pimClient.data.allCollections(params)
 
   // Set up Nacelle Localizer
   let navigator
@@ -30,38 +47,8 @@ export default function (context, inject) {
     navigator
   })
 
-  const logEvent = (event) => {
-    client.events.log(event)
-  }
-
-  const onEvent = (eventType, fn) => {
-    console.warn(
-      `"$nacelle.onEvent" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
-Please update your project to use the @nacelle/client-js-sdk methods "$nacelle.events.onEvent"\n
-Learn more about the Client SDK in our docs here: https://docs.getnacelle.com/api-reference/client-js-sdk.html`
-    )
-    client.events.onEvent(eventType, fn)
-  }
-
-  const isVariantAvailable = async (options) => {
-    console.warn(
-      `"$nacelle.isVariantAvailable" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
-Please update your project to use the @nacelle/client-js-sdk methods "$nacelle.status.isVariantAvailable"\n
-Learn more about the Client SDK in our docs here: https://docs.getnacelle.com/api-reference/client-js-sdk.html`
-    )
-    return client.status.isVariantAvailable(options)
-  }
-
-  const setSpace = async () => {
+  const setSpace = () => {
     const { commit } = context.store
-
-    if (process.browser) {
-      console.warn(
-        `"$nacelle.setSpace" is going to be deprecated in future versions of the nacelle-nuxt-module.\n
-Please update your project to remove the usage of "$nacelle.setSpace".\n
-This will be handled automatically during the build process.`
-      )
-    }
 
     if (space) {
       const { id, name, domain, metafields, linklists } = space
@@ -73,7 +60,7 @@ This will be handled automatically during the build process.`
     }
   }
 
-  const nacelleNuxtServerInit = async () => {
+  const nacelleNuxtServerInit = () => {
     setSpace()
   }
 
@@ -81,10 +68,7 @@ This will be handled automatically during the build process.`
     ...settings,
     defaultLocale,
     nacelleNuxtServerInit,
-    logEvent,
-    onEvent,
     setSpace,
-    isVariantAvailable,
     client,
     data: client.data,
     checkout: client.checkout,
