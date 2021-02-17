@@ -52,10 +52,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    { src: '~/plugins/nuxt-client-init.js', ssr: false },
-    '~/plugins/jsonld'
-  ],
+  plugins: [{ src: '~/plugins/nuxt-client-init.js', ssr: false }],
 
   /*
    ** Nacelle Configuration
@@ -68,7 +65,7 @@ export default {
     /* Optional */
     // Set the default internationalization locales string for Nacelle to use
     // locale: {
-    //   pim: 'en-us'
+    //   pim: 'en-us',
     //   cms: 'en-US'
     // }
 

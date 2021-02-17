@@ -61,10 +61,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import viewEvent from '~/mixins/viewEvent'
-import jsonld from '~/mixins/jsonld'
 
 export default {
-  mixins: [viewEvent('article'), jsonld('article')],
+  mixins: [viewEvent('article')],
   data() {
     return {
       article: null
