@@ -25,6 +25,13 @@ module.exports = {
         asyncArrow: 'always'
       }
     ],
-    'vue/no-v-html': false
+    'vue/attribute-hyphenation': [
+      'error',
+      'always',
+      {
+        ignore: ['data-', 'aria-', 'slot-scope']
+      }
+    ],
+    'vue/no-v-html': 1
   }
 }
