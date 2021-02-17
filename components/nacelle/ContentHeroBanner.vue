@@ -104,7 +104,7 @@ export default {
       return `hero nacelle is-${this.size} is-align-${this.alignment} ${mobileHeightClass}`
     },
     imageUrl() {
-      return this.featuredMedia?.fields?.file?.url
+      return this.featuredMedia?.src
     },
     mobileSrc() {
       return this.mobileBackgroundImgUrl || this.imageUrl

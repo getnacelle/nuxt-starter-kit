@@ -85,7 +85,7 @@ export default {
   },
   computed: {
     imageUrl() {
-      return this.featuredMedia?.fields?.file?.url
+      return this.featuredMedia?.src
     },
     columnClasses() {
       const desktopReverse = this.reverseDesktop ? 'is-column-reverse' : ''
