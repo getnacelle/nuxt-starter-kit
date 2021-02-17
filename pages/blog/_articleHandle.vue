@@ -14,6 +14,7 @@
           <interface-featured-media
             v-if="article && article.featuredMedia"
             :media="article.featuredMedia"
+            :width="400"
           />
         </transition>
       </div>
