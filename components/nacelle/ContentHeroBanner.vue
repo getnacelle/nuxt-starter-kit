@@ -6,7 +6,7 @@
     >
       <nacelle-image
         :src="imageUrl"
-        :mobileSrc="mobileSrc"
+        :mobile-src="mobileSrc"
         :alt="backgroundAltTag"
         layout="responsive"
         class="hero-background"
@@ -42,6 +42,10 @@
 <script>
 export default {
   props: {
+    featuredMedia: {
+      type: Object,
+      default: () => ({})
+    },
     alignment: {
       type: String,
       default: 'center'
@@ -57,10 +61,6 @@ export default {
     mobileCrop: {
       type: Boolean,
       default: true
-    },
-    imageUrl: {
-      type: String,
-      default: ''
     },
     mobileBackgroundImgUrl: {
       type: String,
@@ -102,6 +102,9 @@ export default {
         : ''
 
       return `hero nacelle is-${this.size} is-align-${this.alignment} ${mobileHeightClass}`
+    },
+    imageUrl() {
+      return this.featuredMedia?.fields?.file?.url
     },
     mobileSrc() {
       return this.mobileBackgroundImgUrl || this.imageUrl

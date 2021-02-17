@@ -43,11 +43,12 @@ export default {
       default: ''
     },
     alt: {
-      type: String
-    },
-    imageUrl: {
       type: String,
       default: ''
+    },
+    featuredMedia: {
+      type: Object,
+      default: () => ({})
     },
     title: {
       type: String,
@@ -83,6 +84,9 @@ export default {
     }
   },
   computed: {
+    imageUrl() {
+      return this.featuredMedia?.fields?.file?.url
+    },
     columnClasses() {
       const desktopReverse = this.reverseDesktop ? 'is-column-reverse' : ''
       const mobileReverse = this.reverseMobile ? 'is-mobile-column-reverse' : ''
