@@ -13,8 +13,8 @@
     "test": "jest",
     "test:ci": "jest --no-coverage --runInBand",
     "test:watch": "jest --watch",
-    "storybook": "npx nuxt storybook",
-    "storybook:build": "npx nuxt storybook build",
+    "storybook": "nuxt storybook",
+    "storybook:build": "nuxt storybook build",
     "storybook:serve": "serve storybook-static -p 4444"
   },
   "dependencies": {
