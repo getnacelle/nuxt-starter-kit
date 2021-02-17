@@ -22,7 +22,7 @@ export default {
   css: ['@/assets/global.scss'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
+  components: ['~/components/nacelle', '~/components/nacelle/image'],
 
   // Add environment variables to either `publicRuntineConfig` (exposed to client)
   // or to `privateRuntimeConfig`
