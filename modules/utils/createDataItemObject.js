@@ -41,7 +41,7 @@ export default ({ type, item, route, routeConfig }) => {
 
   // For custom types append type to global handle
   // This will allow querying based on type with $nacelle.content()
-  if (defaultTypes.indexOf(dataItem.type) === -1) {
+  if (!defaultTypes.includes(dataItem.type)) {
     dataItem.globalHandle = `${dataItem.globalHandle}::${dataItem.type}`
   }
 

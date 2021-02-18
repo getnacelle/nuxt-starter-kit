@@ -2,11 +2,11 @@
   <section :class="bannerClasses">
     <slot
       name="background"
-      v-bind="{mobileBackgroundImgUrl, imageUrl, backgroundAltTag}"
+      v-bind="{ mobileBackgroundImgUrl, imageUrl, backgroundAltTag }"
     >
       <nacelle-image
         :src="imageUrl"
-        :mobileSrc="mobileSrc"
+        :mobile-src="mobileSrc"
         :alt="backgroundAltTag"
         layout="responsive"
         class="hero-background"
@@ -15,10 +15,7 @@
     <div class="hero-body">
       <div class="container">
         <div class="hero-body-inner">
-          <slot
-            name="body"
-            v-bind="{textColor, title, subtitle}"
-          >
+          <slot name="body" v-bind="{ textColor, title, subtitle }">
             <h1 class="title">
               {{ title }}
             </h1>
@@ -29,10 +26,7 @@
               {{ subtitle }}
             </h3>
           </slot>
-          <slot
-            name="cta"
-            v-bind="{ctaUrl, ctaText, ctaHandler}"
-          >
+          <slot name="cta" v-bind="{ ctaUrl, ctaText, ctaHandler }">
             <p v-if="ctaText.length > 0">
               <cta-button :to="ctaUrl" @clicked="ctaHandler">{{
                 ctaText
@@ -48,6 +42,10 @@
 <script>
 export default {
   props: {
+    featuredMedia: {
+      type: Object,
+      default: () => ({})
+    },
     alignment: {
       type: String,
       default: 'center'
@@ -63,10 +61,6 @@ export default {
     mobileCrop: {
       type: Boolean,
       default: true
-    },
-    imageUrl: {
-      type: String,
-      default: ''
     },
     mobileBackgroundImgUrl: {
       type: String,
@@ -109,6 +103,9 @@ export default {
 
       return `hero nacelle is-${this.size} is-align-${this.alignment} ${mobileHeightClass}`
     },
+    imageUrl() {
+      return this.featuredMedia?.src
+    },
     mobileSrc() {
       return this.mobileBackgroundImgUrl || this.imageUrl
     }
@@ -117,8 +114,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1{
-  color:white;
+h1 {
+  color: white;
   font-size: 48pt !important;
   text-transform: uppercase;
 }
@@ -141,11 +138,11 @@ h1{
   bottom: 0;
   background-color: black;
 
-  & /deep/ img {
+  & ::v-deep img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: .5;
+    opacity: 0.5;
   }
 }
 

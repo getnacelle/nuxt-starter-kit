@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-console */
 self.importScripts('https://unpkg.com/idb-keyval@5.0.2/dist/iife/index-min.js')
 
 onmessage = function receiver(e) {

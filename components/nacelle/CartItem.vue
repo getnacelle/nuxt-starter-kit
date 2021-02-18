@@ -32,7 +32,7 @@
       <div class="flyout-item-details columns is-marginless is-paddingless">
         <product-price class="flyout-item-price" :price="item.variant.price" />
         <quantity-selector :item="item" :quantity="item.quantity" />
-        <cart-flyout-item-remove-button :lineId="item.variant.id" />
+        <cart-flyout-item-remove-button :line-id="item.variant.id" />
       </div>
     </div>
   </div>

@@ -1,8 +1,8 @@
 import { withInfo } from 'storybook-addon-vue-info'
 import StoryRouter from 'storybook-vue-router'
 import PageContent from '../nacelle/PageContent'
-import store from '../../.storybook/store'
-import { defaultProduct } from '../../tests/mocks/defaultObjects';
+
+import { defaultProduct } from '../../tests/mocks/defaultObjects'
 
 const productArray = [
   defaultProduct,
@@ -94,7 +94,8 @@ const defaultObj = {
           fields: {
             title: 'jupiter-bed',
             file: {
-              url: '//images.ctfassets.net/9n7z3zrrmdu4/4ykTjR1fM1563524AIRvq2/59e172a7ab0783ea77a792dcef6faf39/iStock-476157466.jpg',
+              url:
+                '//images.ctfassets.net/9n7z3zrrmdu4/4ykTjR1fM1563524AIRvq2/59e172a7ab0783ea77a792dcef6faf39/iStock-476157466.jpg',
               details: {
                 size: 114815,
                 image: {
@@ -138,7 +139,8 @@ const defaultObj = {
           fields: {
             title: 'demo-photo1',
             file: {
-              url: '//images.ctfassets.net/9n7z3zrrmdu4/2mri2qBxe39mYOENoIIHTx/5a453f3dabec858c0090f09b746df307/demo-photo1.jpeg',
+              url:
+                '//images.ctfassets.net/9n7z3zrrmdu4/2mri2qBxe39mYOENoIIHTx/5a453f3dabec858c0090f09b746df307/demo-photo1.jpeg',
               details: {
                 size: 124110,
                 image: {
@@ -237,7 +239,8 @@ const defaultObj = {
                 {
                   data: {},
                   marks: [],
-                  value: 'Run a manual sweep of anomalous airborne or electromagnetic readings. Radiation levels in our atmosphere have increased by 3,000 percent.',
+                  value:
+                    'Run a manual sweep of anomalous airborne or electromagnetic readings. Radiation levels in our atmosphere have increased by 3,000 percent.',
                   nodeType: 'text'
                 }
               ],
@@ -272,7 +275,8 @@ const defaultObj = {
           fields: {
             title: 'demo-photo3',
             file: {
-              url: '//images.ctfassets.net/9n7z3zrrmdu4/5YSVUJO2PAFG8lvvCOg1Jd/335b6e906be4e5638dc597c41033e4e3/demo-photo3.jpeg',
+              url:
+                '//images.ctfassets.net/9n7z3zrrmdu4/5YSVUJO2PAFG8lvvCOg1Jd/335b6e906be4e5638dc597c41033e4e3/demo-photo3.jpeg',
               details: {
                 size: 164105,
                 image: {
@@ -365,7 +369,8 @@ const defaultObj = {
             },
             fields: {
               name: '@john-doe',
-              quotation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum metus a vulputate viverra. Sed vel varius libero, id luctus sem.',
+              quotation:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum metus a vulputate viverra. Sed vel varius libero, id luctus sem.',
               featuredMedia: {
                 sys: {
                   space: {
@@ -392,7 +397,8 @@ const defaultObj = {
                 fields: {
                   title: '300x300',
                   file: {
-                    url: '//images.ctfassets.net/9n7z3zrrmdu4/1KsG8pQDYVLqlHdVl0XSF8/05b9cffbeb36a7de9da5d31e0fbb7aea/300x300.png',
+                    url:
+                      '//images.ctfassets.net/9n7z3zrrmdu4/1KsG8pQDYVLqlHdVl0XSF8/05b9cffbeb36a7de9da5d31e0fbb7aea/300x300.png',
                     details: {
                       size: 1132,
                       image: {
@@ -439,7 +445,8 @@ const defaultObj = {
             },
             fields: {
               name: '@the-fourth-user',
-              quotation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum metus a vulputate viverra. Sed vel varius libero, id luctus sem.',
+              quotation:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum metus a vulputate viverra. Sed vel varius libero, id luctus sem.',
               featuredMedia: {
                 sys: {
                   space: {
@@ -466,7 +473,8 @@ const defaultObj = {
                 fields: {
                   title: '300x300',
                   file: {
-                    url: '//images.ctfassets.net/9n7z3zrrmdu4/1KsG8pQDYVLqlHdVl0XSF8/05b9cffbeb36a7de9da5d31e0fbb7aea/300x300.png',
+                    url:
+                      '//images.ctfassets.net/9n7z3zrrmdu4/1KsG8pQDYVLqlHdVl0XSF8/05b9cffbeb36a7de9da5d31e0fbb7aea/300x300.png',
                     details: {
                       size: 1132,
                       image: {
@@ -513,7 +521,8 @@ const defaultObj = {
             },
             fields: {
               name: '@third-user-name',
-              quotation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum metus a vulputate viverra. Sed vel varius libero, id luctus sem.',
+              quotation:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum metus a vulputate viverra. Sed vel varius libero, id luctus sem.',
               featuredMedia: {
                 sys: {
                   space: {
@@ -540,7 +549,8 @@ const defaultObj = {
                 fields: {
                   title: '300x300',
                   file: {
-                    url: '//images.ctfassets.net/9n7z3zrrmdu4/1KsG8pQDYVLqlHdVl0XSF8/05b9cffbeb36a7de9da5d31e0fbb7aea/300x300.png',
+                    url:
+                      '//images.ctfassets.net/9n7z3zrrmdu4/1KsG8pQDYVLqlHdVl0XSF8/05b9cffbeb36a7de9da5d31e0fbb7aea/300x300.png',
                     details: {
                       size: 1132,
                       image: {
@@ -587,7 +597,8 @@ const defaultObj = {
             },
             fields: {
               name: '@user-two',
-              quotation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum metus a vulputate viverra. Sed vel varius libero, id luctus sem.',
+              quotation:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed interdum metus a vulputate viverra. Sed vel varius libero, id luctus sem.',
               featuredMedia: {
                 sys: {
                   space: {
@@ -614,7 +625,8 @@ const defaultObj = {
                 fields: {
                   title: '300x300',
                   file: {
-                    url: '//images.ctfassets.net/9n7z3zrrmdu4/1KsG8pQDYVLqlHdVl0XSF8/05b9cffbeb36a7de9da5d31e0fbb7aea/300x300.png',
+                    url:
+                      '//images.ctfassets.net/9n7z3zrrmdu4/1KsG8pQDYVLqlHdVl0XSF8/05b9cffbeb36a7de9da5d31e0fbb7aea/300x300.png',
                     details: {
                       size: 1132,
                       image: {
@@ -640,7 +652,8 @@ const defaultObj = {
       contentHtml: 'Bringing You the Best Widgets!',
       image: {
         id: 'Z2lkOi8vc2hvcGlmeS9BcnRpY2xlSW1hZ2UvOTYyOTI3MDExMw==',
-        originalSrc: 'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/contentful-demo-4.jpeg?v=1568650754'
+        originalSrc:
+          'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/contentful-demo-4.jpeg?v=1568650754'
       },
       tags: [
         'field::alignment::left',
@@ -660,9 +673,7 @@ const defaultObj = {
       handle: 'what-people-are-saying',
       contentHtml: '',
       image: null,
-      tags: [
-        'field::contentType::ContentTestimonials'
-      ],
+      tags: ['field::contentType::ContentTestimonials'],
       contentType: 'ContentTestimonials'
     },
     {
@@ -670,19 +681,18 @@ const defaultObj = {
       handle: 'mr-spacely',
       contentHtml: 'These were exactly what I was looking for!',
       image: null,
-      tags: [
-        'childSection',
-        'field::contentType::ContentTestimonial'
-      ],
+      tags: ['childSection', 'field::contentType::ContentTestimonial'],
       contentType: 'ContentTestimonial'
     },
     {
       title: 'Hundreds of Colors',
       handle: 'hundreds-of-colors',
-      contentHtml: 'So many options to choose from! Widgets for every occasion!',
+      contentHtml:
+        'So many options to choose from! Widgets for every occasion!',
       image: {
         id: 'Z2lkOi8vc2hvcGlmeS9BcnRpY2xlSW1hZ2UvOTYyOTQ5OTQ4OQ==',
-        originalSrc: 'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/demo-photo6.jpeg?v=1568653303'
+        originalSrc:
+          'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/demo-photo6.jpeg?v=1568653303'
       },
       tags: [
         'field::backgroundColor::#D9B18C',
@@ -702,10 +712,7 @@ const defaultObj = {
       handle: 'mr-cogswell',
       contentHtml: 'Their quality and attention to detail is unparalleled.',
       image: null,
-      tags: [
-        'childSection',
-        'field::contentType::ContentTestimonial'
-      ],
+      tags: ['childSection', 'field::contentType::ContentTestimonial'],
       contentType: 'ContentTestimonial'
     },
     {
@@ -714,7 +721,8 @@ const defaultObj = {
       contentHtml: 'Our widgets are produced right in your backyard!',
       image: {
         id: 'Z2lkOi8vc2hvcGlmeS9BcnRpY2xlSW1hZ2UvOTYyOTQzMzk1Mw==',
-        originalSrc: 'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/IconEb1_822px.jpg?v=1568652668'
+        originalSrc:
+          'https://cdn.shopify.com/s/files/1/0255/4491/7089/articles/IconEb1_822px.jpg?v=1568652668'
       },
       tags: [
         'field::contentType::ContentSideBySide',
@@ -730,9 +738,7 @@ const defaultObj = {
       handle: 'whats-new',
       contentHtml: '',
       image: null,
-      tags: [
-        'field::contentType::ContentProductGrid'
-      ],
+      tags: ['field::contentType::ContentProductGrid'],
       contentType: 'ContentProductGrid'
     }
   ]
@@ -740,12 +746,11 @@ const defaultObj = {
 
 export default {
   title: 'Components | Content / Page Content',
-  decorators: [StoryRouter()],
-};
+  decorators: [StoryRouter()]
+}
 
 export const ContentfulContent = () => ({
   components: { PageContent },
-  store,
   data() {
     return {
       page: {
@@ -758,11 +763,10 @@ export const ContentfulContent = () => ({
   template: `
     <page-content :page="page" :products="products"/>
   `
-});
+})
 
 export const CustomPageContentMapper = () => ({
   components: { PageContent },
-  store,
   data() {
     return {
       page: {
@@ -774,7 +778,7 @@ export const CustomPageContentMapper = () => ({
   },
   computed: {
     customMappedContent() {
-      return this.page.sections.map(section => {
+      return this.page.sections.map((section) => {
         return section.fields.handle
       })
     }
@@ -793,19 +797,19 @@ export const CustomPageContentMapper = () => ({
       </template>
     </page-content>
   `
-});
+})
 
 CustomPageContentMapper.story = {
   parameters: {
     info: {
-      summary: 'By default page content will look at the source of the page and use either a Shopify or Contentful data mapper. The mapper and mapper function can be customized.'
+      summary:
+        'By default page content will look at the source of the page and use either a Shopify or Contentful data mapper. The mapper and mapper function can be customized.'
     }
-  },
-};
+  }
+}
 
 export const CustomSectionComponents = () => ({
   components: { PageContent },
-  store,
   data() {
     return {
       page: {
@@ -817,7 +821,7 @@ export const CustomSectionComponents = () => ({
   },
   computed: {
     customMappedContent() {
-      return this.page.content.map(section => {
+      return this.page.content.map((section) => {
         return section.id
       })
     }
@@ -831,19 +835,18 @@ export const CustomSectionComponents = () => ({
       </template>
     </page-content>
   `
-});
+})
 
 CustomSectionComponents.story = {
   parameters: {
     info: {
       summary: ''
     }
-  },
-};
+  }
+}
 
 export const ShopifyContent = () => ({
   components: { PageContent },
-  store,
   data() {
     return {
       page: {
@@ -855,7 +858,7 @@ export const ShopifyContent = () => ({
   },
   computed: {
     customMappedContent() {
-      return this.page.content.map(section => {
+      return this.page.content.map((section) => {
         return section.id
       })
     }
@@ -863,7 +866,7 @@ export const ShopifyContent = () => ({
   template: `
     <page-content :page="page" :products="products"/>
   `
-});
+})
 
 ShopifyContent.story = {
   name: 'Shopify Content',
@@ -872,12 +875,11 @@ ShopifyContent.story = {
     info: {
       summary: ''
     }
-  },
-};
+  }
+}
 
 export const CustomContentfulContentTypes = () => ({
   components: { PageContent },
-  store,
   data() {
     return {
       page: {
@@ -920,7 +922,7 @@ export const CustomContentfulContentTypes = () => ({
   },
   computed: {
     customMappedContent() {
-      return this.page.content.map(section => {
+      return this.page.content.map((section) => {
         return section.id
       })
     }
@@ -935,19 +937,18 @@ export const CustomContentfulContentTypes = () => ({
       </template>
     </page-content>
   `
-});
+})
 
 CustomContentfulContentTypes.story = {
   parameters: {
     info: {
       summary: ''
     }
-  },
-};
+  }
+}
 
 export const CustomShopifyContentTypes = () => ({
   components: { PageContent },
-  store,
   data() {
     return {
       page: {
@@ -969,19 +970,14 @@ export const CustomShopifyContentTypes = () => ({
             handle: 'custom-slider',
             contentHtml: '',
             image: null,
-            tags: [
-              'field::contentType::CustomSlider'
-            ]
+            tags: ['field::contentType::CustomSlider']
           },
           {
             title: 'Custom Slider Slide',
             handle: 'custom-slider-slide',
             contentHtml: '',
             image: null,
-            tags: [
-              'childSection',
-              'field::contentType::CustomSliderSlide'
-            ]
+            tags: ['childSection', 'field::contentType::CustomSliderSlide']
           }
         ]
       },
@@ -990,7 +986,7 @@ export const CustomShopifyContentTypes = () => ({
   },
   computed: {
     customMappedContent() {
-      return this.page.content.map(section => {
+      return this.page.content.map((section) => {
         return section.id
       })
     }
@@ -1005,12 +1001,12 @@ export const CustomShopifyContentTypes = () => ({
       </template>
     </page-content>
   `
-});
+})
 
 CustomShopifyContentTypes.story = {
   parameters: {
     info: {
       summary: ''
     }
-  },
-};
+  }
+}

@@ -2,13 +2,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-export default async (context) => {
+export default (context) => {
   if (!context.store) {
     context.store = new Vuex.Store()
   }
 
   context.app.router.afterEach((to, from) => {
-    if (process.browser || process.client) {
+    if (process.client) {
       if (to.path === '/search' && from.path === '/search') {
         // don't track page view events for search page filtering
         return

@@ -1,7 +1,7 @@
 import { withKnobs } from '@storybook/addon-knobs'
 import { withInfo } from 'storybook-addon-vue-info'
 import StoryRouter from 'storybook-vue-router'
-import store from '../../.storybook/store'
+
 import {
   defaultProduct,
   shopifyArticle,
@@ -20,8 +20,8 @@ const storyWrapper = () => {
 
 export default {
   title: 'Components | Content / Blog / Article Content',
-  decorators: [withInfo, StoryRouter(), storyWrapper],
-};
+  decorators: [withInfo, StoryRouter(), storyWrapper]
+}
 
 export const Shopify = () => ({
   components: { BlogArticleContent },
@@ -33,19 +33,18 @@ export const Shopify = () => ({
   template: `
     <blog-article-content :article="article" />
   `
-});
+})
 
 Shopify.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 export const ShopifyWithShopLook = () => ({
   components: { BlogArticleContent },
-  store,
   data() {
     return {
       article: shopifyArticle,
@@ -58,7 +57,7 @@ export const ShopifyWithShopLook = () => ({
       :products="products"
     />
   `
-});
+})
 
 ShopifyWithShopLook.story = {
   name: 'Shopify with Shop Look',
@@ -66,12 +65,11 @@ ShopifyWithShopLook.story = {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 export const ShopLookWithCustomProductCard = () => ({
   components: { BlogArticleContent },
-  store,
   data() {
     return {
       article: shopifyArticle,
@@ -88,7 +86,7 @@ export const ShopLookWithCustomProductCard = () => ({
       </template>
     </blog-article-content>
   `
-});
+})
 
 ShopLookWithCustomProductCard.story = {
   name: 'Shop Look with Custom Product Card',
@@ -96,8 +94,8 @@ ShopLookWithCustomProductCard.story = {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 export const Contentful = () => ({
   components: { BlogArticleContent },
@@ -111,15 +109,15 @@ export const Contentful = () => ({
       :article="article"
     />
   `
-});
+})
 
 Contentful.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 export const Customized = () => ({
   components: { BlogArticleContent },
@@ -135,12 +133,12 @@ export const Customized = () => ({
       </div>
     </blog-article-content>
   `
-});
+})
 
 Customized.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}

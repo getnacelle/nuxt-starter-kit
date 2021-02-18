@@ -6,15 +6,8 @@
 /****
 -->
 <template>
-  <div
-    v-if="collection"
-    class="page page-collection"
-  >
-    <content-hero-banner
-      v-if="collection && collection.title && collection.featuredImage"
-      :title="collection.title"
-      :image-url="collection.featuredImage"
-    />
+  <div v-if="collection" class="page page-collection">
+    <page-content class="page" :page="page" />
     <section class="section">
       <div class="container">
         <div class="columns is-multiline">
@@ -27,10 +20,7 @@
         </div>
       </div>
       <observe-emitter @observe="showMore" />
-      <div
-        v-if="isFetching"
-        style="text-align: center"
-      >
+      <div v-if="isFetching" style="text-align: center">
         Loading products...
       </div>
     </section>
@@ -42,23 +32,28 @@ import productModule from '~/store/product/productModule'
 import viewEvent from '~/mixins/viewEvent'
 
 export default {
-  mixins: [
-    viewEvent('collection')
-  ],
+  mixins: [viewEvent('collection')],
   data() {
     return {
       collection: null,
       collectionProducts: [],
       productVisibilityCount: 12,
       fetchBuffer: 12,
-      isFetching: false
+      isFetching: false,
+      page: null
     }
   },
   async fetch() {
-    const collectionData = await this.$nacelle.data.collection({
-      handle: this.$route.params.collectionHandle
-    })
-    this.collection = collectionData
+    const { collectionHandle: handle } = this.$route.params
+
+    this.collection = await this.$nacelle.data
+      .collection({ handle })
+      .catch(() => console.warn(`No collection with handle: '${handle}' found`))
+
+    this.page = await this.$nacelle.data
+      .page({ handle })
+      .catch(() => console.warn(`No page with handle: '${handle}' found`))
+
     await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
   },
   computed: {
@@ -70,11 +65,13 @@ export default {
     }
   },
   mounted() {
-    if (process.client && this.collection) {
-      this.collectionProducts.forEach(product => {
+    if (this.collection) {
+      this.collectionProducts.forEach((product) => {
         const namespace = `product/${product.handle}`
         if (!this.$store.hasModule(namespace)) {
-          this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+          this.$store.registerModule(namespace, productModule(), {
+            preserveState: !!this.$store.state[namespace]
+          })
           this.$store.dispatch(`${namespace}/setupProduct`, product)
         }
         this.$store.dispatch(`${namespace}/storeProduct`, product)
@@ -82,13 +79,13 @@ export default {
     }
   },
   beforeDestroy() {
-    this.collectionProducts.forEach(product => {
+    this.collectionProducts.forEach((product) => {
       const namespace = `product/${product.handle}`
       this.$store.commit(`${namespace}/unloadProduct`)
     })
   },
   methods: {
-    async showMore() {
+    showMore() {
       if (!this.collection) {
         return
       }
@@ -106,19 +103,23 @@ export default {
       const products = this.collection.productLists[0].handles
         .slice(start, end)
         .map((handle, index) => {
-          this.$set(
-            this.collectionProducts,
-            index + start,
-            { handle, isLoading: true }
-          )
+          this.$set(this.collectionProducts, index + start, {
+            handle,
+            isLoading: true
+          })
           return handle
         })
         .map(async (handle, index) => {
           const namespace = `product/${handle}`
           if (!this.$store.hasModule(namespace)) {
-            this.$store.registerModule(namespace, productModule(), { preserveState: !!this.$store.state[namespace] })
+            this.$store.registerModule(namespace, productModule(), {
+              preserveState: !!this.$store.state[namespace]
+            })
           }
-          const product = await this.$store.dispatch(`${namespace}/fetchProduct`, handle)
+          const product = await this.$store.dispatch(
+            `${namespace}/fetchProduct`,
+            handle
+          )
           this.$set(this.collectionProducts, index + start, product)
         })
 

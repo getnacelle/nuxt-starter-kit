@@ -1,9 +1,5 @@
 <template>
-  <img
-    :src="source"
-    class="interface-close-button nacelle"
-    @click="close"
-  />
+  <img :src="source" class="interface-close-button nacelle" @click="close" />
 </template>
 
 <script>
@@ -23,7 +19,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 img {
   width: 1rem;
   cursor: pointer;

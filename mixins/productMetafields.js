@@ -21,9 +21,9 @@ export default {
   },
   methods: {
     getMetafield(namespace, key) {
-      const metafield = this.product.metafields.find(field => (
-        field.namespace === namespace && field.key === key
-      ))
+      const metafield = this.product.metafields.find(
+        (field) => field.namespace === namespace && field.key === key
+      )
 
       if (metafield) {
         return metafield.value

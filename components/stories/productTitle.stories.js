@@ -1,24 +1,21 @@
-import { withInfo } from 'storybook-addon-vue-info';
+import { withInfo } from 'storybook-addon-vue-info'
 
-import ProductTitle from '../nacelle/ProductTitle';
-
-import store from '../../.storybook/store';
+import ProductTitle from '../nacelle/ProductTitle'
 
 export default {
   title: 'Components | Product',
-  decorators: [withInfo],
-};
+  decorators: [withInfo]
+}
 
 export const Title = () => ({
-  store,
   components: { ProductTitle },
-  template: '<product-title/>',
-});
+  template: '<product-title/>'
+})
 
 Title.story = {
   parameters: {
     info: {
       // summary: "Hello"
-    },
-  },
-};
+    }
+  }
+}

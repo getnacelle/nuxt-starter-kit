@@ -1,6 +1,7 @@
-export default globalHandle => {
-  let [handle, locale] = globalHandle.split('::')
-  if(!locale) locale = 'en-us'
-  let formattedLocale = `::${locale.toLowerCase().replace('_', '-')}`
+export default (globalHandle) => {
+  const [handle, globalHandleLocale] = globalHandle.split('::')
+  const locale = globalHandleLocale || 'en-us'
+  const formattedLocale = `::${locale.toLowerCase().replace('_', '-')}`
+
   return String(`${handle}${formattedLocale}`)
 }

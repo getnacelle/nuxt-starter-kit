@@ -1,5 +1,4 @@
 import { withInfo } from 'storybook-addon-vue-info'
-import store from '../../.storybook/store'
 
 import ProductAddToWishlistButton from '../nacelle/ProductAddToWishlistButton'
 
@@ -9,7 +8,6 @@ export default {
 }
 
 export const AddToWishlistButton = () => ({
-  store,
   components: { ProductAddToWishlistButton },
   data() {
     return {

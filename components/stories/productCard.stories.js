@@ -2,7 +2,6 @@ import { withKnobs } from '@storybook/addon-knobs'
 import { withInfo } from 'storybook-addon-vue-info'
 import StoryRouter from 'storybook-vue-router'
 
-import store from '../../.storybook/store'
 import ProductCard from '../nacelle/ProductCard'
 import { defaultProduct } from '../../tests/mocks/defaultObjects'
 
@@ -24,7 +23,6 @@ export default {
 
 export const Default = () => ({
   components: { ProductCard },
-  store,
   template: '<product-card />'
 })
 
@@ -37,7 +35,6 @@ Default.story = {
 }
 
 export const WithSampleData = () => ({
-  store,
   components: { ProductCard },
   data() {
     return {

@@ -1,5 +1,5 @@
 <template>
-  <component class="product-title nacelle" :is="element">{{title}}</component>
+  <component :is="element" class="product-title nacelle">{{ title }}</component>
 </template>
 
 <script>

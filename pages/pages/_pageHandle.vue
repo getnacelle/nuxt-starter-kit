@@ -1,9 +1,6 @@
 <template>
   <div class="page">
-    <page-content
-      v-if="!$fetchState.pending"
-      :page="page"
-    />
+    <page-content v-if="!$fetchState.pending" :page="page" />
   </div>
 </template>
 
@@ -15,10 +12,10 @@ export default {
     }
   },
   async fetch() {
-    this.page = await this.$nacelle.data.page({
-      handle: this.$route.params.pageHandle
-    })
+    const { pageHandle: handle } = this.$route.params
+    this.page = await this.$nacelle.data
+      .page({ handle })
+      .catch(() => console.warn(`No page with handle: '${handle}' found`))
   }
-
 }
 </script>

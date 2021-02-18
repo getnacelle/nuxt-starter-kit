@@ -47,7 +47,7 @@ export const getters = {
 
   checkoutLineItems(state) {
     if (state.lineItems.length > 0) {
-      return state.lineItems.map(lineItem => ({
+      return state.lineItems.map((lineItem) => ({
         cartItemId: lineItem.id,
         variantId: lineItem.variant.id,
         quantity: lineItem.quantity,
@@ -61,10 +61,15 @@ export const getters = {
 
 export const mutations = {
   addLineItemMutation(state, payload) {
-    const index = state.lineItems.findIndex(lineItem => {
+    const index = state.lineItems.findIndex((lineItem) => {
       if (lineItem.variant.id === payload.variant.id) {
-        return JSON.stringify(payload.metafields) === JSON.stringify(lineItem.metafields) // match only if metafields are the same.
+        return (
+          JSON.stringify(payload.metafields) ===
+          JSON.stringify(lineItem.metafields)
+        ) // match only if metafields are the same.
       }
+
+      return false
     })
     if (index === -1) {
       // generate unique id for line
@@ -77,20 +82,24 @@ export const mutations = {
 
   removeLineItemMutation(state, payload) {
     const index = state.lineItems.findIndex(
-      lineItem => lineItem.variant.id === payload
+      (lineItem) => lineItem.variant.id === payload
     )
     state.lineItems.splice(index, 1)
   },
 
   incrementLineItemMutation(state, payload) {
-    const index = state.lineItems.findIndex(lineItem => lineItem.id === payload)
+    const index = state.lineItems.findIndex(
+      (lineItem) => lineItem.id === payload
+    )
     if (index !== -1) {
       state.lineItems[index].quantity++
     }
   },
 
   decrementLineItemMutation(state, payload) {
-    const index = state.lineItems.findIndex(lineItem => lineItem.id === payload)
+    const index = state.lineItems.findIndex(
+      (lineItem) => lineItem.id === payload
+    )
     if (index !== -1 && state.lineItems[index].quantity >= 1) {
       state.lineItems[index].quantity--
       if (state.lineItems[index].quantity === 0) {
@@ -126,7 +135,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async addLineItem({ state, rootState, commit, dispatch }, payload) {
+  addLineItem({ state, rootState, commit, dispatch }, payload) {
     commit('addLineItemMutation', payload)
     dispatch('saveLineItems', state.lineItems)
 
@@ -142,9 +151,11 @@ export const actions = {
     }
   },
 
-  async removeLineItem({ state, rootState, dispatch, commit }, payload) {
+  removeLineItem({ state, rootState, dispatch, commit }, payload) {
     if (rootState.events) {
-      const lineItem = state.lineItems.find(item => item.variant.id === payload)
+      const lineItem = state.lineItems.find(
+        (item) => item.variant.id === payload
+      )
       dispatch(
         'events/removeFromCart',
         {
@@ -159,17 +170,17 @@ export const actions = {
     dispatch('saveLineItems', state.lineItems)
   },
 
-  async incrementLineItem({ state, commit, dispatch }, payload) {
+  incrementLineItem({ state, commit, dispatch }, payload) {
     commit('incrementLineItemMutation', payload)
     dispatch('saveLineItems', state.lineItems)
   },
 
-  async decrementLineItem({ state, commit, dispatch }, payload) {
+  decrementLineItem({ state, commit, dispatch }, payload) {
     commit('decrementLineItemMutation', payload)
     dispatch('saveLineItems', state.lineItems)
   },
 
-  async saveLineItems({ state }) {
+  saveLineItems({ state }) {
     set('line-items', state.lineItems)
   },
 

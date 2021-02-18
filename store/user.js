@@ -46,7 +46,7 @@ export const actions = {
     await context.dispatch('readAnonymousID')
     await context.dispatch('readSession')
 
-    if (process.browser) {
+    if (process.client) {
       const userData = Cookies.get('user-data')
 
       if (userData) {
@@ -55,7 +55,7 @@ export const actions = {
     }
   },
 
-  // ANONYMOUS ID ACTIONS //////////////////////////////////////////
+  // ANONYMOUS ID ACTIONS //
   async createAnonymousID(context) {
     const anonymousID = uuid()
     await set('anonymousID', anonymousID)
@@ -70,11 +70,11 @@ export const actions = {
     }
   },
 
-  // SESSION ACTIONS //////////////////////////////////////////
-  async createSession(context) {
+  // SESSION ACTIONS //
+  createSession(context) {
     const sessionID = uuid()
     context.commit('setSessionID', sessionID)
-    if (process.browser) {
+    if (process.client) {
       Cookies.set('session-id', sessionID, {
         expires: new Date().setMinutes(30)
       })
@@ -82,7 +82,7 @@ export const actions = {
   },
 
   readSession(context) {
-    if (process.browser) {
+    if (process.client) {
       const sessionCookie = Cookies.get('session-id')
       if (sessionCookie === undefined) {
         context.dispatch('createSession')
@@ -94,7 +94,7 @@ export const actions = {
   },
 
   refreshSession(context) {
-    if (process.browser) {
+    if (process.client) {
       Cookies.set('session-id', context.state.sessionID, {
         expires: new Date().setMinutes(30)
       })

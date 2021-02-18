@@ -1,30 +1,30 @@
-import { withKnobs, button } from '@storybook/addon-knobs';
-import { withInfo } from 'storybook-addon-vue-info';
-import StoryRouter from 'storybook-vue-router';
-import store from '../../.storybook/store';
+import { withKnobs, button } from '@storybook/addon-knobs'
+import { withInfo } from 'storybook-addon-vue-info'
+import StoryRouter from 'storybook-vue-router'
+import MainNavFlyout from '../nacelle/MainNavFlyout'
 
-import MainNavFlyout from '../nacelle/MainNavFlyout';
-
-const label = 'Toggle Menu';
+const label = 'Toggle Menu'
 const handler = () => {
-  store.commit('menu/toggleShowMenu');
-};
+  store.commit('menu/toggleShowMenu')
+}
 
 export default {
   title: 'Components | Main Nav',
-  decorators: [withInfo, withKnobs, StoryRouter(),
+  decorators: [
+    withInfo,
+    withKnobs,
+    StoryRouter(),
     () => {
       return {
         template: `
           <div style="max-width: 450px; margin: 3rem auto; text-align: center"><story/></div>
-        `,
-      };
-    },
-  ],
-};
+        `
+      }
+    }
+  ]
+}
 
 export const _MainNavFlyout = () => ({
-  store,
   components: { MainNavFlyout },
   template: `
     <div>
@@ -37,14 +37,14 @@ export const _MainNavFlyout = () => ({
     </div>
   `,
   created() {
-    button(label, handler);
-  },
-});
+    button(label, handler)
+  }
+})
 
 _MainNavFlyout.story = {
   parameters: {
     info: {
       // summary: "Hello"
-    },
-  },
-};
+    }
+  }
+}

@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div aria-hidden="true"></div>
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
@@ -11,20 +11,21 @@ export default {
     ...mapState(['facebookCatalogID']),
     ...mapGetters('cart', ['quantityTotal']),
     ...mapState('cart', ['lineItems']),
+
     productIDs() {
-      const productIDs = this.lineItems.map(item => {
+      const productIDs = this.lineItems.map((item) => {
         return this.decodeBase64VariantId(item.id)
       })
       return productIDs
     },
     logEntry() {
-      return JSON.parse(JSON.stringify(this.log)).pop()
+      return [...this.log].pop()
     },
     fbq() {
-      return process.browser ? window.fbq : undefined
+      return process.client ? window.fbq : undefined
     },
     ga() {
-      return process.browser ? window.ga : undefined
+      return process.client ? window.ga : undefined
     }
   },
   watch: {
@@ -150,7 +151,7 @@ export default {
     facebookCheckoutInitiate() {
       if (typeof this.fbq !== 'undefined') {
         this.fbq('track', 'InitiateCheckout', {
-          content_ids: this.productIDs.map(id => {
+          content_ids: this.productIDs.map((id) => {
             return this.decodeBase64ProductId(id)
           }),
           content_type: 'product',

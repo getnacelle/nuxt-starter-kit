@@ -1,10 +1,7 @@
 <template>
   <div class="page-content nacelle">
     <div v-if="page">
-      <div
-        v-for="section in page.sections"
-        :key="section.id"
-      >
+      <div v-for="section in page.sections" :key="section.id">
         <component
           :is="getComponentDefinition(section.sys.contentType.sys.id)"
           v-if="section.sys.contentType"
@@ -19,12 +16,12 @@
 </template>
 
 <script>
+import { pascalCase } from 'pascal-case'
 import HeroBanner from '~/components/nacelle/ContentHeroBanner'
 import SideBySide from '~/components/nacelle/ContentSideBySide'
 import ProductGrid from '~/components/nacelle/ContentProductGrid'
 import CollectionGrid from '~/components/nacelle/CollectionGrid'
 import NacelleComponentPlaceholder from '~/components/nacelle/NacelleComponentPlaceholder'
-import { pascalCase } from 'pascal-case'
 
 export default {
   components: {
@@ -32,16 +29,16 @@ export default {
     SideBySide,
     ProductGrid,
     CollectionGrid,
-    NacelleComponentPlaceholder,
+    NacelleComponentPlaceholder
   },
   props: {
     page: {
       type: Object,
       default: () => ({
         source: '',
-        sections: [],
-      }),
-    },
+        sections: []
+      })
+    }
   },
   methods: {
     getComponentDefinition(def) {
@@ -50,8 +47,8 @@ export default {
       } else {
         return 'NacelleComponentPlaceholder'
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

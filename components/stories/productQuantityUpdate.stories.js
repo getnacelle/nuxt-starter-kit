@@ -1,19 +1,16 @@
-import { withInfo } from 'storybook-addon-vue-info';
-import QuantitySelector from '../nacelle/QuantitySelector';
-import store from '../../.storybook/store';
-
+import { withInfo } from 'storybook-addon-vue-info'
+import QuantitySelector from '../nacelle/QuantitySelector'
 export default {
   title: 'Components | Product',
-  decorators: [withInfo],
-};
+  decorators: [withInfo]
+}
 
 export const Quantity = () => ({
-  store,
   components: { QuantitySelector },
   data() {
     return {
-      quantity: 0,
-    };
+      quantity: 0
+    }
   },
   template: `
     <div class="section">
@@ -22,13 +19,13 @@ export const Quantity = () => ({
       />
     </div>
   `,
-  mounted() {},
-});
+  mounted() {}
+})
 
 Quantity.story = {
   parameters: {
     info: {
-      summary: 'Increment or decrement quantity.',
-    },
-  },
-};
+      summary: 'Increment or decrement quantity.'
+    }
+  }
+}

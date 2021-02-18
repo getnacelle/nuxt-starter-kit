@@ -1,9 +1,9 @@
 <template>
   <div class="options nacelle">
-    <div class="option" v-for="option in options" :key="option.name">
+    <div v-for="option in options" :key="option.name" class="option">
       <h3 class="option-label">{{ option.name }}</h3>
       <div class="swatches">
-        <slot name="swatch" v-bind="{option}" />
+        <slot name="swatch" v-bind="{ option }" />
       </div>
     </div>
   </div>

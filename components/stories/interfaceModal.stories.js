@@ -1,9 +1,7 @@
-import { withInfo } from 'storybook-addon-vue-info';
-import { withKnobs, button } from '@storybook/addon-knobs';
-import InterfaceModal from '../nacelle/InterfaceModal';
-import store from '../../.storybook/store';
-
-const label = 'Show Modal';
+import { withInfo } from 'storybook-addon-vue-info'
+import { withKnobs, button } from '@storybook/addon-knobs'
+import InterfaceModal from '../nacelle/InterfaceModal'
+const label = 'Show Modal'
 
 export default {
   title: 'Components | General',
@@ -12,18 +10,17 @@ export default {
     withInfo,
     withKnobs,
     () => ({
-      template: '<div style="padding: 3rem;"><story/></div>',
-    }),
-  ],
-};
+      template: '<div style="padding: 3rem;"><story/></div>'
+    })
+  ]
+}
 
 export const Modal = () => ({
-  store,
   components: { InterfaceModal },
   data() {
     return {
-      open: true,
-    };
+      open: true
+    }
   },
   template: `
     <interface-modal :modalOpen="open" v-on:closeModal="open = false">
@@ -33,15 +30,15 @@ export const Modal = () => ({
   `,
   created() {
     button(label, () => {
-      this.open = true;
-    });
-  },
-});
+      this.open = true
+    })
+  }
+})
 
 Modal.story = {
   parameters: {
     info: {
       // summary: "Hello"
-    },
-  },
-};
+    }
+  }
+}

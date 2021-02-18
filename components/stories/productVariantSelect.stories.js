@@ -1,11 +1,7 @@
 import { withInfo } from 'storybook-addon-vue-info'
 import { withKnobs, boolean } from '@storybook/addon-knobs'
 
-import store from '../../.storybook/store'
-
 import ProductVariantSelect from '../nacelle/ProductVariantSelect'
-import CartFlyout from '../nacelle/CartFlyout'
-import CartFlyoutItem from '../nacelle/CartFlyoutItem'
 
 import defaultMultivariate from '../../tests/mocks/multivariateProduct'
 
@@ -16,11 +12,8 @@ export default {
 
 export const VariantSelect = () => ({
   components: {
-    ProductVariantSelect,
-    CartFlyout,
-    CartFlyoutItem
+    ProductVariantSelect
   },
-  store,
   props: {
     showAtc: {
       default: boolean('Show Add to Cart', true)

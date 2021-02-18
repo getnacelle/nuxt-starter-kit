@@ -1,4 +1,4 @@
-const eventProperties = rootState => {
+const eventProperties = (rootState) => {
   const { user, space, cart } = rootState || {}
   const timestamp = Date.now()
   const spaceID = space ? space.id : null
@@ -10,7 +10,7 @@ const eventProperties = rootState => {
   let domain = null
   let url = null
 
-  if (process.browser) {
+  if (process.client) {
     urlParams = window.location.search
     domain = window.location.origin
     url = window.location.href

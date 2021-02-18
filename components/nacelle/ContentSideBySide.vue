@@ -18,7 +18,12 @@
             <div class="content" v-html="contentHtml" />
           </div>
         </slot>
-        <slot name="cta" :ctaUrl="ctaUrl" :ctaText="ctaText" :ctaHandler="ctaHandler">
+        <slot
+          name="cta"
+          :ctaUrl="ctaUrl"
+          :ctaText="ctaText"
+          :ctaHandler="ctaHandler"
+        >
           <p v-if="ctaText.length > 0" class="has-text-centered">
             <cta-button :to="ctaUrl" @clicked="ctaHandler">
               {{ ctaText }}
@@ -31,7 +36,6 @@
 </template>
 
 <script>
-
 export default {
   props: {
     backgroundColor: {
@@ -39,11 +43,12 @@ export default {
       default: ''
     },
     alt: {
-      type: String
-    },
-    imageUrl: {
       type: String,
       default: ''
+    },
+    featuredMedia: {
+      type: Object,
+      default: () => ({})
     },
     title: {
       type: String,
@@ -79,6 +84,9 @@ export default {
     }
   },
   computed: {
+    imageUrl() {
+      return this.featuredMedia?.src
+    },
     columnClasses() {
       const desktopReverse = this.reverseDesktop ? 'is-column-reverse' : ''
       const mobileReverse = this.reverseMobile ? 'is-mobile-column-reverse' : ''
@@ -124,7 +132,7 @@ export default {
   position: relative;
   padding: 0;
 
-  & /deep/ img {
+  & ::v-deep img {
     display: block;
     width: 100%;
 

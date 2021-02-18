@@ -1,5 +1,5 @@
 import { get, set } from 'idb-keyval'
-const isFunc = (func) => (typeof func === 'function')
+const isFunc = (func) => typeof func === 'function'
 
 export const state = () => ({
   id: null,
@@ -64,9 +64,15 @@ export const actions = {
       throw new Error('Cannot checkout with an empty cart')
     }
 
-    let checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId })
+    let checkout = await this.$nacelle.checkout.process({
+      cartItems,
+      checkoutId
+    })
     if (checkout && checkout.completed) {
-      checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId: '' })
+      checkout = await this.$nacelle.checkout.process({
+        cartItems,
+        checkoutId: ''
+      })
     }
 
     if (!checkout || !checkout.id || !checkout.url) {
@@ -74,7 +80,11 @@ export const actions = {
     }
 
     if (rootState.events) {
-      dispatch('events/checkoutInit', { cart: rootState.cart.lineItems }, { root: true })
+      dispatch(
+        'events/checkoutInit',
+        { cart: rootState.cart.lineItems },
+        { root: true }
+      )
     }
 
     commit('setCheckout', checkout)
@@ -83,12 +93,17 @@ export const actions = {
   async addCheckoutParams({ commit, dispatch, state, rootState }) {
     const queryOperator = state.url.includes('?') ? '&' : '?'
     const linkerParam = await dispatch('getLinkerParam')
-    await commit('setUrl', `${state.url}${queryOperator}c=${JSON.stringify(rootState.user.userData)}&${linkerParam}`)
+    await commit(
+      'setUrl',
+      `${state.url}${queryOperator}c=${JSON.stringify(
+        rootState.user.userData
+      )}&${linkerParam}`
+    )
   },
 
-  async getLinkerParam() {
+  getLinkerParam() {
     return new Promise((resolve, reject) => {
-      const gaClient = process.browser ? window.ga : undefined
+      const gaClient = process.client ? window.ga : undefined
 
       if (typeof gaClient !== 'undefined') {
         gaClient((tracker) => resolve(tracker.get('linkerParam')))
@@ -100,7 +115,7 @@ export const actions = {
   },
 
   checkoutRedirect({ state }) {
-    if (process.browser) {
+    if (process.client) {
       window.location = state.url
     }
   }

@@ -47,7 +47,8 @@ export default {
       default: ''
     },
     menu: {
-      type: Array
+      type: Array,
+      default: () => []
     }
   }
 }

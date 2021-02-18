@@ -1,4 +1,3 @@
-
 export const state = () => ({
   searchData: {
     products: []
@@ -29,17 +28,15 @@ export const getters = {
   },
 
   productData(state, getters) {
-    return getters.hasProductData
-      ? state.searchData.products
-      : []
+    return getters.hasProductData ? state.searchData.products : []
   }
 }
 
 export const mutations = {
-  setQuery(state, {query, position}) {
+  setQuery(state, { query, position }) {
     position === 'global'
-      ? state.globalQuery = query
-      : state.pageQuery = query
+      ? (state.globalQuery = query)
+      : (state.pageQuery = query)
   },
 
   setFilteredData(state, data) {
@@ -71,10 +68,10 @@ export const mutations = {
   setSearchingGlobal(state, isSearching) {
     state.isSearchingGlobal = isSearching
   },
-  setResults(state, {results, position}) {
+  setResults(state, { results, position }) {
     position === 'global'
-      ? state.globalResults = results
-      : state.pageResults = results
+      ? (state.globalResults = results)
+      : (state.pageResults = results)
   },
   startSearchWorker(state, searchData) {
     state.searchWorker = state.searchWorker || new Worker('/worker/search.js')
@@ -83,7 +80,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async getSearchData({commit, getters, state}) {
+  getSearchData({ commit, getters, state }) {
     if (getters.hasProductData && !state.isLoading) {
       return
     }
@@ -99,7 +96,7 @@ export const actions = {
     }
   },
 
-  searchCatalog({ state, getters, commit }, {value, position}) {
+  searchCatalog({ state, getters, commit }, { value, position }) {
     commit('startSearchWorker', getters.productData)
     commit('setSearchingGlobal', true)
 

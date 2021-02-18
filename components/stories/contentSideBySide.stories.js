@@ -1,16 +1,14 @@
 import { withKnobs, text, boolean } from '@storybook/addon-knobs'
 import { withInfo } from 'storybook-addon-vue-info'
-import store from '../../.storybook/store';
 
 import ContentSideBySide from '../nacelle/ContentSideBySide'
 
 export default {
   title: 'Components | Content / Side by Side',
-  decorators: [withInfo, withKnobs],
-};
+  decorators: [withInfo, withKnobs]
+}
 
 export const Default = () => ({
-  store,
   components: { ContentSideBySide },
   props: {
     imageUrl: {
@@ -46,18 +44,17 @@ export const Default = () => ({
       :reverseMobile="reverseMobile"
     />
   `
-});
+})
 
 Default.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}
 
 export const CustomSlots = () => ({
-  store,
   components: { ContentSideBySide },
   props: {
     imageUrl: {
@@ -97,12 +94,12 @@ export const CustomSlots = () => ({
       </template>
     </content-side-by-side>
   `
-});
+})
 
 CustomSlots.story = {
   parameters: {
     info: {
       // summary: "Hello"
     }
-  },
-};
+  }
+}

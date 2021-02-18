@@ -5,7 +5,7 @@ import { withActions, action } from '@storybook/addon-actions';
 import { withKnobs, object } from '@storybook/addon-knobs';
 import { withInfo } from 'storybook-addon-vue-info';
 import StoryRouter from 'storybook-vue-router';
-import store from '../../.storybook/store';
+;
 import RefinementFilters from '../nacelle/RefinementFilters';
 import searchResults from '../../tests/mocks/search-results';
 
@@ -35,7 +35,6 @@ export default {
 };
 
 export const _RefinementFilters = () => ({
-  store,
   components: { RefinementFilters },
   props: {
     filters: {

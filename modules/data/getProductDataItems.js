@@ -27,7 +27,7 @@ export default async ({ client, routeConfig }) => {
 
   // Create Shop page collection item
   if (products) {
-    const shopProducts = [...new Set(products.map(product => product.handle))]
+    const shopProducts = [...new Set(products.map((product) => product.handle))]
     items.push(
       createDataItemObject({
         type: 'collection',

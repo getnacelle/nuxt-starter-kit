@@ -18,7 +18,8 @@ export default async ({ client, routeConfig = {} }) => {
     Our docs outline how to get a Space ID if you need one: https://docs.getnacelle.com/nuxt/join-a-project.html#git-clone`)
   }
 
-  console.log(
+  // eslint-disable-next-line no-console
+  console.info(
     '\x1B[36m',
     '҈',
     '\x1B[0m',
@@ -29,7 +30,7 @@ export default async ({ client, routeConfig = {} }) => {
     getProductDataItems({ client, routeConfig }),
     getCollectionDataItems({ client, routeConfig }),
     getContentDataItems({ client, routeConfig })
-  ]).then(results => {
+  ]).then((results) => {
     return [].concat.apply([], results)
   })
 

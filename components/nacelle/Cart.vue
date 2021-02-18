@@ -1,12 +1,16 @@
 <template>
   <transition name="slide">
-    <div class="flyout" v-if="cartVisible">
-      <cart-flyout-header v-on:close="handleClose" />
+    <div v-if="cartVisible" class="flyout">
+      <cart-flyout-header @close="handleClose" />
       <cart-flyout-messaging>
         <messaging-free-shipping-counter />
       </cart-flyout-messaging>
       <div class="cart-items">
-        <cart-item v-for="item in lineItems" :key="item.variant.id" :item="item"></cart-item>
+        <cart-item
+          v-for="item in lineItems"
+          :key="item.variant.id"
+          :item="item"
+        ></cart-item>
       </div>
       <cart-flyout-subtotal />
       <cart-flyout-checkout-button />
@@ -15,7 +19,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import CartFlyoutHeader from '~/components/nacelle/CartFlyoutHeader'
 import CartFlyoutMessaging from '~/components/nacelle/CartFlyoutMessaging'
 import CartFlyoutSubtotal from '~/components/nacelle/CartFlyoutSubtotal'
@@ -34,6 +38,13 @@ export default {
   computed: {
     ...mapState('cart', ['lineItems', 'cartVisible'])
   },
+  watch: {
+    lineItems(newValue) {
+      if (newValue.length === 0) {
+        this.hideCart()
+      }
+    }
+  },
   methods: {
     ...mapMutations('cart', [
       'showCart',
@@ -42,13 +53,6 @@ export default {
     ]),
     handleClose() {
       this.hideCart()
-    }
-  },
-  watch: {
-    lineItems(newValue) {
-      if (newValue.length == 0) {
-        this.hideCart()
-      }
     }
   }
 }

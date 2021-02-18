@@ -3,7 +3,7 @@
     <div class="placeholder">
       <div class="text">
         <p>The component</p>
-        <h3><{{ type }}/></h3>
+        <h3>{{ typeString }}</h3>
         <p>has not been created or registered yet.</p>
       </div>
     </div>
@@ -12,33 +12,38 @@
 
 <script>
 export default {
-props:{
+  props: {
     type: {
-        type: String,
-        default: ''
+      type: String,
+      default: ''
     }
-}
+  },
+  computed: {
+    typeString() {
+      return `<${this.type} />`
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.placeholder{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 4px dashed rgb(207, 207, 207);
-    height: 250px;
-    margin: 2rem;
+.placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 4px dashed rgb(207, 207, 207);
+  height: 250px;
+  margin: 2rem;
 }
-.text{
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-h3{
-    font-size: 20pt;
-    margin: 0 1rem;
-    font-weight: 700;
+h3 {
+  font-size: 20pt;
+  margin: 0 1rem;
+  font-weight: 700;
 }
 </style>

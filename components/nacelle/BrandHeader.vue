@@ -1,27 +1,37 @@
 <template>
   <div class="brand-header nacelle">
-    <div v-if="logoAlign == 'left'" class="columns is-marginless is-paddingless">
+    <div
+      v-if="logoAlign == 'left'"
+      class="columns is-marginless is-paddingless"
+    >
       <div class="column" :class="logoColumnWidth">
         <interface-logo :src="logoSrc" />
       </div>
       <div class="column is-offset-1 auto links">
-        <router-link v-for="link in links" :key="link.path" :to="link.path">{{link.title}}</router-link>
+        <router-link v-for="link in links" :key="link.path" :to="link.path">{{
+          link.title
+        }}</router-link>
       </div>
       <div class="column auto icons">
         <interface-icon
           v-for="icon in icons"
           :key="icon.iconName"
-          :iconName="icon.iconName"
-          :iconMethod="icon.iconMethod"
+          :icon-name="icon.iconName"
+          :icon-method="icon.iconMethod"
           :path="icon.path"
-          :iconMethodType="icon.iconMethodType"
+          :icon-method-type="icon.iconMethodType"
         />
       </div>
     </div>
 
-    <div v-if="logoAlign == 'center'" class="columns is-marginless is-paddingless">
+    <div
+      v-if="logoAlign == 'center'"
+      class="columns is-marginless is-paddingless"
+    >
       <div class="column is-5 links">
-        <router-link v-for="link in links" :key="link" :to="link.path">{{link.title}}</router-link>
+        <router-link v-for="link in links" :key="link" :to="link.path">{{
+          link.title
+        }}</router-link>
       </div>
       <div class="column is-2">
         <interface-logo :src="logoSrc" />
@@ -40,19 +50,24 @@ export default {
   },
   props: {
     links: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     logoSrc: {
-      type: String
+      type: String,
+      default: ''
     },
     logoAlign: {
-      type: String
+      type: String,
+      default: ''
     },
     logoColumnWidth: {
-      type: String
+      type: String,
+      default: ''
     },
     icons: {
-      type: Array
+      type: Array,
+      default: () => []
     }
   }
 }

@@ -18,10 +18,12 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   props: {
     product: {
-      type: Object
+      type: Object,
+      default: () => ({})
     },
     variant: {
-      type: Object
+      type: Object,
+      default: () => ({})
     },
     allOptionsSelected: { type: Boolean, default: false }
   },
@@ -29,7 +31,7 @@ export default {
     ...mapState('cart', ['lineItems']),
     quantityInCart() {
       if (this.variant != null) {
-        const item = this.lineItems.find(item => {
+        const item = this.lineItems.find((item) => {
           return item.variant.id === this.variant.id
         })
         if (item) {

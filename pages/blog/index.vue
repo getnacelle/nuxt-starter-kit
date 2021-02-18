@@ -12,9 +12,10 @@ export default {
     }
   },
   async fetch() {
-    this.page = await this.$nacelle.data.page({
-      handle: 'blog'
-    })
+    const { name: handle } = this.$route
+    this.page = await this.$nacelle.data
+      .page({ handle })
+      .catch(() => console.warn(`No page with handle: '${handle}' found`))
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="subtotal nacelle" v-if="cartSubtotal">
+  <div v-if="cartSubtotal" class="subtotal nacelle">
     <slot :subtotal="cartSubtotal">
       <component :is="titleTag" class="subtotal-title">
         <span>Subtotal:</span>
@@ -10,8 +10,9 @@
 </template>
 
 <script>
-import ProductPrice from '~/components/nacelle/ProductPrice'
 import { mapGetters } from 'vuex'
+import ProductPrice from '~/components/nacelle/ProductPrice'
+
 export default {
   components: {
     ProductPrice
@@ -28,7 +29,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .subtotal {
   border-top: 1px solid #dedede;
   padding: 1.5rem 0;
@@ -40,7 +41,7 @@ export default {
   text-align: center;
   font-weight: 700;
   color: #616161;
-  
+
   span:first-child {
     margin-right: 0.5rem;
   }

@@ -7,7 +7,7 @@
     class="input nacelle"
     @keyup="trackSearchEvent"
     @keydown.enter="submitQuery"
-  >
+  />
 </template>
 
 <script>
@@ -67,11 +67,15 @@ export default {
       // Check that the key press is a letter or number and that
       // local query has a value before tracking an event
       if (/^[a-z0-9]$/i.test(e.key) && query) {
-        const triggerSearchEvent = this.debounce(this.searchProducts, 500, 'event')
+        const triggerSearchEvent = this.debounce(
+          this.searchProducts,
+          500,
+          'event'
+        )
         triggerSearchEvent({ query })
       }
     },
-    debounce(fn, debounceTime, label='query') {
+    debounce(fn, debounceTime, label = 'query') {
       return (...args) => {
         if (this.timeout[label] !== null) {
           clearTimeout(this.timeout[label])
@@ -83,6 +87,6 @@ export default {
     submitQuery() {
       this.$emit('submit', this.localQuery)
     }
-  },
+  }
 }
 </script>

@@ -13,13 +13,10 @@
             class="shop-look-product"
           >
             <slot name="product-card" :product="product">
-              <product-card :productHandle="product.handle" />
+              <product-card :product-handle="product.handle" />
             </slot>
           </div>
-          <interface-close-button
-            class="close"
-            v-on:close="toggleProductCard"
-          />
+          <interface-close-button class="close" @close="toggleProductCard" />
         </div>
       </div>
     </transition>

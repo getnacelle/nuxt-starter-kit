@@ -17,36 +17,40 @@
 <script>
 import RefinementFilterColorSwatch from '~/components/nacelle/RefinementFilterColorSwatch'
 export default {
+  components: { RefinementFilterColorSwatch },
   props: {
     value: {
-      type: String
+      type: String,
+      default: ''
     },
     property: {
-      type: String
+      type: String,
+      default: ''
     },
     activeFilters: {
       type: Array,
       default: () => [String]
     }
   },
-  components: { RefinementFilterColorSwatch },
   computed: {
     filterActive() {
       const vm = this
       if (vm.activeFilters.length > 0) {
-        return vm.activeFilters.some(filter => filter.property === vm.property)
+        return vm.activeFilters.some(
+          (filter) => filter.property === vm.property
+        )
       }
       return null
     },
     selected() {
       const vm = this
       if (vm.filterActive) {
-        const thisFilter = vm.activeFilters.find(filter => {
+        const thisFilter = vm.activeFilters.find((filter) => {
           return filter.property === vm.property
         })
 
         if (thisFilter) {
-          return thisFilter.values.some(val => {
+          return thisFilter.values.some((val) => {
             return val === vm.value
           })
         }

@@ -5,17 +5,19 @@ module.exports = {
     node: true,
     jest: true
   },
-  extends: ['eslint:recommended', 'plugin:vue/recommended'],
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly'
-  },
   parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: 'module'
+    parser: 'babel-eslint'
   },
-  plugins: ['vue'],
+  extends: [
+    '@nuxtjs',
+    'prettier',
+    'prettier/vue',
+    'plugin:prettier/recommended',
+    'plugin:nuxt/recommended'
+  ],
+  plugins: ['prettier'],
   rules: {
+    'vue/no-v-html': 1,
     'space-before-function-paren': [
       'error',
       {
@@ -24,12 +26,21 @@ module.exports = {
         asyncArrow: 'always'
       }
     ],
-    'vue/max-attributes-per-line': ['error', {
-      singleline: 2,
-      multiline: {
-        max: 1,
-        allowFirstLine: false
+    'vue/attribute-hyphenation': [
+      'error',
+      'always',
+      {
+        ignore: ['data-', 'aria-', 'slot-scope']
       }
-    }]
+    ],
+    'no-console': 'off',
+    'no-restricted-syntax': [
+      'error',
+      {
+        selector:
+          "CallExpression[callee.object.name='console'][callee.property.name!=/^(log|warn|error|info|trace)$/]",
+        message: 'Unexpected property on console object was called'
+      }
+    ]
   }
 }

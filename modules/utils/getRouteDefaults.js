@@ -1,4 +1,4 @@
-export default routeConfig => {
+export default (routeConfig) => {
   const paths = {
     page: '/pages',
     blog: '',

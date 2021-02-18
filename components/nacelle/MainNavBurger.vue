@@ -47,7 +47,7 @@ export default {
   width: 16px;
   transform-origin: center;
   transition-duration: 86ms;
-  transition-property: background-color,opacity,transform;
+  transition-property: background-color, opacity, transform;
   transition-timing-function: ease-out;
 
   &:nth-child(1) {
@@ -63,7 +63,7 @@ export default {
   }
 }
 
-.burger.is-active span{
+.burger.is-active span {
   &:nth-child(1) {
     transform: translateY(5px) rotate(45deg);
   }
@@ -77,4 +77,3 @@ export default {
   }
 }
 </style>
-

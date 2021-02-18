@@ -1,6 +1,9 @@
 export default ({ product, fallbackPrice, locale }) => {
   if (product.priceRange.currencyCode === locale.currency) {
-    return new Intl.NumberFormat(product.locale, { style: 'currency', currency: product.priceRange.currencyCode }).format(fallbackPrice)
+    return new Intl.NumberFormat(product.locale, {
+      style: 'currency',
+      currency: product.priceRange.currencyCode
+    }).format(fallbackPrice)
   }
 
   let priceForCurrency
@@ -9,8 +12,8 @@ export default ({ product, fallbackPrice, locale }) => {
       for (let u = 0; u < product.variants[i].priceRules.length; u++) {
         if (
           product.variants[i].priceRules[u].priceCurrency === locale.currency &&
-            (!priceForCurrency ||
-              priceForCurrency < product.variants[i].priceRules[u].price)
+          (!priceForCurrency ||
+            priceForCurrency < product.variants[i].priceRules[u].price)
         ) {
           priceForCurrency = product.variants[i].priceRules[u].price
           break
@@ -21,9 +24,16 @@ export default ({ product, fallbackPrice, locale }) => {
 
   const currencyToDisplay = {
     locale: priceForCurrency ? locale.locale : product.locale,
-    currency: priceForCurrency ? locale.currency : product.priceRange.currencyCode,
+    currency: priceForCurrency
+      ? locale.currency
+      : product.priceRange.currencyCode,
     price: priceForCurrency || fallbackPrice
   }
-  const formattedCurrency = new Intl.NumberFormat(currencyToDisplay.locale, { style: 'currency', currency: currencyToDisplay.currency }).format(currencyToDisplay.price)
-  return priceForCurrency ? `${formattedCurrency} ${locale.currency}` : formattedCurrency
+  const formattedCurrency = new Intl.NumberFormat(currencyToDisplay.locale, {
+    style: 'currency',
+    currency: currencyToDisplay.currency
+  }).format(currencyToDisplay.price)
+  return priceForCurrency
+    ? `${formattedCurrency} ${locale.currency}`
+    : formattedCurrency
 }

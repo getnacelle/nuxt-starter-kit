@@ -1,7 +1,7 @@
 <template>
   <div v-if="src" class="featured-media nacelle">
     <figure v-if="type.includes('image')">
-      <nacelle-image v-bind="{src, alt, width}" />
+      <nacelle-image v-bind="{ src, alt, width }" />
     </figure>
     <video v-if="type.includes('video')">
       <source :src="src" :type="type" />
@@ -17,7 +17,12 @@ export default {
       default: () => {}
     },
     width: {
-      type: Number
+      type: Number,
+      required: true
+    },
+    alt: {
+      type: String,
+      default: ''
     }
   },
   computed: {

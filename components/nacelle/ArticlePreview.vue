@@ -93,7 +93,7 @@ export default {
   background-color: #f5f5f5;
 }
 
-.is-featured /deep/ .featured-media {
+.is-featured ::v-deep .featured-media {
   @media screen and (min-width: 769px) {
     position: absolute;
     top: 0;

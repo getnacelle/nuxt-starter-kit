@@ -14,6 +14,7 @@
           <interface-featured-media
             v-if="article && article.featuredMedia"
             :media="article.featuredMedia"
+            :width="400"
           />
         </transition>
       </div>
@@ -36,7 +37,7 @@
                 :title="article.title"
                 :author="article.author"
                 :tags="article.tags"
-                :publishDate="article.publishDate"
+                :publish-date="article.publishDate"
               >
                 <!-- Extra HTML markup can also be added below the default header content -->
               </blog-article-header>
@@ -44,7 +45,11 @@
             <div class="column is-9 content">
               <blog-article-content :article="article">
                 <!-- Extra HTML added after content -->
-                <nuxt-link :to="`/${$route.params.blogHandle}/`" class="breadcrumb">Back to Blog</nuxt-link>
+                <nuxt-link
+                  :to="`/${$route.params.blogHandle}/`"
+                  class="breadcrumb"
+                  >Back to Blog</nuxt-link
+                >
               </blog-article-content>
             </div>
           </div>
@@ -57,23 +62,18 @@
 <script>
 import { mapGetters } from 'vuex'
 import viewEvent from '~/mixins/viewEvent'
-import jsonld from '~/mixins/jsonld'
 
 export default {
+  mixins: [viewEvent('article')],
   data() {
     return {
       article: null
     }
   },
   async fetch() {
-    this.article = await this.$nacelle.data.article({ handle: this.$route.params.articleHandle, locale: 'en-US' })
-  },
-  mixins: [
-    viewEvent('article'),
-    jsonld('article')
-  ],
-  computed: {
-    ...mapGetters('space', ['getMetatag'])
+    this.article = await this.$nacelle.data.article({
+      handle: this.$route.params.articleHandle
+    })
   },
   head() {
     if (this.article) {
@@ -128,6 +128,9 @@ export default {
         meta
       }
     }
+  },
+  computed: {
+    ...mapGetters('space', ['getMetatag'])
   }
 }
 </script>
@@ -141,7 +144,7 @@ export default {
     height: 400px;
   }
 
-  /deep/ .featured-media {
+  ::v-deep .featured-media {
     width: 100%;
     height: 100%;
 

@@ -1,8 +1,5 @@
 import { withInfo } from 'storybook-addon-vue-info'
 
-import store from '../../.storybook/store'
-
-import ProductImage from '../nacelle/ProductImage'
 import ProductPrice from '../nacelle/ProductPrice'
 import ProductTitle from '../nacelle/ProductTitle'
 import ProductDescription from '../nacelle/ProductDescription'
@@ -11,8 +8,6 @@ import ProductAddToCartButton from '../nacelle/ProductAddToCartButton'
 import ProductQuantityUpdate from '../nacelle/ProductQuantityUpdate'
 import ProductOptions from '../nacelle/ProductOptions'
 import ProductVariantSelect from '../nacelle/ProductVariantSelect'
-import CartFlyout from '../nacelle/CartFlyout'
-import CartFlyoutItem from '../nacelle/CartFlyoutItem'
 
 import defaultMultivariate from '../../tests/mocks/multivariateProduct'
 
@@ -27,15 +22,11 @@ export const Pdp = () => ({
     ProductTitle,
     ProductDescription,
     ProductCategory,
-    ProductImage,
     ProductAddToCartButton,
     ProductQuantityUpdate,
     ProductOptions,
-    ProductVariantSelect,
-    CartFlyout,
-    CartFlyoutItem
+    ProductVariantSelect
   },
-  store,
   data() {
     return {
       product: defaultMultivariate,
