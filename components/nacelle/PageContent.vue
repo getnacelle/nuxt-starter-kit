@@ -11,7 +11,6 @@
         />
       </div>
     </div>
-    <nacelle-page-placeholder v-else />
   </div>
 </template>
 
