@@ -1,6 +1,6 @@
 <template>
   <div class="app nacelle">
-    <global-header ref="header" />
+    <global-header />
     <nuxt keep-alive :keep-alive-props="{ max: 2 }" />
     <site-footer />
     <event-dispatcher />
@@ -13,11 +13,6 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  data() {
-    return {
-      headerHeight: null
-    }
-  },
   head() {
     const properties = {}
     const meta = []
