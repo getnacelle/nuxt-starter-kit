@@ -55,9 +55,7 @@ describe('Product Add to Cart Button', () => {
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
     const store = new Vuex.Store(storeConfig)
-    store.state.products.products = {
-      [productData.product.handle]: productData
-    }
+    store.state.products.product = productData.product
     const wrapper = shallowMount(ProductAddToCartButton, {
       localVue,
       store,
@@ -73,9 +71,7 @@ describe('Product Add to Cart Button', () => {
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
     const store = new Vuex.Store(storeConfig)
-    store.state.products.products = {
-      [productData.product.handle]: productData
-    }
+    store.state.products.product = productData.product
     const wrapper = shallowMount(ProductAddToCartButton, {
       localVue,
       store,
@@ -93,9 +89,7 @@ describe('Product Add to Cart Button', () => {
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
     const store = new Vuex.Store(storeConfig)
-    store.state.products.products = {
-      [productData.product.handle]: productData
-    }
+    store.state.products.product = productData.product
     const wrapper = shallowMount(ProductAddToCartButton, {
       localVue,
       store,
@@ -113,28 +107,22 @@ describe('Product Add to Cart Button', () => {
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
     const store = new Vuex.Store(storeConfig)
-    store.state.products.products = {
-      [productData.product.handle]: {
-        ...productData,
-        product: {
-          ...productData.product,
-          variants: [
-            ...productData.product.variants,
+    store.state.products.product = {
+      ...productData.product,
+      variants: [
+        ...productData.product.variants,
+        {
+          id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFadC8yODU2ODgyMDAyMzQw52==',
+          price: '34.99',
+          availableForSale: true,
+          selectedOptions: [
             {
-              id:
-                'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFadC8yODU2ODgyMDAyMzQw52==',
-              price: '34.99',
-              availableForSale: true,
-              selectedOptions: [
-                {
-                  name: 'Size',
-                  value: 'Medium'
-                }
-              ]
+              name: 'Size',
+              value: 'Medium'
             }
           ]
         }
-      }
+      ]
     }
     const wrapper = shallowMount(ProductAddToCartButton, {
       localVue,
@@ -150,14 +138,12 @@ describe('Product Add to Cart Button', () => {
     expect(wrapper.find('button').text()).toBe('Select Options')
   })
 
-  it('passes metafield props recieved from parent to cartLineItems', () => {
+  it('passes metafield props recieved from parent to lineItems', () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
     const store = new Vuex.Store(storeConfig)
-    store.state.products.products = {
-      [productData.product.handle]: productData
-    }
+    store.state.products.product = productData.product
     const wrapper = shallowMount(ProductAddToCartButton, {
       localVue,
       store,
