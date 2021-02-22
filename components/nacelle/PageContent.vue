@@ -16,8 +16,20 @@
 
 <script>
 import { pascalCase } from 'pascal-case'
+import HeroBanner from '~/components/nacelle/ContentHeroBanner'
+import SideBySide from '~/components/nacelle/ContentSideBySide'
+import ProductGrid from '~/components/nacelle/ContentProductGrid'
+import CollectionGrid from '~/components/nacelle/CollectionGrid'
+import NacelleComponentPlaceholder from '~/components/nacelle/NacelleComponentPlaceholder'
 
 export default {
+  components: {
+    HeroBanner,
+    SideBySide,
+    ProductGrid,
+    CollectionGrid,
+    NacelleComponentPlaceholder
+  },
   props: {
     page: {
       type: Object,
