@@ -24,14 +24,7 @@
 </template>
 
 <script>
-import MainNavBurger from '~/components/nacelle/MainNavBurger'
-import MainNavCart from '~/components/nacelle/MainNavCart'
-
 export default {
-  components: {
-    MainNavBurger,
-    MainNavCart
-  },
   props: {
     logoSrc: {
       type: String,

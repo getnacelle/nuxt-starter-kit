@@ -1,6 +1,18 @@
 import { get, set } from 'idb-keyval'
 const isFunc = (func) => typeof func === 'function'
 
+function handleCheckoutError(err) {
+  if (err.message && err.message.startsWith('401')) {
+    console.warn(
+      'Received a 401 (unauthorized) response when attempting checkout. ' +
+        'Please verify your Checkout Settings in the Nacelle Dashboard. ' +
+        'Most likey, the token is incorrect, or there is a typo in the endpoint URL.'
+    )
+  }
+
+  throw new Error(err.message)
+}
+
 export const state = () => ({
   id: null,
   url: null
@@ -64,19 +76,24 @@ export const actions = {
       throw new Error('Cannot checkout with an empty cart')
     }
 
-    let checkout = await this.$nacelle.checkout.process({
-      cartItems,
-      checkoutId
-    })
-    if (checkout && checkout.completed) {
-      checkout = await this.$nacelle.checkout.process({
+    let checkout = await this.$nacelle.checkout
+      .process({
         cartItems,
-        checkoutId: ''
+        checkoutId
       })
+      .catch((err) => handleCheckoutError(err))
+    if (checkout && checkout.completed) {
+      checkout = await this.$nacelle.checkout
+        .process({
+          cartItems,
+          checkoutId: ''
+        })
+        .catch((err) => handleCheckoutError(err))
     }
 
     if (!checkout || !checkout.id || !checkout.url) {
-      throw new Error('Checkout Failure')
+      const checkoutErrors = JSON.stringify(checkout?.errors, null, 2)
+      throw new Error(`Checkout Failure:\n\n${checkoutErrors}`)
     }
 
     if (rootState.events) {

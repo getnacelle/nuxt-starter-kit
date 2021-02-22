@@ -37,16 +37,7 @@
 </template>
 
 <script>
-import ProductOptions from '~/components/nacelle/ProductOptions'
-import QuantitySelector from '~/components/nacelle/QuantitySelector'
-import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
-
 export default {
-  components: {
-    ProductOptions,
-    QuantitySelector,
-    ProductAddToCartButton
-  },
   props: {
     showQuantitySelect: {
       type: Boolean,

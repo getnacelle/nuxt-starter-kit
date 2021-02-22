@@ -15,9 +15,7 @@
 </template>
 
 <script>
-import RefinementFilterColorSwatch from '~/components/nacelle/RefinementFilterColorSwatch'
 export default {
-  components: { RefinementFilterColorSwatch },
   props: {
     value: {
       type: String,

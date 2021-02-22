@@ -15,12 +15,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import ProductPrice from '~/components/nacelle/ProductPrice'
 
 export default {
-  components: {
-    ProductPrice
-  },
   computed: {
     ...mapGetters('cart', [
       'freeShippingThresholdPassed',
