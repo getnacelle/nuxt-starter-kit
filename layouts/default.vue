@@ -1,5 +1,5 @@
 <template>
-  <lazy-hydrate idle class="app nacelle">
+  <lazy-hydrate when-idle class="app nacelle">
     <div>
       <global-header />
       <nuxt keep-alive :keep-alive-props="{ max: 2 }" />
