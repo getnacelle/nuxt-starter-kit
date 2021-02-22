@@ -6,7 +6,7 @@ module.exports = {
     jest: true
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: '@babel/eslint-parser'
   },
   extends: [
     '@nuxtjs',
@@ -15,7 +15,7 @@ module.exports = {
     'plugin:prettier/recommended',
     'plugin:nuxt/recommended'
   ],
-  plugins: ['prettier'],
+  plugins: ['prettier', '@babel'],
   rules: {
     'vue/no-v-html': 1,
     'space-before-function-paren': [
