@@ -20,21 +20,8 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import CartFlyoutHeader from '~/components/nacelle/CartFlyoutHeader'
-import CartFlyoutMessaging from '~/components/nacelle/CartFlyoutMessaging'
-import CartFlyoutSubtotal from '~/components/nacelle/CartFlyoutSubtotal'
-import CartFlyoutCheckoutButton from '~/components/nacelle/CartFlyoutCheckoutButton'
-import MessagingFreeShippingCounter from '~/components/nacelle/MessagingFreeShippingCounter'
-import CartItem from '~/components/nacelle/CartItem'
+
 export default {
-  components: {
-    CartFlyoutHeader,
-    CartFlyoutMessaging,
-    CartFlyoutSubtotal,
-    CartFlyoutCheckoutButton,
-    MessagingFreeShippingCounter,
-    CartItem
-  },
   computed: {
     ...mapState('cart', ['lineItems', 'cartVisible'])
   },
@@ -72,6 +59,7 @@ export default {
   border-left: 1px solid #dedede7a;
   box-shadow: 20px 0px 20px 20px #e6e6e6c4;
   z-index: 999;
+  transition: ease-in-out transform 250ms;
 
   @media screen and (max-width: 768px) {
     width: 100%;
