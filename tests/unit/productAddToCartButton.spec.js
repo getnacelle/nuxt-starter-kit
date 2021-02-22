@@ -1,7 +1,7 @@
+import Vuex from 'vuex'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import ProductAddToCartButton from '@/components/nacelle/ProductAddToCartButton'
 import createStoreConfig from '../storeConfig'
-import Vuex from 'vuex'
 
 const variant = {
   id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFadC8yODU2ODgyMDAyMzQwMQ==',
@@ -50,7 +50,7 @@ const productData = {
 }
 
 describe('Product Add to Cart Button', () => {
-  it('renders the button', async () => {
+  it('renders the button', () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -68,7 +68,7 @@ describe('Product Add to Cart Button', () => {
     expect(wrapper.findAll('button').exists()).toBe(true)
   })
 
-  it('adds the item there is only one option/value', async () => {
+  it('adds the item there is only one option/value', () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -88,7 +88,7 @@ describe('Product Add to Cart Button', () => {
     expect(store.state.cart.lineItems.length).toBeGreaterThan(0)
   })
 
-  it('displays "add to cart" when there is only one option', async () => {
+  it('displays "add to cart" when there is only one option', () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -108,7 +108,7 @@ describe('Product Add to Cart Button', () => {
     expect(wrapper.find('button').text()).toBe('Add to Cart')
   })
 
-  it('displays "select options" even after item is added when there are multiple variants', async () => {
+  it('displays "select options" even after item is added when there are multiple variants', () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -150,7 +150,7 @@ describe('Product Add to Cart Button', () => {
     expect(wrapper.find('button').text()).toBe('Select Options')
   })
 
-  it('passes metafield props recieved from parent to cartLineItems', async () => {
+  it('passes metafield props recieved from parent to cartLineItems', () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()

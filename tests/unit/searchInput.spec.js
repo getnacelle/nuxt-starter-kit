@@ -1,7 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
-import storeConfig from '../storeConfig'
 import SearchInput from '@/components/nacelle/SearchInput'
+import storeConfig from '../storeConfig'
 
 jest.useFakeTimers()
 

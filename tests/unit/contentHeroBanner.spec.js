@@ -11,7 +11,7 @@ const store = new Vuex.Store(storeConfig())
 
 const defaults = {
   imageUrl:
-  'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-banner-img.png',
+    'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-banner-img.png',
   title: 'Hero Title',
   subtitle: 'Subtitle copy text',
   ctaText: 'CTA BUTTON'
@@ -41,15 +41,15 @@ const wrapperCta = mount(ContentHeroBanner, {
 })
 
 describe('ContentHeroBanner.vue', () => {
-  it('renders a banner', async () => {
+  it('renders a banner', () => {
     expect(wrapperDefault.classes()).toContain('hero')
   })
 
-  it('is size medium by default', async () => {
+  it('is size medium by default', () => {
     expect(wrapperDefault.classes()).toContain('is-medium')
   })
 
-  it('is fullheight when supplied "fullheight" size prop', async () => {
+  it('is fullheight when supplied "fullheight" size prop', () => {
     expect(wrapperFullheight.classes()).toContain('is-fullheight')
   })
 

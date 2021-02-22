@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import storeConfig from '../storeConfig'
 import { v4 as uuid, validate } from 'uuid'
+import storeConfig from '../storeConfig'
 Vue.use(Vuex)
 
 describe('Cart Store', () => {
-  it('adds a line item to the line items array', async () => {
+  it('adds a line item to the line items array', () => {
     const store = new Vuex.Store(storeConfig())
     store.dispatch('cart/addLineItem', {
       image: {
@@ -20,11 +20,15 @@ describe('Cart Store', () => {
       }
     })
     expect(store.state.cart.lineItems.length).toEqual(1)
-    expect(store.state.cart.lineItems[0].id).toContain('Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==')
-    expect(validate(store.state.cart.lineItems[0].id.split('::')[1])).toBeTruthy()
+    expect(store.state.cart.lineItems[0].id).toContain(
+      'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
+    )
+    expect(
+      validate(store.state.cart.lineItems[0].id.split('::')[1])
+    ).toBeTruthy()
   })
 
-  it('removes a line item from the line items array', async () => {
+  it('removes a line item from the line items array', () => {
     const store = new Vuex.Store(storeConfig())
     store.state.cart.lineItems = [
       {
@@ -41,14 +45,11 @@ describe('Cart Store', () => {
         }
       }
     ]
-    store.dispatch(
-      'cart/removeLineItem',
-      store.state.cart.lineItems[0].id
-    )
+    store.dispatch('cart/removeLineItem', store.state.cart.lineItems[0].id)
     expect(store.state.cart.lineItems).toEqual([])
   })
 
-  it('increments a line item', async () => {
+  it('increments a line item', () => {
     const store = new Vuex.Store(storeConfig())
     store.state.cart.lineItems = [
       {
@@ -65,14 +66,11 @@ describe('Cart Store', () => {
         }
       }
     ]
-    store.dispatch(
-      'cart/incrementLineItem',
-      store.state.cart.lineItems[0].id
-    )
+    store.dispatch('cart/incrementLineItem', store.state.cart.lineItems[0].id)
     expect(store.state.cart.lineItems[0].quantity).toEqual(2)
   })
 
-  it('decrements a line item', async () => {
+  it('decrements a line item', () => {
     const store = new Vuex.Store(storeConfig())
     store.state.cart.lineItems = [
       {
@@ -89,14 +87,11 @@ describe('Cart Store', () => {
         }
       }
     ]
-    store.dispatch(
-      'cart/decrementLineItem',
-      store.state.cart.lineItems[0].id
-    )
+    store.dispatch('cart/decrementLineItem', store.state.cart.lineItems[0].id)
     expect(store.state.cart.lineItems[0].quantity).toEqual(1)
   })
 
-  it('sets the line items array', async () => {
+  it('sets the line items array', () => {
     const store = new Vuex.Store(storeConfig())
     const lineUuid = uuid()
     store.commit('cart/setLineItems', [
@@ -131,7 +126,7 @@ describe('Cart Store', () => {
     ])
   })
 
-  it('calculates the cart value', async () => {
+  it('calculates the cart value', () => {
     const store = new Vuex.Store(storeConfig())
     store.commit('cart/setLineItems', [
       {
@@ -152,7 +147,7 @@ describe('Cart Store', () => {
     expect(store.getters['cart/cartSubtotal']).toEqual(80)
   })
 
-  it('returns true if the free shipping threshold has been reached', async () => {
+  it('returns true if the free shipping threshold has been reached', () => {
     const store = new Vuex.Store(storeConfig())
     store.commit('cart/setFreeShippingThreshold', 100)
     store.commit('cart/setLineItems', [
@@ -174,7 +169,7 @@ describe('Cart Store', () => {
     ])
     expect(store.getters['cart/freeShippingThresholdPassed']).toEqual(true)
   })
-  it('returns the amount needed to hit the shipping threshold', async () => {
+  it('returns the amount needed to hit the shipping threshold', () => {
     const store = new Vuex.Store(storeConfig())
     store.commit('cart/setFreeShippingThreshold', 100)
     store.commit('cart/setLineItems', [
@@ -197,7 +192,7 @@ describe('Cart Store', () => {
     expect(store.getters['cart/amountUntilFreeShipping']).toEqual(20)
   })
 
-  it('returns an array of line items with the properties needed for checkout', async () => {
+  it('returns an array of line items with the properties needed for checkout', () => {
     const store = new Vuex.Store(storeConfig())
     const lineUuid = uuid()
     store.commit('cart/setLineItems', [
@@ -227,5 +222,4 @@ describe('Cart Store', () => {
       }
     ])
   })
-
 })

@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import InterfaceFeaturedMedia from '@/components/nacelle/InterfaceFeaturedMedia'
 
 describe('InterfaceFeaturedMedia.vue', () => {
-  it('renders an image if media type is image', async() => {
+  it('renders an image if media type is image', () => {
     const wrapper = shallowMount(InterfaceFeaturedMedia, {
       propsData: {
         media: {
