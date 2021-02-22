@@ -10,12 +10,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import ProductCard from '~/components/nacelle/ProductCard'
 
 export default {
-  components: {
-    ProductCard
-  },
   props: {
     productHandle: {
       type: String,

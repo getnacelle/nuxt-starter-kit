@@ -14,12 +14,7 @@
 </template>
 
 <script>
-import ProductGrid from '~/components/nacelle/ProductGrid'
-
 export default {
-  components: {
-    ProductGrid
-  },
   props: {
     title: {
       type: String,

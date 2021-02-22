@@ -12,12 +12,7 @@
 </template>
 
 <script>
-import InterfaceCloseButton from '~/components/nacelle/InterfaceCloseButton'
-
 export default {
-  components: {
-    InterfaceCloseButton
-  },
   props: {
     title: {
       type: String,

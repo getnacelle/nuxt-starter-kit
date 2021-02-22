@@ -8,11 +8,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import InterfaceModal from '~/components/nacelle/InterfaceModal'
+
 export default {
-  components: {
-    InterfaceModal
-  },
   data() {
     return {
       showModal: false

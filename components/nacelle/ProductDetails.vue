@@ -24,22 +24,8 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import ProductCategory from '~/components/nacelle/ProductCategory'
-import ProductMediaSelectView from '~/components/nacelle/ProductMediaSelectView'
-import ProductTitle from '~/components/nacelle/ProductTitle'
-import ProductPrice from '~/components/nacelle/ProductPrice'
-import ProductDescription from '~/components/nacelle/ProductDescription'
-import ProductVariantSelect from '~/components/nacelle/ProductVariantSelect'
 
 export default {
-  components: {
-    ProductCategory,
-    ProductMediaSelectView,
-    ProductTitle,
-    ProductPrice,
-    ProductDescription,
-    ProductVariantSelect
-  },
   props: {
     product: {
       type: Object,

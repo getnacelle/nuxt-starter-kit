@@ -24,14 +24,7 @@
 </template>
 
 <script>
-import InterfaceCloseButton from '~/components/nacelle/InterfaceCloseButton'
-import ProductCard from '~/components/nacelle/ProductCard'
-
 export default {
-  components: {
-    InterfaceCloseButton,
-    ProductCard
-  },
   props: {
     imageSrc: {
       type: String,

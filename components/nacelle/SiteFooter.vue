@@ -16,12 +16,8 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { defaultLocales } from '../../tests/mocks/defaultObjects'
-import LocaleSelector from '~/components/nacelle/LocaleSelector'
 
 export default {
-  components: {
-    LocaleSelector
-  },
   data() {
     return {
       localeList: defaultLocales.locales
