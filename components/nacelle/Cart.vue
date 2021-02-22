@@ -58,6 +58,7 @@ export default {
   border-left: 1px solid #dedede7a;
   box-shadow: 20px 0px 20px 20px #e6e6e6c4;
   z-index: 999;
+  transition: ease-in-out transform 250ms;
 
   @media screen and (max-width: 768px) {
     width: 100%;
