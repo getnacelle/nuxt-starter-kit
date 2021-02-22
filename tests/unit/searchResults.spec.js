@@ -7,24 +7,25 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('SearchResults.vue', () => {
-  it('provides search results from a supplied query and search data', async () => {
-    const store = new Vuex.Store(storeConfig())
-    const wrapper = mount(SearchResults, {
-      localVue,
-      store,
-      propsData: {
-        searchQuery: { value: 'test' },
-        searchData: [
-          { title: 'test', description: 'cool' },
-          { title: 'wow', description: 'right.' }
-        ]
-      }
-    })
 
-    await wrapper.vm.searchResults
+  const store = new Vuex.Store(storeConfig())
+  const wrapper = mount(SearchResults, {
+    localVue,
+    store
+  })
 
-    expect(wrapper.vm.searchResults).toEqual([
-      { title: 'test', description: 'cool' }
-    ])
+  wrapper.vm.setAutocompleteVisible = jest.fn()
+  wrapper.vm.searchCatalog = jest.fn()
+
+  it('hides autocomplete and requests fresh search results when search query changes', async () => {
+    wrapper.setProps({ searchQuery: 'test' })
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.vm.setAutocompleteVisible).toHaveBeenCalledWith(true)
+    expect(wrapper.vm.searchCatalog).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.searchCatalog).toHaveBeenCalledWith(
+      { value: 'test', position: 'global' }
+    )
   })
 })
