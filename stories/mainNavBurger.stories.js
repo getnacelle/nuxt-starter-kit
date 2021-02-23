@@ -1,0 +1,30 @@
+import { withInfo } from 'storybook-addon-vue-info'
+import MainNavBurger from '../components/nacelle/MainNavBurger'
+
+export default {
+  title: 'Components | Main Nav',
+
+  decorators: [
+    withInfo,
+    () => {
+      return {
+        template: '<div style="padding: 3rem;"><story/></div>'
+      }
+    }
+  ]
+}
+
+export const Burger = () => ({
+  components: { MainNavBurger },
+  template: `
+    <main-nav-burger />
+  `
+})
+
+Burger.story = {
+  parameters: {
+    info: {
+      // summary: "Hello"
+    }
+  }
+}
