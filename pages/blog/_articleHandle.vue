@@ -60,11 +60,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import viewEvent from '~/mixins/viewEvent'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  mixins: [viewEvent('article')],
   data() {
     return {
       article: null
@@ -130,7 +128,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('space', ['getMetatag'])
+    ...mapGetters('space', ['getMetatag']),
+    ...mapActions('events', ['articleView'])
+  },
+  mounted() {
+    this.articleView({ article: this.article })
   }
 }
 </script>

@@ -9,11 +9,13 @@ const eventProperties = (rootState) => {
   let urlParams = null
   let domain = null
   let url = null
+  let pathname = null
 
   if (process.client) {
     urlParams = window.location.search
     domain = window.location.origin
     url = window.location.href
+    pathname = window.location.pathname
   }
 
   return {
@@ -25,6 +27,7 @@ const eventProperties = (rootState) => {
     cart: cartJsonString,
     urlParams,
     url,
+    pathname,
     domain
   }
 }
@@ -40,75 +43,94 @@ export const mutations = {
 
 export const actions = {
   pageView({ commit, rootState }, payload) {
-    commit('addEvent', {
-      eventType: 'PAGE_VIEW',
-      payload,
-      ...eventProperties(rootState)
-    })
+    if (payload) {
+      commit('addEvent', {
+        eventType: 'PAGE_VIEW',
+        payload,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
-  productView({ commit, rootState }, product) {
-    commit('addEvent', {
-      eventType: 'PRODUCT_VIEW',
-      payload: { product },
-      ...eventProperties(rootState)
-    })
+  productView({ commit, rootState }, { product, selectedVariant }) {
+    if (product) {
+      commit('addEvent', {
+        eventType: 'PRODUCT_VIEW',
+        product,
+        selectedVariant,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
-  collectionView({ commit, rootState }, collection) {
-    commit('addEvent', {
-      eventType: 'COLLECTION_VIEW',
-      payload: { collection },
-      ...eventProperties(rootState)
-    })
+  collectionView({ commit, rootState }, { collection }) {
+    if (collection) {
+      commit('addEvent', {
+        eventType: 'COLLECTION_VIEW',
+        collection,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
-  blogView({ commit, rootState }, blog) {
-    commit('addEvent', {
-      eventType: 'BLOG_VIEW',
-      payload: { blog },
-      ...eventProperties(rootState)
-    })
+  blogView({ commit, rootState }, { blog }) {
+    if (blog) {
+      commit('addEvent', {
+        eventType: 'BLOG_VIEW',
+        blog,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
-  articleView({ commit, rootState }, article) {
-    commit('addEvent', {
-      eventType: 'ARTICLE_VIEW',
-      payload: { article },
-      ...eventProperties(rootState)
-    })
+  articleView({ commit, rootState }, { article }) {
+    if (article) {
+      commit('addEvent', {
+        eventType: 'ARTICLE_VIEW',
+        article,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
   addToCart({ commit, rootState }, payload) {
-    commit('addEvent', {
-      eventType: 'ADD_TO_CART',
-      payload,
-      ...eventProperties(rootState)
-    })
+    if (payload) {
+      commit('addEvent', {
+        eventType: 'ADD_TO_CART',
+        payload,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
   removeFromCart({ commit, rootState }, payload) {
-    commit('addEvent', {
-      eventType: 'REMOVE_FROM_CART',
-      payload,
-      ...eventProperties(rootState)
-    })
+    if (payload) {
+      commit('addEvent', {
+        eventType: 'REMOVE_FROM_CART',
+        payload,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
   checkoutInit({ commit, rootState }, payload) {
-    commit('addEvent', {
-      eventType: 'CHECKOUT_INIT',
-      payload,
-      ...eventProperties(rootState)
-    })
+    if (payload) {
+      commit('addEvent', {
+        eventType: 'CHECKOUT_INIT',
+        payload,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
   searchProducts({ commit, rootState }, payload) {
-    commit('addEvent', {
-      eventType: 'SEARCH_PRODUCTS',
-      payload,
-      ...eventProperties(rootState)
-    })
+    if (payload) {
+      commit('addEvent', {
+        eventType: 'SEARCH_PRODUCTS',
+        payload,
+        ...eventProperties(rootState)
+      })
+    }
   }
 }
 
