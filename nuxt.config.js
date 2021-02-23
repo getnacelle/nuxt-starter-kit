@@ -60,14 +60,11 @@ export default {
    */
   nacelle: {
     spaceID: process.env.NACELLE_SPACE_ID,
-    token: process.env.NACELLE_GRAPHQL_TOKEN,
+    token: process.env.NACELLE_GRAPHQL_TOKEN
 
     /* Optional */
     // Set the default internationalization locales string for Nacelle to use
-    // locale: {
-    //   pim: 'en-us',
-    //   cms: 'en-US'
-    // }
+    // defaultLocale: 'en-US'
 
     // Optional array of data type strings to direct Nacelle to include other data types
     // besides products in search data.
@@ -75,11 +72,7 @@ export default {
 
     // If you wish to set the Nacelle GraphQL endpoint to something other than the
     // default.
-    // customEndpoint: process.env.NACELLE_CUSTOM_ENDPOINT,
-
-    // Enables attempting to fetch data from a user's preferred locale and falling back
-    // fetching default locale data.
-    isMultiLocale: true
+    // customEndpoint: process.env.NACELLE_CUSTOM_ENDPOINT
   },
 
   generate: {
