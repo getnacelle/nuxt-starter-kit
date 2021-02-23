@@ -4,20 +4,17 @@ import EventDispatcher from '@/components/nacelle/EventDispatcher'
 import storeConfig from '../storeConfig'
 import products from '../mocks/static-products'
 
+const product = products[0]
+const { handle, image, metafields, id, title } = product
+
 const localVue = createLocalVue()
-
 localVue.use(Vuex)
-
 const store = new Vuex.Store(storeConfig())
 
 const wrapper = mount(EventDispatcher, {
   localVue,
   store
 })
-
-const product = products[0]
-
-const { handle, image, metafields, id, title } = product
 
 const lineItem = {
   variant: product.variants[0],
@@ -43,13 +40,13 @@ describe('Event Dispatcher', () => {
   })
 
   it('tracks a product view event', () => {
-    store.dispatch('events/productView', product)
+    store.dispatch('events/productView', { product })
 
     expect(wrapper.vm.logEntry.eventType).toEqual('PRODUCT_VIEW')
 
-    expect(wrapper.vm.logEntry.payload.product.title).toEqual(product.title)
+    expect(wrapper.vm.logEntry.product.title).toEqual(product.title)
 
-    expect(wrapper.vm.logEntry.payload.product.id).toEqual(product.id)
+    expect(wrapper.vm.logEntry.product.id).toEqual(product.id)
   })
 
   it('tracks an add-to-cart event', () => {
