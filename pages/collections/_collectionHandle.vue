@@ -28,11 +28,10 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import productModule from '~/store/product/productModule'
-import viewEvent from '~/mixins/viewEvent'
 
 export default {
-  mixins: [viewEvent('collection')],
   data() {
     return {
       collection: null,
@@ -56,6 +55,41 @@ export default {
 
     await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
   },
+  head() {
+    if (this.collection) {
+      const properties = {}
+      const meta = []
+
+      if (this.collection.title) {
+        const fullTitle = this.collection.title
+
+        properties.title = fullTitle
+        meta.push({
+          hid: 'og:title',
+          property: 'og:title',
+          content: fullTitle
+        })
+      }
+
+      if (this.collection.description) {
+        meta.push({
+          hid: 'description',
+          name: 'description',
+          content: this.collection.description
+        })
+        meta.push({
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.collection.description
+        })
+      }
+
+      return {
+        ...properties,
+        meta
+      }
+    }
+  },
   computed: {
     visibleProducts() {
       if (this.collectionProducts.length) {
@@ -76,6 +110,7 @@ export default {
         }
         this.$store.dispatch(`${namespace}/storeProduct`, product)
       })
+      this.collectionView({ collection: this.collection })
     }
   },
   beforeDestroy() {
@@ -85,6 +120,8 @@ export default {
     })
   },
   methods: {
+    ...mapActions('events', ['collectionView']),
+
     showMore() {
       if (!this.collection) {
         return
@@ -127,54 +164,6 @@ export default {
       this.isFetching = false
     }
   }
-  // head() {
-  //   if (this.collection) {
-  //     const properties = {}
-  //     const meta = []
-  //     const title = this.getMetatag('title')
-
-  //     if (this.collection.title) {
-  //       let fullTitle = this.collection.title
-
-  //       if (title) {
-  //         fullTitle = `${fullTitle} | ${title.value}`
-  //       }
-
-  //       properties.title = fullTitle
-  //       meta.push({
-  //         hid: 'og:title',
-  //         property: 'og:title',
-  //         content: fullTitle
-  //       })
-  //     }
-
-  //     if (this.collection.description) {
-  //       meta.push({
-  //         hid: 'description',
-  //         name: 'description',
-  //         content: this.collection.description
-  //       })
-  //       meta.push({
-  //         hid: 'og:description',
-  //         property: 'og:description',
-  //         content: this.collection.description
-  //       })
-  //     }
-
-  //     if (this.featuredImage) {
-  //       meta.push({
-  //         hid: 'og:image',
-  //         property: 'og:image',
-  //         content: this.featuredImage
-  //       })
-  //     }
-
-  //     return {
-  //       ...properties,
-  //       meta
-  //     }
-  //   }
-  // }
 }
 </script>
 

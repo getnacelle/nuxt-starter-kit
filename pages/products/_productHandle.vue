@@ -48,30 +48,31 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import productModule from '~/store/product/productModule'
 import productMetafields from '~/mixins/productMetafields'
-import viewEvent from '~/mixins/viewEvent'
 
 export default {
-  mixins: [productMetafields, viewEvent('product')],
+  mixins: [productMetafields],
   data() {
     return {
+      namespace: '',
       product: null
     }
   },
   async fetch() {
     const handle = this.$route.params.productHandle
-    const namespace = `product/${handle}`
-    if (!this.$store.hasModule(namespace)) {
-      this.$store.registerModule(namespace, productModule(), {
-        preserveState: !!this.$store.state[namespace]
+    this.namespace = `product/${handle}`
+    if (!this.$store.hasModule(this.namespace)) {
+      this.$store.registerModule(this.namespace, productModule(), {
+        preserveState: !!this.$store.state[this.namespace]
       })
     }
     const product = await this.$store.dispatch(
-      `${namespace}/fetchProduct`,
+      `${this.namespace}/fetchProduct`,
       handle
     )
+
     this.product = product
   },
   head() {
@@ -125,13 +126,20 @@ export default {
   computed: {
     ...mapGetters('space', ['getMetatag'])
   },
+  mounted() {
+    if (this.$store.state[this.namespace]) {
+      const { product, selectedVariant } = this.$store.state[this.namespace]
+      this.productView({ product, selectedVariant })
+    }
+  },
 
   beforeDestroy() {
     const namespace = `product/${this.product.handle}`
     this.$store.commit(`${namespace}/unloadProduct`)
   },
   methods: {
-    ...mapMutations('cart', ['showCart'])
+    ...mapMutations('cart', ['showCart']),
+    ...mapActions('events', ['productView'])
   }
 }
 </script>
