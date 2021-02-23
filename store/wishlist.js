@@ -40,9 +40,7 @@ export const actions = {
       res.json()
     )
     if (searchJson) {
-      // The old version of nacelle-nuxt-module uses 'products', new version uses 'product'
-      const key = searchJson.products ? 'products' : 'product'
-      return searchJson[key].filter(
+      return searchJson.product.filter(
         (product) => product && product.title && product.variants
       )
     }
