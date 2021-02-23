@@ -41,9 +41,4 @@ describe('ProductOptionSwatch.vue', () => {
     expect(wrapper.findAll('div').exists()).toBe(true)
     expect(wrapper.text()).toBe('Small')
   })
-
-  it('emits an event when clicked', () => {
-    wrapper.trigger('click')
-    expect(wrapper.emitted().swatchValue).toBeTruthy()
-  })
 })
