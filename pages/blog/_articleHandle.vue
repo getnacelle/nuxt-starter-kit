@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import viewEvent from '~/mixins/viewEvent'
 
 export default {
@@ -130,7 +130,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('space', ['getMetatag'])
+    ...mapGetters('space', ['getMetatag']),
+    ...mapActions('events', ['articleView'])
+  },
+  mounted() {
+    this.articleView({ article: this.article })
   }
 }
 </script>
