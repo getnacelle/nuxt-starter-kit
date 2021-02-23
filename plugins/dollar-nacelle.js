@@ -3,35 +3,24 @@ import NacelleClient from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
 export default function (context, inject) {
   const options = JSON.parse(`<%= JSON.stringify(options) %>`)
   const { settings, space } = options
-  const { spaceID, token, endpoint, tem, wishlistEndpoint } = settings
-  const defaultLocale = settings.locale?.cms || 'en-US'
+  const {
+    spaceID,
+    token,
+    endpoint,
+    tem,
+    wishlistEndpoint,
+    defaultLocale
+  } = settings
 
-  const pimClient = new NacelleClient({
+  const client = new NacelleClient({
     id: spaceID,
     token,
     nacelleEndpoint: endpoint,
-    locale: settings.locale?.pim || 'en-us',
+    locale: defaultLocale || 'en-US',
     eventsEndpoint: tem,
     wishlistEndpoint,
     useStatic: false
   })
-
-  const cmsClient = new NacelleClient({
-    id: spaceID,
-    token,
-    nacelleEndpoint: endpoint,
-    locale: settings.locale?.cms || 'en-US',
-    eventsEndpoint: tem,
-    useStatic: false
-  })
-
-  const client = cmsClient
-  client.data.product = (params) => pimClient.data.product(params)
-  client.data.products = (params) => pimClient.data.products(params)
-  client.data.allProducts = (params) => pimClient.data.allProducts(params)
-  client.data.collection = (params) => pimClient.data.collection(params)
-  client.data.collectionPage = (params) => pimClient.data.collectionPage(params)
-  client.data.allCollections = (params) => pimClient.data.allCollections(params)
 
   const setSpace = () => {
     const { commit } = context.store
