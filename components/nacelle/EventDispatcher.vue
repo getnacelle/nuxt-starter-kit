@@ -19,7 +19,7 @@ export default {
       return productIDs
     },
     logEntry() {
-      return [...this.log].pop()
+      return this.log[this.log.length - 1]
     },
     fbq() {
       return process.client ? window.fbq : undefined
