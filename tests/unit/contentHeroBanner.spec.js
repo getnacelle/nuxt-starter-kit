@@ -1,5 +1,7 @@
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
 import ContentHeroBanner from '@/components/nacelle/ContentHeroBanner'
+import CtaButton from '@/components/nacelle/CtaButton'
+import NacelleImage from '@/components/nacelle/image/NacelleImage'
 import Vuex from 'vuex'
 
 import storeConfig from '../storeConfig'
@@ -11,7 +13,7 @@ const store = new Vuex.Store(storeConfig())
 
 const defaults = {
   imageUrl:
-  'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-banner-img.png',
+    'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-banner-img.png',
   title: 'Hero Title',
   subtitle: 'Subtitle copy text',
   ctaText: 'CTA BUTTON'
@@ -20,13 +22,21 @@ const defaults = {
 const wrapperDefault = shallowMount(ContentHeroBanner, {
   store,
   localVue,
-  propsData: { ...defaults }
+  propsData: { ...defaults },
+  components: {
+    NacelleImage,
+    CtaButton
+  }
 })
 
 const wrapperFullheight = shallowMount(ContentHeroBanner, {
   store,
   localVue,
-  propsData: { ...defaults, size: 'fullheight' }
+  propsData: { ...defaults, size: 'fullheight' },
+  components: {
+    NacelleImage,
+    CtaButton
+  }
 })
 
 const mockClickHandler = jest.fn()
@@ -37,6 +47,10 @@ const wrapperCta = mount(ContentHeroBanner, {
   propsData: {
     ...defaults,
     ctaHandler: mockClickHandler
+  },
+  components: {
+    NacelleImage,
+    CtaButton
   }
 })
 
