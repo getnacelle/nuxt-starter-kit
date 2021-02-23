@@ -6,7 +6,7 @@ function handleCheckoutError(err) {
     console.warn(
       'Received a 401 (unauthorized) response when attempting checkout. ' +
         'Please verify your Checkout Settings in the Nacelle Dashboard. ' +
-        'Most likey, the token is incorrect, or there is a typo in the endpoint URL.'
+        'Most likely, the token is incorrect, or there is a typo in the endpoint URL.'
     )
   }
 
@@ -108,14 +108,24 @@ export const actions = {
   },
 
   async addCheckoutParams({ commit, dispatch, state, rootState }) {
-    const queryOperator = state.url.includes('?') ? '&' : '?'
+    const parsedUrl = new URL(state.url)
+
+    if (rootState.user.userData) {
+      parsedUrl.searchParams.set('c', JSON.stringify(rootState.user.userData))
+    }
+
+    if (state.discountCode) {
+      parsedUrl.searchParams.set('discount', state.discountCode)
+    }
+
     const linkerParam = await dispatch('getLinkerParam')
-    await commit(
-      'setUrl',
-      `${state.url}${queryOperator}c=${JSON.stringify(
-        rootState.user.userData
-      )}&${linkerParam}`
-    )
+
+    if (linkerParam) {
+      const [gaParamName, gaParamValue] = linkerParam.split('=')
+      parsedUrl.searchParams.set(gaParamName, gaParamValue)
+    }
+
+    await commit('setUrl', parsedUrl.toString())
   },
 
   getLinkerParam() {
