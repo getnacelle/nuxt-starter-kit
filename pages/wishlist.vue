@@ -3,14 +3,11 @@
     <content-hero-banner title="Wishlist" />
     <section class="section">
       <div class="container">
-        <div class="columns is-multiline">
-          <product-grid
-            v-if="products && products.length > 0"
-            :products="products"
-            :show-add-to-cart="true"
-            :show-quantity-update="true"
-          />
-        </div>
+        <product-grid
+          :products="products"
+          :show-add-to-cart="true"
+          :show-quantity-update="true"
+        />
       </div>
     </section>
   </div>
@@ -18,12 +15,31 @@
 
 <script>
 import { mapState } from 'vuex'
-
+import productModule from '~/store/product/productModule'
 export default {
+  data() {
+    return {
+      productData: null
+    }
+  },
   computed: {
     ...mapState('wishlist', ['items']),
     products() {
       return this.items.map((item) => item.product)
+    }
+  },
+  watch: {
+    async products() {
+      const products = this.products.map((product) => {
+        const namespace = `product/${product.handle}`
+        if (!this.$store.hasModule(namespace)) {
+          this.$store.registerModule(namespace, productModule(), {
+            preserveState: false
+          })
+        }
+        return this.$store.dispatch(`${namespace}/fetchProduct`, product.handle)
+      })
+      this.productData = await Promise.all(products)
     }
   }
 }
