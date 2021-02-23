@@ -61,10 +61,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import viewEvent from '~/mixins/viewEvent'
 
 export default {
-  mixins: [viewEvent('article')],
   data() {
     return {
       article: null
