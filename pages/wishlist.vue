@@ -4,7 +4,7 @@
     <section class="section">
       <div class="container">
         <product-grid
-          :products="products"
+          :products="productData"
           :show-add-to-cart="true"
           :show-quantity-update="true"
         />
