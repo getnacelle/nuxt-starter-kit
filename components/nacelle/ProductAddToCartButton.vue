@@ -23,9 +23,7 @@ export default {
     },
     metafields: {
       type: Array,
-      default: () => {
-        return []
-      }
+      default: () => []
     },
     quantity: {
       type: Number,
