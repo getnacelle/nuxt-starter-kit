@@ -1,4 +1,4 @@
-import { clear, set, get, keys } from 'idb-keyval'
+import { keys, del } from 'idb-keyval'
 
 export const state = () => ({
   collectionLimit: 12,
@@ -24,14 +24,15 @@ export const actions = {
     await this.$nacelle.nacelleNuxtServerInit(ctx, context)
   },
   async clearProductIdb({ state, commit }) {
-    const idbKeys = await keys()
-
-    if (!state.productDataCleared && idbKeys.length > 1) {
+    if (!state.productDataCleared) {
       commit('setProductsCleared', true)
-      const anonymousID = await get('anonymousID')
-      clear()
+      const idbKeys = await keys()
 
-      return set('anonymousID', anonymousID)
+      const cleared = idbKeys
+        .filter((key) => key.startsWith('product/'))
+        .map((key) => del(key))
+
+      await Promise.all(cleared)
     }
   },
   getIndexedDbWorker({ state, commit }) {
