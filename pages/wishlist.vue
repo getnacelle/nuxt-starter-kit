@@ -30,7 +30,7 @@ export default {
   },
   watch: {
     async products() {
-      await fetchProducts()
+      await this.fetchProducts()
     }
   },
   methods: {
