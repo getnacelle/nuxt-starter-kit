@@ -30,6 +30,11 @@ export default {
   },
   watch: {
     async products() {
+      await fetchProducts()
+    }
+  },
+  methods: {
+    async fetchProducts() {
       const products = this.products.map((product) => {
         const namespace = `product/${product.handle}`
         if (!this.$store.hasModule(namespace)) {
@@ -44,16 +49,7 @@ export default {
   },
   async mounted() {
     if (this.products) {
-      const products = this.products.map((product) => {
-        const namespace = `product/${product.handle}`
-        if (!this.$store.hasModule(namespace)) {
-          this.$store.registerModule(namespace, productModule(), {
-            preserveState: false
-          })
-        }
-        return this.$store.dispatch(`${namespace}/fetchProduct`, product.handle)
-      })
-      this.productData = await Promise.all(products)
+      await this.fetchProducts()
     }
   }
 }
