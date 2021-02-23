@@ -34,19 +34,17 @@
 import { mapActions, mapGetters } from 'vuex'
 export default {
   props: {
-    productHandle: {
-      type: String,
-      default: ''
+    product: {
+      type: Object,
+      default: () => ({})
+    },
+    variant: {
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {
     ...mapGetters('wishlist', ['getItemByVariantId']),
-    product() {
-      return null
-    },
-    variant() {
-      return null
-    },
     isSavedInWishlist() {
       return this.variant && !!this.getItemByVariantId(this.variant.id)
     }
