@@ -1,5 +1,4 @@
 import { mount } from '@vue/test-utils'
-// import ProductTitle from '@/components/ProductTitle'
 import productMetafields from '../../mixins/productMetafields'
 
 const MixinTestBench = {
@@ -16,25 +15,29 @@ const MixinTestBench = {
 }
 
 describe('productMetafields.js', () => {
-  const metafields = [{
-    id: null,
-    namespace: 'subscriptions',
-    key: 'charge_interval_frequency',
-    value: '30',
-    __typename: 'ProductMetafield'
-  }, {
-    id: null,
-    namespace: 'subscriptions',
-    key: 'order_interval_frequency',
-    value: '30',
-    __typename: 'ProductMetafield'
-  }, {
-    id: null,
-    namespace: 'subscriptions',
-    key: 'order_interval_unit',
-    value: 'day',
-    __typename: 'ProductMetafield'
-  }]
+  const metafields = [
+    {
+      id: null,
+      namespace: 'subscriptions',
+      key: 'charge_interval_frequency',
+      value: '30',
+      __typename: 'ProductMetafield'
+    },
+    {
+      id: null,
+      namespace: 'subscriptions',
+      key: 'order_interval_frequency',
+      value: '30',
+      __typename: 'ProductMetafield'
+    },
+    {
+      id: null,
+      namespace: 'subscriptions',
+      key: 'order_interval_unit',
+      value: 'day',
+      __typename: 'ProductMetafield'
+    }
+  ]
 
   it('creates metafieldObj computed property', () => {
     const wrapper = mount(MixinTestBench, {
@@ -65,8 +68,10 @@ describe('productMetafields.js', () => {
       }
     })
 
-    const orderIntervalUnit = wrapper.vm
-      .getMetafield('subscriptions', 'order_interval_unit')
+    const orderIntervalUnit = wrapper.vm.getMetafield(
+      'subscriptions',
+      'order_interval_unit'
+    )
 
     expect(orderIntervalUnit).toEqual('day')
   })

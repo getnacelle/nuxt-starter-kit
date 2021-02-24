@@ -14,5 +14,7 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/components/**/*.vue',
     '<rootDir>/pages/**/*.vue'
-  ]
+  ],
+  reporters: ['default', 'jest-github-actions-reporter'],
+  testLocationInResults: true
 }

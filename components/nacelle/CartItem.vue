@@ -25,10 +25,10 @@
           element="h4"
         />
       </router-link>
-      <product-variant-title
-        :title="variant.title"
-        class="flyout-item-variant-title"
-      />
+      <p
+        v-if="title != 'Default Title'"
+        class="flyout-item-variant-title variant-title nacelle"
+      ></p>
       <div class="flyout-item-details columns is-marginless is-paddingless">
         <product-price class="flyout-item-price" :price="item.variant.price" />
         <quantity-selector :item="item" :quantity="item.quantity" />

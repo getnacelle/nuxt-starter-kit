@@ -2,7 +2,7 @@
   <div class="article-preview nacelle" :class="{ 'is-featured': isFeatured }">
     <slot name="media" :featuredMedia="featuredMedia">
       <nuxt-link :to="link">
-        <interface-featured-media :media="featuredMedia" :width="400" />
+        <nacelle-image :src="featuredMedia.file.url" :width="400" />
       </nuxt-link>
     </slot>
     <slot

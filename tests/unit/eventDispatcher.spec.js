@@ -1,23 +1,20 @@
-import storeConfig from '../storeConfig'
+import Vuex from 'vuex'
 import { mount, createLocalVue } from '@vue/test-utils'
 import EventDispatcher from '@/components/nacelle/EventDispatcher'
-import Vuex from 'vuex'
+import storeConfig from '../storeConfig'
 import products from '../mocks/static-products'
 
+const product = products[0]
+const { handle, image, metafields, id, title } = product
+
 const localVue = createLocalVue()
-
 localVue.use(Vuex)
-
 const store = new Vuex.Store(storeConfig())
 
 const wrapper = mount(EventDispatcher, {
   localVue,
   store
 })
-
-const product = products[0]
-
-const { handle, image, metafields, id, title } = product
 
 const lineItem = {
   variant: product.variants[0],
@@ -37,17 +34,19 @@ describe('Event Dispatcher', () => {
 
     expect(wrapper.vm.logEntry.eventType).toEqual('PAGE_VIEW')
 
-    expect(wrapper.vm.logEntry.payload.url).toEqual('https://www.example.com/blog/some-article')
+    expect(wrapper.vm.logEntry.payload.url).toEqual(
+      'https://www.example.com/blog/some-article'
+    )
   })
 
   it('tracks a product view event', () => {
-    store.dispatch('events/productView', product)
+    store.dispatch('events/productView', { product })
 
     expect(wrapper.vm.logEntry.eventType).toEqual('PRODUCT_VIEW')
 
-    expect(wrapper.vm.logEntry.payload.product.title).toEqual(product.title)
+    expect(wrapper.vm.logEntry.product.title).toEqual(product.title)
 
-    expect(wrapper.vm.logEntry.payload.product.id).toEqual(product.id)
+    expect(wrapper.vm.logEntry.product.id).toEqual(product.id)
   })
 
   it('tracks an add-to-cart event', () => {
@@ -58,10 +57,15 @@ describe('Event Dispatcher', () => {
 
     expect(wrapper.vm.logEntry.eventType).toEqual('ADD_TO_CART')
 
-    expect(wrapper.vm.logEntry.payload.product.variant.title).toEqual(lineItem.variant.title)
+    expect(wrapper.vm.logEntry.payload.product.variant.title).toEqual(
+      lineItem.variant.title
+    )
 
-    expect(wrapper.vm.decodeBase64VariantId(wrapper.vm.logEntry.payload.product.variant.id))
-      .toEqual(wrapper.vm.decodeBase64VariantId(lineItem.variant.id))
+    expect(
+      wrapper.vm.decodeBase64VariantId(
+        wrapper.vm.logEntry.payload.product.variant.id
+      )
+    ).toEqual(wrapper.vm.decodeBase64VariantId(lineItem.variant.id))
   })
 
   it('tracks an remove-from-cart event', () => {
@@ -72,14 +76,19 @@ describe('Event Dispatcher', () => {
 
     expect(wrapper.vm.logEntry.eventType).toEqual('REMOVE_FROM_CART')
 
-    expect(wrapper.vm.logEntry.payload.product.variant.title).toEqual(lineItem.variant.title)
+    expect(wrapper.vm.logEntry.payload.product.variant.title).toEqual(
+      lineItem.variant.title
+    )
 
-    expect(wrapper.vm.decodeBase64VariantId(wrapper.vm.logEntry.payload.product.variant.id))
-      .toEqual(wrapper.vm.decodeBase64VariantId(lineItem.variant.id))
+    expect(
+      wrapper.vm.decodeBase64VariantId(
+        wrapper.vm.logEntry.payload.product.variant.id
+      )
+    ).toEqual(wrapper.vm.decodeBase64VariantId(lineItem.variant.id))
   })
 
   it('tracks an checkout initiation event', () => {
-    const cart = product.variants.map(variant => {
+    const cart = product.variants.map((variant) => {
       return {
         variant,
         handle,
@@ -91,18 +100,20 @@ describe('Event Dispatcher', () => {
       }
     })
 
-    cart.forEach(
-      item => {
-        store.dispatch('cart/addLineItem', item)
-      }
-    )
+    cart.forEach((item) => {
+      store.dispatch('cart/addLineItem', item)
+    })
 
     store.dispatch('events/checkoutInit', cart)
 
     expect(wrapper.vm.logEntry.eventType).toEqual('CHECKOUT_INIT')
 
-    expect(wrapper.vm.productIDs).toEqual(cart.map(item => wrapper.vm.decodeBase64VariantId(item.id)))
+    expect(wrapper.vm.productIDs).toEqual(
+      cart.map((item) => wrapper.vm.decodeBase64VariantId(item.id))
+    )
 
-    expect(store.state.cart.lineItems.reduce((acc, item) => acc + item.quantity, 0)).toEqual(cart.length)
+    expect(
+      store.state.cart.lineItems.reduce((acc, item) => acc + item.quantity, 0)
+    ).toEqual(cart.length)
   })
 })

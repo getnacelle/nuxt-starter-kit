@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import InterfaceLogo from '@/components/nacelle/InterfaceLogo'
 
 describe('InterfaceLogo.vue', () => {
-  it('renders an image', async() => {
+  it('renders an image', () => {
     const wrapper = shallowMount(InterfaceLogo, {
       propsData: {
         src:

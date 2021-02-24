@@ -11,9 +11,9 @@
     <article class="article">
       <div class="article-hero">
         <transition name="fade">
-          <interface-featured-media
+          <nacelle-image
             v-if="article && article.featuredMedia"
-            :media="article.featuredMedia"
+            :src="article.featuredMedia.file.url"
             :width="400"
           />
         </transition>

@@ -1,10 +1,6 @@
 name: ci
 
-on:
-  pull_request:
-    branches:
-      - main
-      - master
+on: pull_request
 
 jobs:
   ci:
@@ -39,4 +35,7 @@ jobs:
         run: npm run lint
 
       - name: Run tests 🧪
-        run: npm run test
+        uses: ChristiaanScheermeijer/jest-reporter-action@v0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-command: 'npm run test:ci'

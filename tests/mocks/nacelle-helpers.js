@@ -1,7 +1,7 @@
 export default {
-  install (Vue) {
+  install(Vue) {
     Vue.prototype.$nacelleHelpers = {
-      transformProduct (product) {
+      transformProduct(product) {
         return product
       }
     }

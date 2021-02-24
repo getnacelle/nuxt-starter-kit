@@ -19,7 +19,7 @@ export default {
       return productIDs
     },
     logEntry() {
-      return [...this.log].pop()
+      return this.log[this.log.length - 1]
     },
     fbq() {
       return process.client ? window.fbq : undefined
@@ -29,7 +29,7 @@ export default {
     }
   },
   watch: {
-    log(log) {
+    log() {
       if (process.client) {
         switch (this.logEntry.eventType) {
           case 'PAGE_VIEW':

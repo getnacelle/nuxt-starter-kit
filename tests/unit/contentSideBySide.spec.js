@@ -9,7 +9,7 @@ const defaults = {
 }
 
 describe('ContentSideBySide.vue', () => {
-  it('renders a side by side section', async () => {
+  it('renders a side by side section', () => {
     const wrapper = shallowMount(ContentSideBySide, {
       propsData: { ...defaults }
     })
