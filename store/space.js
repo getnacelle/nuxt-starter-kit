@@ -57,17 +57,17 @@ export const getters = {
     return {}
   },
 
-  getMetatag: state => tag => {
+  getMetatag: (state) => (tag) => {
     if (state.metafields) {
       return state.metafields.find(
-        field => field.namespace === 'metatag' && field.key === tag
+        (field) => field.namespace === 'metatag' && field.key === tag
       )
     }
 
     return {}
   },
 
-  getMetaNamespace: state => namespace => {
+  getMetaNamespace: (state) => (namespace) => {
     if (state.metafields) {
       return state.metafields.reduce((obj, metafield) => {
         if (metafield.namespace === namespace) {
@@ -81,10 +81,10 @@ export const getters = {
     return {}
   },
 
-  getMetafield: state => (namespace, key) => {
+  getMetafield: (state) => (namespace, key) => {
     if (state.metafields) {
       const metafield = state.metafields.find(
-        field => field.namespace === namespace && field.key === key
+        (field) => field.namespace === namespace && field.key === key
       )
 
       if (metafield) {
@@ -95,17 +95,17 @@ export const getters = {
     return undefined
   },
 
-  getLinks: state => handle => {
+  getLinks: (state) => (handle) => {
     if (!state.linklists) {
       return []
     }
 
-    const linklist = state.linklists.find(l => l.handle === handle)
+    const linklist = state.linklists.find((l) => l.handle === handle)
 
     return linklist ? linklist.links : []
   },
 
-  getLocalizedLinks: (state, getters, rootState) => handle => {
+  getLocalizedLinks: (state, getters, rootState) => (handle) => {
     const locale =
       rootState.user.locale && rootState.user.locale.locale
         ? rootState.user.locale.locale.toLowerCase()

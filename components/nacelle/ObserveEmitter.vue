@@ -10,7 +10,7 @@ export default {
       default: () => {
         return {
           root: null,
-          rootMargin: '100px',
+          rootMargin: '600px',
           threshold: 0.1
         }
       }
@@ -21,7 +21,7 @@ export default {
       observer: null
     }
   },
-  mounted () {
+  mounted() {
     this.initObserver()
   },
   methods: {

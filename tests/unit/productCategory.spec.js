@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import ProductCategory from '@/components/nacelle/ProductCategory'
 
 describe('ProductCategory.vue', () => {
-  it('renders the product category', async () => {
+  it('renders the product category', () => {
     const wrapper = shallowMount(ProductCategory, {
       propsData: { category: 'Test' }
     })

@@ -3,12 +3,11 @@
     <router-link v-if="path" :to="path">
       <img class="icon" :src="iconSrc" />
     </router-link>
-    <img class="icon" v-else :src="iconSrc" @click="handleIconMethod" />
+    <img v-else class="icon" :src="iconSrc" @click="handleIconMethod" />
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 export default {
   props: {
     iconName: {
@@ -16,16 +15,20 @@ export default {
       required: true
     },
     iconMethod: {
-      type: String
+      type: String,
+      default: ''
     },
     iconMethodType: {
-      type: String
+      type: String,
+      default: ''
     },
     path: {
-      type: String
+      type: String,
+      default: ''
     },
     customIcon: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -33,21 +36,21 @@ export default {
       switch (this.iconName) {
         case 'wishlist':
           return 'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-wishlist-icon.svg'
-          break
         case 'cart':
           return 'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-cart-icon.svg'
-          break
         case 'account':
           return 'https://nacelle-assets.s3-us-west-2.amazonaws.com/default-account-icon.svg'
+        default:
+          return ''
       }
     }
   },
   methods: {
     handleIconMethod() {
       if (this.iconMethod) {
-        if (this.iconMethodType == 'mutation') {
+        if (this.iconMethodType === 'mutation') {
           this.$store.commit(this.iconMethod)
-        } else if (this.iconMethodType == 'action') {
+        } else if (this.iconMethodType === 'action') {
           this.$store.commit(this.iconMethod)
         }
       }

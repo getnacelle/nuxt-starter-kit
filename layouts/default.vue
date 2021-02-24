@@ -1,62 +1,21 @@
 <template>
-  <div class="app nacelle">
-    <global-header ref="header" />
-    <nuxt :style="{ 'margin-top': `${headerHeight}px` }" />
-    <site-footer />
-    <event-dispatcher />
-    <error-modal />
-    <cart-watch />
-  </div>
+  <lazy-hydrate when-idle class="app nacelle">
+    <div>
+      <global-header />
+      <nuxt keep-alive :keep-alive-props="{ max: 2 }" />
+      <site-footer />
+      <event-dispatcher />
+      <error-modal />
+      <cart-watch />
+    </div>
+  </lazy-hydrate>
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex'
-import localforage from 'localforage'
-import GlobalHeader from '~/components/nacelle/GlobalHeader'
-import SiteFooter from '~/components/nacelle/SiteFooter'
-import EventDispatcher from '~/components/nacelle/EventDispatcher'
-import ErrorModal from '~/components/nacelle/ErrorModal'
-import CartWatch from '~/components/nacelle/CartWatch'
-import queryString from 'query-string'
-
+import { mapGetters, mapActions } from 'vuex'
+import LazyHydrate from 'vue-lazy-hydration'
 export default {
-  components: {
-    GlobalHeader,
-    SiteFooter,
-    EventDispatcher,
-    ErrorModal,
-    CartWatch
-  },
-  methods: {
-    ...mapActions('cart', ['initializeCart']),
-    ...mapActions('checkout', ['initializeCheckout']),
-    ...mapMutations('checkout', ['setDiscountCode']),
-    ...mapActions('user', ['readSession'])
-  },
-  data() {
-    return {
-      headerHeight: null
-    }
-  },
-  computed: {
-    ...mapGetters('space', ['getMetatag'])
-  },
-  async mounted() {
-    if (this.$refs.header) {
-      this.headerHeight = this.$refs.header.$el.clientHeight
-    }
-
-    await this.initializeCheckout()
-    await this.initializeCart()
-
-    if (process.env.DEV_MODE === 'true') {
-      console.log('dev mode active!')
-      localforage.clear()
-    }
-
-    this.setDiscountCode(queryString.parse(location.search).discount)
-    this.readSession()
-  },
+  components: { LazyHydrate },
   head() {
     const properties = {}
     const meta = []
@@ -109,6 +68,25 @@ export default {
       ...properties,
       meta
     }
+  },
+  computed: {
+    ...mapGetters('space', ['getMetatag'])
+  },
+  async mounted() {
+    await this.initializeCheckout()
+    await this.initializeCart()
+    await this.clearProductIdb()
+    this.getSearchData()
+    this.readSession()
+    this.getWishlists()
+  },
+  methods: {
+    ...mapActions(['clearProductIdb']),
+    ...mapActions('cart', ['initializeCart']),
+    ...mapActions('checkout', ['initializeCheckout']),
+    ...mapActions('user', ['readSession']),
+    ...mapActions('search', ['getSearchData']),
+    ...mapActions('wishlist', ['getWishlists'])
   }
 }
 </script>

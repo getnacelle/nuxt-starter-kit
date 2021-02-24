@@ -1,11 +1,11 @@
-import { createLocalVue } from '@vue/test-utils'
-import storeConfig from '../storeConfig'
 import Vuex from 'vuex'
+import { createLocalVue } from '@vue/test-utils'
+import storeConfig from '@/tests/storeConfig'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('Space Store', () => {
-  it('adds a metafield to metafields array', async() => {
+  it('adds a metafield to metafields array', () => {
     const store = new Vuex.Store(storeConfig())
     store.commit('space/addMetafield', {
       namespace: 'metatag',
@@ -21,7 +21,7 @@ describe('Space Store', () => {
     ])
   })
 
-  it('get namespace returns namespace object', async() => {
+  it('get namespace returns namespace object', () => {
     const store = new Vuex.Store(storeConfig())
     store.state.space.metafields = [
       {
@@ -38,7 +38,7 @@ describe('Space Store', () => {
     })
   })
 
-  it('metafieldsObj returns metafields object', async() => {
+  it('metafieldsObj returns metafields object', () => {
     const store = new Vuex.Store(storeConfig())
     store.state.space.metafields = [
       {
@@ -69,7 +69,7 @@ describe('Space Store', () => {
     })
   })
 
-  it('updateSpace sets space', async() => {
+  it('updateSpace sets space', () => {
     const store = new Vuex.Store(storeConfig())
     const id = '12345'
     const name = 'test-store'

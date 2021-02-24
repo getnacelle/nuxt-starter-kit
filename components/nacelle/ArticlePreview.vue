@@ -2,7 +2,7 @@
   <div class="article-preview nacelle" :class="{ 'is-featured': isFeatured }">
     <slot name="media" :featuredMedia="featuredMedia">
       <nuxt-link :to="link">
-        <interface-featured-media :media="featuredMedia" />
+        <nacelle-image :src="featuredMedia.file.url" :width="400" />
       </nuxt-link>
     </slot>
     <slot
@@ -37,9 +37,7 @@
 </template>
 
 <script>
-import InterfaceFeaturedMedia from '~/components/nacelle/InterfaceFeaturedMedia'
 export default {
-  components: {InterfaceFeaturedMedia},
   props: {
     title: {
       type: String,
@@ -95,7 +93,7 @@ export default {
   background-color: #f5f5f5;
 }
 
-.is-featured /deep/ .featured-media {
+.is-featured ::v-deep .featured-media {
   @media screen and (min-width: 769px) {
     position: absolute;
     top: 0;

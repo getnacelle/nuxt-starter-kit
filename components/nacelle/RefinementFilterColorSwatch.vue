@@ -10,7 +10,10 @@
 <script>
 export default {
   props: {
-    color: String,
+    color: {
+      type: String,
+      default: ''
+    },
     selected: Boolean
   },
   computed: {

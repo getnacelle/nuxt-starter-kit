@@ -11,7 +11,7 @@
       <div class="container">
         <div class="columns">
           <div class="column is-4 is-offset-4">
-            <search-box position="in-page" />
+            <search-box v-bind="{ position, searchQuery: pageQuery }" />
           </div>
         </div>
       </div>
@@ -19,37 +19,33 @@
     <section class="section filtering">
       <div class="column is-12">
         <refinement-filters
-          v-if="productData"
-          :propertyFilters="[
+          v-if="pageResults && pageResults.length"
+          :property-filters="[
             { field: 'productType', label: 'Product Type' },
             { field: 'color', label: 'Color' },
             { field: 'material', label: 'Material' },
             { field: 'size', label: 'Size' }
           ]"
-          :priceRangeFilters="[
+          :price-range-filters="[
             { range: [0, 50], label: '< $50' },
             { range: [50, 100], label: '$50 - 100' },
             { range: [100, 200], label: '$100 - 200' },
             { range: [200, 500], label: '$200 - 500' },
             { range: [500, 0], label: '> $500' }
           ]"
-          :inputData="productData"
-          v-on:updated="updateFilteredData"
+          :input-data="pageResults"
+          @refined="setFilteredData"
         />
       </div>
     </section>
     <section class="section">
       <div class="columns is-multiline">
         <div class="column is-12">
-          <refinement-results
-            v-if="filteredData"
-            :searchData="filteredData"
-            :searchQuery="query"
-          >
-            <template v-slot:result="{ result }">
-              <product-grid :products="result" :columns="4" is-search-result />
+          <refinement-results v-if="filteredData" :search-data="filteredData">
+            <template #results="{ results }">
+              <product-grid :products="results" :columns="4" />
             </template>
-            <template v-slot:no-results>
+            <template #no-results>
               <search-no-results />
             </template>
           </refinement-results>
@@ -60,50 +56,51 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import SearchBox from '~/components/nacelle/SearchBox'
-import RefinementFilters from '~/components/nacelle/RefinementFilters'
-import RefinementResults from '~/components/nacelle/RefinementResults'
-import ProductGrid from '~/components/nacelle/ProductGrid'
-import SearchNoResults from '~/components/nacelle/SearchNoResults'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
-  components: {
-    SearchBox,
-    RefinementFilters,
-    RefinementResults,
-    ProductGrid,
-    SearchNoResults
+  data() {
+    return {
+      position: 'page'
+    }
   },
   computed: {
-    ...mapState('search', ['query', 'loadedData', 'filteredData']),
-    ...mapGetters('search', ['productData'])
+    ...mapState('search', [
+      'pageQuery',
+      'pageResults',
+      'isLoading',
+      'filteredData'
+    ])
   },
   watch: {
-    loadedData(newVal) {
-      if (newVal) {
-        if (this.$route.query && this.$route.query.q) {
-          this.setQuery({
-            origin: 'in-page',
-            value: this.$route.query.q
-          })
-        }
+    isLoading(newVal) {
+      if (!newVal && this.$route.query?.q) {
+        this.searchCatalog({ value: this.$route.query.q, position: 'page' })
+      }
+    },
+    pageQuery(newVal) {
+      if (newVal && String(newVal) !== '') {
+        this.searchCatalog({ value: newVal, position: 'page' })
       }
     }
   },
-  created() {
-    if (process.browser) {
-      if (!this.filteredData) {
-        this.getProductData()
-      }
-    }
+  mounted() {
+    this.refreshQuery()
+  },
+  activated() {
+    this.refreshQuery()
   },
   methods: {
-    ...mapMutations('search', ['setFilteredData']),
-    ...mapMutations('search', ['setQuery']),
-    ...mapActions('search', ['getProductData']),
-    updateFilteredData(data) {
-      this.setFilteredData(data)
+    ...mapMutations('search', ['setFilteredData', 'setQuery']),
+    ...mapActions('search', ['searchCatalog']),
+
+    refreshQuery() {
+      if (!this.isLoading && this.$route.query?.q) {
+        this.setQuery({
+          query: this.$route.query.q,
+          position: this.position
+        })
+      }
     }
   }
 }

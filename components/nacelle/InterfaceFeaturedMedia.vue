@@ -1,21 +1,15 @@
 <template>
-  <div class="featured-media nacelle">
-    <figure v-if="source && type.includes('image')">
-      <picture>
-        <source :srcset="optimizeSource({ url: media.src })" />
-        <source :srcset="optimizeSource({ url: media.src, format: 'webp' })" type="image/webp" />
-        <source :srcset="optimizeSource({ url: media.src, format: 'jpg' })" type="image/jpg" />
-        <img :src="media.src" />
-      </picture>
+  <div v-if="src" class="featured-media nacelle">
+    <figure v-if="type.includes('image')">
+      <nacelle-image v-bind="{ src, alt, width }" />
     </figure>
-    <video v-if="source && type.includes('video')">
-      <source :src="media.src" :type="type" />
+    <video v-if="type.includes('video')">
+      <source :src="src" :type="type" />
     </video>
   </div>
 </template>
 
 <script>
-import imageOptimize from '~/mixins/imageOptimize'
 export default {
   props: {
     media: {
@@ -23,28 +17,21 @@ export default {
       default: () => {}
     },
     width: {
-      type: Number
+      type: Number,
+      required: true
+    },
+    alt: {
+      type: String,
+      default: ''
     }
   },
   computed: {
-    source() {
-      if (this.media && this.media.src) {
-        return this.media.src
-      }
-
-      return null
+    src() {
+      return this.media?.src
     },
     type() {
-      if (this.media && this.media.type) {
-        return this.media.type
-      }
-
-      return 'image'
+      return this.media?.type || 'image'
     }
-  },
-  mixins: [imageOptimize]
+  }
 }
 </script>
-
-<style>
-</style>

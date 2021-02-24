@@ -1,12 +1,8 @@
 <template>
   <div class="product-recommendations" :class="orientation">
-    <div
-      v-for="handle in recommendations"
-      :key="handle"
-      @click="onClick(handle)"
-    >
+    <div v-for="handle in recommendations" :key="handle">
       <slot :product="getProduct(handle)">
-        <product-card :productHandle="handle"></product-card>
+        <product-card :product-handle="handle"></product-card>
       </slot>
     </div>
   </div>
@@ -14,12 +10,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import ProductCard from '~/components/nacelle/ProductCard'
 
 export default {
-  components: {
-    ProductCard
-  },
   props: {
     productHandle: {
       type: String,
@@ -43,23 +35,15 @@ export default {
       const recommendations = this.getRecommendations(this.productHandle, {
         limit: this.limit
       })
-      const handles = recommendations.map(r => r.handle)
+      const handles = recommendations.map((r) => r.handle)
       return handles
-    }
-  },
-  methods: {
-    ...mapActions('products', ['loadProductRecommendations']),
-    ...mapActions('events', ['productRecommendation']),
-    onClick(handle) {
-      this.productRecommendation({
-        sourceHandles: [this.productHandle],
-        recommendedHandles: this.recommendations,
-        clickedHandle: handle
-      })
     }
   },
   created() {
     this.loadProductRecommendations({ productHandle: this.productHandle })
+  },
+  methods: {
+    ...mapActions('products', ['loadProductRecommendations'])
   }
 }
 </script>

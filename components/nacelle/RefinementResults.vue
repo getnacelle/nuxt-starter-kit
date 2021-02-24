@@ -1,133 +1,113 @@
 <template>
   <div>
     <transition name="fade" mode="out-in">
-      <div
-        v-if="searchResults && searchResults.length == 0"
-        key="no-results"
-        class="no-results"
-      >
-        <slot name="no-results"></slot>
+      <div v-if="isLoading" key="loading">
+        <slot name="loading" />
       </div>
-      <div key="results" class="search-results" v-else>
+      <div v-else-if="searchData.length" key="results" class="search-results">
         <h2>
-          Showing {{ searchResults.length }} {{ itemSinglularPlural }} based on
+          Showing {{ searchData.length }} {{ itemSinglularPlural }} based on
           selected filters
         </h2>
-        <slot name="result" :result="searchResultsSlice"></slot>
-        <div ref="load-more"></div>
+        <slot name="results" :results="visibleResults" />
+        <observe-emitter @observe="showMore" />
+        <div v-if="isFetching" style="text-align: center">
+          Loading products...
+        </div>
+      </div>
+      <div v-else key="no-results" class="no-results">
+        <slot name="no-results" />
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import Fuse from 'fuse.js'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState } from 'vuex'
+import productModule from '~/store/product/productModule'
+
 export default {
   props: {
-    searchKeys: {
-      type: Array,
-      default: () => {
-        return ['title']
-      }
-    },
     searchData: {
-      type: Array
-    },
-    searchQuery: {
-      type: Object
-    },
-    relevanceThreshold: {
-      type: Number,
-      default: 0.5
-    }
-  },
-  watch: {
-    filteredData(newData, oldData) {
-      if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
-        this.resetResults()
-      }
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
-      searchRes: null,
-      pageHeight: null
+      fetchBuffer: 12,
+      isFetching: 0,
+      resultsToDisplay: 12,
+      loadedResults: []
     }
   },
   computed: {
-    ...mapState('search', ['resultsToDisplay', 'filteredData']),
+    ...mapState('search', ['isLoading']),
+
     itemSinglularPlural() {
-      if (this.searchResults && this.searchResults.length === 1) {
-        return 'item'
-      } else if (this.searchResults && this.searchResults.length > 1) {
-        return 'items'
-      } else {
-        return 'items'
-      }
+      return this.searchData?.length === 1 ? 'item' : 'items'
     },
-    searchResults() {
-      if (
-        this.searchData &&
-        this.searchQuery &&
-        this.searchQuery.value &&
-        String(this.searchQuery.value) !== ''
-      ) {
-        const options = {
-          keys: this.searchKeys,
-          threshold: this.relevanceThreshold
-        }
-        const results = new Fuse(this.searchData, options)
-          .search(String(this.searchQuery.value))
-          .map(result => result.item)
-
-        this.$emit('results')
-
-        const trackSearchEvent = this.debounce(this.search, 500)
-        trackSearchEvent({
-          query: this.searchQuery.value,
-          resultCount: results.length
-        })
-
-        return results
-      }
-
-      this.$emit('no-query')
-
-      return this.searchData
-    },
-    searchResultsSlice() {
-      return this.searchResults.slice(0, this.resultsToDisplay)
+    visibleResults() {
+      return this.loadedResults.slice(0, this.resultsToDisplay)
     }
+  },
+  watch: {
+    searchData(newData, oldData) {
+      if (
+        newData.map((p) => p.handle).join('') !==
+        oldData.map((p) => p.handle).join('')
+      ) {
+        this.resultsToDisplay = 12
+        this.loadedResults = []
+      }
+      this.fetchProducts(0, this.resultsToDisplay + this.fetchBuffer)
+    }
+  },
+
+  beforeDestroy() {
+    this.loadedResults.forEach((product) => {
+      const namespace = `product/${product.handle}`
+      this.$store.commit(`${namespace}/unloadProduct`)
+    })
   },
   methods: {
-    ...mapMutations('search', ['showMoreResults', 'resetResults']),
-    ...mapActions('events', ['search']),
-    debounce(fn, debounceTime) {
-      return (...args) => {
-        if (this.timeout !== null) {
-          clearTimeout(this.timeout)
-        }
-
-        this.timeout = setTimeout(() => fn(...args), debounceTime)
+    showMore() {
+      if (this.loadedResults.length > 12) {
+        const currentCount = this.resultsToDisplay
+        const fetchCursor = currentCount + this.fetchBuffer
+        this.resultsToDisplay = currentCount + 12
+        this.fetchProducts(fetchCursor, fetchCursor + 12)
       }
+    },
+    async fetchProducts(start, end) {
+      this.isFetching = true
+
+      const products = this.searchData
+        .slice(start, end)
+        .map(({ handle }, index) => {
+          this.$set(this.loadedResults, index + start, {
+            handle,
+            isLoading: true
+          })
+          return handle
+        })
+        .map(async (handle, index) => {
+          const namespace = `product/${handle}`
+          if (!this.$store.hasModule(namespace)) {
+            this.$store.registerModule(namespace, productModule(), {
+              preserveState: !!this.$store.state[namespace]
+            })
+          }
+          const product = await this.$store.dispatch(
+            `${namespace}/fetchProduct`,
+            handle
+          )
+          this.$set(this.loadedResults, index + start, product)
+        })
+
+      await Promise.all(products)
+      this.isFetching = false
     }
-  },
-  mounted() {
-    setTimeout(() => {
-      if (this.$refs['load-more']) {
-        const options = {
-          root: null,
-          rootMargin: '250px',
-          threshold: 1
-        }
-        const observer = new IntersectionObserver(this.showMoreResults, options)
-        const observee = this.$refs['load-more']
-
-        observer.observe(observee)
-        this.isObserverInitialized = true
-      }
-    }, 5000)
   }
 }
 </script>

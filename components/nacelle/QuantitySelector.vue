@@ -2,9 +2,9 @@
   <div class="quantity-updater no-select nacelle">
     <input
       :value="quantity"
-      @input="update(Number($event.target.value))"
       class="quantity-input"
       type="text"
+      @input="update(Number($event.target.value))"
     />
     <div class="switches">
       <div
@@ -34,7 +34,8 @@ const timeInterval = 100
 export default {
   props: {
     item: {
-      type: Object
+      type: Object,
+      default: () => ({})
     },
     quantity: {
       type: Number,
@@ -55,7 +56,7 @@ export default {
      *  Allows us to await a setTimeout by return a Promise
      * @param milliseconds - ms argument for setTimeout
      */
-    wait (milliseconds) {
+    wait(milliseconds) {
       return new Promise((resolve, reject) => setTimeout(resolve, milliseconds))
     },
     /**
@@ -91,7 +92,7 @@ export default {
      *  Start a repetitive call to increment and decrement method after a timeInterval on mousedown event and will stop on mouseup event on controls
      * @param handler - increment or decrement method
      */
-    async start (handler) {
+    async start(handler) {
       document.addEventListener('mouseup', this.stop)
       this.startTime = new Date()
       this.handler = handler
@@ -105,7 +106,7 @@ export default {
      * clear interval on mouseup event and remove the listener
      * @param evt - event to be removed
      */
-    stop (evt) {
+    stop(evt) {
       document.removeEventListener(evt.type, this.stop)
       this.handler()
       clearInterval(this.interval)

@@ -1,19 +1,35 @@
 <template>
   <div class="variant-select nacelle">
     <product-options
-      v-show="showProductOptions"
-      :productHandle="productHandle"
-    />
+      v-if="product.variants.length > 1 && options && options.length"
+      :options="options"
+    >
+      <template #swatch="{ option }">
+        <product-option-swatch
+          v-for="{ value } in option.values"
+          :key="value"
+          v-bind="{
+            value,
+            optionName: option.name,
+            variants: product.variants,
+            handle: product.handle,
+            selectedVariant
+          }"
+          swatch-style="tab"
+        />
+      </template>
+    </product-options>
+
     <slot name="above-button"></slot>
     <div class="columns is-mobile">
-      <div v-if="displayQuantitySelect" class="column auto">
+      <div v-if="showQuantitySelect" class="column auto">
         <quantity-selector :quantity.sync="quantity" />
       </div>
       <div class="column auto">
         <product-add-to-cart-button
+          :product="product"
+          :variant="selectedVariant"
           :quantity="quantity"
-          :productHandle="product.handle"
-          :allOptionsSelected="allOptionsSelected(productHandle)"
         />
       </div>
     </div>
@@ -21,63 +37,28 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-import ProductOptions from '~/components/nacelle/ProductOptions'
-import QuantitySelector from '~/components/nacelle/QuantitySelector'
-import ProductAddToCartButton from '~/components/nacelle/ProductAddToCartButton'
-
 export default {
   props: {
-    productHandle: {
-      type: String,
-      default: ''
-    },
     showQuantitySelect: {
       type: Boolean,
       default: true
+    },
+    product: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
     return {
-      quantity: 0
+      quantity: 1
     }
   },
-  components: {
-    ProductOptions,
-    QuantitySelector,
-    ProductAddToCartButton
-  },
   computed: {
-    ...mapGetters('products', [
-      'getProduct',
-      'getSelectedVariant',
-      'allOptionsSelected',
-      'getAllOptions'
-    ]),
-    product() {
-      return this.getProduct(this.productHandle)
-    },
-    allOptions() {
-      return this.getAllOptions(this.productHandle)
-    },
     selectedVariant() {
-      return this.getSelectedVariant(this.productHandle)
+      return this.$store.state[`product/${this.product.handle}`].selectedVariant
     },
-    showProductOptions() {
-      return (
-        Array.isArray(this.allOptions) &&
-        this.allOptions.length >= 1 &&
-        this.allOptions[0].values.length > 1 &&
-        this.product.availableForSale
-      )
-    },
-    displayQuantitySelect() {
-      return (
-        this.allOptionsSelected(this.productHandle) &&
-        this.selectedVariant &&
-        this.selectedVariant.availableForSale &&
-        this.showQuantitySelect
-      )
+    options() {
+      return this.$store.state[`product/${this.product.handle}`].options
     }
   }
 }

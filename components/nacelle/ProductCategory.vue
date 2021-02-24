@@ -2,7 +2,7 @@
   <div class="product-category nacelle">
     <slot :category="category">
       <p class="product-category-text">
-        {{category}}
+        {{ category }}
       </p>
     </slot>
   </div>

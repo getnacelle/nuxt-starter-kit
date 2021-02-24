@@ -8,16 +8,16 @@ export default {
       locale: 'en-us',
       data: {
         products({ handles }) {
-          const products = handles.map(handle => defaultProduct)
+          const products = handles.map(() => defaultProduct)
 
-          return new Promise(resolve => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               resolve(products)
             }, 100)
           })
         },
         content({ handle, type }) {
-          return new Promise(resolve => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               resolve({
                 id: '12345',
@@ -33,7 +33,7 @@ export default {
           })
         },
         collection({ handle }) {
-          return new Promise(resolve => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               resolve(staticCollection)
             })

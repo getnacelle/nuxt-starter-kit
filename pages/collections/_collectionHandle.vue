@@ -1,137 +1,67 @@
 <!--
 /****
-/* Product collections are loaded with the getCollection mixin.
 /* For information about creating collections, please refer to:
 /*
 /* https://docs.getnacelle.com/nuxt/collections.html#adding-content-to-collections-pages
 /****
 -->
 <template>
-  <div class="page page-shop" v-if="collection">
-    <content-hero-banner
-      v-if="collection"
-      :title="collection.title"
-      :imageUrl="featuredImage"
-    />
+  <div v-if="collection" class="page page-collection">
+    <page-content class="page" :page="page" />
     <section class="section">
       <div class="container">
         <div class="columns is-multiline">
           <product-grid
-            v-if="products && products.length > 0"
-            :products="products"
-            :showAddToCart="true"
-            :showQuantityUpdate="true"
+            v-if="visibleProducts.length"
+            :products="visibleProducts"
+            :show-add-to-cart="true"
+            :show-quantity-update="true"
           />
         </div>
       </div>
-      <observe-emitter v-on:observe="fetchMore" />
+      <observe-emitter @observe="showMore" />
+      <div v-if="isFetching" style="text-align: center">
+        Loading products...
+      </div>
     </section>
   </div>
 </template>
 
 <script>
-import getCollection from '~/mixins/getCollection'
-import viewEvent from '~/mixins/viewEvent'
-import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
-import ProductGrid from '~/components/nacelle/ProductGrid'
-import ObserveEmitter from '~/components/nacelle/ObserveEmitter'
-import { mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
+import productModule from '~/store/product/productModule'
+
 export default {
-  name: 'collection',
-  components: {
-    ContentHeroBanner,
-    ProductGrid,
-    ObserveEmitter
-  },
-  mixins: [
-    getCollection(),
-    viewEvent('collection')
-  ],
-  computed: {
-    productData() {
-      if (this.products) {
-        return this.products.map(product => {
-          const { tags, variants, ...rest } = product
-
-          /// //////////////////////////
-          /// //////////////////////////
-          // Get product filter facets from variant data
-          const variantOptions = variants.map(variant => {
-            return variant.selectedOptions
-          })
-
-          const variantFacets = variantOptions
-            .reduce((acc, item) => {
-              return acc.concat(item)
-            }, [])
-            .map(option => JSON.stringify(option))
-
-          const facets = Array.from(new Set(variantFacets))
-            .map(option => JSON.parse(option))
-            .map(option => {
-              return { name: option.name.toLowerCase(), value: option.value }
-            })
-
-          /// //////////////////////////
-          /// //////////////////////////
-          // Get product filter facets from tags. Tags should be formatted "filter_property-name_value"
-          const rootFacets = tags.filter(tag => tag.includes('filter'))
-
-          rootFacets.forEach(facet => {
-            const facetFragments = facet.split('_')
-            const facetName = facetFragments[1]
-            const facetValue = () => {
-              const fragments = facetFragments[2].split('-')
-              return fragments
-                .map(fragment => {
-                  return `${fragment
-                    .charAt(0)
-                    .toUpperCase()}${fragment.substring(1)}`
-                })
-                .join(' ')
-            }
-
-            rest[facetName] = facetValue()
-            facets.push({ name: facetName, value: facetValue() })
-          })
-
-          if (product.productType) {
-            facets.push({ name: 'productType', value: product.productType })
-          }
-
-          rest.minPrice = rest.priceRange.min
-
-          return { ...rest, tags, variantOptions, variants, facets }
-        })
-      }
-
-      return []
-    },
-    ...mapGetters('space', ['getMetatag']),
-    featuredImage() {
-      if (
-        this.collection &&
-        this.collection.featuredMedia &&
-        this.collection.featuredMedia.src
-      ) {
-        return this.collection.featuredMedia.src
-      }
-
-      return null
+  data() {
+    return {
+      collection: null,
+      collectionProducts: [],
+      productVisibilityCount: 12,
+      fetchBuffer: 12,
+      isFetching: false,
+      page: null
     }
+  },
+  async fetch() {
+    const { collectionHandle: handle } = this.$route.params
+
+    this.collection = await this.$nacelle.data
+      .collection({ handle })
+      .catch(() => console.warn(`No collection with handle: '${handle}' found`))
+
+    this.page = await this.$nacelle.data
+      .page({ handle })
+      .catch(() => console.warn(`No page with handle: '${handle}' found`))
+
+    await this.fetchProducts(0, this.productVisibilityCount + this.fetchBuffer)
   },
   head() {
     if (this.collection) {
       const properties = {}
       const meta = []
-      const title = this.getMetatag('title')
 
       if (this.collection.title) {
-        let fullTitle = this.collection.title
-
-        if (title) {
-          fullTitle = `${fullTitle} | ${title.value}`
-        }
+        const fullTitle = this.collection.title
 
         properties.title = fullTitle
         meta.push({
@@ -154,24 +84,93 @@ export default {
         })
       }
 
-      if (this.featuredImage) {
-        meta.push({
-          hid: 'og:image',
-          property: 'og:image',
-          content: this.featuredImage
-        })
-      }
-
       return {
         ...properties,
         meta
       }
+    }
+  },
+  computed: {
+    visibleProducts() {
+      if (this.collectionProducts.length) {
+        return this.collectionProducts.slice(0, this.productVisibilityCount)
+      }
+      return []
+    }
+  },
+  mounted() {
+    if (this.collection) {
+      this.collectionProducts.forEach((product) => {
+        const namespace = `product/${product.handle}`
+        if (!this.$store.hasModule(namespace)) {
+          this.$store.registerModule(namespace, productModule(), {
+            preserveState: !!this.$store.state[namespace]
+          })
+          this.$store.dispatch(`${namespace}/setupProduct`, product)
+        }
+        this.$store.dispatch(`${namespace}/storeProduct`, product)
+      })
+      this.collectionView({ collection: this.collection })
+    }
+  },
+  beforeDestroy() {
+    this.collectionProducts.forEach((product) => {
+      const namespace = `product/${product.handle}`
+      this.$store.commit(`${namespace}/unloadProduct`)
+    })
+  },
+  methods: {
+    ...mapActions('events', ['collectionView']),
+
+    showMore() {
+      if (!this.collection) {
+        return
+      }
+      const currentCount = this.productVisibilityCount
+      const fetchCursor = currentCount + this.fetchBuffer
+      this.productVisibilityCount = currentCount + 12
+      this.fetchProducts(fetchCursor, fetchCursor + 12)
+    },
+    async fetchProducts(start, end) {
+      if (!this.collection?.productLists[0]?.handles) {
+        return
+      }
+      this.isFetching = true
+
+      const products = this.collection.productLists[0].handles
+        .slice(start, end)
+        .map((handle, index) => {
+          this.$set(this.collectionProducts, index + start, {
+            handle,
+            isLoading: true
+          })
+          return handle
+        })
+        .map(async (handle, index) => {
+          const namespace = `product/${handle}`
+          if (!this.$store.hasModule(namespace)) {
+            this.$store.registerModule(namespace, productModule(), {
+              preserveState: !!this.$store.state[namespace]
+            })
+          }
+          const product = await this.$store.dispatch(
+            `${namespace}/fetchProduct`,
+            handle
+          )
+          this.$set(this.collectionProducts, index + start, product)
+        })
+
+      await Promise.all(products)
+      this.isFetching = false
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.page-collection {
+  min-height: 85vh;
+}
 .product {
   .title {
     font-weight: bold;

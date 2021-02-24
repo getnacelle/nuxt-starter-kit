@@ -1,37 +1,55 @@
 <template>
   <div class="page page-shop">
-    <content-hero-banner
-      title="Wishlist"
-    />
+    <content-hero-banner title="Wishlist" />
     <section class="section">
       <div class="container">
-        <div class="columns is-multiline">
-          <product-grid
-            v-if="products && products.length > 0"
-            :products="products"
-            :showAddToCart="true"
-            :showQuantityUpdate="true"
-          />
-        </div>
+        <product-grid
+          :products="productData"
+          :show-add-to-cart="true"
+          :show-quantity-update="true"
+        />
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import ContentHeroBanner from '~/components/nacelle/ContentHeroBanner'
-import ProductGrid from '~/components/nacelle/ProductGrid'
 import { mapState } from 'vuex'
-
+import productModule from '~/store/product/productModule'
 export default {
-  components: {
-    ContentHeroBanner,
-    ProductGrid
+  data() {
+    return {
+      productData: null
+    }
   },
   computed: {
     ...mapState('wishlist', ['items']),
     products() {
-      return this.items.map(item => item.product)
+      return this.items.map((item) => item.product)
+    }
+  },
+  watch: {
+    async products() {
+      await this.fetchProducts()
+    }
+  },
+  methods: {
+    async fetchProducts() {
+      const products = this.products.map((product) => {
+        const namespace = `product/${product.handle}`
+        if (!this.$store.hasModule(namespace)) {
+          this.$store.registerModule(namespace, productModule(), {
+            preserveState: false
+          })
+        }
+        return this.$store.dispatch(`${namespace}/fetchProduct`, product.handle)
+      })
+      this.productData = await Promise.all(products)
+    }
+  },
+  async mounted() {
+    if (this.products) {
+      await this.fetchProducts()
     }
   }
 }

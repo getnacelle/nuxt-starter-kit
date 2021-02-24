@@ -1,92 +1,47 @@
 <template>
   <div>
     <transition name="fade" mode="out-in">
-      <div
-        v-if="searchResults && searchResults.length == 0"
-        key="no-results"
-        class="no-results"
-      >
-        <slot name="no-results"></slot>
+      <div v-if="isLoading" key="loading">
+        <slot name="loading" />
       </div>
-      <div key="results" class="search-results" v-else>
-        <slot name="result" :result="searchResults"></slot>
+      <div
+        v-else-if="globalResults.length"
+        key="results"
+        class="search-results"
+      >
+        <slot name="result" :result="globalResults" />
+      </div>
+      <div v-else key="no-results" class="no-results">
+        <slot name="no-results" />
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import Fuse from 'fuse.js'
-import { mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   props: {
-    searchKeys: {
-      type: Array,
-      default: () => {
-        return ['title']
-      }
-    },
-    searchData: {
-      type: Array
-    },
     searchQuery: {
-      type: Object
-    },
-    relevanceThreshold: {
-      type: Number,
-      default: 0.5
-    }
-  },
-  data() {
-    return {
-      searchRes: null
+      type: String,
+      default: null
     }
   },
   computed: {
-    searchResults() {
-      if (
-        this.searchData &&
-        this.searchQuery &&
-        this.searchQuery.value &&
-        String(this.searchQuery.value) !== ''
-      ) {
-        const options = {
-          keys: this.searchKeys,
-          threshold: this.relevanceThreshold
-        }
-        const results = new Fuse(this.searchData, options)
-          .search(String(this.searchQuery.value))
-          .filter(result => typeof result.item !== 'undefined')
-          .map(result => result.item)
-
-        this.$emit('results')
-
-        const trackSearchEvent = this.debounce(this.search, 500)
-        trackSearchEvent({
-          query: this.searchQuery.value,
-          resultCount: results.length
-        })
-
-        return results
+    ...mapState('search', ['isLoading', 'globalResults'])
+  },
+  watch: {
+    searchQuery(newVal) {
+      if (newVal && String(newVal) !== '') {
+        this.setAutocompleteVisible(true)
+        this.searchCatalog({ value: newVal, position: 'global' })
       }
-
-      this.$emit('no-query')
-
-      return this.searchData
     }
   },
   methods: {
-    ...mapActions('events', ['search']),
-    debounce(fn, debounceTime) {
-      return (...args) => {
-        if (this.timeout !== null) {
-          clearTimeout(this.timeout)
-        }
-
-        this.timeout = setTimeout(() => fn(...args), debounceTime)
-      }
-    }
+    ...mapActions('search', ['searchCatalog']),
+    ...mapMutations('search', ['setAutocompleteVisible'])
   }
 }
 </script>

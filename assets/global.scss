@@ -7,10 +7,8 @@
 
 /* secondary background color is F8F7F5 */
 
-@import url('https://fonts.googleapis.com/css?family=Noto+Serif+SC&display=swap');
-@import url('https://use.typekit.net/jcb5tgv.css');
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css');
+
 h1,
 h2,
 h3,
@@ -37,33 +35,15 @@ span {
   border-bottom: 1px solid #dedede;
 }
 
-.modal-title {
-  text-align: center;
-  font-size: 18pt;
-}
+/* Transitions */
 
-/* Global */
-.app {
-  color: #3b3b3b;
-  font-family: 'brandon-grotesque', sans-serif;
-  font-weight: 400;
-  font-style: normal;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
-
-.app h1,
-.app h2,
-.app h3,
-.app h4,
-.app h5,
-.app h6 {
-  font-family: 'Noto Serif SC', serif;
-  font-weight: 500;
-}
-
-.app a {
-  font-family: 'brandon-grotesque', sans-serif;
-  font-weight: 400;
-  font-style: normal;
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 
 /* Header */
@@ -159,6 +139,7 @@ span {
   border-left: 1px solid #dedede7a;
   box-shadow: 20px 0px 20px 20px #e6e6e6c4;
   z-index: 999;
+  transition: ease-in-out transform 250ms;
 
   @media screen and (max-width: 768px) {
     width: 100%;
@@ -207,11 +188,6 @@ span {
 
 .nav-flyout .navbar-item img {
   max-height: none;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.32s ease;
 }
 
 .nav-flyout.slide-enter, .nav-flyout.slide-leave-to /* .fade-leave-active below version 2.1.8 */ {

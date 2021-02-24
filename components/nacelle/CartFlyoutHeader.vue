@@ -1,32 +1,18 @@
 <template>
   <div class="flyout-cart-header ui-border-bottom nacelle">
-    <slot
-      name="title"
-      :title="title"
-    >
-      <component
-        :is="titleTag"
-        class="flyout-cart-hearder-title"
-      >
+    <slot name="title" :title="title">
+      <component :is="titleTag" class="flyout-cart-hearder-title">
         {{ title }}
       </component>
     </slot>
     <slot name="close-button">
-      <interface-close-button
-        class="close"
-        @close="close"
-      />
+      <interface-close-button class="close" @close="close" />
     </slot>
   </div>
 </template>
 
 <script>
-import InterfaceCloseButton from '~/components/nacelle/InterfaceCloseButton'
-
 export default {
-  components: {
-    InterfaceCloseButton
-  },
   props: {
     title: {
       type: String,
@@ -38,7 +24,7 @@ export default {
     }
   },
   methods: {
-    close () {
+    close() {
       this.$emit('close')
     }
   }

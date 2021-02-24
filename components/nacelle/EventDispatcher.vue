@@ -1,51 +1,53 @@
 <template>
-  <div></div>
+  <div aria-hidden="true"></div>
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
 
+import { decode } from 'js-base64'
 export default {
   computed: {
     ...mapState('events', ['log']),
     ...mapState(['facebookCatalogID']),
     ...mapGetters('cart', ['quantityTotal']),
     ...mapState('cart', ['lineItems']),
+
     productIDs() {
-      const productIDs = this.lineItems.map(item => {
+      const productIDs = this.lineItems.map((item) => {
         return this.decodeBase64VariantId(item.id)
       })
       return productIDs
     },
     logEntry() {
-      return JSON.parse(JSON.stringify(this.log)).pop()
+      return this.log[this.log.length - 1]
     },
     fbq() {
-      return process.browser ? window.fbq : undefined
+      return process.client ? window.fbq : undefined
     },
     ga() {
-      return process.browser ? window.ga : undefined
+      return process.client ? window.ga : undefined
     }
   },
   watch: {
-    log(log) {
+    log() {
       if (process.client) {
         switch (this.logEntry.eventType) {
-          case 'pageView':
+          case 'PAGE_VIEW':
             this.facebookPageView()
             this.googleAnalyticsPageView()
             break
-          case 'productView':
+          case 'PRODUCT_VIEW':
             this.facebookProductView()
             this.googleAnalyticsProductView()
             break
-          case 'cartAdd':
+          case 'ADD_TO_CART':
             this.facebookAddToCart()
             this.googleAnalyticsAddToCart()
             break
-          case 'cartRemove':
+          case 'REMOVE_FROM_CART':
             this.googleAnalyticsRemoveFromCart()
             break
-          case 'checkoutInit':
+          case 'CHECKOUT_INIT':
             this.facebookCheckoutInitiate()
             break
         }
@@ -55,18 +57,14 @@ export default {
   methods: {
     decodeBase64ProductId(encodedId) {
       const variantIdBase64 = encodedId.split('::')[0]
-      const variantIdString = Buffer.from(variantIdBase64, 'base64').toString(
-        'ascii'
-      )
+      const variantIdString = decode(variantIdBase64)
       const variantId = variantIdString.split('gid://shopify/Product/')[1]
 
       return variantId
     },
     decodeBase64VariantId(encodedId) {
       const variantIdBase64 = encodedId.split('::')[0]
-      const variantIdString = Buffer.from(variantIdBase64, 'base64').toString(
-        'ascii'
-      )
+      const variantIdString = decode(variantIdBase64)
       const variantId = variantIdString.split(
         'gid://shopify/ProductVariant/'
       )[1]
@@ -81,7 +79,7 @@ export default {
     },
     googleAnalyticsPageView() {
       if (typeof this.ga !== 'undefined') {
-        this.ga('send', 'pageview', this.logEntry.path)
+        this.ga('send', 'pageview', this.logEntry.payload.path)
       }
     },
 
@@ -89,8 +87,10 @@ export default {
     facebookProductView() {
       if (typeof this.fbq !== 'undefined') {
         this.fbq('track', 'ViewContent', {
-          content_ids: this.decodeBase64ProductId(this.logEntry.product.id),
-          content_name: this.logEntry.product.title,
+          content_ids: this.decodeBase64ProductId(
+            this.logEntry.payload.product.id
+          ),
+          content_name: this.logEntry.payload.product.title,
           content_type: 'product',
           product_catalog_id: this.facebookCatalogID
         })
@@ -99,8 +99,8 @@ export default {
     googleAnalyticsProductView() {
       if (typeof this.ga !== 'undefined') {
         this.ga('ec:addProduct', {
-          id: this.decodeBase64ProductId(this.logEntry.product.id),
-          name: this.logEntry.product.title
+          id: this.decodeBase64ProductId(this.logEntry.payload.product.id),
+          name: this.logEntry.payload.product.title
         })
         this.ga('ec:setAction', 'detail')
         this.ga('send', 'pageview')
@@ -112,11 +112,11 @@ export default {
       if (typeof this.fbq !== 'undefined') {
         this.fbq('track', 'AddToCart', {
           content_ids: this.decodeBase64VariantId(
-            this.logEntry.product.variant.id
+            this.logEntry.payload.product.variant.id
           ),
-          content_name: this.logEntry.product.variant.title,
+          content_name: this.logEntry.payload.product.variant.title,
           content_type: 'product',
-          value: this.logEntry.product.variant.price,
+          value: this.logEntry.payload.product.variant.price,
           currency: 'USD',
           product_catalog_id: this.facebookCatalogID
         })
@@ -125,8 +125,10 @@ export default {
     googleAnalyticsAddToCart() {
       if (typeof this.ga !== 'undefined') {
         this.ga('ec:addProduct', {
-          id: this.decodeBase64ProductId(this.logEntry.product.variant.id),
-          name: this.logEntry.product.variant.title
+          id: this.decodeBase64ProductId(
+            this.logEntry.payload.product.variant.id
+          ),
+          name: this.logEntry.payload.product.variant.title
         })
         this.ga('ec:setAction', 'add')
         this.ga('send', 'event', 'UX', 'click', 'add to cart')
@@ -137,8 +139,8 @@ export default {
     googleAnalyticsRemoveFromCart() {
       if (typeof this.ga !== 'undefined') {
         this.ga('ec:addProduct', {
-          id: this.logEntry.product.variant.id,
-          name: this.logEntry.product.variant.title
+          id: this.logEntry.payload.product.variant.id,
+          name: this.logEntry.payload.product.variant.title
         })
         this.ga('ec:setAction', 'remove')
         this.ga('send', 'event', 'UX', 'click', 'remove from cart')
@@ -149,7 +151,7 @@ export default {
     facebookCheckoutInitiate() {
       if (typeof this.fbq !== 'undefined') {
         this.fbq('track', 'InitiateCheckout', {
-          content_ids: this.productIDs.map(id => {
+          content_ids: this.productIDs.map((id) => {
             return this.decodeBase64ProductId(id)
           }),
           content_type: 'product',

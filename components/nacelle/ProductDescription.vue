@@ -13,7 +13,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .product-description {
   margin-bottom: 1rem;
 }

@@ -3,12 +3,12 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import VueCurrencyFilter from 'vue-currency-filter'
-Vue.use(VueCurrencyFilter)
 export default {
   props: {
-    price: [String, Number],
+    price: {
+      type: [String, Number],
+      default: ''
+    },
     currencyCode: {
       type: String,
       default: 'USD'

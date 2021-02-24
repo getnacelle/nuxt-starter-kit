@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 export default {
   props: {
     checkoutText: {
@@ -36,8 +36,7 @@ export default {
             // Allows processing after checkout create and before redirecting.
           }
         })
-      } catch(err) {
-        console.log(err)
+      } catch (err) {
         this.setCartError(err)
         this.loading = false
       }

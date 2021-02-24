@@ -1,99 +1,42 @@
 export const state = () => ({
-  query: null,
+  searchData: {
+    products: []
+  },
+  searchOptions: {
+    relevanceThreshold: 0.5,
+    keys: ['title']
+  },
+  searchWorker: null,
+
+  // global search state
+  globalQuery: null,
+  globalResults: [],
+  isSearchingGlobal: false,
   autocompleteVisible: false,
-  filtersCleared: false,
-  searchData: {},
+
+  // in-page search state
+  pageQuery: null,
+  pageResults: [],
   filteredData: null,
-  loadedData: false,
-  searchLoading: false,
+  isLoading: false,
   resultsToDisplay: 12
 })
 
 export const getters = {
-  queryOrigin(state) {
-    if (state.query && state.query.origin) {
-      return state.query.origin
-    }
-
-    return undefined
-  },
-
   hasProductData(state) {
-    return (
-      state.searchData &&
-      state.searchData.products &&
-      state.searchData.products.length > 0
-    )
+    return state.searchData.products.length > 0
   },
 
-  productData(state) {
-    if (
-      state.searchData &&
-      state.searchData.products &&
-      state.searchData.products.length > 0
-    ) {
-      return state.searchData.products.map(product => {
-        const { tags, variants, ...rest } = product
-
-        /// //////////////////////////
-        /// //////////////////////////
-        // Get product filter facets from variant data
-        const variantOptions = variants.map(variant => {
-          return variant.selectedOptions
-        })
-
-        const variantFacets = variantOptions
-          .reduce((acc, item) => {
-            return acc.concat(item)
-          }, [])
-          .map(option => JSON.stringify(option))
-
-        const facets = Array.from(new Set(variantFacets))
-          .map(option => JSON.parse(option))
-          .map(option => {
-            return { name: option.name.toLowerCase(), value: option.value }
-          })
-
-        /// //////////////////////////
-        /// //////////////////////////
-        // Get product filter facets from tags. Tags should be formatted "filter_property-name_value"
-        const rootFacets = tags.filter(tag => tag.includes('filter'))
-
-        rootFacets.forEach(facet => {
-          const facetFragments = facet.split('_')
-          const facetName = facetFragments[1]
-          const facetValue = () => {
-            const fragments = facetFragments[2].split('-')
-            return fragments
-              .map(fragment => {
-                return `${fragment.charAt(0).toUpperCase()}${fragment.substring(
-                  1
-                )}`
-              })
-              .join(' ')
-          }
-
-          rest[facetName] = facetValue()
-          facets.push({ name: facetName, value: facetValue() })
-        })
-
-        if (product.productType) {
-          facets.push({ name: 'productType', value: product.productType })
-        }
-
-        rest.minPrice = rest.priceRange.min
-
-        return { ...rest, tags, variantOptions, variants, facets }
-      })
-    }
-
-    return []
+  productData(state, getters) {
+    return getters.hasProductData ? state.searchData.products : []
   }
 }
 
 export const mutations = {
-  setQuery(state, query) {
-    state.query = query
+  setQuery(state, { query, position }) {
+    position === 'global'
+      ? (state.globalQuery = query)
+      : (state.pageQuery = query)
   },
 
   setFilteredData(state, data) {
@@ -108,20 +51,8 @@ export const mutations = {
     state.resultsToDisplay = 12
   },
 
-  setAutocompleteVisible(state) {
-    state.autocompleteVisible = true
-  },
-
-  setAutocompleteNotVisible(state) {
-    state.autocompleteVisible = false
-  },
-
-  setFiltersCleared(state) {
-    state.filtersCleared = true
-  },
-
-  setFiltersNotCleared(state) {
-    state.filtersCleared = false
+  setAutocompleteVisible(state, isVisible) {
+    state.autocompleteVisible = isVisible
   },
 
   setSearchData(state, data) {
@@ -131,45 +62,51 @@ export const mutations = {
     }
   },
 
-  dataHasLoaded(state) {
-    state.loadedData = true
+  setLoading(state, isLoading) {
+    state.isLoading = isLoading
   },
-
-  dataNotLoaded(state) {
-    state.loadedData = false
+  setSearchingGlobal(state, isSearching) {
+    state.isSearchingGlobal = isSearching
   },
-
-  isSearching(state) {
-    state.searchLoading = true
+  setResults(state, { results, position }) {
+    position === 'global'
+      ? (state.globalResults = results)
+      : (state.pageResults = results)
   },
-
-  isNotSearching(state) {
-    state.searchLoading = false
+  startSearchWorker(state, searchData) {
+    state.searchWorker = state.searchWorker || new Worker('/worker/search.js')
+    state.searchWorker.postMessage({ searchData })
   }
 }
 
 export const actions = {
-  getProductData({ commit, getters }) {
-    if (!getters.hasProductData) {
-      commit('dataNotLoaded')
-      commit('isSearching')
+  getSearchData({ commit, getters, state }) {
+    if (getters.hasProductData && !state.isLoading) {
+      return
+    }
+    commit('setLoading', true)
 
-      this.$nacelle.data.connector
-        .request('data/search.json')
-        .then(res => {
-          if (res && res.data) {
-            commit('dataHasLoaded')
-            commit('isNotSearching')
+    const worker = new Worker('/worker/productCatalog.js')
+    worker.postMessage(null)
+    worker.onmessage = (e) => {
+      const products = e.data.product
+      commit('setSearchData', { products })
+      commit('setLoading', false)
+      worker.terminate()
+    }
+  },
 
-            const products = res.data.product
+  searchCatalog({ state, getters, commit }, { value, position }) {
+    commit('startSearchWorker', getters.productData)
+    commit('setSearchingGlobal', true)
 
-            commit('setSearchData', { products })
-          }
-        })
-        .catch(err => {
-          console.log(err)
-          return err
-        })
+    state.searchWorker.postMessage({
+      options: state.searchOptions,
+      value
+    })
+    state.searchWorker.onmessage = (e) => {
+      commit('setResults', { results: e.data, position })
+      commit('setSearchingGlobal', false)
     }
   }
 }

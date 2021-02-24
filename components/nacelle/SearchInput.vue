@@ -1,68 +1,92 @@
 <template>
   <input
-    type="text"
-    :placeholder="placeholderText"
-    class="input nacelle"
-    v-model="localQuery"
-    @keyup="setQueryInStore"
     :ref="`${position}-search-input`"
+    v-model="localQuery"
+    :placeholder="placeholderText"
+    type="text"
+    class="input nacelle"
+    @keyup="trackSearchEvent"
+    @keydown.enter="submitQuery"
   />
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   props: {
     placeholderText: {
       type: String,
-      default: 'Search products..'
+      default: 'Search products...'
+    },
+    searchQuery: {
+      type: String,
+      default: null
     },
     position: {
-      type: String
+      type: String,
+      default: 'global'
+    }
+  },
+  data() {
+    return {
+      localQuery: null,
+      timeout: {}
     }
   },
   watch: {
-    $route(newRoute) {
+    $route() {
       if (this.position === 'global') {
         this.localQuery = null
         this.$refs['global-search-input'].blur()
       }
     },
-    query(newVal) {
+    localQuery(newVal) {
+      const emitUpdated = this.debounce(() => {
+        this.$emit('update', newVal)
+      }, 250)
+      emitUpdated()
+    },
+    searchQuery(newVal) {
       if (newVal == null) {
         this.localQuery = null
       }
       if (this.position !== 'global' && newVal) {
-        this.localQuery = newVal.value
+        this.localQuery = newVal
       }
-    }
-  },
-  data() {
-    return {
-      localQuery: null
-    }
-  },
-  computed: {
-    ...mapState('search', ['query'])
-  },
-  methods: {
-    ...mapMutations('search', ['setQuery']),
-    setQueryInStore(e) {
-      if (e.key !== 'Enter') {
-        this.setQuery({ value: this.localQuery, origin: this.position })
-      }
-    }
-  },
-  created() {
-    if (this.query && this.position !== 'global') {
-      this.localQuery = this.query.value
     }
   },
   mounted() {
     if (this.position !== 'global') {
       this.$refs[`${this.position}-search-input`].focus()
     }
+  },
+  methods: {
+    ...mapActions('events', ['searchProducts']),
+    trackSearchEvent(e) {
+      const query = this.localQuery
+      // Check that the key press is a letter or number and that
+      // local query has a value before tracking an event
+      if (/^[a-z0-9]$/i.test(e.key) && query) {
+        const triggerSearchEvent = this.debounce(
+          this.searchProducts,
+          500,
+          'event'
+        )
+        triggerSearchEvent({ query })
+      }
+    },
+    debounce(fn, debounceTime, label = 'query') {
+      return (...args) => {
+        if (this.timeout[label] !== null) {
+          clearTimeout(this.timeout[label])
+        }
+
+        this.timeout[label] = setTimeout(() => fn(...args), debounceTime)
+      }
+    },
+    submitQuery() {
+      this.$emit('submit', this.localQuery)
+    }
   }
 }
 </script>
-<style lang="scss" scoped></style>

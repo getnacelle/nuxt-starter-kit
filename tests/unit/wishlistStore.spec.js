@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import storeConfig from '../storeConfig'
+import storeConfig from '@/tests/storeConfig'
 Vue.use(Vuex)
 
 describe('Wishlist Store', () => {
-  it('adds a product to items array', async () => {
+  it('adds a product to items array', () => {
     const store = new Vuex.Store(storeConfig())
     const variant = {
       id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
@@ -40,7 +40,7 @@ describe('Wishlist Store', () => {
     expect(store.state.wishlist.items.length).toEqual(1)
   })
 
-  it('removes a product from the items array', async () => {
+  it('removes a product from the items array', () => {
     const store = new Vuex.Store(storeConfig())
     const variant = {
       id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
@@ -81,7 +81,7 @@ describe('Wishlist Store', () => {
     expect(store.state.wishlist.items).toEqual([])
   })
 
-  it('clears items from wishlist', async () => {
+  it('clears items from wishlist', () => {
     const store = new Vuex.Store(storeConfig())
     const variant = {
       id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
@@ -120,7 +120,7 @@ describe('Wishlist Store', () => {
     expect(store.state.wishlist.items).toEqual([])
   })
 
-  it('returns item by variant Id', async () => {
+  it('returns item by variant Id', () => {
     const store = new Vuex.Store(storeConfig())
     const variant = {
       id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
@@ -159,7 +159,7 @@ describe('Wishlist Store', () => {
     expect(item.variant.id).toEqual(variant.id)
   })
 
-  it('returns quantity total', async () => {
+  it('returns quantity total', () => {
     const store = new Vuex.Store(storeConfig())
     const variant = {
       id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='

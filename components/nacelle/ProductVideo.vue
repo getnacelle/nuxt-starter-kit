@@ -15,7 +15,8 @@
 export default {
   props: {
     source: {
-      type: String
+      type: String,
+      default: ''
     },
     showControls: {
       type: Boolean,
@@ -32,7 +33,7 @@ export default {
   },
   computed: {
     muted() {
-      if (this.autoplay == true) {
+      if (this.autoplay === true) {
         return true
       } else {
         return false
@@ -42,5 +43,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

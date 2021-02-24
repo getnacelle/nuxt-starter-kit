@@ -1,9 +1,9 @@
-import { mount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
-import storeConfig from '../storeConfig'
+import { mount, createLocalVue } from '@vue/test-utils'
 import LocaleSelector from '@/components/nacelle/LocaleSelector'
+import storeConfig from '@/tests/storeConfig'
 
-import { defaultLocales } from '../../tests/mocks/defaultObjects';
+import { defaultLocales } from '../../tests/mocks/defaultObjects'
 
 describe('LocaleSelector.vue', () => {
   let store
@@ -18,18 +18,21 @@ describe('LocaleSelector.vue', () => {
       localVue,
       store,
       propsData: {
-        localeList: defaultLocales.locales,
+        localeList: defaultLocales.locales
       }
     })
   })
 
-  it('renders a select component', async() => {
+  it('renders a select component', () => {
     expect(wrapper.findAll('select').exists()).toBe(true)
   })
 
   it('updates user locale', async () => {
-    wrapper.findAll('option').at(1).element.selected = true 
+    wrapper.findAll('option').at(1).element.selected = true
     await wrapper.find('select').trigger('change')
-    expect(store.state.user.locale.locale).toBe(wrapper.props('localeList')[1].locale)
+
+    expect(store.state.user.locale.locale).toBe(
+      wrapper.props('localeList')[1].locale
+    )
   })
 })

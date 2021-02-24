@@ -1,8 +1,17 @@
-import { shallowMount } from '@vue/test-utils'
+import Vuex from 'vuex'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import ProductOptionSwatch from '@/components/nacelle/ProductOptionSwatch'
+import storeConfig from '@/tests/storeConfig'
+
+const localVue = createLocalVue()
+localVue.use(Vuex)
+const store = new Vuex.Store(storeConfig())
 
 describe('ProductOptionSwatch.vue', () => {
   const wrapper = shallowMount(ProductOptionSwatch, {
+    store,
+    localVue,
     propsData: {
       value: 'Small',
       optionName: 'Size',
@@ -27,12 +36,9 @@ describe('ProductOptionSwatch.vue', () => {
       ]
     }
   })
-  it('renders a swatch', async () => {
+
+  it('renders a swatch', () => {
     expect(wrapper.findAll('div').exists()).toBe(true)
     expect(wrapper.text()).toBe('Small')
-  })
-  it('emits an event when clicked', () => {
-    wrapper.trigger('click')
-    expect(wrapper.emitted().swatchValue).toBeTruthy()
   })
 })

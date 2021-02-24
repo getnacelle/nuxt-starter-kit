@@ -1,8 +1,14 @@
 <template>
   <div
-    :class="[swatchStyle, availableClass, swatchNameClass]"
+    :class="[
+      availableClass,
+      stockClass,
+      swatchNameClass,
+      swatchSelectedClass,
+      swatchStyle
+    ]"
     class="option-swatch nacelle no-select"
-    @click="emitValue"
+    @click="setSelected"
   >
     <div
       v-if="swatchStyle == 'bubble'"
@@ -10,43 +16,95 @@
       :style="swatchBg"
       class="inside-color"
     />
-    <span v-if="swatchStyle != 'bubble'">{{ value }}</span>
+    <span v-else>{{ value }}</span>
   </div>
 </template>
 
 <script>
-import flattenDeep from 'lodash.flattendeep'
 export default {
   props: {
     value: {
-      type: String
+      type: String,
+      default: ''
     },
     optionName: {
-      type: String
+      type: String,
+      default: ''
     },
     swatchStyle: {
-      type: String
-    },
-    selected: {
-      type: Boolean
+      type: String,
+      default: ''
     },
     variants: {
-      type: Array
+      type: Array,
+      default: () => []
     },
-    selectedOptions: {
-      type: Array
+    handle: {
+      type: String,
+      default: ''
+    },
+    selectedVariant: {
+      type: Object,
+      default: () => ({})
     }
   },
-  methods: {
-    emitValue() {
-      if (this.optionAvailable) {
-        this.$emit('swatchValue', this.value)
-      }
+  asyncData({ $config: { contentAssetStorage } }) {
+    return contentAssetStorage
+  },
+  data() {
+    return {
+      contentAssetStorage: ''
     }
   },
   computed: {
+    optionAvailableForSale() {
+      if (this.variants) {
+        return this.variants
+          .filter((variant) =>
+            variant.selectedOptions.some(
+              (option) => option.value === this.value
+            )
+          )
+          .some((variant) => variant.availableForSale)
+      }
+      return null
+    },
+    optionAvailable() {
+      // if this option were selected, test if there is a matching variant
+      const productStore = this.$store.state[`product/${this.handle}/`]
+      if (!productStore) {
+        return false
+      }
+
+      const testSelectedOptions = productStore.selectedOptions.map(
+        ({ name, value }) => ({ name, value })
+      )
+      const index = testSelectedOptions.findIndex(
+        (item) => item.name === this.optionName
+      )
+      if (index > -1) {
+        testSelectedOptions[index].value = this.value
+      } else {
+        testSelectedOptions.push({ name: this.optionName, value: this.value })
+      }
+
+      const optionAvailable = productStore.product.variants.some((variant) => {
+        return testSelectedOptions.every((option) => {
+          return variant.selectedOptions.some(
+            (variantOption) =>
+              JSON.stringify(variantOption) === JSON.stringify(option)
+          )
+        })
+      })
+      return optionAvailable
+    },
+    isSelected() {
+      return this.selectedVariant?.selectedOptions?.some(
+        (option) => option.value === this.value
+      )
+    },
     swatchClass() {
-      if (this.value && this.optionName == 'Color') {
+      if (this.value && this.optionName === 'Color') {
         const color = String(this.value)
         return `swatch-color-${color.toLowerCase()}`
       }
@@ -61,136 +119,29 @@ export default {
       return `${basePath}/swatches/${this.value}.png`
     },
     swatchBg() {
-      if (this.swatchSrc) {
-        return {
-          background: `url(${this.swatchSrc})`
-        }
-      }
-
-      return null
-    },
-    variantsWithOptionValue() {
-      if (this.variants) {
-        let vm = this
-        return this.variants.filter(variant => {
-          if (
-            variant.selectedOptions.filter(option => {
-              return option.value == vm.value
-            }).length > 0 &&
-            variant.availableForSale
-          ) {
-            return true
-          } else {
-            return false
-          }
-        })
-      }
+      return this.swatchSrc ? { background: `url(${this.swatchSrc})` } : null
     },
 
-    optionAvailable() {
-      let vm = this
-      if (
-        vm.variantsWithOptionValue &&
-        vm.variantsWithOptionValue.length == 1 &&
-        vm.selectedOptions.length > 0
-      ) {
-        let matches = flattenDeep(
-          vm.variantsWithOptionValue[0].selectedOptions.map(option => {
-            if (option.name != vm.optionName) {
-              return vm.selectedOptions.map(selectedOption => {
-                if (selectedOption.name == option.name) {
-                  if (selectedOption.value == option.value) {
-                    return true
-                  } else {
-                    return false
-                  }
-                }
-              })
-            }
-          })
-        )
-        if (matches.includes(false)) {
-          return false
-        } else {
-          return this.variantsWithOptionValue[0].availableForSale
-        }
-        // this is the last piece. for the variant that remains, determine whether or not its options are selected
-        //
-      } else if (
-        vm.variantsWithOptionValue &&
-        vm.variantsWithOptionValue.length == 1 &&
-        vm.selectedOptions.length == 0
-      ) {
-        return true
-      } else if (
-        vm.variantsWithOptionValue &&
-        this.variantsWithOptionValue.length > 1
-      ) {
-        // return this.variantsWithOptionValue.filter(variant =>{
-        //   if(vm.selectedOptions.filter(option=>{
-        //     if(option.name )
-        //   }))
-        // })
-        return true
-      } else {
-        return false
-
-        // IF MULTIPLE DIMENSIONS ////////////////////////////////
-        // let variantsWithThisOptionValue = this.variants.filter(variant => {
-        //   if (
-        //     variant.selectedOptions.filter(option => {
-        //       return option.value == vm.value
-        //     }).length > 0
-        //   ) {
-        //     return true
-        //   } else {
-        //     return false
-        //   }
-        // })
-        // if (variantsWithThisOptionValue.length == 1) {
-        //   return variantsWithThisOptionValue[0].availableForSale
-        // } else if (variantsWithThisOptionValue.length > 1) {
-        //   return true
-        // } else {
-        //   return false
-        // }
-
-        // if (variants.length == 1) {
-        //   return variants[0].availableForSale
-        // } else {
-        //   let availableVariants = variants.filter(variant => {
-        //     return variant.availableForSale == true
-        //   })
-
-        //   if (availableVariants.length > 0 && vm.selectedOptions.length > 0) {
-        //     let variantsWithThisOption = vm.selectedOptions.filter(option => {
-        //       return option.value == vm.value
-        //     })
-        //     console.log(variantsWithThisOption)
-        //     if (variantsWithThisOption.length > 0) {
-        //       return true
-        //     } else {
-        //       return variantsWithThisOption[0].availableForSale
-        //     }
-        //   } else if (availableVariants.length > 0) {
-        //     return true
-        //   } else {
-        //     return false
-        //   }
-        // }
-      }
+    swatchSelectedClass() {
+      return this.isSelected ? 'selected' : 'not-selected'
+    },
+    stockClass() {
+      return this.optionAvailableForSale ? 'in-stock' : 'out-of-stock'
     },
     availableClass() {
-      if (this.optionAvailable) {
-        return 'available'
-      } else {
-        return 'not-available'
-      }
+      return this.optionAvailable ? 'available' : 'not-available'
     },
     swatchNameClass() {
-      if (this.optionName) {
-        let formattedOptionName = this.optionName.replace(' ', '-')
-        return `swatch-${this.optionName}`
+      return this.optionName ? `swatch-${this.optionName}` : ''
+    }
+  },
+  methods: {
+    setSelected() {
+      if (this.optionAvailableForSale) {
+        this.$store.dispatch(`product/${this.handle}/setSelected`, {
+          name: this.optionName,
+          value: this.value
+        })
       }
     }
   }
@@ -262,6 +213,10 @@ export default {
 }
 
 .not-available {
+  border: 1px solid #ccc;
+  color: #ccc;
+}
+.out-of-stock {
   text-decoration: line-through;
   border: 1px dashed rgb(219, 219, 219);
   color: rgb(219, 219, 219);

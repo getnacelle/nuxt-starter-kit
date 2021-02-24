@@ -1,7 +1,7 @@
-import { createLocalVue, mount } from '@vue/test-utils'
-import storeConfig from '../storeConfig'
 import Vuex from 'vuex'
+import { createLocalVue, mount } from '@vue/test-utils'
 import ProductCard from '@/components/nacelle/ProductCard'
+import storeConfig from '@/tests/storeConfig'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -12,6 +12,7 @@ describe('ProductCard.vue', () => {
       max: '29.99',
       currencyCode: 'USD'
     },
+    locale: 'en-us',
     priceCurrency: 'USD',
     title: 'Awesome T-Shirt',
     category: "Men's Shirts",
@@ -26,9 +27,13 @@ describe('ProductCard.vue', () => {
       {
         id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
       }
-    ]
+    ],
+    selectedVariant: {
+      id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ=='
+    }
   }
   const store = new Vuex.Store(storeConfig())
+  store.state['product/gray-t-shirt'] = defaultProduct
   store.state.cart.lineItems = [
     {
       image: {
@@ -43,23 +48,17 @@ describe('ProductCard.vue', () => {
       }
     }
   ]
-  store.state.products.products = {
-    [defaultProduct.handle]: { product: defaultProduct }
-  }
 
-  it('renders a product card', async () => {
+  it('renders a product card', () => {
     const wrapper = mount(ProductCard, {
       stubs: ['router-link'],
       store,
       localVue,
       propsData: {
-        productHandle: defaultProduct.handle
+        product: defaultProduct
       }
     })
 
     expect(wrapper.find('.product-card').exists()).toBe(true)
-
-    const title = wrapper.find('.product-title')
-    expect(title.text()).toBe('Awesome T-Shirt')
   })
 })

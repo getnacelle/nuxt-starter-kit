@@ -1,19 +1,12 @@
 <template>
   <div class="product-grid section nacelle">
     <div class="container">
-      <slot
-        name="header"
-        :title="title"
-      >
+      <slot name="header" :title="title">
         <component :is="titleTag" class="title has-text-centered">
           {{ title }}
         </component>
       </slot>
-      <slot
-        name="products"
-        :products="products"
-        :columns="columns"
-      >
+      <slot name="products" :products="products" :columns="columns">
         <product-grid :products="products" :columns="columns" />
       </slot>
     </div>
@@ -21,12 +14,7 @@
 </template>
 
 <script>
-import ProductGrid from '~/components/nacelle/ProductGrid'
-
 export default {
-  components: {
-    ProductGrid
-  },
   props: {
     title: {
       type: String,
@@ -48,6 +36,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

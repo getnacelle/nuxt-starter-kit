@@ -1,14 +1,14 @@
-import storeConfig from '../storeConfig'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { defaultLineItem } from '../mocks/defaultObjects'
 import { mount } from '@vue/test-utils'
 import QuantitySelector from '@/components/nacelle/QuantitySelector'
+import { defaultLineItem } from '@/tests/mocks/defaultObjects'
+import storeConfig from '@/tests/storeConfig'
 
 Vue.use(Vuex)
 
 describe('QuantitySelector.vue', () => {
-  it('if quantity equals 1 decrement removes item, if item specified in props', async () => {
+  it('if quantity equals 1 decrement removes item, if item specified in props', () => {
     const store = new Vuex.Store(storeConfig())
     store.dispatch('cart/addLineItem', {
       ...defaultLineItem,

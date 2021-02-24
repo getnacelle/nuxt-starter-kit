@@ -1,7 +1,7 @@
-import storeConfig from '../storeConfig'
-import products from '../mocks/static-products'
 import Vue from 'vue'
 import Vuex from 'vuex'
+import products from '@/tests/mocks/static-products'
+import storeConfig from '@/tests/storeConfig'
 Vue.use(Vuex)
 
 const product = products[0]
@@ -18,58 +18,77 @@ const lineItem = {
   metafields
 }
 
+const counter = {
+  length: 1,
+  log: 0
+}
+
+const incrementCounter = () => {
+  counter.length += 1
+  counter.log += 1
+}
+
 describe('Event Store', () => {
-  let store
-  beforeEach(() => {
-    store = new Vuex.Store(storeConfig())
-  })
+  const store = new Vuex.Store(storeConfig())
 
   it('adds a page view event to log array', () => {
-    store.dispatch('events/pageView', { payload: 'New Page' })
-    expect(store.state.events.log.length).toEqual(1)
-    expect(store.state.events.log[0].eventType).toEqual('pageView')
-    expect(store.state.events.log[0].payload).toEqual('New Page')
+    store.dispatch('events/pageView', 'New Page')
+    expect(store.state.events.log.length).toEqual(counter.length)
+    expect(store.state.events.log[counter.log].eventType).toEqual('PAGE_VIEW')
+    expect(store.state.events.log[counter.log].payload).toEqual('New Page')
+    incrementCounter()
   })
 
-  it('adds a product view event to log array', () => {
-    store.dispatch('events/productView', product)
-    expect(store.state.events.log.length).toEqual(1)
-    expect(store.state.events.log[0].eventType).toEqual('productView')
-    expect(store.state.events.log[0]).toEqual(
-      expect.objectContaining({ product })
+  it('adds a product view event to log array', async () => {
+    await store.dispatch('events/productView', { product })
+    expect(store.state.events.log[counter.log].eventType).toEqual(
+      'PRODUCT_VIEW'
     )
+    expect(store.state.events.log[counter.log].product).toEqual(product)
+    incrementCounter()
   })
 
   it('adds an add-to-cart event to log array', () => {
     store.dispatch('events/addToCart', lineItem)
-    expect(store.state.events.log.length).toEqual(1)
-    expect(store.state.events.log[0].eventType).toEqual('cartAdd')
-    expect(store.state.events.log[0]).toEqual(expect.objectContaining(lineItem))
+    expect(store.state.events.log.length).toEqual(counter.length)
+    expect(store.state.events.log[counter.log].eventType).toEqual('ADD_TO_CART')
+    expect(store.state.events.log[counter.log].payload).toEqual(lineItem)
+    incrementCounter()
   })
 
   it('adds an remove-from-cart event to log array', () => {
     store.dispatch('events/removeFromCart', lineItem)
-    expect(store.state.events.log.length).toEqual(1)
-    expect(store.state.events.log[0].eventType).toEqual('cartRemove')
-    expect(store.state.events.log[0]).toEqual(expect.objectContaining(lineItem))
+    expect(store.state.events.log.length).toEqual(counter.length)
+    expect(store.state.events.log[counter.log].eventType).toEqual(
+      'REMOVE_FROM_CART'
+    )
+    expect(store.state.events.log[counter.log].payload).toEqual(lineItem)
+    incrementCounter()
   })
 
   it('adds a checkout-init event to log array', () => {
     store.dispatch('events/addToCart', lineItem)
+    incrementCounter()
+
     store.dispatch('events/checkoutInit', { cart: [lineItem] })
-    expect(store.state.events.log.length).toEqual(2)
-    expect(store.state.events.log[1].eventType).toEqual('checkoutInit')
-    expect(store.state.events.log[1].cart[0]).toEqual(lineItem)
+    expect(store.state.events.log.length).toEqual(counter.length)
+    expect(store.state.events.log[counter.log].eventType).toEqual(
+      'CHECKOUT_INIT'
+    )
+    expect(store.state.events.log[counter.log].payload.cart[0]).toEqual(
+      lineItem
+    )
+    incrementCounter()
   })
 
   it('adds a search products event to log array', () => {
     const searchQuery = { query: 'fitness' }
 
-    store.dispatch('events/search', searchQuery)
-    expect(store.state.events.log.length).toEqual(1)
-    expect(store.state.events.log[0].eventType).toEqual('search')
-    expect(store.state.events.log[0]).toEqual(
-      expect.objectContaining(searchQuery)
+    store.dispatch('events/searchProducts', searchQuery)
+    expect(store.state.events.log.length).toEqual(counter.length)
+    expect(store.state.events.log[counter.log].eventType).toEqual(
+      'SEARCH_PRODUCTS'
     )
+    expect(store.state.events.log[counter.log].payload).toEqual(searchQuery)
   })
 })

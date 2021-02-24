@@ -1,7 +1,6 @@
 <!--
 /****
-/* Individual products are loaded with the getProduct mixin.
-/* For instructions related to connecting your invetory to
+/* For instructions related to connecting your inventory to
 /* Nacelle, please refer to:
 /*
 /* https://docs.getnacelle.com/getting-started.html#_2-product-settings
@@ -11,13 +10,10 @@
   <div class="product">
     <section class="section">
       <div class="container">
-        <product-details
-          v-if="product && product.handle"
-          :productHandle="product.handle"
-        />
+        <product-details v-if="product" :product="product" />
       </div>
     </section>
-    <section class="section product-meta" v-if="product">
+    <section v-if="product" class="section product-meta">
       <div class="container">
         <div class="columns">
           <div class="column is-7">
@@ -46,42 +42,38 @@
             </div>
           </div>
         </div>
-        <h3 class="title is-4">Recommended Products</h3>
-        <product-recommendations
-          :productHandle="productHandle"
-          :limit="3"
-          :orientation="'horizontal'"
-          v-slot:default="{ product }"
-        >
-          <!-- <span>{{ product.title }}</span> -->
-        </product-recommendations>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import getProduct from '~/mixins/getProduct'
-import ProductDetails from '~/components/nacelle/ProductDetails'
-import ProductRecommendations from '~/components/nacelle/ProductRecommendations'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+import productModule from '~/store/product/productModule'
 import productMetafields from '~/mixins/productMetafields'
-import viewEvent from '~/mixins/viewEvent'
-import jsonld from '~/mixins/jsonld'
-import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  components: { ProductDetails, ProductRecommendations },
-  mixins: [
-    getProduct(),
-    productMetafields,
-    viewEvent('product'),
-    jsonld('product')
-  ],
-  computed: {
-    ...mapGetters('space', ['getMetatag'])
+  mixins: [productMetafields],
+  data() {
+    return {
+      namespace: '',
+      product: null
+    }
   },
-  methods: {
-    ...mapMutations('cart', ['showCart'])
+  async fetch() {
+    const handle = this.$route.params.productHandle
+    this.namespace = `product/${handle}`
+    if (!this.$store.hasModule(this.namespace)) {
+      this.$store.registerModule(this.namespace, productModule(), {
+        preserveState: !!this.$store.state[this.namespace]
+      })
+    }
+    const product = await this.$store.dispatch(
+      `${this.namespace}/fetchProduct`,
+      handle
+    )
+
+    this.product = product
   },
   head() {
     if (this.product) {
@@ -130,6 +122,24 @@ export default {
         meta
       }
     }
+  },
+  computed: {
+    ...mapGetters('space', ['getMetatag'])
+  },
+  mounted() {
+    if (this.$store.state[this.namespace]) {
+      const { product, selectedVariant } = this.$store.state[this.namespace]
+      this.productView({ product, selectedVariant })
+    }
+  },
+
+  beforeDestroy() {
+    const namespace = `product/${this.product.handle}`
+    this.$store.commit(`${namespace}/unloadProduct`)
+  },
+  methods: {
+    ...mapMutations('cart', ['showCart']),
+    ...mapActions('events', ['productView'])
   }
 }
 </script>

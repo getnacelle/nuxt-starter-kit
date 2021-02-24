@@ -1,7 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
-import storeConfig from '../storeConfig'
 import SearchInput from '@/components/nacelle/SearchInput'
+import storeConfig from '@/tests/storeConfig'
 
 jest.useFakeTimers()
 
@@ -17,7 +17,7 @@ describe('SearchInput.vue', () => {
       localVue
     })
 
-    wrapper.vm.setQuery = jest.fn()
+    wrapper.vm.searchProducts = jest.fn()
 
     // Simulate typing and triggering the keyup event
     wrapper.find('input').setValue('a')
@@ -25,7 +25,7 @@ describe('SearchInput.vue', () => {
 
     jest.runAllTimers()
     await wrapper.vm.$nextTick()
-    expect(wrapper.vm.setQuery).toHaveBeenCalledTimes(1)
-    expect(wrapper.vm.setQuery).toHaveBeenCalledWith({ value: 'a' })
+    expect(wrapper.vm.searchProducts).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.searchProducts).toHaveBeenCalledWith({ query: 'a' })
   })
 })

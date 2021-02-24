@@ -1,42 +1,46 @@
-import localforage from 'localforage'
-import { omit } from 'search-params'
-const isFunc = (func) => (typeof func === 'function')
+import { get, set } from 'idb-keyval'
+const isFunc = (func) => typeof func === 'function'
+
+function handleCheckoutError(err) {
+  if (err.message && err.message.startsWith('401')) {
+    console.warn(
+      'Received a 401 (unauthorized) response when attempting checkout. ' +
+        'Please verify your Checkout Settings in the Nacelle Dashboard. ' +
+        'Most likely, the token is incorrect, or there is a typo in the endpoint URL.'
+    )
+  }
+
+  throw new Error(err.message)
+}
 
 export const state = () => ({
   id: null,
-  url: null,
-  discountCode: null
+  url: null
 })
 
 export const mutations = {
   setId(state, payload) {
-    localforage.setItem('checkout-id', payload)
+    set('checkout-id', payload)
     state.id = payload
   },
 
   setUrl(state, payload) {
-    localforage.setItem('checkout-url', payload)
+    set('checkout-url', payload)
     state.url = payload
   },
 
   setCheckout(state, { id, url }) {
-    localforage.setItem('checkout-id', id)
-    localforage.setItem('checkout-url', url)
+    set('checkout-id', id)
+    set('checkout-url', url)
     state.id = id
     state.url = url
-  },
-
-  setDiscountCode(state, payload) {
-    if (payload && payload.trim()) {
-      state.discountCode = payload
-    }
   }
 }
 
 export const actions = {
   async initializeCheckout({ commit, dispatch }) {
-    const id = await localforage.getItem('checkout-id')
-    const url = await localforage.getItem('checkout-url')
+    const id = await get('checkout-id')
+    const url = await get('checkout-url')
     if (id && url) {
       const { completed } = await this.$nacelle.checkout.get({ id, url })
       if (completed) {
@@ -72,31 +76,61 @@ export const actions = {
       throw new Error('Cannot checkout with an empty cart')
     }
 
-    let checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId })
+    let checkout = await this.$nacelle.checkout
+      .process({
+        cartItems,
+        checkoutId
+      })
+      .catch((err) => handleCheckoutError(err))
     if (checkout && checkout.completed) {
-      checkout = await this.$nacelle.checkout.process({ cartItems, checkoutId: '' })
+      checkout = await this.$nacelle.checkout
+        .process({
+          cartItems,
+          checkoutId: ''
+        })
+        .catch((err) => handleCheckoutError(err))
     }
 
     if (!checkout || !checkout.id || !checkout.url) {
-      throw new Error('Checkout Failure')
+      const checkoutErrors = JSON.stringify(checkout?.errors, null, 2)
+      throw new Error(`Checkout Failure:\n\n${checkoutErrors}`)
     }
 
     if (rootState.events) {
-      dispatch('events/checkoutInit', { cart: rootState.cart.lineItems }, { root: true })
+      dispatch(
+        'events/checkoutInit',
+        { cart: rootState.cart.lineItems },
+        { root: true }
+      )
     }
 
     commit('setCheckout', checkout)
   },
 
   async addCheckoutParams({ commit, dispatch, state, rootState }) {
-    const queryOperator = state.url.includes('?') ? '&' : '?'
+    const parsedUrl = new URL(state.url)
+
+    if (rootState.user.userData) {
+      parsedUrl.searchParams.set('c', JSON.stringify(rootState.user.userData))
+    }
+
+    if (state.discountCode) {
+      parsedUrl.searchParams.set('discount', state.discountCode)
+    }
+
     const linkerParam = await dispatch('getLinkerParam')
-    await commit('setUrl', `${state.url}${queryOperator}c=${JSON.stringify(rootState.user.userData)}&${linkerParam}${state.discountCode ? `&discount=${state.discountCode}` : ''}`)
+
+    if (linkerParam) {
+      const [gaParamName, gaParamValue] = linkerParam.split('=')
+      parsedUrl.searchParams.set(gaParamName, gaParamValue)
+    }
+
+    await commit('setUrl', parsedUrl.toString())
   },
 
-  async getLinkerParam() {
+  getLinkerParam() {
     return new Promise((resolve, reject) => {
-      const gaClient = process.browser ? window.ga : undefined
+      const gaClient = process.client ? window.ga : undefined
 
       if (typeof gaClient !== 'undefined') {
         gaClient((tracker) => resolve(tracker.get('linkerParam')))
@@ -108,7 +142,7 @@ export const actions = {
   },
 
   checkoutRedirect({ state }) {
-    if (process.browser) {
+    if (process.client) {
       window.location = state.url
     }
   }

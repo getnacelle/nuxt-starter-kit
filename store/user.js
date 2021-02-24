@@ -1,5 +1,5 @@
-import { uuid } from 'uuidv4'
-import localforage from 'localforage'
+import { v4 as uuid } from 'uuid'
+import { set, get } from 'idb-keyval'
 import * as Cookies from 'es-cookie'
 
 export const state = () => ({
@@ -46,7 +46,7 @@ export const actions = {
     await context.dispatch('readAnonymousID')
     await context.dispatch('readSession')
 
-    if (process.browser) {
+    if (process.client) {
       const userData = Cookies.get('user-data')
 
       if (userData) {
@@ -55,14 +55,14 @@ export const actions = {
     }
   },
 
-  // ANONYMOUS ID ACTIONS //////////////////////////////////////////
+  // ANONYMOUS ID ACTIONS //
   async createAnonymousID(context) {
     const anonymousID = uuid()
-    await localforage.setItem('anonymousID', anonymousID)
+    await set('anonymousID', anonymousID)
     context.commit('setAnonymousID', anonymousID)
   },
   async readAnonymousID(context) {
-    const anonymousID = await localforage.getItem('anonymousID')
+    const anonymousID = await get('anonymousID')
     if (anonymousID != null) {
       context.commit('setAnonymousID', anonymousID)
     } else {
@@ -70,11 +70,11 @@ export const actions = {
     }
   },
 
-  // SESSION ACTIONS //////////////////////////////////////////
-  async createSession(context) {
+  // SESSION ACTIONS //
+  createSession(context) {
     const sessionID = uuid()
     context.commit('setSessionID', sessionID)
-    if (process.browser) {
+    if (process.client) {
       Cookies.set('session-id', sessionID, {
         expires: new Date().setMinutes(30)
       })
@@ -82,7 +82,7 @@ export const actions = {
   },
 
   readSession(context) {
-    if (process.browser) {
+    if (process.client) {
       const sessionCookie = Cookies.get('session-id')
       if (sessionCookie === undefined) {
         context.dispatch('createSession')
@@ -94,13 +94,12 @@ export const actions = {
   },
 
   refreshSession(context) {
-    if (process.browser) {
+    if (process.client) {
       Cookies.set('session-id', context.state.sessionID, {
         expires: new Date().setMinutes(30)
       })
     }
   }
-
 }
 
 export default {

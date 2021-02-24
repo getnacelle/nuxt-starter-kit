@@ -1,12 +1,12 @@
-import storeConfig from '../storeConfig'
+import Vuex from 'vuex'
 import { mount, createLocalVue } from '@vue/test-utils'
 import CartFlyoutSubtotal from '@/components/nacelle/CartFlyoutSubtotal'
-import Vuex from 'vuex'
+import storeConfig from '@/tests/storeConfig'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('CartFlyoutSubtotal.vue', () => {
-  it('displays the cart subtotal', async() => {
+  it('displays the cart subtotal', () => {
     const store = new Vuex.Store(storeConfig())
     const wrapper = mount(CartFlyoutSubtotal, {
       store,

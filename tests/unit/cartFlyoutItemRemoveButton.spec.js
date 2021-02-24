@@ -1,18 +1,18 @@
-import storeConfig from '../storeConfig'
-import { shallowMount,createLocalVue } from '@vue/test-utils'
-import CartFlyoutItemRemoveButton from '@/components/nacelle/CartFlyoutItemRemoveButton'
-
 import Vuex from 'vuex'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
+import CartFlyoutItemRemoveButton from '@/components/nacelle/CartFlyoutItemRemoveButton'
+import storeConfig from '@/tests/storeConfig'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('CartFlyoutItemRemoveButton.vue', () => {
-  it('removes a line item from the cart', async() => {
+  it('removes a line item from the cart', () => {
     const store = new Vuex.Store(storeConfig())
     store.state.cart.lineItems = [
       {
-        id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::ae9703f4-9810-4ac8-bc2b-38f0e57d7028',
+        id:
+          'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yODU2ODgyMDAyMzQwMQ==::ae9703f4-9810-4ac8-bc2b-38f0e57d7028',
         image: {
           source: 'https://nacelle-assets.s3-us-west-2.amazonaws.com/shirt.jpg'
         },

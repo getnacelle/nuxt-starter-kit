@@ -1,28 +1,24 @@
 <template>
   <transition name="fade-up">
     <div
+      v-show="autocompleteVisible"
       class="autocomplete is-hidden-mobile"
-      v-show="shouldShowAutocomplete"
       @mouseenter="cursorInside = true"
-      @mouseleave="setNotVisibleAndClearQuery"
+      @mouseleave="mouseLeave"
     >
       <h2>Search Results</h2>
-      <search-results
-        :searchData="productData"
-        :searchQuery="query"
-        slotMode="multiple"
-        v-if="productData"
-        v-on:results="setAutocompleteVisible"
-        v-on:no-query="setAutocompleteNotVisible"
-      >
-        <template v-slot:result="{ result }">
+      <search-results :search-query="globalQuery">
+        <template #result="{ result }">
           <search-autocomplete-item
             v-for="item in result"
-            :item="item"
             :key="item.id"
+            :item="item"
           />
         </template>
-        <template v-slot:no-results>
+        <template #loading>
+          <span>Loading product catalog...</span>
+        </template>
+        <template #no-results>
           <search-no-results />
         </template>
       </search-results>
@@ -31,11 +27,7 @@
 </template>
 
 <script>
-import SearchResults from '~/components/nacelle/SearchResults'
-import SearchNoResults from '~/components/nacelle/SearchNoResults'
-import SearchAutocompleteItem from '~/components/nacelle/SearchAutocompleteItem'
-import { mapState, mapMutations, mapGetters } from 'vuex'
-import ClickOutside from 'vue-click-outside'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   data() {
@@ -43,48 +35,27 @@ export default {
       cursorInside: false
     }
   },
-  components: {
-    SearchResults,
-    SearchNoResults,
-    SearchAutocompleteItem
-  },
-  directives: {
-    ClickOutside
+  computed: {
+    ...mapState('search', ['globalQuery', 'autocompleteVisible'])
   },
   watch: {
     $route() {
-      this.setAutocompleteNotVisible()
+      this.cursorInside = false
+      this.setAutocompleteVisible(false)
     }
   },
-  computed: {
-    ...mapState('search', ['query', 'autocompleteVisible']),
-    ...mapGetters('search', ['queryOrigin', 'productData']),
-    shouldShowAutocomplete() {
-      if (
-        this.autocompleteVisible &&
-        this.queryOrigin &&
-        this.queryOrigin == 'global'
-      ) {
-        return true
-      }
-      return
-    }
-  },
+
   methods: {
     ...mapMutations('search', ['setAutocompleteVisible']),
-    ...mapMutations('search', ['setAutocompleteNotVisible']),
-    ...mapMutations('search', ['setQuery']),
-    setNotVisibleAndClearQuery() {
-      let vm = this
-      vm.cursorInside = false
+
+    mouseLeave() {
+      this.cursorInside = false
 
       setTimeout(() => {
-        if (!vm.cursorInside) {
-          this.setAutocompleteNotVisible()
+        if (!this.cursorInside) {
+          this.setAutocompleteVisible(false)
         }
       }, 600)
-
-      this.setQuery(null)
     }
   }
 }

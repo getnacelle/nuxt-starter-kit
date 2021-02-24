@@ -1,32 +1,27 @@
 <template>
   <div class="search" :class="`${position}-searchbox`">
     <search-input
-      :placeholderText="placeholderText"
+      :placeholder-text="placeholderText"
       :position="position"
-      @focus.native="getData"
-      @keydown.enter.native="navigateToSearchResults"
+      :search-query="searchQuery"
+      @update="updateQuery"
+      @submit="navigateToSearchResults"
     />
     <button
       v-if="position == 'global'"
       class="button"
-      @click="navigateToSearchResults"
+      @click="navigateToSearchResults(searchQuery)"
     >
       Search
     </button>
-    <search-autocomplete v-if="position == 'global'"/>
+    <search-autocomplete v-if="position === 'global'" />
   </div>
 </template>
 
 <script>
-import SearchInput from '~/components/nacelle/SearchInput'
-import SearchAutocomplete from '~/components/nacelle/SearchAutocomplete'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapMutations } from 'vuex'
 
 export default {
-  components: {
-    SearchInput,
-    SearchAutocomplete
-  },
   props: {
     position: {
       type: String,
@@ -36,31 +31,36 @@ export default {
       type: String,
       default: 'product'
     },
+    searchQuery: {
+      type: String,
+      default: null
+    },
     placeholderText: {
       type: String,
-      default: 'Search products..'
+      default: 'Search products...'
     }
-  },
-  computed: {
-    ...mapState('search', ['query'])
   },
   methods: {
     ...mapMutations('menu', ['disableMenu']),
-    ...mapActions('search', ['getProductData']),
-    getData() {
-      if (this.searchCategory === 'product') {
-        this.getProductData()
+    ...mapMutations('search', ['setQuery']),
+    updateQuery(query) {
+      this.setQuery({ query, position: this.position })
+
+      if (this.position === 'page') {
+        const routeQuery = this.$route.query
+        const newRouteQuery = { ...routeQuery, q: query }
+
+        if (JSON.stringify(routeQuery) !== JSON.stringify(newRouteQuery)) {
+          this.$router.replace({ query: newRouteQuery })
+        }
       }
     },
-    navigateToSearchResults() {
-      const queryVal = this.query && this.query.value ? this.query.value : ''
+    navigateToSearchResults(query) {
+      const q = query || ''
 
-      this.disableMenu()
-
-      if (this.position == 'global') {
-        this.$router.push({ path: '/search', query: { q: queryVal } })
-      } else {
-        this.$router.push({query: { q: queryVal } })
+      if (this.position === 'global') {
+        this.disableMenu()
+        this.$router.push({ path: '/search', query: { q } })
       }
     }
   }

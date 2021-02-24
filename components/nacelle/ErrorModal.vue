@@ -8,11 +8,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import InterfaceModal from '~/components/nacelle/InterfaceModal'
+
 export default {
-  components: {
-    InterfaceModal
-  },
   data() {
     return {
       showModal: false
@@ -22,8 +19,8 @@ export default {
     ...mapState('cart', ['error'])
   },
   created() {
-    this.$store.subscribe((mutation, state) => {
-      const { type, payload } = mutation
+    this.$store.subscribe((mutation) => {
+      const { type } = mutation
 
       if (type === 'cart/setCartError') {
         this.showModal = true

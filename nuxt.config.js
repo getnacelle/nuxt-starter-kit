@@ -1,13 +1,9 @@
-import path from 'path'
-import fs from 'fs-extra'
-
-require('dotenv').config()
+import generateRoutes from './nacelle-routing/generateRoutes'
 
 export default {
-  mode: process.env.BUILD_MODE,
-  /*
-   ** Headers of the page
-   */
+  target: 'static',
+
+  // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: process.env.npm_package_name || '',
     meta: [
@@ -21,40 +17,70 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
-  /*
-   ** Customize the progress-bar color
-   */
-  loading: { color: '#fff' },
 
-  /*
-   ** Global CSS
-   */
-  css: ['@/assets/global.scss', 'vue-glide-js/dist/vue-glide.css'],
+  // Global CSS: https://go.nuxtjs.dev/config-css
+  css: ['@/assets/global.scss'],
 
-  env: {
-    nacelleSpaceID: process.env.NACELLE_SPACE_ID,
-    nacelleToken: process.env.NACELLE_GRAPHQL_TOKEN,
-    buildMode: process.env.BUILD_MODE,
+  // Auto import components: https://go.nuxtjs.dev/config-components
+  components: ['~/components/nacelle', '~/components/nacelle/image'],
+
+  // Add environment variables to either `publicRuntineConfig` (exposed to client)
+  // or to `privateRuntimeConfig`
+  // https://nuxtjs.org/blog/moving-from-nuxtjs-dotenv-to-runtime-config/#introducing-the-nuxtjs-runtime-config
+  publicRuntimeConfig: {
+    API_PORT: process.env.API_PORT,
     contentAssetStorage: process.env.CONTENT_ASSET_STORAGE || ''
   },
+  privateRuntimeConfig: {},
 
-  plugins: [
-    { src: '~/plugins/nuxt-client-init.js', ssr: false },
-    '~/plugins/jsonld'
-  ],
+  // PWA module configuration: https://go.nuxtjs.dev/pwa
+  pwa: {
+    manifest: {
+      lang: 'en'
+    }
+  },
 
+  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
+  buildModules: ['@nuxtjs/eslint-module', 'nuxt-purgecss'],
+
+  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/pwa',
-    '@nuxtjs/dotenv',
-    '@nacelle/nacelle-nuxt-module',
     '@nuxtjs/sitemap',
-    '@nuxtjs/axios',
     'nuxt-polyfill',
-    'vue-currency-filter/nuxt'
+    '~/modules/nacelle'
   ],
 
-  router: {
-    middleware: 'cart'
+  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
+  plugins: [{ src: '~/plugins/nuxt-client-init.js', ssr: false }],
+
+  /*
+   ** Nacelle Configuration
+   * https://docs.getnacelle.com/nuxt/nuxt-config.html
+   */
+  nacelle: {
+    spaceID: process.env.NACELLE_SPACE_ID,
+    token: process.env.NACELLE_GRAPHQL_TOKEN
+
+    /* Optional */
+    // Set the default internationalization locales string for Nacelle to use
+    // defaultLocale: 'en-US'
+
+    // Optional array of data type strings to direct Nacelle to include other data types
+    // besides products in search data.
+    // searchDataTypes: ['article', 'page', 'blog'],
+
+    // If you wish to set the Nacelle GraphQL endpoint to something other than the
+    // default.
+    // customEndpoint: process.env.NACELLE_CUSTOM_ENDPOINT
+  },
+
+  generate: {
+    crawler: false,
+    concurrency: 25,
+    async routes() {
+      return await generateRoutes()
+    }
   },
 
   polyfill: {
@@ -66,77 +92,16 @@ export default {
     ]
   },
 
+  // Customize the progress-bar color
+  loading: { color: '#fff' },
+
+  router: {
+    middleware: 'cart'
+  },
+
   sitemap: {
     gzip: true,
-    hostname: 'http://localhost:3000', // When deploying, change this to your production URL
-    routes: () => {
-      const staticDir = path.resolve(__dirname, './static/data')
-      const routes = fs.readJsonSync(`${staticDir}/routes.json`)
-      const routesOnly = routes.map(route => route.route)
-
-      return routesOnly
-    }
-  },
-
-  /*
-   ** Nacelle Configuration
-   * https://docs.getnacelle.com/nuxt/nuxt-config.html
-   */
-  nacelle: {
-    /* Required Parameters */
-    spaceID: process.env.NACELLE_SPACE_ID,
-    token: process.env.NACELLE_GRAPHQL_TOKEN,
-
-    /* Optional */
-
-    // Google Analytics ID
-    // gaID: process.env.NACELLE_GA_ID,
-
-    // Facebook Pixel Tracking ID
-    // fbID: process.env.NACELLE_FB_ID,
-
-    // Set the default internationalization locale string for Nacelle to use
-    // locale: 'en-us',
-
-    // Customize the route base paths used by Nacelle and Nuxt during generate
-    // Learn more in our docs: https://docs.getnacelle.com/nuxt/nuxt-config.html#routeconfig
-    // routeConfig: null,
-
-    // Function that can be used for modifying the route array for adding or customizing
-    // routes during generate.
-    // Learn more in our docs: https://docs.getnacelle.com/nuxt/nuxt-config.html#extendroutes
-    // extendRoutes: null,
-
-    // Optional array of data type strings to direct Nacelle to include other data types
-    // besides products in search data.
-    // searchDataTypes: ['article', 'page', 'blog'],
-
-    // Set to true to bypass fetching data from your space and generating
-    // static JSON files.
-    // Only set to true if you have previously performed this step at least once.
-    // skipPrefetch: process.env.SKIP_PREFETCH === 'true',
-
-    // If you wish to set the Nacelle GraphQL endpoint to something other than the
-    // default.
-    // customEndpoint: process.env.NACELLE_CUSTOM_ENDPOINT,
-
-    // Set the event tracking endpoint to a URL other than the default
-    // tem: process.env.NACELLE_TEM,
-
-    // Customize the build process by creating a new NacelleClient class
-    // object.
-    // buildClient: null,
-
-    // Enables attempting to fetch data from a user's preferred locale and falling back
-    // fetching default locale data.
-    isMultiLocale: true
-  },
-
-  generate: {
-    concurrency: 5,
-    done({ errors }, nuxt) {
-      nuxt.callHook('generate:done', { nuxt, errors })
-    }
+    hostname: 'http://localhost:3000' // When deploying, change this to your production URL
   },
 
   vue: {
@@ -145,7 +110,13 @@ export default {
     }
   },
 
+  // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    extend(config) {
+      config.node = {
+        Buffer: false
+      }
+    },
     postcss: {
       preset: {
         features: {
@@ -165,12 +136,6 @@ export default {
         trimCustomFragments: true,
         useShortDoctype: true
       }
-    },
-    transpile: [
-      '@nacelle/nacelle-nuxt-module',
-      '@nacelle/nacelle-tools',
-      'fuse.js',
-      'uuidv4'
-    ]
+    }
   }
 }

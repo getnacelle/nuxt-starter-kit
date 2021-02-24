@@ -1,18 +1,34 @@
-import Vue from 'vue'
-
-const eventProperties = rootState => {
+const eventProperties = (rootState) => {
   const { user, space, cart } = rootState || {}
-  const spaceId = space ? space.id : null
-  const userId = user && user.userID ? user.userID : null
-  const anonymousId = user && user.anonymousId ? user.anonymousId : null
+  const timestamp = Date.now()
+  const spaceID = space ? space.id : null
+  const userID = user && user.userID ? user.userID : null
+  const anonymousID = user && user.anonymousID ? user.anonymousID : null
+  const cartJsonString =
+    cart && cart.lineItems ? JSON.stringify(cart.lineItems) : null
+  let urlParams = null
+  let domain = null
+  let url = null
+  let pathname = null
+
+  if (process.client) {
+    urlParams = window.location.search
+    domain = window.location.origin
+    url = window.location.href
+    pathname = window.location.pathname
+  }
+
   return {
-    spaceId,
-    ...(cart && cart.lineItems && { cart: cart.lineItems }),
-    user: {
-      ...user,
-      userId,
-      anonymousId
-    }
+    timestamp,
+    spaceID,
+    userID,
+    anonymousID,
+    user,
+    cart: cartJsonString,
+    urlParams,
+    url,
+    pathname,
+    domain
   }
 }
 export const state = () => ({
@@ -26,110 +42,95 @@ export const mutations = {
 }
 
 export const actions = {
-  sendEvent({ commit, rootState }, payload) {
-    const event = {
-      ...eventProperties(rootState),
-      ...payload
+  pageView({ commit, rootState }, payload) {
+    if (payload) {
+      commit('addEvent', {
+        eventType: 'PAGE_VIEW',
+        payload,
+        ...eventProperties(rootState)
+      })
     }
-    try {
-      Vue.prototype.$nuxt.$nacelle.events.log(event)
-    } catch (error) {
-      console.error(error)
+  },
+
+  productView({ commit, rootState }, { product, selectedVariant }) {
+    if (product) {
+      commit('addEvent', {
+        eventType: 'PRODUCT_VIEW',
+        product,
+        selectedVariant,
+        ...eventProperties(rootState)
+      })
     }
-    commit('addEvent', event)
   },
 
-  pageView({ dispatch }, payload) {
-    dispatch('sendEvent', {
-      eventType: 'pageView',
-      ...payload
-    })
+  collectionView({ commit, rootState }, { collection }) {
+    if (collection) {
+      commit('addEvent', {
+        eventType: 'COLLECTION_VIEW',
+        collection,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
-  productView({ dispatch }, product) {
-    dispatch('sendEvent', {
-      eventType: 'productView',
-      product
-    })
+  blogView({ commit, rootState }, { blog }) {
+    if (blog) {
+      commit('addEvent', {
+        eventType: 'BLOG_VIEW',
+        blog,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
-  collectionView({ dispatch }, collection) {
-    dispatch('sendEvent', {
-      eventType: 'collectionView',
-      collection
-    })
+  articleView({ commit, rootState }, { article }) {
+    if (article) {
+      commit('addEvent', {
+        eventType: 'ARTICLE_VIEW',
+        article,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
-  blogView({ dispatch }, blog) {
-    dispatch('sendEvent', {
-      eventType: 'blogView',
-      blog
-    })
+  addToCart({ commit, rootState }, payload) {
+    if (payload) {
+      commit('addEvent', {
+        eventType: 'ADD_TO_CART',
+        payload,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
-  articleView({ dispatch }, article) {
-    dispatch('sendEvent', {
-      eventType: 'articleView',
-      article
-    })
+  removeFromCart({ commit, rootState }, payload) {
+    if (payload) {
+      commit('addEvent', {
+        eventType: 'REMOVE_FROM_CART',
+        payload,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
-  addToCart({ dispatch }, payload) {
-    dispatch('sendEvent', {
-      eventType: 'cartAdd',
-      ...payload
-    })
+  checkoutInit({ commit, rootState }, payload) {
+    if (payload) {
+      commit('addEvent', {
+        eventType: 'CHECKOUT_INIT',
+        payload,
+        ...eventProperties(rootState)
+      })
+    }
   },
 
-  removeFromCart({ dispatch }, payload) {
-    dispatch('sendEvent', {
-      eventType: 'cartRemove',
-      ...payload
-    })
-  },
-
-  checkoutInit({ dispatch }, payload) {
-    dispatch('sendEvent', {
-      eventType: 'checkoutInit',
-      ...payload
-    })
-  },
-
-  checkoutComplete({ dispatch }, payload) {
-    dispatch('sendEvent', {
-      eventType: 'checkoutComplete',
-      ...payload
-    })
-  },
-
-  emailSignup({ dispatch }, payload) {
-    dispatch('sendEvent', {
-      eventType: 'emailSignup',
-      ...payload
-    })
-  },
-
-  search({ dispatch, commit }, payload) {
-    commit('setSearchResults', payload)
-    dispatch('sendEvent', {
-      eventType: 'search',
-      ...payload
-    })
-  },
-
-  searchSelected({ dispatch, state }, payload) {
-    dispatch('sendEvent', {
-      eventType: 'searchSelected',
-      ...state.searchResults,
-      ...payload
-    })
-  },
-
-  productRecommendation({ dispatch }, payload) {
-    dispatch('sendEvent', {
-      eventType: 'productRecommendation',
-      ...payload
-    })
+  searchProducts({ commit, rootState }, payload) {
+    if (payload) {
+      commit('addEvent', {
+        eventType: 'SEARCH_PRODUCTS',
+        payload,
+        ...eventProperties(rootState)
+      })
+    }
   }
 }
 

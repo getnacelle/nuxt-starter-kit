@@ -1,22 +1,11 @@
 <template>
-  <div
-    class="modal-wrapper nacelle"
-    @close="closeModal"
-  >
+  <div class="modal-wrapper nacelle" @close="closeModal">
     <transition name="fade">
-      <div
-        v-if="modalOpen"
-        ref="outer"
-        class="modal-outer"
-        @click="clickOuter"
-      >
+      <div v-if="modalOpen" ref="outer" class="modal-outer" @click="clickOuter">
         <div class="container">
           <div class="columns">
             <div class="modal-inner column is-6">
-              <interface-close-button
-                class="close"
-                @close="closeModal"
-              />
+              <interface-close-button class="close" @close="closeModal" />
               <div class="modal-content">
                 <slot @close="closeModal" />
               </div>
@@ -29,21 +18,17 @@
 </template>
 
 <script>
-import InterfaceCloseButton from '~/components/nacelle/InterfaceCloseButton'
 export default {
-  components: {
-    InterfaceCloseButton
-  },
   props: {
     modalOpen: {
       type: Boolean
     }
   },
   methods: {
-    closeModal () {
+    closeModal() {
       this.$emit('closeModal')
     },
-    clickOuter (e) {
+    clickOuter(e) {
       const { target } = e
 
       if (target === this.$refs.outer) {
