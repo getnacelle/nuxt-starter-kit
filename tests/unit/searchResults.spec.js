@@ -7,7 +7,6 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('SearchResults.vue', () => {
-
   const store = new Vuex.Store(storeConfig())
   const wrapper = mount(SearchResults, {
     localVue,
@@ -24,8 +23,9 @@ describe('SearchResults.vue', () => {
 
     expect(wrapper.vm.setAutocompleteVisible).toHaveBeenCalledWith(true)
     expect(wrapper.vm.searchCatalog).toHaveBeenCalledTimes(1)
-    expect(wrapper.vm.searchCatalog).toHaveBeenCalledWith(
-      { value: 'test', position: 'global' }
-    )
+    expect(wrapper.vm.searchCatalog).toHaveBeenCalledWith({
+      value: 'test',
+      position: 'global'
+    })
   })
 })
