@@ -35,7 +35,9 @@ jobs:
         run: npm run lint
 
       - name: Run tests 🧪
-        run: npm run test:ci'
-        uses: tanmen/jest-reporter@v1
+        run: jest --json --outputFile=result.json --testLocationInResults
+      - uses: tanmen/jest-reporter@v1
+        if: always()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
