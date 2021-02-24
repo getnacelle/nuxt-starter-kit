@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
 import MainNavWishlist from '@/components/nacelle/MainNavWishlist'
-import createStoreConfig from '../storeConfig'
+import createStoreConfig from '@/tests/storeConfig'
 
 describe('Main Nav Wishlist Button', () => {
   it('renders the button', () => {

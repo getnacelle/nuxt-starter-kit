@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import ProductAddToWishlistButton from '@/components/nacelle/ProductAddToWishlistButton'
-import createStoreConfig from '../storeConfig'
+import createStoreConfig from '@/tests/storeConfig'
 
 const variant = {
   id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFadC8yODU2ODgyMDAyMzQwMQ==',

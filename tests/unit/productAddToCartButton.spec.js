@@ -1,8 +1,8 @@
 import Vuex from 'vuex'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import ProductAddToCartButton from '@/components/nacelle/ProductAddToCartButton'
-import createStoreConfig from '../storeConfig'
-import { defaultProduct } from '../mocks/defaultObjects'
+import { defaultProduct } from '@/tests/mocks/defaultObjects'
+import createStoreConfig from '@/tests/storeConfig'
 
 const storeConfig = createStoreConfig()
 

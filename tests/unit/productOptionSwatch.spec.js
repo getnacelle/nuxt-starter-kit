@@ -2,7 +2,7 @@ import Vuex from 'vuex'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import ProductOptionSwatch from '@/components/nacelle/ProductOptionSwatch'
-import storeConfig from '../storeConfig'
+import storeConfig from '@/tests/storeConfig'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

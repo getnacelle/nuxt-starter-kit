@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { mount } from '@vue/test-utils'
 import QuantitySelector from '@/components/nacelle/QuantitySelector'
-import { defaultLineItem } from '../mocks/defaultObjects'
-import storeConfig from '../storeConfig'
+import { defaultLineItem } from '@/tests/mocks/defaultObjects'
+import storeConfig from '@/tests/storeConfig'
 
 Vue.use(Vuex)
 

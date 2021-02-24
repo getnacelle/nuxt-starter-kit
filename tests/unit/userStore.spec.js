@@ -1,6 +1,6 @@
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
-import createStoreConfig from '../storeConfig'
+import createStoreConfig from '@/tests/storeConfig'
 
 process.browser = true
 describe('User Store', () => {
