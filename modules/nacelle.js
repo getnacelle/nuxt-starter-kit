@@ -29,7 +29,7 @@ module.exports = async function (moduleOptions) {
 
   // Add $nacelle plugin
   this.addPlugin({
-    src: path.resolve(__dirname, '../plugins/dollar-nacelle.js'),
+    src: path.resolve(__dirname, './dollar-nacelle.js'),
     filename: 'dollar-nacelle.js',
     options: {
       settings: options,
