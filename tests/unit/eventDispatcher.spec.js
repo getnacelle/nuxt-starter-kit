@@ -1,8 +1,8 @@
 import Vuex from 'vuex'
 import { mount, createLocalVue } from '@vue/test-utils'
 import EventDispatcher from '@/components/nacelle/EventDispatcher'
-import storeConfig from '../storeConfig'
-import products from '../mocks/static-products'
+import products from '@/tests/mocks/static-products'
+import storeConfig from '@/tests/storeConfig'
 
 const product = products[0]
 const { handle, image, metafields, id, title } = product

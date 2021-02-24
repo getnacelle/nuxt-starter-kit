@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { v4 as uuid, validate } from 'uuid'
-import storeConfig from '../storeConfig'
+import storeConfig from '@/tests/storeConfig'
 Vue.use(Vuex)
 
 describe('Cart Store', () => {

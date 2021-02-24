@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import CartFlyoutItemRemoveButton from '@/components/nacelle/CartFlyoutItemRemoveButton'
-import storeConfig from '../storeConfig'
+import storeConfig from '@/tests/storeConfig'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

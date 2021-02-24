@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import MainNavCart from '@/components/nacelle/MainNavCart'
-import storeConfig from '../storeConfig'
+import storeConfig from '@/tests/storeConfig'
 
 const localVue = createLocalVue()
 

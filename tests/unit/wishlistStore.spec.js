@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import storeConfig from '../storeConfig'
+import storeConfig from '@/tests/storeConfig'
 Vue.use(Vuex)
 
 describe('Wishlist Store', () => {

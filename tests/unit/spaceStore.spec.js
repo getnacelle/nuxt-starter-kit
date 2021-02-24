@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import { createLocalVue } from '@vue/test-utils'
-import storeConfig from '../storeConfig'
+import storeConfig from '@/tests/storeConfig'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 

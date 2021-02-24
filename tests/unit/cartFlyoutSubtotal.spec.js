@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import { mount, createLocalVue } from '@vue/test-utils'
 import CartFlyoutSubtotal from '@/components/nacelle/CartFlyoutSubtotal'
-import storeConfig from '../storeConfig'
+import storeConfig from '@/tests/storeConfig'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 

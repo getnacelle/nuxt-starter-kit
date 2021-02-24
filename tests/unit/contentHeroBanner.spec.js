@@ -4,7 +4,7 @@ import CtaButton from '@/components/nacelle/CtaButton'
 import NacelleImage from '@/components/nacelle/image/NacelleImage'
 import Vuex from 'vuex'
 
-import storeConfig from '../storeConfig'
+import storeConfig from '@/tests/storeConfig'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

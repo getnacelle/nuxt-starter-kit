@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import { mount, createLocalVue } from '@vue/test-utils'
 import LocaleSelector from '@/components/nacelle/LocaleSelector'
-import storeConfig from '../storeConfig'
+import storeConfig from '@/tests/storeConfig'
 
 import { defaultLocales } from '../../tests/mocks/defaultObjects'
 

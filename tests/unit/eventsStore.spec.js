@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import storeConfig from '../storeConfig'
-import products from '../mocks/static-products'
+import products from '@/tests/mocks/static-products'
+import storeConfig from '@/tests/storeConfig'
 Vue.use(Vuex)
 
 const product = products[0]
