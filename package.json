@@ -11,7 +11,7 @@
     "lint": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext \".js,.vue\" --ignore-path .gitignore .",
     "test": "jest",
-    "test:ci": "jest --silent --runInBand",
+    "test:ci": "jest --silent --runInBand --collectCoverage",
     "test:watch": "jest --watch"
   },
   "dependencies": {
