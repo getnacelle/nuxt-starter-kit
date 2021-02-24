@@ -1,7 +1,7 @@
 import NacelleClient from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
 
 export default function (context, inject) {
-<% if( options === undefined) {%>
+<% if( options == undefined) {%>
   return null
  <%} %>
 
