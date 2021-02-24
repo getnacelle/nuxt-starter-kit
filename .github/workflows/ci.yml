@@ -35,9 +35,7 @@ jobs:
         run: npm run lint
 
       - name: Run tests 🧪
-        id: testCoverage
-        uses: anuraag016/Jest-Coverage-Diff@master
+        uses: ChristiaanScheermeijer/jest-reporter-action@v0.4.0
         with:
-          runCommand: "npx jest --silent --runInBand --collectCoverageFrom='[\"{components,store}/**/*.{js,ts,vue}\"]' --coverage --collectCoverage=true --coverageDirectory='./' --coverageReporters='json-summary' --forceExit --detectOpenHandles tests/unit/*.*spec.js"
-          delta: 0.5
-
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-command: 'npm run test:ci'
