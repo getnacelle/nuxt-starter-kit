@@ -18,7 +18,7 @@ module.exports = {
   ],
   plugins: ['prettier', '@babel'],
   rules: {
-    'vue/no-v-html': 1,
+    'vue/no-v-html': 0,
     'space-before-function-paren': [
       'error',
       {

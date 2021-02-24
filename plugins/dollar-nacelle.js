@@ -16,7 +16,7 @@ export default function (context, inject) {
     id: spaceID,
     token,
     nacelleEndpoint: endpoint,
-    locale: defaultLocale || 'en-US',
+    locale: defaultLocale,
     eventsEndpoint: tem,
     wishlistEndpoint,
     useStatic: false
