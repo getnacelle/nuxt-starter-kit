@@ -1,6 +1,6 @@
 {
   "name": "@nacelle/nacelle-starter",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "author": "Nacelle",
   "scripts": {
     "dev": "nuxt",
@@ -12,10 +12,7 @@
     "lint:fix": "eslint --fix --ext \".js,.vue\" --ignore-path .gitignore .",
     "test": "jest",
     "test:ci": "jest --no-coverage --runInBand",
-    "test:watch": "jest --watch",
-    "storybook": "nuxt storybook",
-    "storybook:build": "nuxt storybook build",
-    "storybook:serve": "serve storybook-static -p 4444"
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@nacelle/client-js-sdk": "^3.1.1",
@@ -45,14 +42,8 @@
     "@nuxtjs/eslint-config": "^5.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/sitemap": "^2.2.1",
-    "@nuxtjs/storybook": "^3.3.1",
-    "@storybook/addon-actions": "^5.3.17",
-    "@storybook/addon-knobs": "^5.3.17",
-    "@storybook/addon-links": "^5.3.17",
-    "@storybook/addon-notes": "^5.3.17",
     "@testing-library/jest-dom": "^5.11.9",
     "@vue/test-utils": "^1.1.3",
-    "axios-mock-adapter": "^1.19.0",
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
     "babel-plugin-lodash": "^3.3.4",
@@ -73,11 +64,7 @@
     "sass": "^1.32.7",
     "sass-loader": "^10.1.1",
     "serve": "^11.3.0",
-    "storybook-addon-vue-info": "^1.4.2",
-    "storybook-vue-router": "^1.0.7",
-    "vue-jest": "^4.0.0-rc.1",
-    "vue-loader": "^15.9.6",
-    "vue-template-compiler": "^2.6.11"
+    "vue-jest": "^4.0.0-rc.1"
   },
   "lint-staged": {
     "*.{js,vue}": "eslint",
