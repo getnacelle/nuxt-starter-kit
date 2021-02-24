@@ -35,9 +35,8 @@ jobs:
         run: npm run lint
 
       - name: Run tests 🧪
-        run: jest --json --outputFile=result.json --testLocationInResults
-      - uses: tanmen/jest-reporter@v1
-        if: always()
+        uses: raulanatol/jest-coverage-comment-action@v1.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          jest-command: 'npm run jest-ci'
 
