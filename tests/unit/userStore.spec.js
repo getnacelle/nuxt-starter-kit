@@ -1,6 +1,5 @@
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
-import * as Cookies from 'es-cookie'
 import createStoreConfig from '../storeConfig'
 
 process.browser = true
@@ -17,25 +16,5 @@ describe('User Store', () => {
     })
     expect(store.state.user.userID).toEqual('123456')
     expect(store.state.user.customerEmail).toEqual('test@test.com')
-  })
-
-  it('creates a session cookie and sets the session id', () => {
-    const localVue = createLocalVue()
-    localVue.use(Vuex)
-    const storeConfig = createStoreConfig()
-    const store = new Vuex.Store(storeConfig)
-    store.dispatch('user/createSession')
-    const cookie = Cookies.get('session-id')
-    expect(store.state.user.sessionID).not.toBeNull()
-    expect(cookie).toBeDefined()
-  })
-
-  it('reads the session cookie', () => {
-    const localVue = createLocalVue()
-    localVue.use(Vuex)
-    const storeConfig = createStoreConfig()
-    const store = new Vuex.Store(storeConfig)
-    store.dispatch('user/readSession')
-    expect(store.state.user.sessionID).not.toBeNull()
   })
 })

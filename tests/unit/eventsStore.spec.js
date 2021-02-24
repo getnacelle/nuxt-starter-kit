@@ -39,13 +39,12 @@ describe('Event Store', () => {
     incrementCounter()
   })
 
-  it('adds a product view event to log array', () => {
-    store.dispatch('events/productView', product)
-    expect(store.state.events.log.length).toEqual(counter.length)
+  it('adds a product view event to log array', async () => {
+    await store.dispatch('events/productView', { product })
     expect(store.state.events.log[counter.log].eventType).toEqual(
       'PRODUCT_VIEW'
     )
-    expect(store.state.events.log[counter.log].payload).toEqual({ product })
+    expect(store.state.events.log[counter.log].product).toEqual(product)
     incrementCounter()
   })
 
