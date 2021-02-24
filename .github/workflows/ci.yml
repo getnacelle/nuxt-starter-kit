@@ -38,6 +38,6 @@ jobs:
         id: testCoverage
         uses: anuraag016/Jest-Coverage-Diff@master
         with:
-          runCommand: "npx jest --collectCoverageFrom='[\"src/**/*.{js,jsx,ts,tsx}\"]' --coverage --collectCoverage=true --coverageDirectory='./' --coverageReporters='json-summary' --forceExit --detectOpenHandles test/.*test.*"
+          runCommand: "npx jest --silent --runInBand --collectCoverageFrom='[\"{components,store}/**/*.{js,ts,vue}\"]' --coverage --collectCoverage=true --coverageDirectory='./' --coverageReporters='json-summary' --forceExit --detectOpenHandles tests/unit/*.*spec.js"
           delta: 0.5
 
