@@ -1,9 +1,8 @@
 import NacelleClient from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
 
 export default function (context, inject) {
-  const options = JSON.parse(`<%= JSON.stringify(options) %>`)
-  const { settings, space } = options
-  const {
+  const { settings, space } = <%= JSON.stringify(options) %> // eslint-disable-line
+  const { 
     spaceID,
     token,
     endpoint,
