@@ -2,7 +2,9 @@ import NacelleClient from '@nacelle/client-js-sdk/dist/client-js-sdk.esm'
 
 export default function (context, inject) {
   try {
-    const { settings, space } = JSON.parse(`<%= JSON.stringify(options) %>`)
+    const { settings, space } = JSON.parse(
+      `<%= JSON.stringify(options || {}) %>`
+    )
     const {
       spaceID,
       token,
@@ -54,6 +56,7 @@ export default function (context, inject) {
 
     inject('nacelle', plugin)
   } catch (err) {
+    // guards against cases where this plugin is processed with EJS (via sao)
     return null
   }
 }
