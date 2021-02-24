@@ -5,7 +5,7 @@ import ProductShopLook from '~/components/nacelle/ProductShopLook'
 const localVue = createLocalVue()
 
 describe('ProductShopLook.vue', () => {
-  it('click image opens modal', async() => {
+  it('click image opens modal', () => {
     const wrapper = shallowMount(ProductShopLook, {
       localVue,
       stubs: { RouterLink: RouterLinkStub },

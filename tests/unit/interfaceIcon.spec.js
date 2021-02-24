@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import InterfaceIcon from '@/components/nacelle/InterfaceIcon'
 
 describe('InterfaceIcon.vue', () => {
-  it('renders an svg', async() => {
+  it('renders an svg', () => {
     const wrapper = shallowMount(InterfaceIcon, {
       propsData: { iconName: 'cart', iconAction: 'cart/showCart' }
     })

@@ -1,7 +1,7 @@
-import storeConfig from '../storeConfig'
-import products from '../mocks/static-products'
 import Vue from 'vue'
 import Vuex from 'vuex'
+import storeConfig from '../storeConfig'
+import products from '../mocks/static-products'
 Vue.use(Vuex)
 
 const product = products[0]
@@ -39,13 +39,12 @@ describe('Event Store', () => {
     incrementCounter()
   })
 
-  it('adds a product view event to log array', () => {
-    store.dispatch('events/productView', product)
-    expect(store.state.events.log.length).toEqual(counter.length)
+  it('adds a product view event to log array', async () => {
+    await store.dispatch('events/productView', { product })
     expect(store.state.events.log[counter.log].eventType).toEqual(
       'PRODUCT_VIEW'
     )
-    expect(store.state.events.log[counter.log].payload).toEqual({ product })
+    expect(store.state.events.log[counter.log].product).toEqual(product)
     incrementCounter()
   })
 

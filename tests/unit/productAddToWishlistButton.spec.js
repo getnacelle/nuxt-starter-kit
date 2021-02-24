@@ -1,7 +1,7 @@
+import Vuex from 'vuex'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import ProductAddToWishlistButton from '@/components/nacelle/ProductAddToWishlistButton'
 import createStoreConfig from '../storeConfig'
-import Vuex from 'vuex'
 
 const variant = {
   id: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFadC8yODU2ODgyMDAyMzQwMQ==',
@@ -50,7 +50,7 @@ const productData = {
 }
 
 describe('Product Add to Wishlist Button', () => {
-  it('renders the button', async () => {
+  it('renders the button', () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -65,7 +65,7 @@ describe('Product Add to Wishlist Button', () => {
     expect(wrapper.findAll('.add-to-wishlist').exists()).toBe(true)
   })
 
-  it('adds the item to wishlist', async () => {
+  it('adds the item to wishlist', () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
     const storeConfig = createStoreConfig()
@@ -81,77 +81,4 @@ describe('Product Add to Wishlist Button', () => {
     wrapper.find('.add-to-wishlist').trigger('click')
     expect(store.state.wishlist.items.length).toBeGreaterThan(0)
   })
-
-  // it('removes the item from wishlist', async () => {
-  //   const localVue = createLocalVue()
-  //   localVue.use(Vuex)
-  //   const storeConfig = createStoreConfig()
-  //   const store = new Vuex.Store(storeConfig)
-  //   store.state.products.products = {
-  //     [productData.product.handle]: productData
-  //   }
-  //   const wrapper = shallowMount(ProductAddToWishlistButton, {
-  //     localVue,
-  //     store,
-  //     propsData: {
-  //       allOptionsSelected: true,
-  //       productHandle: productData.product.handle
-  //     }
-  //   })
-
-  //   store.state.wishlist.items = [
-  //     {
-  //       product: productData.product,
-  //       variant
-  //     }
-  //   ]
-  //   wrapper.find('.add-to-wishlist').trigger('click')
-  //   expect(store.state.wishlist.items.length).toBe(0)
-  // })
-
-  // it('has class "not-saved" when item is not added', async () => {
-  //   const localVue = createLocalVue()
-  //   localVue.use(Vuex)
-  //   const storeConfig = createStoreConfig()
-  //   const store = new Vuex.Store(storeConfig)
-  //   store.state.products.products = {
-  //     [productData.product.handle]: productData
-  //   }
-  //   const wrapper = shallowMount(ProductAddToWishlistButton, {
-  //     localVue,
-  //     store,
-  //     propsData: {
-  //       allOptionsSelected: true,
-  //       onlyOneOption: true,
-  //       productHandle: productData.product.handle
-  //     }
-  //   })
-  //   expect(wrapper.find('.add-to-wishlist').classes('not-saved')).toBe(true)
-  // })
-
-  // it('has class "saved" when item is added', async () => {
-  //   const localVue = createLocalVue()
-  //   localVue.use(Vuex)
-  //   const storeConfig = createStoreConfig()
-  //   const store = new Vuex.Store(storeConfig)
-  //   store.state.products.products = {
-  //     [productData.product.handle]: productData
-  //   }
-  //   store.state.wishlist.items = [
-  //     {
-  //       product: productData.product,
-  //       variant
-  //     }
-  //   ]
-  //   const wrapper = shallowMount(ProductAddToWishlistButton, {
-  //     localVue,
-  //     store,
-  //     propsData: {
-  //       allOptionsSelected: true,
-  //       onlyOneOption: true,
-  //       productHandle: productData.product.handle
-  //     }
-  //   })
-  //   expect(wrapper.find('.add-to-wishlist').classes('saved')).toBe(true)
-  // })
 })

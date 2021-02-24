@@ -55,15 +55,15 @@ const wrapperCta = mount(ContentHeroBanner, {
 })
 
 describe('ContentHeroBanner.vue', () => {
-  it('renders a banner', async () => {
+  it('renders a banner', () => {
     expect(wrapperDefault.classes()).toContain('hero')
   })
 
-  it('is size medium by default', async () => {
+  it('is size medium by default', () => {
     expect(wrapperDefault.classes()).toContain('is-medium')
   })
 
-  it('is fullheight when supplied "fullheight" size prop', async () => {
+  it('is fullheight when supplied "fullheight" size prop', () => {
     expect(wrapperFullheight.classes()).toContain('is-fullheight')
   })
 
