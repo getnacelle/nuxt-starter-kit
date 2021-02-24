@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import { get, clear } from 'idb-keyval'
 import storeConfig from '../storeConfig'
 
-require('fake-indexeddb/auto')
 Vue.use(Vuex)
 
 const checkoutIdA =
